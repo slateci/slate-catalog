@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: osg-frontier-squid
+spec:
+  type: NodePort
+  selector:
+    app: osg-frontier-squid
+  ports:
+  - port: 3128

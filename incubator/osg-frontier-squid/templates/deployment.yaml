@@ -1,0 +1,22 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: osg-frontier-squid-deployment
+  labels:
+    app: osg-frontier-squid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osg-frontier-squid
+  template:
+    metadata:
+      labels:
+        app: osg-frontier-squid
+    spec:
+      containers:
+      - name: osg-frontier-squid
+        image: slateci/osg-frontier-squid:0.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3128

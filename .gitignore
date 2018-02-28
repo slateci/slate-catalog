@@ -1,0 +1,17 @@
+_site
+_static_site
+.bundle
+config_override.yml
+
+# Eclipse artifacts
+.project
+.pydevproject
+*.iml
+.idea/
+.bundle/
+
+# NetBeans artifacts
+/nbproject
+
+# Temporary files
+*~
