@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: osg-frontier-squid
+  name: {{ .Chart.Name }}
 spec:
   type: NodePort
   selector:
-    app: osg-frontier-squid
+    app: {{ .Chart.Name }}
   ports:
-  - port: 3128
+  - port: {{ .Values.Service.Port }}

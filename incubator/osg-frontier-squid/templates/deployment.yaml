@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: osg-frontier-squid-deployment
+  name: {{ .Chart.Name }}-deployment
   labels:
-    app: osg-frontier-squid
+    app: {{ .Chart.Name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: osg-frontier-squid
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: osg-frontier-squid
+        app: {{ .Chart.Name }}
     spec:
       containers:
-      - name: osg-frontier-squid
+      - name: {{ .Chart.Name }}
         image: slateci/osg-frontier-squid:0.1
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 3128
+        - containerPort: {{ .Values.Deployment.Port }}
