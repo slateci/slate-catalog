@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: customize
+  name: customize-map
   labels:
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
@@ -15,3 +15,4 @@ data:
     setoptionparameter("cache_dir", 3, "{{ .Values.SquidConf.CacheSize }}")
     print
     }'
+  {{ (.Files.Glob "config/*").AsConfig | indent 2 }}
