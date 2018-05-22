@@ -1,9 +1,7 @@
 
-Deployment:
-  Port: 3128
-
 Service:
   Port: 3128
+  Type: NodePort
 
 SquidConf:
   CacheMem: 128

@@ -15,4 +15,3 @@ data:
     setoptionparameter("cache_dir", 3, "{{ .Values.SquidConf.CacheSize }}")
     print
     }'
-  {{ (.Files.Glob "config/*").AsConfig | indent 2 }}

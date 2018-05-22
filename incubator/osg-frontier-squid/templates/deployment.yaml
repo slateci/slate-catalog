@@ -1,7 +1,7 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-deployment
+  name: {{ .Chart.Name }}
   labels:
     app: {{ .Chart.Name }}
 spec:
@@ -15,15 +15,22 @@ spec:
         app: {{ .Chart.Name }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}
+      - name: osg-frontier-squid
         image: slateci/osg-frontier-squid:0.1
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: {{ .Values.Deployment.Port }}
+        - containerPort: 3128
+          name: squid
         volumeMounts:
-        - mountPath: /etc/squid/
+        - mountPath: /etc/squid/customize.sh
+          subPath: customize.sh
           name: customize-volume
       volumes:
         - name: customize-volume
           configMap:
             name: customize-map
+            items:
+              - key: customize.sh
+                path: customize.sh
+            defaultMode: 0755
+

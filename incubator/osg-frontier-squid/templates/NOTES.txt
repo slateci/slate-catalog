@@ -1,1 +1,6 @@
-Frontier Squid setup to use port: {{ .Values.Service.Port }}
+Installed {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }} and is running at port {{ .Values.Service.Port }}
+
+Some useful debugging commands:
+  $ helm status {{ .Release.Name }}
