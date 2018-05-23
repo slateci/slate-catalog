@@ -6,4 +6,6 @@ Some useful debugging commands:
   $ helm status {{ .Release.Name }}
 
 To use set your http_proxy environment variable to this service's proxy port.
-  $ export http_proxy=http://[your.squid.domain]:3128
+
+If you're using minikube, run this command to use frontier squid from your local environment:
+  $ export http_proxy=$(minikube service --url osg-frontier-squid)
