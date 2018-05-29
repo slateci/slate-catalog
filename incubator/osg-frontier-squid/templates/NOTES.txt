@@ -1,11 +1,16 @@
-Installed {{ .Chart.Name }}.
+Installed {{ template "osg-frontier-squid.fullname" . }}.
 
-Your release is named {{ .Release.Name }} and is running at port {{ .Values.Service.Port }}
+Your release is named "{{ .Release.Name }}".
 
-Some useful debugging commands:
-  $ helm status {{ .Release.Name }}
+To use, set your http_proxy environment variable to this service's address.
 
-To use set your http_proxy environment variable to this service's proxy port.
+The service's internal address can be found using the DNS as:
+{{ .Chart.Name }}-{{ .Values.Tag }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.Service.Port }}
 
-If you're using minikube, run this command to use frontier squid from your local environment:
-  $ export http_proxy=$(minikube service --url osg-frontier-squid)
+The service's external address can be found by running these instructions:
+{{- if contains "NodePort" .Values.Service.Type }}
+minikube service {{ template "osg-frontier-squid.fullname" . }} --url
+{{- else if contains "LoadBalancer" .Values.Service.Type }}
+export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "osg-frontier-squid.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo http://$SERVICE_IP:{{ .Values.Service.Port }}
+{{- end }}

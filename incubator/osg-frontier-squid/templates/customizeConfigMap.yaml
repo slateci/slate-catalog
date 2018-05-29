@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: customize-map
+  name: customize-map-{{ .Values.Tag }}
   labels:
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}

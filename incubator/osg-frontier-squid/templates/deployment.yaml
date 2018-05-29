@@ -1,18 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ template "osg-frontier-squid.fullname" . }}
   labels:
-    app: {{ .Chart.Name }}
+    app: {{ template "osg-frontier-squid.name" . }}
+    chart: {{ template "osg-frontier-squid.chart" . }}
+    release: {{ .Release.Name }}
+
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: {{ template "osg-frontier-squid.name" . }}
+      chart: {{ template "osg-frontier-squid.chart" . }}
+      release: {{ .Release.Name }}
+
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ template "osg-frontier-squid.name" . }}
+        chart: {{ template "osg-frontier-squid.chart" . }}
+        release: {{ .Release.Name }}
     spec:
       containers:
       - name: osg-frontier-squid
@@ -28,7 +36,7 @@ spec:
       volumes:
         - name: customize-volume
           configMap:
-            name: customize-map
+            name: customize-map-{{ .Values.Tag }}
             items:
               - key: customize.sh
                 path: customize.sh
