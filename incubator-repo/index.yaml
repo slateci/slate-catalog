@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   jupyterhub:
   - appVersion: v0.8.1
-    created: 2018-05-24T11:58:09.220824701-04:00
+    created: 2018-05-31T10:38:35.260840672-04:00
     description: Multi-user Jupyter installation
     digest: 0ce95982e9a11228ec92e8690e7ef5a2ac3a6676c1495868c73c513f37dc66f3
     home: https://z2jh.jupyter.org
@@ -18,17 +18,17 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-05-24T11:58:09.235935526-04:00
+    created: 2018-05-31T10:38:35.264154807-04:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
-    digest: 3bdfb060dc7154bb5d3748f2f2f2738254aeafdb8375015dd5246245487df9c5
+    digest: af47c8ff7e1f27db4832a515036bf02dbd26bd6acfd160302c472b9c416e6b49
     name: osg-frontier-squid
     urls:
     - osg-frontier-squid-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-05-24T11:58:09.221569028-04:00
+    created: 2018-05-31T10:38:35.263800371-04:00
     description: A Helm chart for Kubernetes
     digest: 54e9450e3530e61ddd004c9fedc06660b20f1ef1420b432ed1d273ebad5e1387
     name: osg-frontier-squid
@@ -38,21 +38,11 @@ entries:
   perfsonar:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-05-24T11:58:09.236360868-04:00
+    created: 2018-05-31T10:38:35.264392165-04:00
     description: A Helm chart for Kubernetes
     digest: d0db0d3a9ad752d5d140fd5ca1fc9032f4eb36f0a5851ec772720fde1594dc5c
     name: perfsonar
     urls:
     - perfsonar-0.1.0.tgz
     version: 0.1.0
-  test:
-  - apiVersion: v1
-    appVersion: "1.0"
-    created: 2018-05-24T11:58:09.236882495-04:00
-    description: A Helm chart for Kubernetes
-    digest: da5a46a0af2df7ee20ff617ddcf30c0bc0b057a12efa0216a85a7fd64a3a0bcf
-    name: test
-    urls:
-    - test-0.1.0.tgz
-    version: 0.1.0
-generated: 2018-05-24T11:58:09.219364489-04:00
+generated: 2018-05-31T10:38:35.257672326-04:00
