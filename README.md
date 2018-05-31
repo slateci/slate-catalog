@@ -26,7 +26,7 @@ To rebuild all packages from sources:
 On Linux:
 
 ```bash
-> helm package ..\incubator\*
+> helm package ../incubator/*
 > helm repo index .
 ```
 
