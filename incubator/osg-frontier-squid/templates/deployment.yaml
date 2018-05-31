@@ -41,4 +41,8 @@ spec:
               - key: customize.sh
                 path: customize.sh
             defaultMode: 0755
+        - name: persistent-volume
+          persistentVolumeClaim:
+            claimName: myclaim
+
 
