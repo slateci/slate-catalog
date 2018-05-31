@@ -1,18 +1,26 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: osg-frontier-squid-deployment
+  name: {{ template "osg-frontier-squid.fullname" . }}
   labels:
-    app: osg-frontier-squid
+    app: {{ template "osg-frontier-squid.name" . }}
+    chart: {{ template "osg-frontier-squid.chart" . }}
+    release: {{ .Release.Name }}
+
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: osg-frontier-squid
+      app: {{ template "osg-frontier-squid.name" . }}
+      chart: {{ template "osg-frontier-squid.chart" . }}
+      release: {{ .Release.Name }}
+
   template:
     metadata:
       labels:
-        app: osg-frontier-squid
+        app: {{ template "osg-frontier-squid.name" . }}
+        chart: {{ template "osg-frontier-squid.chart" . }}
+        release: {{ .Release.Name }}
     spec:
       containers:
       - name: osg-frontier-squid
@@ -20,3 +28,17 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3128
+          name: squid
+        volumeMounts:
+        - mountPath: /etc/squid/customize.sh
+          subPath: customize.sh
+          name: customize-volume
+      volumes:
+        - name: customize-volume
+          configMap:
+            name: customize-map-{{ .Values.Tag }}
+            items:
+              - key: customize.sh
+                path: customize.sh
+            defaultMode: 0755
+

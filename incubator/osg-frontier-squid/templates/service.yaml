@@ -1,10 +1,16 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: osg-frontier-squid
+  name: {{ template "osg-frontier-squid.fullname" . }}
 spec:
-  type: NodePort
+  type: {{ .Values.Service.Type }} # parametrize for load balancer option
   selector:
-    app: osg-frontier-squid
+    app: {{ template "osg-frontier-squid.name" . }}
+    chart: {{ template "osg-frontier-squid.chart" . }}
+    release: {{ .Release.Name }}
   ports:
-  - port: 3128
+  - port: {{ .Values.Service.Port }}
+    targetPort: squid
+
+# Needs customized name for deployments
+# Could have multiple deployments in the same namespace

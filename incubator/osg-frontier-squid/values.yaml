@@ -1,45 +1,21 @@
-# Default values for osg-frontier-squid.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Tag to label use case of Frontier Squid deployment
+# Generates app name as "osg-frontier-squid-[Tag]" if a tag is provided
+# Enables unique instances of Frontier Squid in one namespace
+Tag: global
 
-replicaCount: 1
+Service:
+  # Port that the service is utilizing within kubernetes cluster.
+  Port: 3128
+  # **** INTERNAL USE ONLY, FOR TESTING **** 
+  # Use NodePort only for minikube testing without metalLB. Load balancer exposes external IP.
+  Type: LoadBalancer
 
-image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+SquidConf:
+  # The amount of memory (in MB) that Frontier Squid may use on the machine.
+  # Per Frontier Squid, do not consume more than 1/8 of system memory with Frontier Squid
+  CacheMem: 128
+  # The amount of disk space (in MB) that Frontier Squid may use on the machine.
+  # The default is 10000 MB (10 GB), but more is advisable if the system supports it.
+  CacheSize: 10000
 
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  path: /
-  hosts:
-    - chart-example.local
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+# Are pod presets out of alpha? If not, when will they be? If so, have they changed names?
