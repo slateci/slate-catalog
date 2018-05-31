@@ -1,13 +1,13 @@
 # Tag to label use case of Frontier Squid deployment
-# Generates app name as "osg-frontier-squid-[Tag]" if a tag is provided
+# Generates app name as "osg-frontier-squid-[Tag]"
 # Enables unique instances of Frontier Squid in one namespace
 Tag: global
 
 Service:
   # Port that the service is utilizing within kubernetes cluster.
   Port: 3128
-  # **** INTERNAL USE ONLY, FOR TESTING **** 
-  # Use NodePort only for minikube testing without metalLB. Load balancer exposes external IP.
+  # Use Type "NodePort" if you want the service to be accessible only within the cluster.
+  # use type "LoadBalancer" if you want the service to also be accessible externally.
   Type: LoadBalancer
 
 SquidConf:
@@ -17,5 +17,3 @@ SquidConf:
   # The amount of disk space (in MB) that Frontier Squid may use on the machine.
   # The default is 10000 MB (10 GB), but more is advisable if the system supports it.
   CacheSize: 10000
-
-# Are pod presets out of alpha? If not, when will they be? If so, have they changed names?
