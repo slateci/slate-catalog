@@ -1,17 +1,19 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: customize-map-{{ .Values.Tag }}
+  name: osg-frontier-squid-{{ .Values.Tag }}-config
   labels:
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
     app: osg-frontier-squid
+    tag: {{ .Values.Tag }}
 data:
   customize.sh: |-
     #!/bin/bash
 
     awk --file `dirname $0`/customhelps.awk --source '{
     setoption("cache_mem", "{{ .Values.SquidConf.CacheMem }} MB")
+    setoption("visible_hostname", "osg-frontier-squid-{{ .Values.Tag }}")
     setoptionparameter("cache_dir", 3, "{{ .Values.SquidConf.CacheSize }}")
     insertline("^# http_access deny !RESTRICT_DEST", "http_access allow all")
     print
