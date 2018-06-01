@@ -39,7 +39,7 @@ spec:
       volumes:
         - name: customize-volume
           configMap:
-            name: osg-frontier-squid-{{ .Values.Tag }}-config
+            name: osg-frontier-squid-{{ .Values.Tag }}-configuration
             items:
               - key: customize.sh
                 path: customize.sh

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: osg-frontier-squid-{{ .Values.Tag }}-config
+  name: osg-frontier-squid-{{ .Values.Tag }}-configuration
   labels:
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
