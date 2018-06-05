@@ -26,7 +26,7 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
 
 ## Limitations ##
 
-#### Persistant Volumes ####
+#### Persistent Volumes ####
 1. For LocalVolumes, **the volume must already exist on the node**
   * As it stands, it is set up for a mount in minikube
   * Dynamic provisioning is in the works on kubernete's end
