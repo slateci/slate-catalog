@@ -6,6 +6,7 @@ metadata:
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
     app: osg-frontier-squid
+    tag: {{ .Values.Tag }}
 data:
   customize.sh: |-
     #!/bin/bash

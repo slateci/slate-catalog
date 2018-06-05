@@ -8,6 +8,7 @@ spec:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
+    tag: {{ .Values.Tag }}
   ports:
   - port: {{ .Values.Service.Port }}
     targetPort: squid

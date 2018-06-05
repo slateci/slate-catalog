@@ -6,6 +6,7 @@ metadata:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
+    tag: {{ .Values.Tag }}
 
 spec:
   replicas: 1
@@ -14,6 +15,7 @@ spec:
       app: {{ template "osg-frontier-squid.name" . }}
       chart: {{ template "osg-frontier-squid.chart" . }}
       release: {{ .Release.Name }}
+      tag: {{ .Values.Tag }}
 
   template:
     metadata:
@@ -21,6 +23,7 @@ spec:
         app: {{ template "osg-frontier-squid.name" . }}
         chart: {{ template "osg-frontier-squid.chart" . }}
         release: {{ .Release.Name }}
+        tag: {{ .Values.Tag }}
     spec:
       containers:
       - name: osg-frontier-squid
