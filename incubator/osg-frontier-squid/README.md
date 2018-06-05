@@ -13,6 +13,10 @@ Customization options include
 • Squid Cache Memory Usage Limit  
 • Squid Cache Disk Usage Limit
 
+This branch utilizes local storage as a persistent volume. **Please see the limitations section before attempting to deploy**.
+The node must have a local volume mounted before deployment. The helm release chart does not currently parametrize the volume mount location, so it must match exactly.
+This helm chart deploys a Persistent volume to be scheduled on a Node with the key `storage=local`, and a Persistent Volume Claim to bind the application to use that volume to store cache data.
+
 ## Application ##
 Frontier Squid is an HTTP cache, providing *quick access to recently downloaded data*.
 
@@ -21,6 +25,17 @@ The best use of this cache is to *use it as an HTTP Proxy*. You can set this wit
 Frontier Squid stores logs of activity within the container's `/var/log/squid/access.log` file, and logs of it's status and startup information within the container's `/var/log/squid/cache.log` file.
 
 ## Limitations ##
+
+#### Persistant Volumes ####
+1. For LocalVolumes, **the volume must already exist on the node**
+  * As it stands, it is set up for a mount in minikube
+  * Dynamic provisioning is in the works on kubernete's end
+  * To create the mount in minikube that this is set up for  
+  `minikube ssh`  
+  `mkdir mnt/disks/vol1`  
+  `sudo mount -t tmpfs vol1 mnt/disks/vol1`
+  `logout`
+
 #### Release Names ####
 1. Helm Charts **cannot overwrite release names**  
   * Overwriting release names can only be done from the command line using `--name` during helm install.
