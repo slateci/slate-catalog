@@ -20,7 +20,7 @@ This helm chart deploys a Persistent volume to be scheduled on a Node with the k
 ## Application ##
 Frontier Squid is an HTTP cache, providing *quick access to recently downloaded data*.
 
-The best use of this cache is to *use it as an HTTP Proxy*. You can set this within your local environment using `export http_proxy=http://[IP Address]:[Port Number]`, within your computer's global internet settings, or within an application that will utlize the cache.
+The best use of this cache is to **use it as an HTTP Proxy**. You can set this within your local environment using `export http_proxy=http://[IP Address]:[Port Number]`, within your computer's global internet settings, or within an application that will utlize the cache.
 
 Frontier Squid stores logs of activity within the container's `/var/log/squid/access.log` file, and logs of it's status and startup information within the container's `/var/log/squid/cache.log` file.
 
@@ -31,10 +31,12 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
   * As it stands, it is set up for a mount in minikube
   * Dynamic provisioning is in the works on kubernete's end
   * To create the mount in minikube that this is set up for  
-  `minikube ssh`  
-  `mkdir mnt/disks/vol1`  
-  `sudo mount -t tmpfs vol1 mnt/disks/vol1`
-  `logout`
+  ```bash
+  minikube ssh  
+  mkdir mnt/disks/vol1  
+  sudo mount -t tmpfs vol1 mnt/disks/vol1  
+  logout
+  ```
 
 #### Release Names ####
 1. Helm Charts **cannot overwrite release names**  
