@@ -5,7 +5,7 @@ The application is packaged as osg-frontier-squid.
 
 Deployments of this package will be labeled as `osg-frontier-squid-[Tag]`, where Tag is a required field in the values.yaml file.
 
-Customization options are provided in the values.yaml file and can be overwritten by adjusting a copy of this file, and running `helm install osg-frontier-squid --values [myvalues].yaml` where myvalues is the name of your file.
+Customization options are provided in the values.yaml file and can be overwritten by adjusting a copy of this file, and running `helm install osg-frontier-squid --values [myvalues].yaml` where myvalues is the name of your file.  
 Customization options include  
 • Tag  
 • Service Port  
@@ -13,8 +13,8 @@ Customization options include
 • Squid Cache Memory Usage Limit  
 • Squid Cache Disk Usage Limit
 
-This branch utilizes local storage as a persistent volume. **Please see the limitations section before attempting to deploy**.
-The node must have a local volume mounted before deployment. The helm release chart does not currently parametrize the volume mount location, so it must match exactly.
+This branch utilizes local storage as a persistent volume. **Please see the limitations section before attempting to deploy**.  
+The node must have a local volume mounted before deployment. The helm release chart does not currently parametrize the volume mount location, so it must match exactly.  
 This helm chart deploys a Persistent volume to be scheduled on a Node with the key `storage=local`, and a Persistent Volume Claim to bind the application to use that volume to store cache data.
 
 ## Application ##
