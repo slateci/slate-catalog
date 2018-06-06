@@ -14,7 +14,7 @@ Customization options include
 • Squid Cache Disk Usage Limit
 
 This branch utilizes local storage as a persistent volume. **Please see the limitations section before attempting to deploy**.  
-The node must have a local volume mounted before deployment. The helm release chart has an option `CacheMount` that must exactly match the path on the node where the volume will be mounted.
+The node must have a local volume mounted before deployment. The helm release chart has an option `CacheMount` that must exactly match the path on the node where the volume will be mounted.  
 This helm chart deploys a Persistent volume to be scheduled on a Node with the key `storage=local`, and a Persistent Volume Claim to bind the application to use that volume to store cache data.  
 The persistent volume and persistent volume claim are templated to deploy at exactly the size requested for the disk usage of the cache, to minimize wasted disk space.
 
@@ -38,7 +38,7 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
   sudo mount -t tmpfs vol1 mnt/disks/vol1  
   logout
   ```
-
+g
 #### Release Names ####
 1. Helm Charts **cannot overwrite release names**  
   * Overwriting release names can only be done from the command line using `--name` during helm install.

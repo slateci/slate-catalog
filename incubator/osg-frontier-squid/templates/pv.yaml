@@ -19,3 +19,10 @@ spec:
           operator: In
           values:
           - local
+    preferred:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: disk-type
+          operator: In
+          values:
+          - ssd
