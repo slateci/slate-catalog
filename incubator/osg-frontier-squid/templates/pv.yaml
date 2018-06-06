@@ -4,13 +4,13 @@ metadata:
   name: osg-frontier-squid-{{ .Values.Tag }}-pv
 spec:
   capacity:
-    storage: 4Gi
+    storage: {{ .Values.SquidConf.CacheSize }}Mi
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
   storageClassName: local-storage
   local:
-    path: /home/docker/mnt/disks/vol1
+    path: {{ .Values.CacheMount }}
   nodeAffinity:
     required:
       nodeSelectorTerms:

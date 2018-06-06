@@ -8,5 +8,5 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.SquidConf.CacheSize }}Mi
   storageClassName: local-storage
