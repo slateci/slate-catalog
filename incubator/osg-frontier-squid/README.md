@@ -1,26 +1,25 @@
 # OSG Frontier Squid for Helm #
 
-## Deployment ##
+----
+## Deployment
 The application is packaged as osg-frontier-squid.
 
 Deployments of this package will be labeled as `osg-frontier-squid-[Tag]`, where Tag is a required field in the values.yaml file.
 
 Customization options are provided in the values.yaml file and can be overwritten by adjusting a copy of this file, and running `helm install osg-frontier-squid --values [myvalues].yaml` where myvalues is the name of your file.
-Customization options include  
-• Tag  
-• Service Port  
-• Service Type  
-• Squid Cache Memory Usage Limit  
-• Squid Cache Disk Usage Limit
 
-## Application ##
+For a comprehensive list of customization options and descriptions, please see the `values.yaml` file.
+
+----
+## Application
 Frontier Squid is an HTTP cache, providing *quick access to recently downloaded data*.
 
 The best use of this cache is to *use it as an HTTP Proxy*. You can set this within your local environment using `export http_proxy=http://[IP Address]:[Port Number]`, within your computer's global internet settings, or within an application that will utlize the cache.
 
 Frontier Squid stores logs of activity within the container's `/var/log/squid/access.log` file, and logs of it's status and startup information within the container's `/var/log/squid/cache.log` file.
 
-## Limitations ##
+----
+## Limitations
 #### Release Names ####
 1. Helm Charts **cannot overwrite release names**  
   * Overwriting release names can only be done from the command line using `--name` during helm install.
@@ -44,3 +43,14 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
   * To utilize a LoadBalancer service type on minikube, run command  
      `kubectl create -f https://raw.githubusercontent.com/mrbobbytables/k8s-intro-tutorials/master/core/manifests/metalLB.yaml`  
      before creating pods that utilize the LoadBalancer.
+
+----
+## Future Work
+1. Persistent Volumes for Local Storage
+  * Persistent volumes are an option for local storage allocation in the future
+  * At the time of development, LocalVolumes do not have support for dynamic provisioning, causing multiple complications with allocation
+    - Admins would have to manually provision and manage persistent volumes on nodes to be claimed
+    - Persistent Volume Claims may bind to volumes larger than needed, wasting local storage
+
+2. Pod Presets for HTTP Proxy Name Injection
+  
