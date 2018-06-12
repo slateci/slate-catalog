@@ -46,11 +46,17 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
 
 ----
 ## Future Work
-1. Persistent Volumes for Local Storage
+
+### Persistent Volumes for Local Storage
   * Persistent volumes are an option for local storage allocation in the future
   * At the time of development, LocalVolumes do not have support for dynamic provisioning, causing multiple complications with allocation
     - Admins would have to manually provision and manage persistent volumes on nodes to be claimed
     - Persistent Volume Claims may bind to volumes larger than needed, wasting local storage
 
-2. Pod Presets for HTTP Proxy Name Injection
+### Pod Presets for HTTP Proxy Name Injection
+
+It is still an open problem to determine how the http proxy is injected in an appliation. Ideally, if the proxy is deployed then the http_proxy variable is set appropriately and if not the variable is left unset. Pod Presets allow in general to inject small modifications to a pod based on labels. We can imagine that, when the service is deployed, a PodPreset is also deployed such that if a pod has a well defined label (i.e. using-proxy = true) then the environment variable is set. There are the following caveats:
+  * PodPresets are currently alpha. In some cases, they need to be added when building/configuring the cluster.
+  * PodPresets only modify the Pod spec before deployment. Therefore if the squid proxy is installed after the installation of the application, or if it is removed after the application is already installed, the change is not picked up and the application will either not be using the proxy or trying to use a proxy that does not exist.
+For these reasons, we left the issue open.
   
