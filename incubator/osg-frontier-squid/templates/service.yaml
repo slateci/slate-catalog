@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: {{ template "osg-frontier-squid.fullname" . }}
 spec:
-  type: {{ .Values.Service.Type }} # parametrize for load balancer option
+  type: {{ .Values.Service.Type }}
   selector:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
@@ -12,6 +12,3 @@ spec:
   ports:
   - port: {{ .Values.Service.Port }}
     targetPort: squid
-
-# Needs customized name for deployments
-# Could have multiple deployments in the same namespace

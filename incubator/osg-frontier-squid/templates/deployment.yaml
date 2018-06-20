@@ -35,19 +35,20 @@ spec:
         volumeMounts:
         - mountPath: /etc/squid/customize.sh
           subPath: customize.sh
-          name: osg-frontier-squid-{{ .Values.Tag }}-customization
+          name: osg-frontier-squid-{{ .Values.Tag }}-configuration
         - mountPath: /var/cache/squid
-          name: osg-frontier-squid-{{ .Values.Tag }}-pv
+          subPath: osg-frontier-squid-{{ .Values.Tag }}-cache
+          name: osg-frontier-squid-{{ .Values.Tag }}-pvc
       volumes:
-        - name: osg-frontier-squid-{{ .Values.Tag }}-customization
+        - name: osg-frontier-squid-{{ .Values.Tag }}-configuration
           configMap:
-            name: osg-frontier-squid-{{ .Values.Tag }}-customization
+            name: osg-frontier-squid-{{ .Values.Tag }}-configuration
             items:
               - key: customize.sh
                 path: customize.sh
             defaultMode: 0755
-        - name: osg-frontier-squid-{{ .Values.Tag }}-pv
+        - name: osg-frontier-squid-{{ .Values.Tag }}-pvc
           persistentVolumeClaim:
-            claimName: osg-frontier-squid-{{ .Values.Tag }}-claim
+            claimName: osg-frontier-squid-{{ .Values.Tag }}-pvc
 
 
