@@ -6,7 +6,7 @@ metadata:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
-    tag: {{ .Values.Tag }}
+    instance: {{ .Values.Instance }}
 
 spec:
   replicas: 1
@@ -15,7 +15,7 @@ spec:
       app: {{ template "osg-frontier-squid.name" . }}
       chart: {{ template "osg-frontier-squid.chart" . }}
       release: {{ .Release.Name }}
-      tag: {{ .Values.Tag }}
+      instance: {{ .Values.Instance }}
 
   template:
     metadata:
@@ -23,8 +23,10 @@ spec:
         app: {{ template "osg-frontier-squid.name" . }}
         chart: {{ template "osg-frontier-squid.chart" . }}
         release: {{ .Release.Name }}
-        tag: {{ .Values.Tag }}
+        instance: {{ .Values.Instance }}
     spec:
+      nodeSelector:
+        storage: "local"
       containers:
       - name: osg-frontier-squid
         image: slateci/osg-frontier-squid:0.1
@@ -35,20 +37,42 @@ spec:
         volumeMounts:
         - mountPath: /etc/squid/customize.sh
           subPath: customize.sh
-          name: osg-frontier-squid-{{ .Values.Tag }}-configuration
+          name: osg-frontier-squid-{{ .Values.Instance }}-configuration
         - mountPath: /var/cache/squid
-          subPath: osg-frontier-squid-{{ .Values.Tag }}-cache
-          name: osg-frontier-squid-{{ .Values.Tag }}-pvc
+          subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
+          name: osg-frontier-squid-{{ .Values.Instance }}-pvc
+        - mountPath: /var/log/squid
+          name: varlog
+      - name: fluent-bit
+        image: fluent/fluent-bit:0.13.4
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsUser: 0
+        # ports:
+        # - containerPort: 2020
+        volumeMounts:
+        - name: fluent-bit-{{ .Values.Instance }}-config
+          mountPath: /fluent-bit/etc/
+        - name: varlog
+          mountPath: /var/log/squid
       volumes:
-        - name: osg-frontier-squid-{{ .Values.Tag }}-configuration
+        - name: osg-frontier-squid-{{ .Values.Instance }}-configuration
           configMap:
-            name: osg-frontier-squid-{{ .Values.Tag }}-configuration
+            name: osg-frontier-squid-{{ .Values.Instance }}-configuration
             items:
               - key: customize.sh
                 path: customize.sh
             defaultMode: 0755
-        - name: osg-frontier-squid-{{ .Values.Tag }}-pvc
+        - name: osg-frontier-squid-{{ .Values.Instance }}-pvc
           persistentVolumeClaim:
-            claimName: osg-frontier-squid-{{ .Values.Tag }}-pvc
+            claimName: osg-frontier-squid-{{ .Values.Instance }}-pvc
+        - name: fluent-bit-{{ .Values.Instance }}-config
+          configMap:
+            name: fluent-bit-{{ .Values.Instance }}-config
+        - name: varlog
+          emptyDir: {}
+
+
+
 
 

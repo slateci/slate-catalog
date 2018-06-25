@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "osg-frontier-squid.name" -}}
-{{- default .Chart.Name .Values.Tag | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.Instance | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -12,7 +12,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "osg-frontier-squid.fullname" -}}
-{{- $name := default .Chart.Name .Values.Tag -}}
+{{- $name := default .Chart.Name .Values.Instance -}}
 {{- if contains $name .Chart.Name -}}
 {{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

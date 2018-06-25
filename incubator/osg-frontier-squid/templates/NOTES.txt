@@ -5,12 +5,12 @@ Your release is named "{{ .Release.Name }}".
 To use, set your http_proxy environment variable to this service's address.
 
 The service's internal address can be found using the DNS as:
-{{ .Chart.Name }}-{{ .Values.Tag }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.Service.Port }}
+{{ .Chart.Name }}-{{ .Values.Instance }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.Service.Port }}
 
 The service's external address can be found by running these instructions:
-{{- if contains "NodePort" .Values.Service.Type }}
-minikube service {{ template "osg-frontier-squid.fullname" . }} --url
-{{- else if contains "LoadBalancer" .Values.Service.Type }}
+{{- if .Values.Service.ExternallyVisible }}
 export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "osg-frontier-squid.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo http://$SERVICE_IP:{{ .Values.Service.Port }}
+{{- else }}
+minikube service {{ template "osg-frontier-squid.fullname" . }} --url
 {{- end }}

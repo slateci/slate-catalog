@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: osg-frontier-squid-{{ .Values.Tag }}-configuration
+  name: osg-frontier-squid-{{ .Values.Instance }}-configuration
   labels:
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
     app: osg-frontier-squid
-    tag: {{ .Values.Tag }}
+    tag: {{ .Values.Instance }}
 data:
   customize.sh: |-
     #!/bin/bash
@@ -15,6 +15,7 @@ data:
     setoption("cache_mem", "{{ .Values.SquidConf.CacheMem }} MB")
     setoptionparameter("cache_dir", 3, "{{ .Values.SquidConf.CacheSize }}")
     setoption("visible_hostname", "osg-frontier-squid-{{ .Values.Tag }}")
+    setoption("acl NET_LOCAL src", "{{ .Values.SquidConf.IPRange }}")
     insertline("^# http_access deny !RESTRICT_DEST", "http_access allow all")
     print
     }'

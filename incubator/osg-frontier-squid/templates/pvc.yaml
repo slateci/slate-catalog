@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: osg-frontier-squid-{{ .Values.Tag }}-pvc
+  name: osg-frontier-squid-{{ .Values.Instance }}-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -9,4 +9,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.SquidConf.CacheSize }}Mi
-  storageClassName: local-storage
+  storageClassName: nfs-provisioner
