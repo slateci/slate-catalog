@@ -54,7 +54,7 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
 
 ### Persistent Volumes for Local Storage
 
-Persistent volume claims are being made using the nfs-provisioner. On our system we have setup the nfs-provisioner to dynamically allocate local storage by using a nodeAffinity and mounting it using hostpath. In order to comply to the dynamic provisioning, the deployment must share the same nodeAffinity. We use storage=local as the label on our nodes that provide local storage.
+Persistent volume claims are being made using the nfs-provisioner. On our system we have setup the nfs-provisioner to dynamically allocate local storage by using a nodeAffinity and mounting it using hostpath. In order to comply to the dynamic provisioning, the deployment must share the same nodeAffinity. We use `storage=local` as the label on our nodes that provide local storage.
 
 ### Pod Presets for HTTP Proxy Name Injection
 
