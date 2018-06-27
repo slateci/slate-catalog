@@ -6,8 +6,8 @@ Instance: global
 Service:
   # Port that the service will utilize.
   Port: 3128
-  # Use Type "NodePort" if you want the service to be visible only within the cluster
-  # Use Type "LoadBalancer" if you want the service to also be accessible outside of the cluster
+  # Controls whether the service is accessible from outside of the cluster.
+  # Must be true/false
   ExternallyVisible: true
 
 SquidConf:
@@ -17,9 +17,4 @@ SquidConf:
   # The amount of disk space (in MB) that Frontier Squid may use on the machine.
   # The default is 10000 MB (10 GB), but more is advisable if the system supports it.
   CacheSize: 10000
-  # The range of incoming IP addresses that will be allowed to use the proxy.
-  # Multiple ranges can be provided, each seperated by a space.
-  # Example: 192.168.1.1/32 192.168.2.1/32
-  # Use 0.0.0.0/0 for open access.
-  IPRange: 0.0.0.0/0
   
