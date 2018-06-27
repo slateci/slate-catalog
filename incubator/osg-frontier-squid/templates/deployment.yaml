@@ -48,8 +48,6 @@ spec:
         imagePullPolicy: IfNotPresent
         securityContext:
           runAsUser: 0
-        # ports:
-        # - containerPort: 2020
         volumeMounts:
         - name: fluent-bit-{{ .Values.Instance }}-config
           mountPath: /fluent-bit/etc/

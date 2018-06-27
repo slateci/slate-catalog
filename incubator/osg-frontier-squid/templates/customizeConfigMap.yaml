@@ -12,10 +12,9 @@ data:
     #!/bin/bash
 
     awk --file `dirname $0`/customhelps.awk --source '{
+    setoption("acl NET_LOCAL src", "{{ .Values.SquidConf.IPRange }}")
     setoption("cache_mem", "{{ .Values.SquidConf.CacheMem }} MB")
     setoptionparameter("cache_dir", 3, "{{ .Values.SquidConf.CacheSize }}")
-    setoption("visible_hostname", "osg-frontier-squid-{{ .Values.Tag }}")
-    setoption("acl NET_LOCAL src", "{{ .Values.SquidConf.IPRange }}")
-    insertline("^# http_access deny !RESTRICT_DEST", "http_access allow all")
+    setoption("visible_hostname", "osg-frontier-squid-{{ .Values.Instance }}")
     print
     }'

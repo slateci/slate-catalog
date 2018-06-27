@@ -8,6 +8,7 @@ spec:
   {{ else }}
   type: ClusterIP
   {{ end }}
+  externalTrafficPolicy: Local
   selector:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
