@@ -12,6 +12,7 @@ data:
     #!/bin/bash
 
     awk --file `dirname $0`/customhelps.awk --source '{
+    setoption("acl NET_LOCAL src", "0.0.0.0/0")
     setoption("http_port", "{{ .Values.Service.Port }}")
     setoption("cache_mem", "{{ .Values.SquidConf.CacheMem }} MB")
     setoptionparameter("cache_dir", 3, "{{ .Values.SquidConf.CacheSize }}")
