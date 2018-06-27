@@ -38,11 +38,14 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
   * NodePort service type creates a pod that is visible only within the cluster.
   * LoadBalancer service type additionally assigns an external IP address and can be used internally or externally of the cluster.
 
+<<<<<<< HEAD
 #### Persistent Volumes ####
 1. This package of Frontier Squid uses persistent volumes to store the cache data.  
   * A persistent volume must already exist on the system, using the local-storage class
   * The local-storage storage class must be created on the cluster
 
+=======
+>>>>>>> master
 #### Minikube ####
 1. Minikube **does not support LoadBalancer** by default  
   * To utilize a LoadBalancer service type on minikube, run command  
@@ -51,6 +54,7 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
 
 ----
 ## Future Work
+<<<<<<< HEAD
 
 ### Persistent Volumes for Local Storage
 
@@ -62,4 +66,13 @@ It is still an open problem to determine how the http proxy is injected in an ap
   * PodPresets are currently alpha. In some cases, they need to be added when building/configuring the cluster.
   * PodPresets only modify the Pod spec before deployment. Therefore if the squid proxy is installed after the installation of the application, or if it is removed after the application is already installed, the change is not picked up and the application will either not be using the proxy or trying to use a proxy that does not exist.
 For these reasons, we left the issue open.
+=======
+1. Persistent Volumes for Local Storage
+  * Persistent volumes are an option for local storage allocation in the future
+  * At the time of development, LocalVolumes do not have support for dynamic provisioning, causing multiple complications with allocation
+    - Admins would have to manually provision and manage persistent volumes on nodes to be claimed
+    - Persistent Volume Claims may bind to volumes larger than needed, wasting local storage
+
+2. Pod Presets for HTTP Proxy Name Injection
+>>>>>>> master
   

@@ -15,6 +15,7 @@ data:
     setoption("acl NET_LOCAL src", "0.0.0.0/0")
     setoption("http_port", "{{ .Values.Service.Port }}")
     setoption("cache_mem", "{{ .Values.SquidConf.CacheMem }} MB")
+    setoption("visible_hostname", "osg-frontier-squid-{{ .Values.Tag }}")
     setoptionparameter("cache_dir", 3, "{{ .Values.SquidConf.CacheSize }}")
     setoption("visible_hostname", "osg-frontier-squid-{{ .Values.Instance }}")
     print

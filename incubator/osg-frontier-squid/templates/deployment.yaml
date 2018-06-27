@@ -69,8 +69,3 @@ spec:
             name: fluent-bit-{{ .Values.Instance }}-config
         - name: varlog
           emptyDir: {}
-
-
-
-
-
