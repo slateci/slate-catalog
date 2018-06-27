@@ -42,6 +42,7 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
 1. This package of Frontier Squid uses persistent volumes to store the cache data.  
   * The persistent volume is created dynamically by the nfs-provisioner linked to local storage.
   * Persistent volumes are deleted when the persistent volume claim is deleted, either by the user or the release.
+  * In order to comply to the dynamic provisioning, the deployment must share the same nodeAffinity. We use `storage=local` as the label on our nodes that provide local storage.
 
 #### Minikube ####
 1. Minikube **does not support LoadBalancer** by default  
@@ -54,7 +55,7 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
 
 ### Persistent Volumes for Local Storage
 
-Persistent volume claims are being made using the nfs-provisioner. On our system we have setup the nfs-provisioner to dynamically allocate local storage by using a nodeAffinity and mounting it using hostpath. In order to comply to the dynamic provisioning, the deployment must share the same nodeAffinity. We use `storage=local` as the label on our nodes that provide local storage.
+Persistent volume claims are being made using the nfs-provisioner. On our system we have setup the nfs-provisioner to dynamically allocate local storage by using a nodeAffinity and mounting it using hostpath. In the future there are plans for a local-provisioner from kubernetes, but there is no release date for this yet.
 
 ### Pod Presets for HTTP Proxy Name Injection
 
