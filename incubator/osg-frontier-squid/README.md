@@ -63,4 +63,3 @@ It is still an open problem to determine how the http proxy is injected in an ap
   * PodPresets are currently alpha. In some cases, they need to be added when building/configuring the cluster.
   * PodPresets only modify the Pod spec before deployment. Therefore if the squid proxy is installed after the installation of the application, or if it is removed after the application is already installed, the change is not picked up and the application will either not be using the proxy or trying to use a proxy that does not exist.
 For these reasons, we left the issue open.
-  
