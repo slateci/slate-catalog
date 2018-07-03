@@ -1,0 +1,4 @@
+ports:
+  port: 9200
+
+storage: 10Gi
