@@ -38,6 +38,12 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
   * NodePort service type creates a pod that is visible only within the cluster.
   * LoadBalancer service type additionally assigns an external IP address and can be used internally or externally of the cluster.
 
+#### Persistent Volumes ####
+1. This package of Frontier Squid uses persistent volumes to store the cache data.  
+  * The persistent volume is created dynamically by the nfs-provisioner linked to local storage.
+  * Persistent volumes are deleted when the persistent volume claim is deleted, either by the user or the release.
+  * In order to comply to the dynamic provisioning, the deployment must share the same nodeAffinity. We use `storage=local` as the label on our nodes that provide local storage.
+
 #### Minikube ####
 1. Minikube **does not support LoadBalancer** by default  
   * To utilize a LoadBalancer service type on minikube, run command  
@@ -48,10 +54,8 @@ Frontier Squid stores logs of activity within the container's `/var/log/squid/ac
 ## Future Work
 
 ### Persistent Volumes for Local Storage
-  * Persistent volumes are an option for local storage allocation in the future
-  * At the time of development, LocalVolumes do not have support for dynamic provisioning, causing multiple complications with allocation
-    - Admins would have to manually provision and manage persistent volumes on nodes to be claimed
-    - Persistent Volume Claims may bind to volumes larger than needed, wasting local storage
+
+Persistent volume claims are being made using the nfs-provisioner. On our system we have setup the nfs-provisioner to dynamically allocate local storage by using a nodeAffinity and mounting it using hostpath. In the future there are plans for a local-provisioner from kubernetes, but there is no release date for this yet.
 
 ### Pod Presets for HTTP Proxy Name Injection
 
@@ -59,4 +63,3 @@ It is still an open problem to determine how the http proxy is injected in an ap
   * PodPresets are currently alpha. In some cases, they need to be added when building/configuring the cluster.
   * PodPresets only modify the Pod spec before deployment. Therefore if the squid proxy is installed after the installation of the application, or if it is removed after the application is already installed, the change is not picked up and the application will either not be using the proxy or trying to use a proxy that does not exist.
 For these reasons, we left the issue open.
-  

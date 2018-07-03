@@ -3,12 +3,17 @@ apiVersion: v1
 metadata:
   name: {{ template "osg-frontier-squid.fullname" . }}
 spec:
-  type: {{ .Values.Service.Type }}
+  {{ if .Values.Service.ExternallyVisible }}
+  type: LoadBalancer
+  {{ else }}
+  type: ClusterIP
+  {{ end }}
+  externalTrafficPolicy: Local
   selector:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
-    tag: {{ .Values.Tag }}
+    instance: {{ .Values.Instance }}
   ports:
   - port: {{ .Values.Service.Port }}
     targetPort: squid

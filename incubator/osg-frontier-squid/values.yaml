@@ -1,14 +1,14 @@
-# Tag to label use case of Frontier Squid deployment
-# Generates app name as "osg-frontier-squid-[Tag]"
+# Instance to label use case of Frontier Squid deployment
+# Generates app name as "osg-frontier-squid-[Instance]"
 # Enables unique instances of Frontier Squid in one namespace
-Tag: global
+Instance: global
 
 Service:
-  # Port that the service is utilizing within kubernetes cluster.
+  # Port that the service will utilize.
   Port: 3128
-  # Use Type "NodePort" if you want the service to be accessible only within the cluster.
-  # use type "LoadBalancer" if you want the service to also be accessible externally.
-  Type: LoadBalancer
+  # Controls whether the service is accessible from outside of the cluster.
+  # Must be true/false
+  ExternallyVisible: true
 
 SquidConf:
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
