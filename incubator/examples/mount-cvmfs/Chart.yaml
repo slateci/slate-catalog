@@ -1,0 +1,8 @@
+# Version of Kubernetes in use
+apiVersion: v1
+# Version of application packaged for installation
+appVersion: "1.7"
+description: A Helm chart to demonstrate usage of CVMFS provisioning
+name: nginx-cvmfs
+# Chart version
+version: 0.1.0
