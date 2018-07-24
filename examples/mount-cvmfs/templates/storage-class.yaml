@@ -1,0 +1,9 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: web-server-{{ .Values.Instance }}-sc
+provisioner: csi-cvmfsplugin
+parameters:
+  repository: {{ .Values.CVMFS.Repository }}
+  proxy: {{ .Values.CVMFS.Proxy }}
+reclaimPolicy: Delete
