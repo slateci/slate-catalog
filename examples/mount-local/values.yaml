@@ -1,0 +1,11 @@
+
+Instance: local-storage-demo
+
+# Configuration options for the local storage
+LocalStorage:
+  # Size (in GB) of local storage to claim
+  Size: 5
+
+Nginx:
+  Dummy: Your Settings Here
+  
