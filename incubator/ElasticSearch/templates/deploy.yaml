@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-elasticsearch-deployment
+  labels:
+    app: {{ .Release.Name }}-elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-elasticsearch
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-elasticsearch
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.0
+        ports:
+        - containerPort: 9200
+        env:
+        - name: ES_JAVA_OPTS
+          value: "-Xms4G -Xmx4G"
+      volumes:
+      - name: {{ .Release.Name }}-elasticsearch-volume
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-elasticsearch-pvc
+#add this to sysctl.conf
+#vm.max_map_count = 262144

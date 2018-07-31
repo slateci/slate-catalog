@@ -1,8 +1,27 @@
 apiVersion: v1
 entries:
+  ElasticSearch:
+  - apiVersion: v1
+    created: 2018-07-19T12:46:23.830464944-06:00
+    digest: 75ecf3b5b732546eb942d717b3cdfe692c72a0a31bd86b875c0e15b838f12293
+    maintainers:
+    - email: jason.stidd@utah.edu
+      name: Jason Stidd
+    name: ElasticSearch
+    urls:
+    - ElasticSearch-0.tgz
+    version: "0"
+  fluentbit-kibana:
+  - apiVersion: v1
+    created: 2018-07-19T12:46:23.832301193-06:00
+    digest: bca08abe108ca230bdf5ac30d9ada10aa1e3a24a95309363995fb4d922a483dd
+    name: fluentbit-kibana
+    urls:
+    - fluentbit-kibana-0.1.tgz
+    version: "0.1"
   jupyterhub:
   - appVersion: v0.8.1
-    created: 2018-06-05T15:21:09.321253333-04:00
+    created: 2018-07-19T12:46:23.834568402-06:00
     description: Multi-user Jupyter installation
     digest: 0ce95982e9a11228ec92e8690e7ef5a2ac3a6676c1495868c73c513f37dc66f3
     home: https://z2jh.jupyter.org
@@ -18,31 +37,41 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-06-05T15:21:09.322200062-04:00
+    created: 2018-07-19T12:46:23.835839-06:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
-    digest: 960b238406c197b4054c5cc912709aae5e6da59fddfa7dc33506e181e06fa7ae
+    digest: d29b6f18e99a7d936be093605b98c3e639ff4ae2bb331499e90a93f0eb41389e
     name: osg-frontier-squid
     urls:
     - osg-frontier-squid-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-06-05T15:21:09.321778471-04:00
+    created: 2018-07-19T12:46:23.835130394-06:00
     description: A Helm chart for Kubernetes
     digest: 54e9450e3530e61ddd004c9fedc06660b20f1ef1420b432ed1d273ebad5e1387
     name: osg-frontier-squid
     urls:
     - osg-frontier-squid-0.1.0.tgz
     version: 0.1.0
+  osiris-unis:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-07-19T12:46:23.836251199-06:00
+    description: Unified Network Information Service (UNIS)
+    digest: 9f2a388137f4af1fba095cb6dc4954bd2c08d92a01565ac5c1476a299df69998
+    name: osiris-unis
+    urls:
+    - osiris-unis-0.1.0.tgz
+    version: 0.1.0
   perfsonar:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-06-05T15:21:09.32257898-04:00
+    created: 2018-07-19T12:46:23.836665773-06:00
     description: A Helm chart for Kubernetes
     digest: d0db0d3a9ad752d5d140fd5ca1fc9032f4eb36f0a5851ec772720fde1594dc5c
     name: perfsonar
     urls:
     - perfsonar-0.1.0.tgz
     version: 0.1.0
-generated: 2018-06-05T15:21:09.319509628-04:00
+generated: 2018-07-19T12:46:23.829548086-06:00

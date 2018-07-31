@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-elasticsearch-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-elasticsearch
+  ports:
+  - name: {{ .Release.Name }}elasticsearch
+    protocol: TCP
+    port: 9200
+    targetPort: {{ .Values.ports.port  }}
+
+

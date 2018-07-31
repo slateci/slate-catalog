@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "osiris-unis.fullname" . }}
+  labels:
+    app: {{ template "osiris-unis.name" . }}
+    chart: {{ template "osiris-unis.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8888
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "osiris-unis.name" . }}
+    release: {{ .Release.Name }}
