@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: htcondor
+  labels:
+    app: htcondor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: htcondor
+  template:
+    metadata:
+      labels: 
+        app: htcondor
+    spec:
+      volumes:
+        ################ BEGIN CONFIG
+      - name: scratch
+        hostPath:
+          path: /scratch/condor
+          type: Directory
+          ################# END CONFIG
+      containers:
+      - name: htcondor-worker
+        image: lincolnbryant/htcondor-docker-cuda:390.12
+        volumeMounts:
+        - name: scratch
+          mountPath: "/var/lib/condor/execute"
+        env:
+          #################### BEGIN CONFIG
+        - name: _CONDOR_MEMORY
+          value: "30000"
+        - name: _CONDOR_NUM_CPUS
+          value: "11"
+        - name: _CONDOR_NODEID
+          value: '"ITS-FIONA"'
+          ##################### END CONFIG
+        - name: _CONDOR_STARTD_ATTRS
+          value: '$(STARTD_ATTRS) NODEID'
+        resources:
+          requests:
+            memory: "30000Mi" # mach configuration above
+            cpu:    "11000m"
+          limits:
+            nvidia.com/gpu: 2
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/condor_off","-peaceful"]
