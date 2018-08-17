@@ -1,0 +1,16 @@
+# Instance to label use case of Frontier Squid deployment
+# Generates app name as "condor-[Instance]"
+# Enables unique instances of Frontier Squid in one namespace
+Instance: global
+
+CondorConfig:
+  # The amount of memory (in MB) that Condor may use on the machine.
+  MemoryLimit: 512
+  # The number of CPUs that this condor instance may take advantage of.
+  NumberCPUs: 1
+  # The ID of the Node or cluster you are deploying on
+  NodeID: SLATE-CONDOR
+  # If there is a GPU available on the cluster, you can specify use of that resource
+  UseGPU: true
+  # Only used if UseGPU is set to true
+  NumberGPUs: 2
