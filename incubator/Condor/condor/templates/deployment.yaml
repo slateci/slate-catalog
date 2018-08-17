@@ -24,12 +24,10 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       volumes:
-        ################ BEGIN CONFIG
       - name: scratch
         hostPath:
           path: /scratch/condor
           type: Directory
-          ################# END CONFIG
       containers:
       - name: htcondor-worker
         image: lincolnbryant/htcondor-docker-cuda:390.12
@@ -37,19 +35,17 @@ spec:
         - name: scratch
           mountPath: "/var/lib/condor/execute"
         env:
-          #################### BEGIN CONFIG
         - name: _CONDOR_MEMORY
           value: {{ .Values.CondorConfig.MemoryLimit | quote }}
         - name: _CONDOR_NUM_CPUS
           value: {{ .Values.CondorConfig.NumCPUs | quote }}
         - name: _CONDOR_NODEID
           value: {{ .Values.CondorConfig.NodeID | quote }}
-          ##################### END CONFIG
         - name: _CONDOR_STARTD_ATTRS
           value: '$(STARTD_ATTRS) NODEID'
         resources:
           requests:
-            memory: "{{ .Values.CondorConfig.MemoryLimit }}Mi" # mach configuration above
+            memory: "{{ .Values.CondorConfig.MemoryLimit }}Mi"
             cpu:    "{{ .Values.CondorConfig.NumCPUs }}000m"
           {{ if .Values.CondorConfig.UseGPU }}
           limits:
