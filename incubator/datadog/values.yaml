@@ -1,3 +1,6 @@
+# Instance to label use case of Datadog deployment
+Instance: global
+
 # Default values for datadog.
 image:
   # This chart is compatible with different images, please choose one
