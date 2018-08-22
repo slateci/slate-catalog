@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   ElasticSearch:
   - apiVersion: v1
-    created: 2018-08-22T12:27:33.264295021-05:00
+    created: 2018-08-22T14:29:01.766915753-06:00
     digest: 75ecf3b5b732546eb942d717b3cdfe692c72a0a31bd86b875c0e15b838f12293
     maintainers:
     - email: jason.stidd@utah.edu
@@ -14,26 +14,44 @@ entries:
   condor:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T12:27:33.264541108-05:00
+    created: 2018-08-22T14:29:01.77087444-06:00
     description: A Helm chart for Kubernetes
     digest: bb48b4d4ff92cf66aedbe63046fa370ddfeb32b9033ee62f3153612bd3a54759
     name: condor
     urls:
     - condor-0.1.0.tgz
     version: 0.1.0
+  elasticsearch:
+  - apiVersion: v1
+    created: 2018-08-22T14:29:01.771285227-06:00
+    digest: b7abe0718bbe0496e786fbed02a0c893b73c113d4e7ae317a6d23e995caada7d
+    name: elasticsearch
+    urls:
+    - elasticsearch-0.1.tgz
+    version: "0.1"
   fluentbit-kibana:
   - apiVersion: v1
-    created: 2018-08-22T12:27:33.265286703-05:00
-    digest: bca08abe108ca230bdf5ac30d9ada10aa1e3a24a95309363995fb4d922a483dd
+    created: 2018-08-22T14:29:01.773176443-06:00
+    digest: a6ac2708476cdc4971dee4f8846a229e59b0ceb045e0533a156c52d8e3214ebc
     name: fluentbit-kibana
     urls:
     - fluentbit-kibana-0.1.tgz
     version: "0.1"
+  htcondor:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-08-22T14:29:01.773612754-06:00
+    description: A Helm chart for Kubernetes
+    digest: 51769a48db818b01ae1933e3f4a914ba4b11a357274f4f4b13de206692469df8
+    name: htcondor
+    urls:
+    - htcondor-0.1.0.tgz
+    version: 0.1.0
   jupyterhub:
   - appVersion: v0.8.1
-    created: 2018-08-22T12:27:33.266059012-05:00
+    created: 2018-08-22T14:29:01.775759119-06:00
     description: Multi-user Jupyter installation
-    digest: 0ce95982e9a11228ec92e8690e7ef5a2ac3a6676c1495868c73c513f37dc66f3
+    digest: 9cc9dace2a4f1eaed2b12e589a47808e7f54640afcb56d011a1d514b1e329653
     home: https://z2jh.jupyter.org
     icon: https://jupyter.org/assets/hublogo.svg
     kubeVersion: '>=1.8.0-0'
@@ -47,17 +65,17 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-08-22T12:27:33.266548018-05:00
+    created: 2018-08-22T14:29:01.777141171-06:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
-    digest: d29b6f18e99a7d936be093605b98c3e639ff4ae2bb331499e90a93f0eb41389e
+    digest: 392f95c64948938a9b6a5028d9426564c4e74172330fa2a0b864c3a03c33155b
     name: osg-frontier-squid
     urls:
     - osg-frontier-squid-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T12:27:33.266277857-05:00
+    created: 2018-08-22T14:29:01.77630489-06:00
     description: A Helm chart for Kubernetes
     digest: 54e9450e3530e61ddd004c9fedc06660b20f1ef1420b432ed1d273ebad5e1387
     name: osg-frontier-squid
@@ -67,9 +85,9 @@ entries:
   osiris-unis:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T12:27:33.26670001-05:00
+    created: 2018-08-22T14:29:01.77755436-06:00
     description: Unified Network Information Service (UNIS)
-    digest: 9f2a388137f4af1fba095cb6dc4954bd2c08d92a01565ac5c1476a299df69998
+    digest: a1a62822bafecd654c946ba594ea91134fae06eb576821e5d1d9266783c97533
     name: osiris-unis
     urls:
     - osiris-unis-0.1.0.tgz
@@ -77,11 +95,11 @@ entries:
   perfsonar:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T12:27:33.266863999-05:00
+    created: 2018-08-22T14:29:01.778009703-06:00
     description: A Helm chart for Kubernetes
-    digest: d0db0d3a9ad752d5d140fd5ca1fc9032f4eb36f0a5851ec772720fde1594dc5c
+    digest: aebdcaa7faaea349c4040767c8afcb31344ed76c30ab5dfb7e07c5718ee0636a
     name: perfsonar
     urls:
     - perfsonar-0.1.0.tgz
     version: 0.1.0
-generated: 2018-08-22T12:27:33.263915592-05:00
+generated: 2018-08-22T14:29:01.766157727-06:00
