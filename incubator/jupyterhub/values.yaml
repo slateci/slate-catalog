@@ -1,3 +1,6 @@
+
+Instance: global
+
 hub:
   service:
     type: ClusterIP

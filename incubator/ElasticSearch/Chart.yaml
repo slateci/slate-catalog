@@ -1,8 +1,0 @@
-apiVersion: v1
-name: ElasticSearch
-version: 0.0
-maintainers: 
-  - name: Jason Stidd
-    email: jason.stidd@utah.edu
-
-

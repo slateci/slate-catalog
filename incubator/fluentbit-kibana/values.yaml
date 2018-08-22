@@ -1,3 +1,5 @@
+Instance: global
+
 fluent-bit:
   # Minikube stores its logs in a separate directory.
   # enable if started in minikube.
