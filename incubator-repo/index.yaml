@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   ElasticSearch:
   - apiVersion: v1
-    created: 2018-08-22T14:29:01.766915753-06:00
+    created: 2018-08-27T15:15:33.031072448-06:00
     digest: 75ecf3b5b732546eb942d717b3cdfe692c72a0a31bd86b875c0e15b838f12293
     maintainers:
     - email: jason.stidd@utah.edu
@@ -14,16 +14,41 @@ entries:
   condor:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T14:29:01.77087444-06:00
+    created: 2018-08-27T15:15:33.031469433-06:00
     description: A Helm chart for Kubernetes
     digest: bb48b4d4ff92cf66aedbe63046fa370ddfeb32b9033ee62f3153612bd3a54759
     name: condor
     urls:
     - condor-0.1.0.tgz
     version: 0.1.0
+  datadog:
+  - appVersion: 6.3.2
+    created: 2018-08-27T15:15:33.033600689-06:00
+    description: DataDog Agent
+    digest: 92d6568483c7c8f4e5b98687bd57a4269e63232bb96bb1f8d2b816f36958782d
+    home: https://www.datadoghq.com
+    icon: https://datadog-live.imgix.net/img/dd_logo_70x75.png
+    keywords:
+    - monitoring
+    - alerting
+    - metric
+    maintainers:
+    - email: haissam@datadoghq.com
+      name: hkaj
+    - email: ilan@datadoghq.com
+      name: irabinovitch
+    - email: xavier.vello@datadoghq.com
+      name: xvello
+    name: datadog
+    sources:
+    - https://app.datadoghq.com/account/settings#agent/kubernetes
+    - https://github.com/DataDog/datadog-agent
+    urls:
+    - datadog-1.0.1.tgz
+    version: 1.0.1
   elasticsearch:
   - apiVersion: v1
-    created: 2018-08-22T14:29:01.771285227-06:00
+    created: 2018-08-27T15:15:33.033980769-06:00
     digest: b7abe0718bbe0496e786fbed02a0c893b73c113d4e7ae317a6d23e995caada7d
     name: elasticsearch
     urls:
@@ -31,8 +56,8 @@ entries:
     version: "0.1"
   fluentbit-kibana:
   - apiVersion: v1
-    created: 2018-08-22T14:29:01.773176443-06:00
-    digest: a6ac2708476cdc4971dee4f8846a229e59b0ceb045e0533a156c52d8e3214ebc
+    created: 2018-08-27T15:15:33.035830719-06:00
+    digest: 9f27474284ac02dafcbf762f7ccc640da47c08e2705f8a27b7c25f9b81bb3e76
     name: fluentbit-kibana
     urls:
     - fluentbit-kibana-0.1.tgz
@@ -40,7 +65,7 @@ entries:
   htcondor:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T14:29:01.773612754-06:00
+    created: 2018-08-27T15:15:33.036231312-06:00
     description: A Helm chart for Kubernetes
     digest: 51769a48db818b01ae1933e3f4a914ba4b11a357274f4f4b13de206692469df8
     name: htcondor
@@ -49,7 +74,7 @@ entries:
     version: 0.1.0
   jupyterhub:
   - appVersion: v0.8.1
-    created: 2018-08-22T14:29:01.775759119-06:00
+    created: 2018-08-27T15:15:33.038208261-06:00
     description: Multi-user Jupyter installation
     digest: 9cc9dace2a4f1eaed2b12e589a47808e7f54640afcb56d011a1d514b1e329653
     home: https://z2jh.jupyter.org
@@ -65,7 +90,7 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-08-22T14:29:01.777141171-06:00
+    created: 2018-08-27T15:15:33.039494585-06:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
     digest: 392f95c64948938a9b6a5028d9426564c4e74172330fa2a0b864c3a03c33155b
@@ -75,7 +100,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T14:29:01.77630489-06:00
+    created: 2018-08-27T15:15:33.038733341-06:00
     description: A Helm chart for Kubernetes
     digest: 54e9450e3530e61ddd004c9fedc06660b20f1ef1420b432ed1d273ebad5e1387
     name: osg-frontier-squid
@@ -85,7 +110,7 @@ entries:
   osiris-unis:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T14:29:01.77755436-06:00
+    created: 2018-08-27T15:15:33.039875902-06:00
     description: Unified Network Information Service (UNIS)
     digest: a1a62822bafecd654c946ba594ea91134fae06eb576821e5d1d9266783c97533
     name: osiris-unis
@@ -95,11 +120,11 @@ entries:
   perfsonar:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-08-22T14:29:01.778009703-06:00
+    created: 2018-08-27T15:15:33.040581611-06:00
     description: A Helm chart for Kubernetes
     digest: aebdcaa7faaea349c4040767c8afcb31344ed76c30ab5dfb7e07c5718ee0636a
     name: perfsonar
     urls:
     - perfsonar-0.1.0.tgz
     version: 0.1.0
-generated: 2018-08-22T14:29:01.766157727-06:00
+generated: 2018-08-27T15:15:33.030217888-06:00
