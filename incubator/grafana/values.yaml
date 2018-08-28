@@ -1,3 +1,6 @@
+# Instance to label use case of Datadog deployment
+Instance: global
+
 rbac:
   create: true
   pspEnabled: true
@@ -13,13 +16,6 @@ image:
   repository: grafana/grafana
   tag: 5.2.3
   pullPolicy: IfNotPresent
-
-  ## Optionally specify an array of imagePullSecrets.
-  ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-  ##
-  # pullSecrets:
-  #   - myRegistrKeySecretName
 
 securityContext:
   runAsUser: 472
@@ -98,11 +94,6 @@ persistence:
 
 adminUser: admin
 # adminPassword: strongpassword
-
-## Use an alternate scheduler, e.g. "stork".
-## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-##
-# schedulerName:
 
 ## Extra environment variables that will be pass onto deployment pods
 env: {}
