@@ -5,6 +5,7 @@ metadata:
   labels:
     app: {{ template "graphite.name" . }}
     chart: {{ template "graphite.chart" . }}
+    instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
