@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: {{ template "globus-connect.fullname" . }}-config
+data:
+  globus-connect-server.conf: |-
+    ;-----------------------------------------------------------------------------
+    ;                                    Globus
+    ;-----------------------------------------------------------------------------
+    [Globus]
+    ;This configuration section configures how to contact Globus when
+    ;creating or modifying an endpoint.
+    ;
+    ;
+    ;        The Client ID of the Globus Connect Server. This is created using the
+    ;        application located at https://auth.globus.org/v2/web/developers and
+    ;        selecting the New GCS option
+    ;        
+    ClientId = {{ .Values.GlobusConnect.Client.ID }}
+    ;
+    ;        The Client Secret of the Globus Connect Server. This is created using
+    ;        the application located at https://auth.globus.org/v2/web/developers
+    ;        and selecting the New GCS option
+    ;        
+    ClientSecret = %(GLOBUS_PASSWORD)s
+    ;-----------------------------------------------------------------------------
+    ;                                   Endpoint
+    ;-----------------------------------------------------------------------------
+    [Endpoint]
+    ;Set these if you want to add or modify the core attributes of the endpoint.
+    ;
+    ;
+    ;        Display name of the endpoint.  The special value %(SHORT_HOSTNAME)s
+    ;        will substitute the first segment of the current machine's public
+    ;        hostname,
+    ;        
+    Name = %(SHORT_HOSTNAME)s
+    ;
+    ;        The public hostname of the GCS server. The special value of
+    ;        %(HOSTNAME)s will use the hostname of the current machine.
+    ;        
+    ServerName = %(HOSTNAME)s
+    ;-----------------------------------------------------------------------------
+    ;                                 LetsEncrypt
+    ;-----------------------------------------------------------------------------
+    [LetsEncrypt]
+    ;This section configures the interaction with the Let's Encrypt service.
+    ;
+    ;
+    ;        The user must supply an email address for LetsEncrypt.
+    ;        
+    Email = {{ .Values.GlobusConnect.Administration.MaintainerEmail }}
+    ;
+    ;        The user must explicitly agree to the Lets Encrypt Terms of Service.
+    ;        If not set to True, the globus-connect-server-setup scripts will
+    ;        provide a link to `https://letsencrypt.org/repository/` so user can
+    ;        view and acknowledge the ToS.
+    ;        
+    AgreeToS = True
+    ;-----------------------------------------------------------------------------
+    ;                                   GridFTP
+    ;-----------------------------------------------------------------------------
+    [GridFTP]
+    ;This section configures a GridFTP server. It can be processed on the
+    ;GridFTP server host to generate a GridFTP configuration file, and on
+    ;that or any other host to add a GridFTP server to an endpoint
+    ;
+    ;
+    ;        Port range to use for incoming connections.  The format is
+    ;        'startport,endport'. If not set, this will default to 50000,51000
+    ;        
+    IncomingPortRange = 50000, 51000
+    ;
+    ;        Port range to use for outgoing connections.  The format is
+    ;        'startport,endport'.  Only use this if your firewall restricts outgoing
+    ;        ports and gridftp won't work otherwise. The default is not restrict
+    ;        outgoing TCP ports.
+    ;        
+    ; OutgoingPortRange =
+    ;
+    ;        Port to use for incoming control connections.
+    ;        
+    Port = 2811
+    ;
+    ;        Hostname or IP address of the interface to use for data connections.
+    ;        If not set in this file, then the default behavior is:
+    ;        - When run on an EC2 instance, the data interface will be
+    ;          automatically configured to use the public ipv4 address of the
+    ;          instance.
+    ;        - When run on a non-EC2 instance, if [Endpoint].ServerName is set, then
+    ;          that value is used. If this resolves to a private
+    ;          IP address, a warning will be issued.
+    ;        - Otherwise, this will not be set, and the gridftp server will tell
+    ;          clients to connect to the IP address that the control connection
+    ;          was established on.
+    ;        
+    ; DataInterface =
+    ;
+    ;        Require an encrypted data connection for all transfers. Transfers
+    ;        attempted without encryption will result in error.
+    ;        
+    RequireEncryption = {{ .Values.GlobusConnect.Administration.EncryptionRequired }}

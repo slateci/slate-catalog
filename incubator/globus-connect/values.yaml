@@ -1,0 +1,22 @@
+# Instance to label use case of Globus Connect deployment
+# Generates app name as "globus-connect-[Instance]"
+# Enables unique instances of Globus Connect in one namespace
+
+Instance: global
+
+####### BEFORE DEPLOYMENT ###########
+# A SLATE secret must be created using `slate-client secret` and given a name
+# The secret must include the client secret provided by globus with the key `globus-password`
+
+GlobusConnect:
+  Client:
+    # Your Globus ID
+    ID: my-id
+    # The name of the secret created using slate secret, that contains your globus generated secret with key 'globus-password'
+    Secret: my-globus-secret
+
+  Administration:
+    # The email address of the primary contact for the globus connect server
+    MaintainerEmail: me@example.com
+    # If true, all transactions not encrypted will fail
+    EncryptionRequired: false
