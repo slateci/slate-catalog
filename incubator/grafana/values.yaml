@@ -1,4 +1,4 @@
-# Instance to label use case of Datadog deployment
+# Instance to label use case of Grafana deployment
 Instance: global
 
 rbac:
