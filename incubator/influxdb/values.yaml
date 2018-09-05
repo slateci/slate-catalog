@@ -1,3 +1,6 @@
+# Instance to label use case of InfluxDB deployment on SLATE
+Instance: global
+
 ## influxdb image version
 ## ref: https://hub.docker.com/r/library/influxdb/tags/
 image:
@@ -13,31 +16,11 @@ service:
   ## Add annotations to service
   # annotations: {}
   type: ClusterIP
-  ## Add IP Cluster
-  # clusterIP: ""
-  ## Add external IPs that route to one or more cluster nodes
-  # externalIPs: []
-  ## Specify LoadBalancer IP (only allow on some cloud provider)
-  # loadBalancerIP: ""
-  ## Allow source IPs to access on service (if empty, any access allow)
-  # loadBalancerSourceRanges: []
 
 ## Persist data to a persistent volume
 ##
 persistence:
   enabled: false
-  ## If true will use an existing PVC instead of creating one
-  # useExisting: false
-  ## Name of existing PVC to be used in the influx deployment
-  # name:
-  ## influxdb data Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
-  # storageClass: "-"
   accessMode: ReadWriteOnce
   size: 8Gi
 
@@ -89,16 +72,10 @@ resources:
 ingress:
   enabled: false
   tls: false
-  # secretName: my-tls-cert # only needed if tls above is true
   hostname: influxdb.foobar.com
   annotations:
     # kubernetes.io/ingress.class: "nginx"
     # kubernetes.io/tls-acme: "true"
-
-## Use an alternate scheduler, e.g. "stork".
-## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-##
-# schedulerName:
 
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -109,8 +86,6 @@ nodeSelector: {}
 ## configure certain parts of the server.
 ## Ref: https://hub.docker.com/_/influxdb/
 env:
-  # - name: INFLUXDB_DB
-  #   value: "demo"
 
 ## Change InfluxDB configuration parameters below:
 ## Defaults are indicated

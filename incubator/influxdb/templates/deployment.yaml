@@ -6,6 +6,7 @@ metadata:
     app: {{ template "influxdb.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
+    instance: {{ .Values.Instance }}
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: 1
