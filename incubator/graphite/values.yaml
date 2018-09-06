@@ -1,4 +1,4 @@
-# Instance to label use case of Datadog deployment
+# Instance to label use case of Graphite deployment
 Instance: global
 
 # Default values for graphite.
@@ -35,12 +35,6 @@ persistence:
   size: 10Gi
 
 resources: {}
-  limits:
-  cpu: 100m
-  memory: 512Mi
-  requests:
-  cpu: 100m
-  memory: 512Mi
 
 nodeSelector: {}
 
@@ -166,7 +160,6 @@ configMaps:
     # defined rate limit. Setting this value high (like "inf" for infinity) will
     # cause carbon to create the files quickly but at the risk of increased I/O.
     MAX_CREATES_PER_MINUTE = 50# Instance to label use case of Datadog deployment
-Instance: global
 
     # Set the minimum timestamp resolution supported by this instance. This allows
     # internal optimisations by overwriting points with equal truncated timestamps
@@ -349,8 +342,6 @@ Instance: global
     #
     # Use consistent-hashing for even distribution of metrics between destinations
     #RELAY_METHOD = consistent-hashing
-    ## Instance to label use case of Datadog deployment
-Instance: global
     # Use consistent-hashing but take into account an aggregation-rules.conf shared
     # by downstream carbon-aggregator daemons. This will ensure that all metrics
     # that map to a given aggregation rule are sent to the same carbon-aggregator
