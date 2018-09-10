@@ -5,13 +5,15 @@ metadata:
   annotations:
 {{ toYaml .Values.server.deploymentAnnotations | indent 4 }}
 {{- end }}
+name: {{ template "prometheus.server.fullname" . }}
   labels:
     app: {{ template "prometheus.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     component: "{{ .Values.server.name }}"
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: {{ template "prometheus.server.fullname" . }}
+    instance: {{ .Values.Instance }}
+  
 spec:
   replicas: {{ .Values.server.replicaCount }}
   {{- if .Values.server.strategy }}
