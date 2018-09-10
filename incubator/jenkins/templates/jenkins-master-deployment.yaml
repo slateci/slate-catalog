@@ -7,6 +7,8 @@ metadata:
     release: {{ .Release.Name | quote }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: "{{ .Release.Name }}-{{ .Values.Master.Name }}"
+    instance: {{ .Values.Instance }}
+    
 spec:
   replicas: 1
   strategy:
@@ -14,6 +16,7 @@ spec:
   selector:
     matchLabels:
       component: "{{ .Release.Name }}-{{ .Values.Master.Component }}"
+      instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:
@@ -22,6 +25,7 @@ spec:
         release: {{ .Release.Name | quote }}
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         component: "{{ .Release.Name }}-{{ .Values.Master.Component }}"
+        instance: {{ .Values.Instance }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         {{- if .Values.Master.PodAnnotations }}
