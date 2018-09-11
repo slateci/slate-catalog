@@ -3,7 +3,7 @@ entries:
   condor:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-10T10:56:00.977721091-05:00
+    created: 2018-09-11T12:50:53.612651813-06:00
     description: A Helm chart for Kubernetes
     digest: bb48b4d4ff92cf66aedbe63046fa370ddfeb32b9033ee62f3153612bd3a54759
     name: condor
@@ -12,9 +12,9 @@ entries:
     version: 0.1.0
   datadog:
   - appVersion: 6.3.2
-    created: 2018-09-10T10:56:00.978743157-05:00
+    created: 2018-09-11T12:50:53.61455271-06:00
     description: DataDog Agent
-    digest: 92d6568483c7c8f4e5b98687bd57a4269e63232bb96bb1f8d2b816f36958782d
+    digest: cb462d38fe1254e3894a92e41c4c650a7fe73eaeae822e4349b6f557019c3f22
     home: https://www.datadoghq.com
     icon: https://datadog-live.imgix.net/img/dd_logo_70x75.png
     keywords:
@@ -37,7 +37,7 @@ entries:
     version: 1.0.1
   elasticsearch:
   - apiVersion: v1
-    created: 2018-09-10T10:56:00.978916219-05:00
+    created: 2018-09-11T12:50:53.614840779-06:00
     digest: b7abe0718bbe0496e786fbed02a0c893b73c113d4e7ae317a6d23e995caada7d
     name: elasticsearch
     urls:
@@ -45,7 +45,7 @@ entries:
     version: "0.1"
   fluentbit-kibana:
   - apiVersion: v1
-    created: 2018-09-10T10:56:00.979740764-05:00
+    created: 2018-09-11T12:50:53.616643165-06:00
     digest: a6ac2708476cdc4971dee4f8846a229e59b0ceb045e0533a156c52d8e3214ebc
     name: fluentbit-kibana
     urls:
@@ -53,9 +53,9 @@ entries:
     version: "0.1"
   grafana:
   - appVersion: 5.2.3
-    created: 2018-09-10T10:56:00.980435174-05:00
+    created: 2018-09-11T12:50:53.617960891-06:00
     description: The leading tool for querying and visualizing time series and metrics.
-    digest: df3b0679844f9f540cf69c28a270783a9fea1ca03e48e3baa8a26ef1b9a6b1d0
+    digest: 476689e4fd79760ce761f3974db3989233f07738c79cb760e1ec56bcac3d50be
     engine: gotpl
     home: https://grafana.net
     icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
@@ -74,9 +74,9 @@ entries:
   graphite:
   - apiVersion: v1
     appVersion: 1.1.3
-    created: 2018-09-10T10:56:00.981524088-05:00
+    created: 2018-09-11T12:50:53.619657206-06:00
     description: Graphite metrics server
-    digest: 9d791e675575cd6530902c19fe1a640a618c2ea6121f7200fde4e33d535bcbf6
+    digest: 7772cd0d4dfa76bd373842cf476d99df099cba228fe728f4a1541322f8340b46
     home: https://graphiteapp.org/
     icon: https://graphiteapp.org/img/graphite-logo_color.png
     keywords:
@@ -96,16 +96,57 @@ entries:
   htcondor:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-10T10:56:00.981724102-05:00
+    created: 2018-09-11T12:50:53.620085501-06:00
     description: A Helm chart for Kubernetes
     digest: 51769a48db818b01ae1933e3f4a914ba4b11a357274f4f4b13de206692469df8
     name: htcondor
     urls:
     - htcondor-0.1.0.tgz
     version: 0.1.0
+  influxdb:
+  - appVersion: "1.6"
+    created: 2018-09-11T12:50:53.621112771-06:00
+    description: Scalable datastore for metrics, events, and real-time analytics.
+    digest: 6524cbd6e1b31bb9c3e5c56ba243bdac7a7df8463240fcd60bd9d275fdca8b52
+    engine: gotpl
+    home: https://www.influxdata.com/time-series-platform/influxdb/
+    keywords:
+    - influxdb
+    - database
+    - timeseries
+    maintainers:
+    - email: jack@influxdb.com
+      name: jackzampolin
+    name: influxdb
+    sources:
+    - https://github.com/influxdata/influxdb
+    urls:
+    - influxdb-0.11.0.tgz
+    version: 0.11.0
+  jenkins:
+  - appVersion: 2.121.3
+    created: 2018-09-11T12:50:53.62300113-06:00
+    description: Open source continuous integration server. It supports multiple SCM
+      tools including CVS, Subversion and Git. It can execute Apache Ant and Apache
+      Maven-based projects as well as arbitrary scripts.
+    digest: dc3ec50dea03fa55ba04ff233ffd4fc24ac68ea0c2465dc55c3c6ae6da06d8e0
+    home: https://jenkins.io/
+    icon: https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png
+    maintainers:
+    - email: lachlan.evenson@microsoft.com
+      name: lachie83
+    - email: viglesias@google.com
+      name: viglesiasce
+    name: jenkins
+    sources:
+    - https://github.com/jenkinsci/jenkins
+    - https://github.com/jenkinsci/docker-jnlp-slave
+    urls:
+    - jenkins-0.18.0.tgz
+    version: 0.18.0
   jupyterhub:
   - appVersion: v0.8.1
-    created: 2018-09-10T10:56:00.982596928-05:00
+    created: 2018-09-11T12:50:53.625222308-06:00
     description: Multi-user Jupyter installation
     digest: 9cc9dace2a4f1eaed2b12e589a47808e7f54640afcb56d011a1d514b1e329653
     home: https://z2jh.jupyter.org
@@ -121,7 +162,7 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-09-10T10:56:00.983537503-05:00
+    created: 2018-09-11T12:50:53.627665215-06:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
     digest: 491d417b2663ba105c1f94714af8fd0f085b98670d0642b612b19a11934880c0
@@ -131,7 +172,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-10T10:56:00.983122225-05:00
+    created: 2018-09-11T12:50:53.626657599-06:00
     description: A Helm chart for Kubernetes
     digest: 54e9450e3530e61ddd004c9fedc06660b20f1ef1420b432ed1d273ebad5e1387
     name: osg-frontier-squid
@@ -141,7 +182,7 @@ entries:
   osiris-unis:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-10T10:56:00.983738716-05:00
+    created: 2018-09-11T12:50:53.628618839-06:00
     description: Unified Network Information Service (UNIS)
     digest: a1a62822bafecd654c946ba594ea91134fae06eb576821e5d1d9266783c97533
     name: osiris-unis
@@ -151,12 +192,93 @@ entries:
   perfsonar:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-10T10:56:00.98396861-05:00
-    description: A test and measurement infrastructure to monitor and ensure network
-      performance
-    digest: a70a025e9f00b7f27623b2bfd364a730a0017c64b9bd3d19b8bf837755ca8e91
+    created: 2018-09-11T12:50:53.629411031-06:00
+    description: A Helm chart for Kubernetes
+    digest: aebdcaa7faaea349c4040767c8afcb31344ed76c30ab5dfb7e07c5718ee0636a
     name: perfsonar
     urls:
     - perfsonar-0.1.0.tgz
     version: 0.1.0
-generated: 2018-09-10T10:56:00.976110907-05:00
+  phabricator:
+  - appVersion: 2018.34.0
+    created: 2018-09-11T12:50:53.631978629-06:00
+    description: Collection of open source web applications that help software companies
+      build better software.
+    digest: 7b9ae083196538cc77f161a4ec76f98e7f65cfed3a50544779bb99b2a875b256
+    engine: gotpl
+    home: https://www.phacility.com/phabricator/
+    icon: https://bitnami.com/assets/stacks/phabricator/img/phabricator-stack-110x117.png
+    keywords:
+    - phabricator
+    - http
+    - https
+    - web
+    - application
+    - collaboration
+    - project management
+    - bug tracking
+    - code review
+    - wiki
+    - git
+    - mercurial
+    - subversion
+    maintainers:
+    - email: containers@bitnami.com
+      name: bitnami-bot
+    name: phabricator
+    sources:
+    - https://github.com/bitnami/bitnami-docker-phabricator
+    urls:
+    - phabricator-2.1.9.tgz
+    version: 2.1.9
+  prometheus:
+  - appVersion: 2.3.2
+    created: 2018-09-11T12:50:53.63429556-06:00
+    description: Prometheus is a monitoring system and time series database.
+    digest: ef53006a583675d8991b7b6eb95ceca323f8c70069d33e7399671bc91d5bc188
+    engine: gotpl
+    home: https://prometheus.io/
+    icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
+    maintainers:
+    - email: mgoodness@gmail.com
+      name: mgoodness
+    - email: gianrubio@gmail.com
+      name: gianrubio
+    name: prometheus
+    sources:
+    - https://github.com/prometheus/alertmanager
+    - https://github.com/prometheus/prometheus
+    - https://github.com/prometheus/pushgateway
+    - https://github.com/prometheus/node_exporter
+    - https://github.com/kubernetes/kube-state-metrics
+    tillerVersion: '>=2.8.0'
+    urls:
+    - prometheus-7.0.3.tgz
+    version: 7.0.3
+  redmine:
+  - appVersion: 3.4.6
+    created: 2018-09-11T12:50:53.637673724-06:00
+    description: A flexible project management web application.
+    digest: 58a0f9aa00351c4b5ef3f137087e3a641993429ae7c65133761cc638cb3efb5d
+    engine: gotpl
+    home: http://www.redmine.org/
+    icon: https://bitnami.com/assets/stacks/redmine/img/redmine-stack-220x234.png
+    keywords:
+    - redmine
+    - project management
+    - www
+    - http
+    - web
+    - application
+    - ruby
+    - rails
+    maintainers:
+    - email: containers@bitnami.com
+      name: Bitnami
+    name: redmine
+    sources:
+    - https://github.com/bitnami/bitnami-docker-redmine
+    urls:
+    - redmine-4.1.0.tgz
+    version: 4.1.0
+generated: 2018-09-11T12:50:53.612011374-06:00
