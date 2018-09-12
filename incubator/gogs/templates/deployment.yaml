@@ -4,6 +4,8 @@ metadata:
   name: {{ template "gogs.fullname" . }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    instance: {{ .Values.Instance }}
+
 spec:
   replicas: 1
   strategy:
@@ -11,10 +13,14 @@ spec:
   selector:
     matchLabels:
       app: {{ template "gogs.fullname" . }}
+      instance: {{ .Values.Instance }}
+
   template:
     metadata:
       labels:
         app: {{ template "gogs.fullname" . }}
+        instance: {{ .Values.Instance }}
+
     spec:
       containers:
         - name: {{ .Chart.Name }}
