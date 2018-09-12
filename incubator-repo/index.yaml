@@ -3,7 +3,7 @@ entries:
   condor:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-12T14:56:04.239509462-06:00
+    created: 2018-09-12T15:57:09.47405124-06:00
     description: A Helm chart for Kubernetes
     digest: bb48b4d4ff92cf66aedbe63046fa370ddfeb32b9033ee62f3153612bd3a54759
     name: condor
@@ -12,7 +12,7 @@ entries:
     version: 0.1.0
   datadog:
   - appVersion: 6.3.2
-    created: 2018-09-12T14:56:04.241674935-06:00
+    created: 2018-09-12T15:57:09.476071996-06:00
     description: DataDog Agent
     digest: cb462d38fe1254e3894a92e41c4c650a7fe73eaeae822e4349b6f557019c3f22
     home: https://www.datadoghq.com
@@ -37,7 +37,7 @@ entries:
     version: 1.0.1
   elasticsearch:
   - apiVersion: v1
-    created: 2018-09-12T14:56:04.241997211-06:00
+    created: 2018-09-12T15:57:09.476371034-06:00
     digest: b7abe0718bbe0496e786fbed02a0c893b73c113d4e7ae317a6d23e995caada7d
     name: elasticsearch
     urls:
@@ -45,8 +45,8 @@ entries:
     version: "0.1"
   fluentbit-kibana:
   - apiVersion: v1
-    created: 2018-09-12T14:56:04.243816715-06:00
-    digest: a6ac2708476cdc4971dee4f8846a229e59b0ceb045e0533a156c52d8e3214ebc
+    created: 2018-09-12T15:57:09.478133357-06:00
+    digest: 9f27474284ac02dafcbf762f7ccc640da47c08e2705f8a27b7c25f9b81bb3e76
     name: fluentbit-kibana
     urls:
     - fluentbit-kibana-0.1.tgz
@@ -54,7 +54,7 @@ entries:
   gogs:
   - apiVersion: v1
     appVersion: 0.11.29
-    created: 2018-09-12T14:56:04.245351626-06:00
+    created: 2018-09-12T15:57:09.479657189-06:00
     description: 'Gogs: Go Git Service'
     digest: 9b989a605aa9fedf9347ebd2d016ffa312cf7bb1d34519ab5f5283491bcfb8c2
     home: https://gogs.io/
@@ -67,7 +67,7 @@ entries:
     version: 0.6.0
   grafana:
   - appVersion: 5.2.3
-    created: 2018-09-12T14:56:04.246726756-06:00
+    created: 2018-09-12T15:57:09.481100077-06:00
     description: The leading tool for querying and visualizing time series and metrics.
     digest: 476689e4fd79760ce761f3974db3989233f07738c79cb760e1ec56bcac3d50be
     engine: gotpl
@@ -88,7 +88,7 @@ entries:
   graphite:
   - apiVersion: v1
     appVersion: 1.1.3
-    created: 2018-09-12T14:56:04.248518727-06:00
+    created: 2018-09-12T15:57:09.482905935-06:00
     description: Graphite metrics server
     digest: 7772cd0d4dfa76bd373842cf476d99df099cba228fe728f4a1541322f8340b46
     home: https://graphiteapp.org/
@@ -110,7 +110,7 @@ entries:
   htcondor:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-12T14:56:04.248876326-06:00
+    created: 2018-09-12T15:57:09.483254877-06:00
     description: A Helm chart for Kubernetes
     digest: 51769a48db818b01ae1933e3f4a914ba4b11a357274f4f4b13de206692469df8
     name: htcondor
@@ -119,7 +119,7 @@ entries:
     version: 0.1.0
   influxdb:
   - appVersion: "1.6"
-    created: 2018-09-12T14:56:04.249928367-06:00
+    created: 2018-09-12T15:57:09.484366459-06:00
     description: Scalable datastore for metrics, events, and real-time analytics.
     digest: 6524cbd6e1b31bb9c3e5c56ba243bdac7a7df8463240fcd60bd9d275fdca8b52
     engine: gotpl
@@ -139,7 +139,7 @@ entries:
     version: 0.11.0
   jenkins:
   - appVersion: 2.121.3
-    created: 2018-09-12T14:56:04.251712644-06:00
+    created: 2018-09-12T15:57:09.486501004-06:00
     description: Open source continuous integration server. It supports multiple SCM
       tools including CVS, Subversion and Git. It can execute Apache Ant and Apache
       Maven-based projects as well as arbitrary scripts.
@@ -160,7 +160,7 @@ entries:
     version: 0.18.0
   jupyterhub:
   - appVersion: v0.8.1
-    created: 2018-09-12T14:56:04.253994625-06:00
+    created: 2018-09-12T15:57:09.491186498-06:00
     description: Multi-user Jupyter installation
     digest: 9cc9dace2a4f1eaed2b12e589a47808e7f54640afcb56d011a1d514b1e329653
     home: https://z2jh.jupyter.org
@@ -175,7 +175,7 @@ entries:
     version: v0.7-dev
   moodle:
   - appVersion: 3.5.2
-    created: 2018-09-12T14:56:04.259498725-06:00
+    created: 2018-09-12T15:57:09.493914156-06:00
     description: Moodle is a learning platform designed to provide educators, administrators
       and learners with a single robust, secure and integrated system to create personalised
       learning environments
@@ -198,7 +198,7 @@ entries:
     version: 2.0.5
   mysql:
   - appVersion: 5.7.14
-    created: 2018-09-12T14:56:04.260834106-06:00
+    created: 2018-09-12T15:57:09.495156905-06:00
     description: Fast, reliable, scalable, and easy to use open-source relational
       database system.
     digest: b8f7159adaafcdbee1db3e29be758f234fbf2dcd814cdcb0cbdeba5c486e248b
@@ -224,7 +224,7 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-09-12T14:56:04.262256954-06:00
+    created: 2018-09-12T15:57:09.496506746-06:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
     digest: 491d417b2663ba105c1f94714af8fd0f085b98670d0642b612b19a11934880c0
@@ -234,7 +234,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-12T14:56:04.261391176-06:00
+    created: 2018-09-12T15:57:09.495677975-06:00
     description: A Helm chart for Kubernetes
     digest: 54e9450e3530e61ddd004c9fedc06660b20f1ef1420b432ed1d273ebad5e1387
     name: osg-frontier-squid
@@ -244,7 +244,7 @@ entries:
   osiris-unis:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-12T14:56:04.262662476-06:00
+    created: 2018-09-12T15:57:09.4969067-06:00
     description: Unified Network Information Service (UNIS)
     digest: a1a62822bafecd654c946ba594ea91134fae06eb576821e5d1d9266783c97533
     name: osiris-unis
@@ -254,7 +254,7 @@ entries:
   perfsonar:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-09-12T14:56:04.263117176-06:00
+    created: 2018-09-12T15:57:09.497335701-06:00
     description: A test and measurement infrastructure to monitor and ensure network
       performance
     digest: a70a025e9f00b7f27623b2bfd364a730a0017c64b9bd3d19b8bf837755ca8e91
@@ -264,7 +264,7 @@ entries:
     version: 0.1.0
   phabricator:
   - appVersion: 2018.34.0
-    created: 2018-09-12T14:56:04.26571863-06:00
+    created: 2018-09-12T15:57:09.499934101-06:00
     description: Collection of open source web applications that help software companies
       build better software.
     digest: 7b9ae083196538cc77f161a4ec76f98e7f65cfed3a50544779bb99b2a875b256
@@ -296,7 +296,7 @@ entries:
     version: 2.1.9
   prometheus:
   - appVersion: 2.3.2
-    created: 2018-09-12T14:56:04.268355415-06:00
+    created: 2018-09-12T15:57:09.502412624-06:00
     description: Prometheus is a monitoring system and time series database.
     digest: ef53006a583675d8991b7b6eb95ceca323f8c70069d33e7399671bc91d5bc188
     engine: gotpl
@@ -318,9 +318,32 @@ entries:
     urls:
     - prometheus-7.0.3.tgz
     version: 7.0.3
+  redis:
+  - appVersion: 4.0.11
+    created: 2018-09-12T15:57:09.504324867-06:00
+    description: Open source, advanced key-value store. It is often referred to as
+      a data structure server since keys can contain strings, hashes, lists, sets
+      and sorted sets.
+    digest: 9913274a63771d6a869f543608f411afd8148ab0e5abdd6c9e3298bf91ba24d8
+    engine: gotpl
+    home: http://redis.io/
+    icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
+    keywords:
+    - redis
+    - keyvalue
+    - database
+    maintainers:
+    - email: containers@bitnami.com
+      name: bitnami-bot
+    name: redis
+    sources:
+    - https://github.com/bitnami/bitnami-docker-redis
+    urls:
+    - redis-3.10.0.tgz
+    version: 3.10.0
   redmine:
   - appVersion: 3.4.6
-    created: 2018-09-12T14:56:04.271795717-06:00
+    created: 2018-09-12T15:57:09.507730069-06:00
     description: A flexible project management web application.
     digest: a3f606a1168833630f266aa04eb356b675cf3012c73112787559a8e4c2d030ab
     engine: gotpl
@@ -344,4 +367,4 @@ entries:
     urls:
     - redmine-4.1.0.tgz
     version: 4.1.0
-generated: 2018-09-12T14:56:04.238828435-06:00
+generated: 2018-09-12T15:57:09.473351412-06:00
