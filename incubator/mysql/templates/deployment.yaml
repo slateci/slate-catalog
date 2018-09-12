@@ -7,11 +7,13 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    instance: {{ .Values.Instance }}
 spec:
   template:
     metadata:
       labels:
         app: {{ template "mysql.fullname" . }}
+        instance: {{ .Values.Instance }}
 {{- with .Values.podAnnotations }}
       annotations:
 {{ toYaml . | indent 8 }}
