@@ -1,6 +1,6 @@
 # Default values for jenkins.
 # This is a YAML-formatted file.
-Isntace: global
+Instance: global
 
 Master:
   Name: jenkins-master
