@@ -1,4 +1,4 @@
-Instanc: global
+Instance: global
 
 ## mysql image version
 ## ref: https://hub.docker.com/r/library/mysql/tags/
