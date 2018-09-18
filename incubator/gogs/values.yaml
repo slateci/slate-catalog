@@ -12,8 +12,6 @@ image:
   tag: 0.11.29
   pullPolicy: IfNotPresent
 
-service:
-
   ## HTTP listen port.
   ## ref: https://gogs.io/docs/advanced/configuration_cheat_sheet
   ##
@@ -36,7 +34,7 @@ service:
 
     ## Application name, can be your company or team name.
     ##
-    appName: 'Gogs'
+    appName: 'gogs'
 
     ## Either "dev", "prod" or "test".
     ##
@@ -54,11 +52,6 @@ service:
     ## Indicates whether or not to enable repository file upload feature.
     ##
     repositoryUploadEnabled: true
-
-    ## File types that are allowed to be uploaded, e.g. image/jpeg|image/png.
-    ## Leave empty means allow any file typ
-    ##
-    repositoryUploadAllowedTypes:
 
     ## Maximum size of each file in MB.
     ##
@@ -95,12 +88,6 @@ service:
     ## For "memory" only, GC interval in seconds, default is 60
     ##
     cacheInterval: 60
-
-    ## For "redis" and "memcache", connection host address
-    ## redis: network=tcp,addr=:6379,password=macaron,db=0,pool_size=100,idle_timeout=180
-    ## memcache: `127.0.0.1:11211`
-    ##
-    cacheHost:
 
     ## Enable this to use captcha validation for registration.
     ##
@@ -197,7 +184,6 @@ service:
     ## Enable Ingress.
     ##
     enabled: false
-
 
 ## Persistent Volume Storage configuration.
 ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes
