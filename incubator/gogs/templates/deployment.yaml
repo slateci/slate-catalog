@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: {{ template "gogs.fullname" . }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    chart: {{ template "gogs.chart" . }} 
+    app: {{ template "gogs.name" . }}
     instance: {{ .Values.Instance }}
 
 spec:
@@ -13,14 +14,10 @@ spec:
   selector:
     matchLabels:
       app: {{ template "gogs.fullname" . }}
-      instance: {{ .Values.Instance }}
-
   template:
     metadata:
       labels:
         app: {{ template "gogs.fullname" . }}
-        instance: {{ .Values.Instance }}
-
     spec:
       containers:
         - name: {{ .Chart.Name }}
