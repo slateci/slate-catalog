@@ -1,3 +1,5 @@
+Instance: global
+
 ## Bitnami ownCloud image version
 ## ref: https://hub.docker.com/r/bitnami/owncloud/tags/
 ##
@@ -10,12 +12,6 @@ image:
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
   pullPolicy: IfNotPresent
-  ## Optionally specify an array of imagePullSecrets.
-  ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-  ##
-  # pullSecrets:
-  #   - myRegistrKeySecretName
 
 ## For Kubernetes v1.4, v1.5 and v1.6, use 'extensions/v1beta1'
 ## For Kubernetes v1.7, use 'networking.k8s.io/v1'
@@ -35,26 +31,10 @@ ingress:
     #   hosts:
     #     - owncloud.cluster.local
 
-## ownCloud host to create application URLs
-## ref: https://github.com/bitnami/bitnami-docker-owncloud#configuration
-##
-# owncloudHost:
-
-## loadBalancerIP for the ownCloud Service (optional, cloud specific)
-## ref: http://kubernetes.io/docs/user-guide/services/#type-loadbalancer
-##
-# owncloudLoadBalancerIP:
-
 ## User of the application
 ## ref: https://github.com/bitnami/bitnami-docker-owncloud#configuration
 ##
 owncloudUsername: user
-
-## Application password
-## Defaults to a random 10-character alphanumeric string if not set
-## ref: https://github.com/bitnami/bitnami-docker-owncloud#configuration
-##
-# owncloudPassword:
 
 ## Admin email
 ## ref: https://github.com/bitnami/bitnami-docker-owncloud#configuration
@@ -100,16 +80,6 @@ mariadb:
   db:
     name: bitnami_owncloud
     user: bn_owncloud
-    ## If the password is not specified, mariadb will generates a random password
-    ##
-    # password:
-
-  ## MariaDB admin password
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
-  ##
-  # rootUser:
-  #   password:
-
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -138,37 +108,9 @@ serviceType: LoadBalancer
 persistence:
   enabled: true
   apache:
-    ## apache data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
     accessMode: ReadWriteOnce
     size: 1Gi
   owncloud:
-    ## owncloud data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
     accessMode: ReadWriteOnce
     size: 8Gi
 
