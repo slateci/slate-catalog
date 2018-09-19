@@ -1,3 +1,5 @@
+Instance: global
+
 # The base hadoop image to use for all components.
 # See this repo for image build details: https://github.com/Comcast/kube-yarn/tree/master/image
 image: danisla/hadoop:2.7.3
