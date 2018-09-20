@@ -1,0 +1,9 @@
+To check that service is up and running:
+* wait 5 min to get everything started
+* log in to lxplus.cern.ch
+* run following commands:
+setupATLAS
+lsetup rucio
+get your grid proxy
+xrdcp -f root://{{ .Values.Service.ExternalIP }}:{{ .Values.Service.Port }}//root://xrootd.aglt2.org:1094//pnfs/aglt2.org/atlasdatadisk/rucio/mc16_13TeV/28/56/AOD.12953611._000017.pool.root.1 /dev/null
+
