@@ -25,9 +25,9 @@ data:
   input-kubernetes.conf: |
     [INPUT]
         Name              tail
-        Tag               kube.*
+        Tag               *
         Path              /var/log/squid/*.log
-        Parser            docker
+        Parser            squid
         DB                /var/log/flb_kube.db
         Mem_Buf_Limit     5MB
         Skip_Long_Lines   On
@@ -44,6 +44,7 @@ data:
   output-elasticsearch.conf: |
     [OUTPUT]
         Name            es
+        Index           fluent-bit-{{ .Release.Namespace }}-{{ template "osg-frontier-squid.fullname" . }}
         Match           *
         Host            atlas-kibana.mwt2.org
         Port            9200
@@ -99,3 +100,10 @@ data:
         Regex       ^\<(?<pri>[0-9]+)\>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
         Time_Key    time
         Time_Format %b %d %H:%M:%S
+
+    [PARSER]
+        Name        squid
+        Format      regex
+        Regex       (?<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s(?<username_ident>[^\s]+)\s(?<username_ssl>[^\s]+)\s\[(?<time>\d{2}\/[a-zA-Z]{3}\/\d{4}:\d{2}:\d{2}:\d{2}\.\d{3}).{8}\"(?<req_method>[^\s]+)\s(?<req_url>[^\s]+)\s(?<protocol>[^\s]+)\"\s(?<http_result>\d+)\s(?<reply_size>\d+)\s(?<squid_status>[^\s]+)\s(?<response_time_ms>\d+)\s\"(?<x_frontier_head>.+)\s(?<cvmfs_head>.+)\"\s\"(?<referer_head>.+)\"\s\"(?<user_agent_head>.+)\"$
+        Time_Key    time
+        Time_Format %d/%B/%Y:%H:%M:%S.%L
