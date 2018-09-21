@@ -1,0 +1,144 @@
+# Default values for jenkins.
+# This is a YAML-formatted file.
+Instance: global
+
+Master:
+  Name: jenkins-master
+  Image: "jenkins/jenkins"
+  ImageTag: "lts"
+  ImagePullPolicy: "Always"
+  Component: "jenkins-master"
+  UseSecurity: true
+  HostNetworking: false
+  AdminUser: admin
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "2000m"
+      memory: "2048Mi"
+  # Enable pod security context (must be `true` if RunAsUser or FsGroup are set)
+  UsePodSecurityContext: true
+  # Set RunAsUser to 1000 to let Jenkins run as non-root user 'jenkins' which exists in 'jenkins/jenkins' docker image.
+  # FsGroup: <will be omitted in deployment if RunAsUser is 0>
+  ServicePort: 8080
+  # For minikube, set this to NodePort, elsewhere use LoadBalancer
+  # Use ClusterIP if your setup includes ingress controller
+  ServiceType: LoadBalancer
+  # Master Service annotations
+  ServiceAnnotations: {}
+  HealthProbes: true
+  HealthProbesLivenessTimeout: 90
+  HealthProbesReadinessTimeout: 60
+  HealthProbeLivenessFailureThreshold: 12
+  SlaveListenerPort: 50000
+  DisabledAgentProtocols:
+    - JNLP-connect
+    - JNLP2-connect
+  CSRF:
+    DefaultCrumbIssuer:
+      Enabled: true
+      ProxyCompatability: true
+  CLI: false
+  # Kubernetes service type for the JNLP slave service
+  # SETTING THIS TO "LoadBalancer" IS A HUGE SECURITY RISK: https://github.com/kubernetes/charts/issues/1341
+  SlaveListenerServiceType: ClusterIP
+  SlaveListenerServiceAnnotations: {}
+  LoadBalancerSourceRanges:
+  - 0.0.0.0/0
+  # List of plugins to be install during Jenkins master start
+  InstallPlugins:
+    - kubernetes:1.12.4
+    - workflow-job:2.24
+    - workflow-aggregator:2.5
+    - credentials-binding:1.16
+    - git:3.9.1
+  # Used to approve a list of groovy functions in pipelines used the script-security plugin. Can be viewed under /scriptApproval
+  # ScriptApproval:
+  #   - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
+  #   - "new groovy.json.JsonSlurperClassic"
+  # List of groovy init scripts to be executed during Jenkins master start
+  InitScripts:
+  #  - |
+  #    print 'adding global pipeline libraries, register properties, bootstrap jobs...'
+  # Kubernetes secret that contains a 'credentials.xml' for Jenkins
+  # CredentialsXmlSecret: jenkins-credentials
+  # Kubernetes secret that contains files to be put in the Jenkins 'secrets' directory,
+  # useful to manage encryption keys used for credentials.xml for instance (such as
+  # master.key and hudson.util.Secret)
+  # SecretsFilesSecret: jenkins-secrets
+  # Jenkins XML job configs to provision
+  # Jobs: |-
+  #   test: |-
+  #     <<xml here>>
+  CustomConfigMap: false
+  # By default, the configMap is only used to set the initial config the first time
+  # that the chart is installed.  Setting `OverwriteConfig` to `true` will overwrite
+  # the jenkins config with the contents of the configMap every time the pod starts.
+  OverwriteConfig: false
+  NodeSelector: {}
+  Tolerations: {}
+  PodAnnotations: {}
+
+  Ingress:
+    ApiVersion: extensions/v1beta1
+    Annotations: {}
+
+    TLS:
+
+Agent:
+  Enabled: true
+  Image: jenkins/jnlp-slave
+  ImageTag: 3.10-1
+  CustomJenkinsLabels: []
+  Component: "jenkins-slave"
+  Privileged: false
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  # You may want to change this to true while testing a new image
+  AlwaysPullImage: false
+  # Controls how slave pods are retained after the Jenkins build completes
+  # Possible values: Always, Never, OnFailure
+  PodRetention: Never
+  # You can define the volumes that you want to mount for this container
+  # Allowed types are: ConfigMap, EmptyDir, HostPath, Nfs, Pod, Secret
+  # Configure the attributes as they appear in the corresponding Java class for that type
+  # https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/main/java/org/csanchez/jenkins/plugins/kubernetes/volumes
+  volumes:
+  NodeSelector: {}
+
+Persistence:
+  Enabled: true
+  ## A manually managed Persistent Volume and Claim
+  ## Requires Persistence.Enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # ExistingClaim:
+
+  Annotations: {}
+  AccessMode: ReadWriteOnce
+  Size: 8Gi
+  volumes:
+  mounts:
+NetworkPolicy:
+  # Enable creation of NetworkPolicy resources.
+  Enabled: false
+  # For Kubernetes v1.4, v1.5 and v1.6, use 'extensions/v1beta1'
+  # For Kubernetes v1.7, use 'networking.k8s.io/v1'
+  ApiVersion: extensions/v1beta1
+
+## Install Default RBAC roles and bindings
+rbac:
+  install: false
+  serviceAccountName: default
+  # RBAC api version (currently either v1, v1beta1, or v1alpha1)
+  apiVersion: v1
+  # Role reference
+  roleRef: cluster-admin
+  # Role kind (RoleBinding or ClusterRoleBinding)
+  roleBindingKind: ClusterRoleBinding
