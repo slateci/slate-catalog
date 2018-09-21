@@ -35,16 +35,16 @@ data:
 
   filter-kubernetes.conf: |
     [FILTER]
-        Name                kubernetes
-        Match               kube.*
-        Kube_URL            https://kubernetes.default.svc.cluster.local:443
-        Merge_Log           On
-        K8S-Logging.Parser  On
+        Name                modify
+        Match               *
+        Add_if_not_present  application_name osg-frontier-squid
+        Add_if_not_present  instance_name    {{ .Values.Instance }}
+        Add_if_not_present  vo               {{ template "namespace" . }}
 
   output-elasticsearch.conf: |
     [OUTPUT]
         Name            es
-        Index           fluent-bit-{{ .Release.Namespace }}-{{ template "osg-frontier-squid.fullname" . }}
+        Index           slate-app-logs
         Match           *
         Host            atlas-kibana.mwt2.org
         Port            9200
