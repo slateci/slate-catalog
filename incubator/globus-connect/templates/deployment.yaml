@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "globus-connect.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      run: {{ template "globus-connect.fullname" . }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: {{ template "globus-connect.fullname" . }}
+    spec:
+      volumes:
+        - name: {{ template "globus-connect.fullname" . }}-config
+          configMap:
+            name: globus-connect
+        - name: cgroups
+          hostPath:
+            path: /sys/fs/cgroup
+      hostNetwork: true
+      containers:
+      - name: "gcs5"
+        image: lincolnbryant/gcsv5:latest
+        securityContext:
+          privileged: true
+        #command: ["/usr/bin/supervisord","-n"]
+        command: ["/usr/sbin/init"]
+        volumeMounts:
+          - name: globus-connect-config
+            mountPath: /etc/globus
+          - name: cgroups
+            mountPath: /sys/fs/cgroup
+            readOnly: true
+        env:
+          - name: GLOBUS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.GlobusConnect.Client.SecretName }}
+                key: globus-password

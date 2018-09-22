@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-server-{{ .Values.Instance }}
+spec:
+  containers:
+  - name: web-server
+    image: nginx:latest
+    imagePullPolicy: IfNotPresent
+    env:
+      - name: SECRET_MOUNT
+        valueFrom:
+          secretKeyRef:
+            name: {{ .Values.Secret.Name }}
+            key: secret-key

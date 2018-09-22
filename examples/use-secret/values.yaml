@@ -1,0 +1,11 @@
+
+Instance: slate-secret-demo
+
+# Configuration options for the secret
+Secret:
+  # Name of pre-deployed slate secret
+  Name: example-secret
+
+Nginx:
+  Dummy: Your Settings Here
+  
