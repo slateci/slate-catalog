@@ -44,11 +44,11 @@ data:
   output-elasticsearch.conf: |
     [OUTPUT]
         Name            es
-        Index           slate-app-logs
+        Logstash_Prefix slate-app-logs
         Match           *
         Host            atlas-kibana.mwt2.org
         Port            9200
-        Logstash_Format Off
+        Logstash_Format On
         Retry_Limit     False
 
   parsers.conf: |
