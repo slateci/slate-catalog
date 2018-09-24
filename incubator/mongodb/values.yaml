@@ -1,3 +1,4 @@
+Instance: global
 image:
   ## Bitnami MongoDB registry
   ##
