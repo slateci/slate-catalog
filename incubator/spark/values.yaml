@@ -1,7 +1,6 @@
 # Default values for spark.
 # This is a YAML-formatted file.
-# Declare name/value pairs to be passed into your templates.
-# name: value
+Instance: global
 
 Spark:
   Path: "/opt/spark"
@@ -16,8 +15,6 @@ Master:
   Memory: "512Mi"
   ServicePort: 7077
   ContainerPort: 7077
-  # Set Master JVM memory. Default 1g
-  # DaemonMemory: 1g
   ServiceType: LoadBalancer
 
 WebUi:
@@ -34,10 +31,6 @@ Worker:
   Cpu: "100m"
   Memory: "512Mi"
   ContainerPort: 8081
-  # Set Worker JVM memory. Default 1g
-  # DaemonMemory: 1g
-  # Set how much total memory workers have to give executors
-  # ExecutorMemory: 1g
   Autoscaling:
     Enabled: false
   ReplicasMax: 10
@@ -57,20 +50,6 @@ Zeppelin:
     Enabled: false
     Path: "/"
     Tls: []
-  #    - Hosts:
-  #    SecretName: zeppelin
-  # Used to create an Ingress record.
-  # Hosts:
-  # - example.local
-  # Annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: "true"
-  # Tls:
-  #   Enabled: true
-  # Secrets must be manually created in the namespace.
-  #   SecretName: example-tls
-  #   Hosts:
-  #   - example.local
   Persistence:
     Config:
       Enabled: false
