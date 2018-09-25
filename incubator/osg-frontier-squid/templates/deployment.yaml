@@ -41,6 +41,7 @@ spec:
         - mountPath: /var/cache/squid
           subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
           name: osg-frontier-squid-{{ .Values.Instance }}-pvc
+        {{ if .Values.SLATE.Logging.Enabled }}
         - mountPath: /var/log/squid
           name: varlog
       - name: fluent-bit
@@ -49,10 +50,11 @@ spec:
         securityContext:
           runAsUser: 0
         volumeMounts:
-        - name: fluent-bit-{{ .Values.Instance }}-config
+        - name: {{ template "osg-frontier-squid.fullname" . }}-fluent-bit-config
           mountPath: /fluent-bit/etc/
         - name: varlog
           mountPath: /var/log/squid
+          {{ end }}
       volumes:
         - name: osg-frontier-squid-{{ .Values.Instance }}-configuration
           configMap:
@@ -64,8 +66,10 @@ spec:
         - name: osg-frontier-squid-{{ .Values.Instance }}-pvc
           persistentVolumeClaim:
             claimName: osg-frontier-squid-{{ .Values.Instance }}-pvc
-        - name: fluent-bit-{{ .Values.Instance }}-config
+        {{ if .Values.SLATE.Logging.Enabled }}
+        - name: {{ template "osg-frontier-squid.fullname" . }}-fluent-bit-config
           configMap:
-            name: fluent-bit-{{ .Values.Instance }}-config
+            name: {{ template "osg-frontier-squid.fullname" . }}-fluent-bit-config
         - name: varlog
           emptyDir: {}
+        {{ end }}

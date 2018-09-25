@@ -1,7 +1,8 @@
+{{ if .Values.SLATE.Logging.Enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: fluent-bit-{{ .Values.Instance }}-config
+  name: {{ template "osg-frontier-squid.fullname" .}}-fluent-bit-config
   namespace: {{ .Release.Namespace }}
   labels:
     k8s-app: fluent-bit
@@ -37,17 +38,18 @@ data:
     [FILTER]
         Name                modify
         Match               *
-        Add_if_not_present  application_name osg-frontier-squid
-        Add_if_not_present  instance_name    {{ .Values.Instance }}
-        Add_if_not_present  vo               {{ template "namespace" . }}
+        Add_if_not_present  application_name {{ .Chart.Name }}
+        Add_if_not_present  instance_name   {{ .Values.Instance }}
+        Add_if_not_present  cluster_name    {{ .Values.SLATE.Cluster.Name }}
+        Add_if_not_present  vo              {{ template "namespace" . }}
 
   output-elasticsearch.conf: |
     [OUTPUT]
         Name            es
         Logstash_Prefix slate-app-logs
         Match           *
-        Host            atlas-kibana.mwt2.org
-        Port            9200
+        Host            {{ .Values.SLATE.Logging.Server.Name }}
+        Port            {{ .Values.SLATE.Logging.Server.Port }}
         Logstash_Format On
         Retry_Limit     False
 
@@ -107,3 +109,5 @@ data:
         Regex       (?<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s(?<username_ident>[^\s]+)\s(?<username_ssl>[^\s]+)\s\[(?<time>\d{2}\/[a-zA-Z]{3}\/\d{4}:\d{2}:\d{2}:\d{2}\.\d{3}).{8}\"(?<req_method>[^\s]+)\s(?<req_url>[^\s]+)\s(?<protocol>[^\s]+)\"\s(?<http_result>\d+)\s(?<reply_size>\d+)\s(?<squid_status>[^\s]+)\s(?<response_time_ms>\d+)\s\"(?<x_frontier_head>.+)\s(?<cvmfs_head>.+)\"\s\"(?<referer_head>.+)\"\s\"(?<user_agent_head>.+)\"$
         Time_Key    time
         Time_Format %d/%B/%Y:%H:%M:%S.%L
+
+{{ end }}
