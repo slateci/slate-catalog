@@ -7,8 +7,7 @@ metadata:
   labels:
     k8s-app: fluent-bit
 data:
-  # Configuration files: server, input, filters and output
-  # ======================================================
+  # Nothing in fluent-bit.conf should need to be changed for a sidecar
   fluent-bit.conf: |
     [SERVICE]
         Flush         1
@@ -23,6 +22,7 @@ data:
     @INCLUDE filter-kubernetes.conf
     @INCLUDE output-elasticsearch.conf
 
+  # The input's path variable is set to the path of the logs for the application you are sending, and the parser repsectively to an appropriate parser defined below
   input-kubernetes.conf: |
     [INPUT]
         Name              tail
@@ -34,6 +34,7 @@ data:
         Skip_Long_Lines   On
         Refresh_Interval  10
 
+  # The values in the filter should be supplied by SLATE standards within the values.yaml, and shoulnd't be edited
   filter-kubernetes.conf: |
     [FILTER]
         Name                modify
@@ -43,6 +44,7 @@ data:
         Add_if_not_present  cluster_name    {{ .Values.SLATE.Cluster.Name }}
         Add_if_not_present  vo              {{ template "namespace" . }}
 
+  # Output to the elasticsearch endpoint defined by the SLATE instance in use, changes will either come from slate or your values.yaml file
   output-elasticsearch.conf: |
     [OUTPUT]
         Name            es
@@ -53,6 +55,7 @@ data:
         Logstash_Format On
         Retry_Limit     False
 
+  # A custom parser should be defined if your application logs do not fit any of these, for proper itemization of fields to be sent to elasticsearch.
   parsers.conf: |
     [PARSER]
         Name   apache
