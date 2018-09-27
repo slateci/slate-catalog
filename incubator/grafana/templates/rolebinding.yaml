@@ -1,18 +1,23 @@
-{{- if .Values.rbac.create -}}
-apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- if .Values.rbac.create }}
 kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "grafana.fullname" . }}
+  name: {{ template "grafana.fullname" . }}-clusterrolebinding
   labels:
     app: {{ template "grafana.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
+    chart: {{ template "grafana.chart" . }}
     release: {{ .Release.Name }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: {{ template "grafana.fullname" . }}
+    heritage: {{ .Release.Service }}
+{{- with .Values.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
 subjects:
-- kind: ServiceAccount
-  name: {{ template "grafana.serviceAccountName" . }}
-{{- end -}}
+  - kind: ServiceAccount
+    name: {{ template "grafana.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ template "grafana.fullname" . }}-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+{{- end}}

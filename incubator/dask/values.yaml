@@ -1,5 +1,4 @@
-# nameOverride: dask
-# fullnameOverride: dask
+Instance: global
 
 scheduler:
   name: scheduler
@@ -11,12 +10,6 @@ scheduler:
   serviceType: "LoadBalancer"
   servicePort: 8786
   resources: {}
-    # limits:
-    #   cpu: 1.8
-    #   memory: 6G
-    # requests:
-    #   cpu: 1.8
-    #   memory: 6G
 
 webUI:
   name: webui
@@ -58,14 +51,4 @@ jupyter:
   servicePort: 80
   password: 'sha1:aae8550c0a44:9507d45e087d5ee481a5ce9f4f16f37a0867318c'  # 'dask'
   env:
-    # - name: EXTRA_CONDA_PACKAGES
-    #   value: numba xarray -c conda-forge
-    # - name: EXTRA_PIP_PACKAGES
-    #   value: s3fs dask-ml --upgrade
   resources: {}
-    # limits:
-    #   cpu: 2
-    #   memory: 6G
-    # requests:
-    #   cpu: 2
-    #   memory: 6G
