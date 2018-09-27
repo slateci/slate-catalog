@@ -1,13 +1,13 @@
+{{ if .Values.SLATE.Logging.Enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: fluent-bit-{{ .Values.Instance }}-config
+  name: {{ template "osg-frontier-squid.fullname" .}}-fluent-bit-config
   namespace: {{ .Release.Namespace }}
   labels:
     k8s-app: fluent-bit
 data:
-  # Configuration files: server, input, filters and output
-  # ======================================================
+  # Nothing in fluent-bit.conf should need to be changed for a sidecar
   fluent-bit.conf: |
     [SERVICE]
         Flush         1
@@ -22,6 +22,7 @@ data:
     @INCLUDE filter-kubernetes.conf
     @INCLUDE output-elasticsearch.conf
 
+  # The input's path variable is set to the path of the logs for the application you are sending, and the parser repsectively to an appropriate parser defined below
   input-kubernetes.conf: |
     [INPUT]
         Name              tail
@@ -33,24 +34,28 @@ data:
         Skip_Long_Lines   On
         Refresh_Interval  10
 
+  # The values in the filter should be supplied by SLATE standards within the values.yaml, and shoulnd't be edited
   filter-kubernetes.conf: |
     [FILTER]
         Name                modify
         Match               *
-        Add_if_not_present  application_name osg-frontier-squid
-        Add_if_not_present  instance_name    {{ .Values.Instance }}
-        Add_if_not_present  vo               {{ template "namespace" . }}
+        Add_if_not_present  application_name {{ .Chart.Name }}
+        Add_if_not_present  instance_name   {{ .Values.Instance }}
+        Add_if_not_present  cluster_name    {{ .Values.SLATE.Cluster.Name }}
+        Add_if_not_present  vo              {{ template "namespace" . }}
 
+  # Output to the elasticsearch endpoint defined by the SLATE instance in use, changes will either come from slate or your values.yaml file
   output-elasticsearch.conf: |
     [OUTPUT]
         Name            es
         Logstash_Prefix slate-app-logs
         Match           *
-        Host            atlas-kibana.mwt2.org
-        Port            9200
+        Host            {{ .Values.SLATE.Logging.Server.Name }}
+        Port            {{ .Values.SLATE.Logging.Server.Port }}
         Logstash_Format On
         Retry_Limit     False
 
+  # A custom parser should be defined if your application logs do not fit any of these, for proper itemization of fields to be sent to elasticsearch.
   parsers.conf: |
     [PARSER]
         Name   apache
@@ -107,3 +112,5 @@ data:
         Regex       (?<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s(?<username_ident>[^\s]+)\s(?<username_ssl>[^\s]+)\s\[(?<time>\d{2}\/[a-zA-Z]{3}\/\d{4}:\d{2}:\d{2}:\d{2}\.\d{3}).{8}\"(?<req_method>[^\s]+)\s(?<req_url>[^\s]+)\s(?<protocol>[^\s]+)\"\s(?<http_result>\d+)\s(?<reply_size>\d+)\s(?<squid_status>[^\s]+)\s(?<response_time_ms>\d+)\s\"(?<x_frontier_head>.+)\s(?<cvmfs_head>.+)\"\s\"(?<referer_head>.+)\"\s\"(?<user_agent_head>.+)\"$
         Time_Key    time
         Time_Format %d/%B/%Y:%H:%M:%S.%L
+
+{{ end }}

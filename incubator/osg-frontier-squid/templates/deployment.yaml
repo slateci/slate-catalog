@@ -25,9 +25,11 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
+      # Required affinity for using local storage
       nodeSelector:
         storage: "local"
       containers:
+      # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid
         image: slateci/osg-frontier-squid:0.1
         imagePullPolicy: IfNotPresent
@@ -35,24 +37,32 @@ spec:
         - containerPort: 3128
           name: squid
         volumeMounts:
+          # Configuration file to be mounted
         - mountPath: /etc/squid/customize.sh
           subPath: customize.sh
           name: osg-frontier-squid-{{ .Values.Instance }}-configuration
+          # Persistent volume for local storage of the cache data
         - mountPath: /var/cache/squid
           subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
           name: osg-frontier-squid-{{ .Values.Instance }}-pvc
+          # Shared directory for logs with the Fluent-bit sidecar, can be enabled or disabled from values.yaml
+        {{ if .Values.SLATE.Logging.Enabled }}
         - mountPath: /var/log/squid
           name: varlog
+        # Container for fluent-bit logging sidecar. Enabled/disabled within values.yaml
       - name: fluent-bit
         image: fluent/fluent-bit:0.13.4
         imagePullPolicy: IfNotPresent
         securityContext:
           runAsUser: 0
         volumeMounts:
-        - name: fluent-bit-{{ .Values.Instance }}-config
+          # Configuration file for fluent-bit sidecar
+        - name: {{ template "osg-frontier-squid.fullname" . }}-fluent-bit-config
           mountPath: /fluent-bit/etc/
+          # Shared directory for logging from application
         - name: varlog
           mountPath: /var/log/squid
+          {{ end }}
       volumes:
         - name: osg-frontier-squid-{{ .Values.Instance }}-configuration
           configMap:
@@ -64,8 +74,11 @@ spec:
         - name: osg-frontier-squid-{{ .Values.Instance }}-pvc
           persistentVolumeClaim:
             claimName: osg-frontier-squid-{{ .Values.Instance }}-pvc
-        - name: fluent-bit-{{ .Values.Instance }}-config
+        {{ if .Values.SLATE.Logging.Enabled }}
+        # Volumes required by fluent-bit sidecar for configuration and accessing application logs of frontier-squid
+        - name: {{ template "osg-frontier-squid.fullname" . }}-fluent-bit-config
           configMap:
-            name: fluent-bit-{{ .Values.Instance }}-config
+            name: {{ template "osg-frontier-squid.fullname" . }}-fluent-bit-config
         - name: varlog
           emptyDir: {}
+        {{ end }}
