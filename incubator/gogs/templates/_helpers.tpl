@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "gogs.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.Instance | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
