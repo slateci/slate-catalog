@@ -1,5 +1,4 @@
 Instance: global
-
 ## Kubernetes configuration
 ## For minikube, set this to NodePort, elsewhere use LoadBalancer
 ##
@@ -11,6 +10,11 @@ image:
   repository: gogs/gogs
   tag: 0.11.29
   pullPolicy: IfNotPresent
+
+service:
+  ## Override the components name (defaults to service).
+  ##
+  # nameOverride:
 
   ## HTTP listen port.
   ## ref: https://gogs.io/docs/advanced/configuration_cheat_sheet
@@ -34,7 +38,7 @@ image:
 
     ## Application name, can be your company or team name.
     ##
-    appName: 'gogs'
+    appName: 'Gogs'
 
     ## Either "dev", "prod" or "test".
     ##
@@ -52,6 +56,11 @@ image:
     ## Indicates whether or not to enable repository file upload feature.
     ##
     repositoryUploadEnabled: true
+
+    ## File types that are allowed to be uploaded, e.g. image/jpeg|image/png.
+    ## Leave empty means allow any file typ
+    ##
+    repositoryUploadAllowedTypes:
 
     ## Maximum size of each file in MB.
     ##
@@ -88,6 +97,12 @@ image:
     ## For "memory" only, GC interval in seconds, default is 60
     ##
     cacheInterval: 60
+
+    ## For "redis" and "memcache", connection host address
+    ## redis: network=tcp,addr=:6379,password=macaron,db=0,pool_size=100,idle_timeout=180
+    ## memcache: `127.0.0.1:11211`
+    ##
+    cacheHost:
 
     ## Enable this to use captcha validation for registration.
     ##
@@ -185,6 +200,33 @@ image:
     ##
     enabled: false
 
+    ## Annotations.
+    ##
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: 'true'
+
+    ## Hostnames.
+    ## Must be provided if Ingress is enabled.
+    ##
+    # hosts:
+    #   - gogs.domain.com
+
+    ## TLS configuration.
+    ## Secrets must be manually created in the namespace.
+    ##
+    # tls:
+    #   - secretName: gogs-tls
+    #     hosts:
+    #       - gogs.domain.com
+
+  ## Service annotations.
+  ## Allows attaching metadata to services for kubernetes components to act on.
+  ##
+  # annotations:
+  #   service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+
+
 ## Persistent Volume Storage configuration.
 ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes
 ##
@@ -192,6 +234,15 @@ persistence:
   ## Enable persistence using Persistent Volume Claims.
   ##
   enabled: true
+
+  ## gogs data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
 
   ## Persistent Volume Access Mode.
   ##
