@@ -97,7 +97,7 @@ entries:
   - appVersion: 5.2.3
     created: 2018-10-03T11:35:12.369840532-04:00
     description: The leading tool for querying and visualizing time series and metrics.
-    digest: 476689e4fd79760ce761f3974db3989233f07738c79cb760e1ec56bcac3d50be
+    digest: 0330fce156d531435f9d043f59c06f2006ddc522db71e6a6d89d0680496a36f3
     engine: gotpl
     home: https://grafana.net
     icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
@@ -343,7 +343,6 @@ entries:
     version: 0.1.0
   osiris-unis:
   - apiVersion: v1
-    appVersion: "1.0"
     created: 2018-10-03T11:35:12.389015648-04:00
     description: Unified Network Information Service (UNIS)
     digest: a1a62822bafecd654c946ba594ea91134fae06eb576821e5d1d9266783c97533

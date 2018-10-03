@@ -1,23 +1,18 @@
 {{- if .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
 metadata:
+  name: {{ template "grafana.fullname" . }}
   labels:
     app: {{ template "grafana.name" . }}
-    chart: {{ template "grafana.chart" . }}
-    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
-{{- with .Values.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
-  name: {{ template "grafana.fullname" . }}-clusterrole
-{{- if or .Values.sidecar.dashboards.enabled .Values.sidecar.datasources.enabled }}
+    release: {{ .Release.Name }}
+{{- if .Values.rbac.pspEnabled }}
 rules:
-- apiGroups: [""] # "" indicates the core API group
-  resources: ["configmaps"]
-  verbs: ["get", "watch", "list"]
-{{- else }}
-rules: []
-{{- end}}
-{{- end}}
+- apiGroups:      ['extensions']
+  resources:      ['podsecuritypolicies']
+  verbs:          ['use']
+  resourceNames:  [{{ template "grafana.fullname" . }}]
+{{- end }}
+{{- end }}
