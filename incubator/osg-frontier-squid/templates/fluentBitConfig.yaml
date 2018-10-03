@@ -39,10 +39,10 @@ data:
     [FILTER]
         Name                modify
         Match               *
-        Add_if_not_present  application_name {{ .Chart.Name }}
-        Add_if_not_present  instance_name   {{ .Values.Instance }}
-        Add_if_not_present  cluster_name    {{ .Values.SLATE.Cluster.Name }}
-        Add_if_not_present  vo              {{ template "namespace" . }}
+        Add_if_not_present  application_name {{- .Chart.Name | indent 1 }}
+        Add_if_not_present  instance_name   {{- .Values.Instance | indent 1 }}
+        Add_if_not_present  cluster_name    {{- .Values.SLATE.Cluster.Name | indent 1 }}
+        Add_if_not_present  vo              {{- template "namespace" . }}
 
   # Output to the elasticsearch endpoint defined by the SLATE instance in use, changes will either come from slate or your values.yaml file
   output-elasticsearch.conf: |
