@@ -21,7 +21,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{- define "namespace" -}}
-{{- printf "%s" .Release.Namespace | trimPrefix "slate-vo-" -}}
+{{- .Release.Namespace | trimPrefix "slate-vo-" | printf " %s" -}}
 {{- end -}}
 
 {{/*
