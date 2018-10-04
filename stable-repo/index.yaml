@@ -1,3 +1,14 @@
 apiVersion: v1
-entries: {}
-generated: 2018-05-22T11:52:27.163207313-04:00
+entries:
+  osg-frontier-squid:
+  - apiVersion: v1
+    appVersion: squid-3
+    created: 2018-10-04T11:14:45.541030398-04:00
+    description: A Helm chart for configuration and deployment of the Open Science
+      Grid's Frontier Squid application.
+    digest: b77c1f93aef8d2dd3658b3aaa6b1a042eaef3389718792d2df8cbbab6d9a4ec2
+    name: osg-frontier-squid
+    urls:
+    - osg-frontier-squid-1.0.0.tgz
+    version: 1.0.0
+generated: 2018-10-04T11:14:45.540316513-04:00
