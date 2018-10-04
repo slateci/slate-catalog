@@ -97,7 +97,7 @@ entries:
   - appVersion: 5.2.3
     created: 2018-10-04T11:11:06.332987983-04:00
     description: The leading tool for querying and visualizing time series and metrics.
-    digest: 476689e4fd79760ce761f3974db3989233f07738c79cb760e1ec56bcac3d50be
+    digest: 0330fce156d531435f9d043f59c06f2006ddc522db71e6a6d89d0680496a36f3
     engine: gotpl
     home: https://grafana.net
     icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
@@ -337,7 +337,7 @@ entries:
     created: 2018-10-04T11:11:06.352126091-04:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
-    digest: 0e9a837640452720317d6c6fea19f2d54361efc6553910ef74f077e2cf3ecca2
+    digest: 7ff0dedef756096c2e961c0aee42c07fa5a22baf9d0f4b3ad51f5b08d813454f
     name: osg-frontier-squid
     urls:
     - osg-frontier-squid-0.2.0.tgz

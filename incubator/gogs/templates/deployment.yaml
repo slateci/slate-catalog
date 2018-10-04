@@ -3,8 +3,9 @@ kind: Deployment
 metadata:
   name: {{ template "gogs.fullname" . }}
   labels:
-    chart: {{ template "gogs.chart" . }} 
     app: {{ template "gogs.name" . }}
+    chart: {{ template "gogs.chart" . }} 
+    release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 
 spec:
@@ -13,11 +14,17 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: {{ template "gogs.fullname" . }}
+      app: {{ template "gogs.name" . }}
+      chart: {{ template "gogs.chart" . }} 
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:
-        app: {{ template "gogs.fullname" . }}
+        app: {{ template "gogs.name" . }}
+        chart: {{ template "gogs.chart" . }} 
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
