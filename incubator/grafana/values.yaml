@@ -2,8 +2,8 @@
 Instance: global
 
 rbac:
-  create: true
-  pspEnabled: true
+  create: false
+  pspEnabled: false
 serviceAccount:
   create: true
   name:
