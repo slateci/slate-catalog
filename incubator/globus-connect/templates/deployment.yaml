@@ -37,5 +37,5 @@ spec:
           - name: GLOBUS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.GlobusConnect.Client.SecretName }}
+                name: {{ .Values.GlobusConnect.Client.Secret }}
                 key: globus-password
