@@ -151,7 +151,7 @@ spec:
           {{- end }}
           ports:
             - name: service
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.service.Port }}
               protocol: TCP
             - name: grafana
               containerPort: 3000
