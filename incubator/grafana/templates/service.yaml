@@ -15,7 +15,7 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-  {{ if .Values.Service.ExternallyVisible }}
+  {{ if .Values.service.ExternallyVisible }}
   type: LoadBalancer
   {{ else }}
   type: ClusterIP
