@@ -20,3 +20,8 @@ GlobusConnect:
     MaintainerEmail: me@example.com
     # If true, all transactions not encrypted will fail
     EncryptionRequired: false
+
+Service:
+    ExternallyVisible: true
+    # Default port for Globus Connect Server to control HTTPS access to collections
+    Port: 443

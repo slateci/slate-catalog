@@ -5,37 +5,56 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: {{ template "globus-connect.fullname" . }}
+      app: {{ template "globus-connect.fullname" . }}
+      chart: {{ template "globus-connect.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
   replicas: 1
   template:
     metadata:
       labels:
-        run: {{ template "globus-connect.fullname" . }}
+        app: {{ template "globus-connect.fullname" . }}
+        chart: {{ template "globus-connect.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
     spec:
       volumes:
         - name: {{ template "globus-connect.fullname" . }}-config
           configMap:
-            name: globus-connect
+            name: {{ template "globus-connect.fullname" . }}-config
         - name: cgroups
           hostPath:
             path: /sys/fs/cgroup
+        - name: tmp-conf
+          emptyDir: {}
       hostNetwork: true
-      containers:
-      - name: "gcs5"
-        image: lincolnbryant/gcsv5:latest
-        securityContext:
-          privileged: true
-        #command: ["/usr/bin/supervisord","-n"]
-        command: ["/usr/sbin/init"]
+      initContainers:
+      - name: init-configmap
+        image: busybox
+        command: ['sh', '-c', 'cp /etc/globus/globus-connect-server.conf /tmp/globus/globus-connect-server.conf; sed -i "s/%(GLOBUS_PASSWORD)s/$GLOBUS_PASSWORD/g" /tmp/globus/globus-connect-server.conf' ]
         volumeMounts:
-          - name: globus-connect-config
+          - name: {{ template "globus-connect.fullname" . }}-config
             mountPath: /etc/globus
-          - name: cgroups
-            mountPath: /sys/fs/cgroup
-            readOnly: true
+          - name: tmp-conf
+            mountPath: /tmp/globus
         env:
           - name: GLOBUS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.GlobusConnect.Client.Secret }}
                 key: globus-password
+      containers:
+      - name: "gcs5"
+        image: slateci/gcs5:latest
+        securityContext:
+          privileged: true
+        #command: ["/usr/bin/supervisord","-n"]
+        command: ["/usr/sbin/init"]
+        volumeMounts:
+          - name: {{ template "globus-connect.fullname" . }}-config
+            mountPath: /etc/globus
+          - name: cgroups
+            mountPath: /sys/fs/cgroup
+            readOnly: true
+          - name: tmp-conf
+            mountPath: /tmp/globus

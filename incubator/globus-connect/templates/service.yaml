@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "globus-connect.fullname" . }}-service
+spec:
+  {{ if .Values.Service.ExternallyVisible }}
+  type: LoadBalancer
+  {{ else }}
+  type: ClusterIP
+  {{ end }}
+  externalTrafficPolicy: Local
+  selector:
+    app: {{ template "globus-connect.name" . }}
+    chart: {{ template "globus-connect.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+  ports:
+  - port: {{ .Values.Service.Port }}
