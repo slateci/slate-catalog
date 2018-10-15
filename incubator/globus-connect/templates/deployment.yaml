@@ -27,6 +27,8 @@ spec:
             path: /sys/fs/cgroup
         - name: tmp-conf
           emptyDir: {}
+        - name: varlog
+          emptyDir: {}
       hostNetwork: true
       initContainers:
       - name: init-configmap
@@ -58,3 +60,11 @@ spec:
             readOnly: true
           - name: tmp-conf
             mountPath: /tmp/globus
+          - name: varlog
+            mountPath: /var/log
+      - name: logs
+        image: busybox
+        command: [ 'sh', '-c', 'sleep 5; tail -f /var/log/globus-connect-server.log' ]
+        volumeMounts:
+          - name: varlog
+            mountPath: /var/log
