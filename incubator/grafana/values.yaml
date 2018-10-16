@@ -36,11 +36,13 @@ downloadDashboardsImage:
 ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
 ## ref: http://kubernetes.io/docs/user-guide/services/
 ##
+
 service:
-  type: ClusterIP
-  port: 80
-  annotations: {}
-  labels: {}
+  # Port that the service will utilize.
+  Port: 80
+  # Controls whether the service is accessible from outside of the cluster.
+  # Must be true/false
+  ExternallyVisible: true
 
 ingress:
   enabled: false
