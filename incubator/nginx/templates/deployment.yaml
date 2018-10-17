@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "nginx.fullname" . }}
+  labels:
+    app: {{ template "nginx.name" . }}
+    chart: {{ template "nginx.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "nginx.name" . }}
+      instance: {{ .Values.Instance }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "nginx.name" . }}
+        instance: {{ .Values.Instance }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: nginx
+        image: "nginx:1.7.9"
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: nginx-{{ .Values.Instance }}-configuration
+          mountPath: /usr/share/nginx/html
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+      restartPolicy: Always
+      volumes:
+      - name: nginx-{{ .Values.Instance }}-configuration
+        configMap:
+          name: nginx-{{ .Values.Instance }}-configuration
