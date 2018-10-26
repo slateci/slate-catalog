@@ -38,6 +38,7 @@ spec:
           items: 
           - key: condor_password
             path: condor_password
+            mode: 256
       - name: htcondor-{{ .Values.Instance }}-configuration
         configMap:
           name: htcondor-{{ .Values.Instance}}-configuration
