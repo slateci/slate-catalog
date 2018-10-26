@@ -49,7 +49,7 @@ spec:
           mountPath: "/var/lib/condor/execute"
         - name: condor-passwordfile-volume
           mountPath: "/etc/condor/condor_password"
-        - name: condor-{{ .Values.Instance}}-configuration
+        - name: htcondor-{{ .Values.Instance}}-configuration
           mountPath: "/etc/condor/condor_config.local"
         env:
         - name: _CONDOR_COLLECTOR_HOST
