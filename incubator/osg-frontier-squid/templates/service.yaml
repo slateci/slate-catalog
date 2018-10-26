@@ -3,12 +3,10 @@ apiVersion: v1
 metadata:
   name: {{ template "osg-frontier-squid.fullname" . }}
 spec:
-  {{ if .Values.Service.ExternallyVisible }}
-  type: LoadBalancer
-  {{ else }}
-  type: ClusterIP
-  {{ end }}
+  type: {{ .Values.Service.ExternalVisibility }}
+  {{ if ne .Values.Service.ExternalVisibility "ClusterIP" }}
   externalTrafficPolicy: Local
+  {{ end }}
   selector:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
