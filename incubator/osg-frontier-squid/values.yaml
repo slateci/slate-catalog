@@ -45,4 +45,6 @@ SquidConf:
   # Multiple ranges can be provided, each seperated by a space.
   # Example: 192.168.1.1/32 192.168.2.1/32
   # Use 0.0.0.0/0 for open access.
-  IPRange: 0.0.0.0/0
+  # The default set of ranges are those defined in RFC 1918 and typically used 
+  # within kubernetes clusters. 
+  IPRange: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
