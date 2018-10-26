@@ -4,4 +4,8 @@ Instance: default
 
 # The HTML data that nginx should serve
 Data: |-
-  <h1>Hello world!<h1>
+  <html>
+  <body>
+  <h1>Hello world!</h1>
+  </body>
+  </html>

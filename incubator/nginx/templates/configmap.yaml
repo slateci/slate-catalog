@@ -7,4 +7,4 @@ metadata:
     instance: {{ .Values.Instance }}
 data:
   index.html: |-
-    {{ .Values.Data }}
+{{ .Values.Data | indent 4 }}
