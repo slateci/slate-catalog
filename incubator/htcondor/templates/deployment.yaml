@@ -24,25 +24,37 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       volumes:
-      - name: scratch
+      - name: executedir
+        {{ if .Values.CondorConfig.ExecuteDir }}
         hostPath:
-          path: /scratch/condor
+          path: {{ .Values.CondorConfig.ExecuteDir }} 
           type: Directory
+        {{ else }}
+        emptyDir: {}
+        {{ end }}  
+      - name: condor-passwordfile-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.PasswordFileSecret }}
+          items: 
+          - key: condor_password
+            path: condor_password
       containers:
       - name: htcondor-worker
         image: lincolnbryant/htcondor-docker-cuda:390.12
         volumeMounts:
-        - name: scratch
+        - name: executedir
           mountPath: "/var/lib/condor/execute"
+        - name: condor-passwordfile-volume
+          mountPath: "/etc/condor/condor_password"
         env:
+        - name: _CONDOR_COLLECTOR_HOST
+          value: {{ .Values.CondorConfig.CollectorHost | quote }}
         - name: _CONDOR_MEMORY
           value: {{ .Values.CondorConfig.MemoryLimit | quote }}
         - name: _CONDOR_NUM_CPUS
-          value: {{ .Values.CondorConfig.NumCPUs | quote }}
+          value: {{ .Values.CondorConfig.NumberCPUs | quote }}
         - name: _CONDOR_NODEID
           value: {{ .Values.CondorConfig.NodeID | quote }}
-        - name: _CONDOR_SEC_PASSWORD_FILE
-          value: {{ .Values.CondorConfig.PasswordFile | quote }}
         - name: _CONDOR_STARTD_ATTRS
           value: '$(STARTD_ATTRS) NODEID'
         resources:
