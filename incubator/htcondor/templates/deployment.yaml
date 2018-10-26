@@ -46,11 +46,13 @@ spec:
         image: lincolnbryant/htcondor-docker-cuda:390.12
         volumeMounts:
         - name: executedir
-          mountPath: "/var/lib/condor/execute"
+          mountPath: /var/lib/condor/execute
         - name: condor-passwordfile-volume
-          mountPath: "/etc/condor/condor_password"
+          mountPath: /etc/condor/condor_password
+          subPath: condor_password
         - name: htcondor-{{ .Values.Instance}}-configuration
-          mountPath: "/etc/condor/condor_config.local"
+          mountPath: /etc/condor/condor_config.local
+          subPath: condor_config.local
         env:
         - name: _CONDOR_COLLECTOR_HOST
           value: {{ .Values.CondorConfig.CollectorHost | quote }}
