@@ -1,9 +1,18 @@
 apiVersion: v1
 entries:
+  nginx:
+  - apiVersion: v1
+    created: 2018-10-26T14:54:20.980765774-05:00
+    description: A simple nginx deployment which serves a static page
+    digest: 6a5394acf543e99b7e1464c2c3781112149f4ef05fa1c9664e67c6105d659f0f
+    name: nginx
+    urls:
+    - nginx-1.0.0.tgz
+    version: 1.0.0
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-10-26T14:24:34.159004223-05:00
+    created: 2018-10-26T14:54:20.981780115-05:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
     digest: 01dba1538c01b3b8fe1879f31e6520d52ada505270dcd4384f35595a8e31c33c
@@ -11,4 +20,4 @@ entries:
     urls:
     - osg-frontier-squid-1.0.0.tgz
     version: 1.0.0
-generated: 2018-10-26T14:24:34.158313543-05:00
+generated: 2018-10-26T14:54:20.977136451-05:00
