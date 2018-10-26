@@ -38,6 +38,9 @@ spec:
           items: 
           - key: condor_password
             path: condor_password
+      - name: htcondor-{{ .Values.Instance }}-configuration
+        configMap:
+          name: htcondor-{{ .Values.Instance}}-configuration
       containers:
       - name: htcondor-worker
         image: lincolnbryant/htcondor-docker-cuda:390.12
@@ -46,6 +49,8 @@ spec:
           mountPath: "/var/lib/condor/execute"
         - name: condor-passwordfile-volume
           mountPath: "/etc/condor/condor_password"
+        - name: condor-{{ .Values.Instance}}-configuration
+          mountPath: "/etc/condor/condor_config.local"
         env:
         - name: _CONDOR_COLLECTOR_HOST
           value: {{ .Values.CondorConfig.CollectorHost | quote }}
