@@ -26,8 +26,10 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       # Required affinity for using local storage
+      {{ if .Values.SLATE.LocalStorage }}
       nodeSelector:
         storage: "local"
+      {{ end }}
       containers:
       # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid
@@ -41,10 +43,10 @@ spec:
         - mountPath: /etc/squid/customize.sh
           subPath: customize.sh
           name: osg-frontier-squid-{{ .Values.Instance }}-configuration
-          # Persistent volume for local storage of the cache data
-        - mountPath: /var/cache/squid
+        # Storage location of the cache data
+        - mountPath: /var/cache/squid/osg-frontier-squid-{{ .Values.Instance }}-cache
           subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
-          name: osg-frontier-squid-{{ .Values.Instance }}-pvc
+          name: osg-frontier-squid-{{ .Values.Instance }}-data
           # Shared directory for logs with the Fluent-bit sidecar, can be enabled or disabled from values.yaml
         {{ if .Values.SLATE.Logging.Enabled }}
         - mountPath: /var/log/squid
@@ -71,9 +73,14 @@ spec:
               - key: customize.sh
                 path: customize.sh
             defaultMode: 0755
-        - name: osg-frontier-squid-{{ .Values.Instance }}-pvc
+        - name: osg-frontier-squid-{{ .Values.Instance }}-data
+        {{ if .Values.SLATE.LocalStorage }}
           persistentVolumeClaim:
             claimName: osg-frontier-squid-{{ .Values.Instance }}-pvc
+        {{ else }}
+          emptyDir: {}
+        {{ end }}
+
         {{ if .Values.SLATE.Logging.Enabled }}
         # Volumes required by fluent-bit sidecar for configuration and accessing application logs of frontier-squid
         - name: {{ template "osg-frontier-squid.fullname" . }}-fluent-bit-config
