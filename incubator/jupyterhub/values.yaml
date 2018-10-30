@@ -1,4 +1,4 @@
-Instance: global
+custom: {}
 
 hub:
   service:
@@ -12,7 +12,13 @@ hub:
   fsGid: 1000
   nodeSelector: {}
   concurrentSpawnLimit: 64
+  consecutiveFailureLimit: 5
   activeServerLimit:
+  deploymentStrategy:
+    # sqlite-pvc backed hub requires Recreate strategy to work
+    type: Recreate
+    # This is required for upgrading to work
+    rollingUpdate:
   db:
     type: sqlite-pvc
     upgrade:
@@ -26,6 +32,9 @@ hub:
       storageClassName:
     url:
   labels: {}
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: /hub/metrics
   extraConfig: {}
   extraConfigMap: {}
   extraEnv: {}
@@ -37,18 +46,26 @@ hub:
     tag: generated-by-chartpress
   resources:
     requests:
-      cpu: 0.2
+      cpu: 200m
       memory: 512Mi
   services: {}
   imagePullPolicy: IfNotPresent
+  imagePullSecret:
+    enabled: false
+    registry:
+    username:
+    email:
+    password:
   pdb:
     enabled: true
+    minAvailable: 1
   networkPolicy:
     enabled: false
     egress:
       - to:
           - ipBlock:
               cidr: 0.0.0.0/0
+  allowNamedServers: false
 
 
 rbac:
@@ -56,7 +73,7 @@ rbac:
 
 
 proxy:
-  secretToken: "3c415852f5bd59311db54ca18f026f407ae2a761b7ff323e94ae0f76e4802129"
+  secretToken: ''
   service:
     type: LoadBalancer
     labels: {}
@@ -71,34 +88,39 @@ proxy:
       pullPolicy: IfNotPresent
     resources:
       requests:
-        cpu: 0.2
+        cpu: 200m
         memory: 512Mi
   nginx:
     image:
       name: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
-      tag: 0.9.0
+      tag: 0.15.0
       pullPolicy: IfNotPresent
     proxyBodySize: 64m
     resources: {}
   lego:
     image:
       name: jetstack/kube-lego
-      # We need a couple of fixes related to ingress.provider that are in master
-      # When 0.1.6 is released, switch to that!
-      tag: master-2368
+      tag: 0.1.7
+      pullPolicy: IfNotPresent
     resources: {}
-  labels:
+  labels: {}
   nodeSelector: {}
   pdb:
     enabled: true
+    minAvailable: 1
   https:
     enabled: true
     type: letsencrypt
+    #type: letsencrypt, manual, secret
     letsencrypt:
       contactEmail: ''
     manual:
       key:
       cert:
+    secret:
+      name: ''
+      key: 'tls.key'
+      crt: 'tls.crt'
     hosts: []
   networkPolicy:
     enabled: false
@@ -117,12 +139,28 @@ auth:
     users:
   dummy:
     password:
+  ldap:
+    dn:
+      search: {}
+      user: {}
+    user: {}
   state:
     enabled: false
     cryptoKey:
 
 
 singleuser:
+  extraTolerations: []
+  nodeSelector: {}
+  extraNodeAffinity:
+    required: []
+    preferred: []
+  extraPodAffinity:
+    required: []
+    preferred: []
+  extraPodAntiAffinity:
+    required: []
+    preferred: []
   networkTools:
     image:
       name: jupyterhub/k8s-network-tools
@@ -139,17 +177,19 @@ singleuser:
               cidr: 0.0.0.0/0
               except:
                 - 169.254.169.254/32
+  events: true
+  extraAnnotations: {}
   extraLabels: {}
   extraEnv: {}
   lifecycleHooks:
-  initContainers:
-  nodeSelector: {}
+  initContainers: []
+  extraContainers: []
   uid: 1000
   fsGid: 100
   serviceAccountName:
-  schedulerStrategy:
   storage:
     type: dynamic
+    extraLabels: {}
     extraVolumes: []
     extraVolumeMounts: []
     static:
@@ -166,6 +206,12 @@ singleuser:
     name: jupyterhub/k8s-singleuser-sample
     tag: generated-by-chartpress
     pullPolicy: IfNotPresent
+  imagePullSecret:
+    enabled: false
+    registry:
+    username:
+    email:
+    password:
   startTimeout: 300
   cpu:
     limit:
@@ -173,8 +219,40 @@ singleuser:
   memory:
     limit:
     guarantee: 1G
+  extraResource:
+    limits: {}
+    guarantees: {}
   cmd: jupyterhub-singleuser
   defaultUrl:
+
+
+scheduling:
+  userScheduler:
+    enabled: false
+    replicas: 1
+    logLevel: 4
+    image:
+      name: gcr.io/google_containers/kube-scheduler-amd64
+      tag: v1.11.2
+    nodeSelector: {}
+    pdb:
+      enabled: true
+      minAvailable: 1
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+  podPriority:
+    enabled: false
+  userPlaceholder:
+    enabled: true
+    replicas: 0
+  corePods:
+    nodeAffinity:
+      matchNodePurpose: prefer
+  userPods:
+    nodeAffinity:
+      matchNodePurpose: prefer
 
 
 prePuller:
@@ -186,7 +264,7 @@ prePuller:
       tag: generated-by-chartpress
   continuous:
     enabled: false
-  extraImages: []
+  extraImages: {}
   pause:
     image:
       name: gcr.io/google_containers/pause
@@ -207,10 +285,6 @@ cull:
   every: 600
   concurrency: 10
   maxAge: 0
-  podCuller:
-    image:
-      name: jupyterhub/k8s-pod-culler
-      tag: generated-by-chartpress
 
 
 debug:
