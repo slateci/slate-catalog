@@ -25,8 +25,12 @@ spec:
     spec:
       volumes:
       - name: stashcache-data
+        {{ if .Values.StashCache.CacheDirectory }}
         hostPath:
           path: {{ .Values.StashCache.CacheDirectory }}
+        {{ else }}
+        emptyDir: {}
+        {{ end }}
       containers:
       - name: stashcache
         image: slateci/stashcache
