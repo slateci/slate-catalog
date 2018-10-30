@@ -1,0 +1,23 @@
+# Label for this particular deployed instance
+# Results in a name like "stashcache-[Instance]"
+# Enables multiple instances of StashCache in one namespace
+Instance: global
+
+Service:
+  Port: 1094
+
+Site:
+  Name: "stashcache"
+
+StashCache:
+  # Local directory to be used as a cache
+  CacheDirectory: /scratch
+  # Space usage
+  HighWaterMark: 0.95
+  LowWaterMark: 0.80
+  # The amount of memory the cache is allowed to use (in GB)
+  RamSize: 1g
+  # Minimal chunk size that will be prefetched/cached.
+  BlockSize: 1M
+  # to prefetch chunks that were not requested
+  Prefetch: 0

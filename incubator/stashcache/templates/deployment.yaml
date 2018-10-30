@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "stashcache.fullname" . }}
+  labels:
+    app: {{ template "stashcache.name" . }}
+    chart: {{ template "stashcache.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "stashcache.name" . }}
+      chart: {{ template "stashcache.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "stashcache.name" . }}
+        chart: {{ template "stashcache.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      volumes:
+      - name: stashcache-data
+        hostPath:
+          path: {{ .Values.StashCache.CacheDirectory }}
+      containers:
+      - name: stashcache
+        image: slateci/stashcache
+        imagePullPolicy: Always
+        command: ["/run_stashcache.sh"]
+        env:
+        - name: STASHCACHE_SPACE_HIGH_WM
+          value: {{ .Values.StashCache.HighWaterMark | quote }}
+        - name: STASHCACHE_SPACE_LOW_WM
+          value: {{ .Values.StashCache.LowWaterMark | quote }}
+        - name: STASHCACHE_RAMSIZE
+          value: {{ .Values.StashCache.RamSize | quote }}
+        - name: STASHCACHE_BLOCKSIZE
+          value: {{ .Values.StashCache.BlockSize | quote }}
+        - name: STASHCACHE_PREFETCH
+          value: {{ .Values.StashCache.Prefetch | quote }}
+        - name: STASHCACHE_SITE_NAME
+          value: {{ .Values.Site.Name | quote }}
+        - name: STASHCACHE_MONITORING_ENDPOINT
+          value: "uct2-collectd.mwt2.org"
+        volumeMounts:
+        - mountPath: "/stash"
+          name: stashcache-data
+          readOnly: false
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.Service.Port }}
+          initialDelaySeconds: 180
+          periodSeconds: 60
+        ports:
+        - containerPort: {{ .Values.Service.Port }}
