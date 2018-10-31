@@ -259,7 +259,7 @@ scheduling:
 
 prePuller:
   hook:
-    enabled: true
+    enabled: false
     extraEnv: {}
     image:
       name: jupyterhub/k8s-image-awaiter
