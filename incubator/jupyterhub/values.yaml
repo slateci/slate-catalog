@@ -263,7 +263,7 @@ prePuller:
     extraEnv: {}
     image:
       name: jupyterhub/k8s-image-awaiter
-      tag: generated-by-chartpress
+      tag: 01eac78 
   continuous:
     enabled: false
   extraImages: {}
