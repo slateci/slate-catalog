@@ -1,3 +1,5 @@
+Instance: global
+
 custom: {}
 
 hub:
@@ -73,7 +75,7 @@ rbac:
 
 
 proxy:
-  secretToken: ''
+  secretToken: bcac9e7502990d59dca4cc1b4d4dee7bccb7e99a9510b4b7be6151e8b55213d5 
   service:
     type: LoadBalancer
     labels: {}
@@ -109,7 +111,7 @@ proxy:
     enabled: true
     minAvailable: 1
   https:
-    enabled: true
+    enabled: false
     type: letsencrypt
     #type: letsencrypt, manual, secret
     letsencrypt:
@@ -257,11 +259,11 @@ scheduling:
 
 prePuller:
   hook:
-    enabled: true
+    enabled: false
     extraEnv: {}
     image:
       name: jupyterhub/k8s-image-awaiter
-      tag: generated-by-chartpress
+      tag: 01eac78 
   continuous:
     enabled: false
   extraImages: {}
