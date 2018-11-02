@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "condor.fullname" . }}
+  name: {{ template "htcondor-submit-node.fullname" . }}
   labels:
-    app: {{ template "condor.fullname" . }}
-    chart: {{ template "condor.chart" . }}
+    app: {{ template "htcondor-submit-node.fullname" . }}
+    chart: {{ template "htcondor-submit-node.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "condor.fullname" . }}
-      chart: {{ template "condor.chart" . }}
+      app: {{ template "htcondor-submit-node.fullname" . }}
+      chart: {{ template "htcondor-submit-node.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
   template:
     metadata:
       labels: 
-        app: {{ template "condor.fullname" . }}
-        chart: {{ template "condor.chart" . }}
+        app: {{ template "htcondor-submit-node.fullname" . }}
+        chart: {{ template "htcondor-submit-node.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
