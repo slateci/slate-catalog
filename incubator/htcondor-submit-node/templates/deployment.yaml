@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "condor.fullname" . }}
+  labels:
+    app: {{ template "condor.fullname" . }}
+    chart: {{ template "condor.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "condor.fullname" . }}
+      chart: {{ template "condor.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
+  template:
+    metadata:
+      labels: 
+        app: {{ template "condor.fullname" . }}
+        chart: {{ template "condor.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      volumes:
+      - name: condor-passwordfile-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.PasswordFileSecret }}
+          items: 
+          - key: condor_password
+            path: condor_password
+            mode: 256
+      - name: condor-passwordfile-volume
+        secret:
+          secretName: {{ .Values.UserConfig.PublicKey }}
+          items: 
+          - key: condor_password
+            path: condor_password
+            mode: 256
+      - name: htcondor-{{ .Values.Instance }}-configuration
+        configMap:
+          name: htcondor-{{ .Values.Instance}}-configuration
+      containers:
+      - name: htcondor-worker
+        image: lincolnbryant/coreos-osg-wn
+        volumeMounts:
+        - name: executedir
+          mountPath: /var/lib/condor/execute
+        - name: condor-passwordfile-volume
+          mountPath: /etc/condor/condor_password
+          subPath: condor_password
+        - name: htcondor-{{ .Values.Instance}}-configuration
+          mountPath: /etc/condor/condor_config.local
+          subPath: condor_config.local
+        - name: user-publickey-{{ .Values.Instance }}
+          mountPath: /home/osg/.ssh/authorized_keys
+          subPath: authorized_keys
+        env:
+        - name: _CONDOR_COLLECTOR_HOST
+          {{ if .Values.CondorConfig.CollectorHost }}
+          value: {{ .Values.CondorConfig.CollectorHost | quote }}
+          {{ else }}
+          value: "$(HOSTNAME)"
+          {{ end }}
+        resources:
+          requests:
+            # we'll make it a modest request for now
+            memory: 1Gi
+            cpu:    1000m
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/condor_off","-peaceful"]
