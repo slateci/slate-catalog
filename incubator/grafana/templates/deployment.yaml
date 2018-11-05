@@ -29,6 +29,7 @@ spec:
       annotations:
 {{ toYaml . | indent 8 }}
 {{- end }}
+    spec:
 {{- if .Values.schedulerName }}
       schedulerName: "{{ .Values.schedulerName }}"
 {{- end }}
