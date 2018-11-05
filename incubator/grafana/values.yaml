@@ -1,12 +1,11 @@
 # Instance to label use case of Grafana deployment
+# Generates app name as "grafana-[Instance]"
+# Enables unique instances of Grafana in one namespace
 Instance: global
 
-rbac:
-  create: false
-  pspEnabled: false
-serviceAccount:
-  create: true
-  name:
+#serviceAccount:
+#  create: true
+#  name:
 
 replicas: 1
 
