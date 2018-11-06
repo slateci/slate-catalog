@@ -21,7 +21,7 @@ downloadDashboardsImage:
   tag: latest
   pullPolicy: IfNotPresent
 
-service:
+Service:
   # Port that the service will utilize.
   Port: 80
   # Controls how your service is can be accessed. Valid values are:
