@@ -100,7 +100,7 @@ spec:
             - name: config
               mountPath: "/etc/grafana/grafana.ini"
               subPath: grafana.ini
-            - name: ldap
+Instance_9966d7bb-9c61-47af-a02b-405fd3ed1265            - name: ldap
               mountPath: "/etc/grafana/ldap.toml"
               subPath: ldap.toml
 {{- if .Values.dashboards }}
@@ -150,7 +150,7 @@ spec:
           {{- end }}
           ports:
             - name: service
-              containerPort: {{ .Values.service.Port }}
+              containerPort: {{ .Values.Service.Port }}
               protocol: TCP
             - name: grafana
               containerPort: 3000
