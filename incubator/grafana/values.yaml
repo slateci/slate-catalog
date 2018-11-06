@@ -21,16 +21,20 @@ downloadDashboardsImage:
   tag: latest
   pullPolicy: IfNotPresent
 
-## Expose the grafana service to be accessed from outside the cluster (LoadBalancer service).
-## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
-## ref: http://kubernetes.io/docs/user-guide/services/
-##
 service:
   # Port that the service will utilize.
   Port: 80
-  # Controls whether the service is accessible from outside of the cluster.
-  # Must be true/false
-  ExternallyVisible: true
+  # Controls how your service is can be accessed. Valid values are:
+  # - LoadBalancer - This ensures that your service has a unique, externally
+  #                  visible IP address
+  # - NodePort - This will give your service the IP address of the cluster node 
+  #              on which it runs. If that address is public, the service will 
+  #              be externally accessible. Using this setting allows your 
+  #              service to share an IP address with other unrelated services. 
+  # - ClusterIP - Your service will only be accessible on the cluster's internal 
+  #               kubernetes network. Use this if you only want to connect to 
+  #               your service from other services running on the same cluster. 
+  ExternalVisibility: LoadBalancer
 
 ingress:
   enabled: false
