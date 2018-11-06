@@ -7,20 +7,18 @@ metadata:
     chart: {{ template "grafana.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- if .Values.service.labels }}
-{{ toYaml .Values.service.labels | indent 4 }}
+{{- if .Values.Service.labels }}
+{{ toYaml .Values.Service.labels | indent 4 }}
 {{- end }}
-{{- with .Values.service.annotations }}
+{{- with .Values.Service.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-  {{ if .Values.service.ExternallyVisible }}
-  type: LoadBalancer
-  {{ else }}
-  type: ClusterIP
-  {{ end }}
+  type: {{ .Values.Service.ExternalVisibility }}
+  {{ if ne .Values.Service.ExternalVisibility "ClusterIP" }}
   externalTrafficPolicy: Local
+  {{ end }}
   ports:
     - name: service
       port: {{ .Values.service.Port }}
