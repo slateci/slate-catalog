@@ -3,10 +3,6 @@
 # Enables unique instances of Grafana in one namespace
 Instance: global
 
-replicas: 1
-
-deploymentStrategy: RollingUpdate
-
 image:
   repository: grafana/grafana
   tag: 5.2.3

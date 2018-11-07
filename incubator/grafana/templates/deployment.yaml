@@ -12,14 +12,15 @@ metadata:
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
+
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: 1 
   selector:
     matchLabels:
       app: {{ template "grafana.name" . }}
       release: {{ .Release.Name }}
   strategy:
-    type: {{ .Values.deploymentStrategy }}
+    type: RollingUpdate 
   template:
     metadata:
       labels:

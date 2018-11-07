@@ -3,7 +3,7 @@ entries:
   condor:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-07T15:20:12.253571696-07:00
+    created: 2018-11-07T15:39:22.34422385-07:00
     description: A Helm chart for Kubernetes
     digest: bb48b4d4ff92cf66aedbe63046fa370ddfeb32b9033ee62f3153612bd3a54759
     name: condor
@@ -12,9 +12,9 @@ entries:
     version: 0.1.0
   dask:
   - appVersion: 0.18.1
-    created: 2018-11-07T15:20:12.2544501-07:00
+    created: 2018-11-07T15:39:22.345126066-07:00
     description: Distributed computation in Python with task scheduling
-    digest: 01780d9bfcbbf68868618f3530e37d83e9b5e5b5dae1f11813ab023ee9bc36a8
+    digest: 94662460dffd384697cb70af7f83e216888d0472ef2681820d299a14d826b302
     home: https://dask.pydata.org
     icon: https://avatars3.githubusercontent.com/u/17131925?v=3&s=200
     maintainers:
@@ -30,9 +30,9 @@ entries:
     version: 1.1.0
   datadog:
   - appVersion: 6.3.2
-    created: 2018-11-07T15:20:12.256322201-07:00
+    created: 2018-11-07T15:39:22.346965987-07:00
     description: DataDog Agent
-    digest: 73d95caa79ad4699a17a527152d4b8979f498ac968a9db90049d77e68feed5e5
+    digest: 30c94f5a2463619fbd2b3213c77d2bb0a4b75e857a2c5180813c36afbce568b6
     home: https://www.datadoghq.com
     icon: https://datadog-live.imgix.net/img/dd_logo_70x75.png
     keywords:
@@ -55,16 +55,16 @@ entries:
     version: 1.0.1
   elasticsearch:
   - apiVersion: v1
-    created: 2018-11-07T15:20:12.256651007-07:00
-    digest: 0955b01590d78c7ec4e04502a24420e979f3f4a5a7e0a601f45e3f21da11f3a3
+    created: 2018-11-07T15:39:22.347440982-07:00
+    digest: 9ca141542f5798685895d4e63acf3f0b6aba1ea7e7cb5345e03e2e9c84417d29
     name: elasticsearch
     urls:
     - elasticsearch-0.1.tgz
     version: "0.1"
   fluentbit-kibana:
   - apiVersion: v1
-    created: 2018-11-07T15:20:12.258399307-07:00
-    digest: 7031fa985fc3111402705ff6cb5a44c23f4c089780caf2fd35d0c8be275efdef
+    created: 2018-11-07T15:39:22.370010037-07:00
+    digest: 70bf788562496aae5585389e92d45152bde086aa1f309da8531c4546f09a8630
     name: fluentbit-kibana
     urls:
     - fluentbit-kibana-0.1.tgz
@@ -72,9 +72,9 @@ entries:
   globus-connect:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-07T15:20:12.258943884-07:00
+    created: 2018-11-07T15:39:22.370643731-07:00
     description: A Helm chart for Kubernetes
-    digest: 91f494868790657727198e03c2594e9715e8d299a98591e374c61e53281a6fa6
+    digest: 8e6d07334ce5cc4a5f3de9e5515c38e8e299ee38626fe452a34d36c65c6afdcb
     name: globus-connect
     urls:
     - globus-connect-0.1.0.tgz
@@ -82,9 +82,9 @@ entries:
   gogs:
   - apiVersion: v1
     appVersion: 0.11.29
-    created: 2018-11-07T15:20:12.260419041-07:00
+    created: 2018-11-07T15:39:22.372260952-07:00
     description: 'Gogs: Go Git Service'
-    digest: 468c43575ee8bb893d0d7849ebdaeea11832eae6963c03bc2069de488927f41a
+    digest: 83632b36bd4aaf805ea0dc5708769dab8a69e62533235e8825511d9829661e35
     home: https://gogs.io/
     icon: https://gogs.io/img/favicon.ico
     keywords:
@@ -95,9 +95,9 @@ entries:
     version: 0.6.0
   grafana:
   - appVersion: 5.2.3
-    created: 2018-11-07T15:20:12.261520236-07:00
+    created: 2018-11-07T15:39:22.373502935-07:00
     description: The leading tool for querying and visualizing time series and metrics.
-    digest: b0fcc9ca5ee8ee6402c1e55403faf6ec6792143fec85ae5429f9af3e115a0d70
+    digest: f194077ed509ee432d104f73066a924d6455eb0fff84ae4b697db3f26c775659
     engine: gotpl
     home: https://grafana.net
     icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
@@ -116,9 +116,9 @@ entries:
   graphite:
   - apiVersion: v1
     appVersion: 1.1.3
-    created: 2018-11-07T15:20:12.263217746-07:00
+    created: 2018-11-07T15:39:22.375267743-07:00
     description: Graphite metrics server
-    digest: d48281bc26466a7881f384e31b286276b8a71908f6d6334c744350029910b8e2
+    digest: 416691c79ee836b9930cdd3464ff1e4b33e2d200f60bae424d2c47c04ed0d09e
     home: https://graphiteapp.org/
     icon: https://graphiteapp.org/img/graphite-logo_color.png
     keywords:
@@ -138,11 +138,11 @@ entries:
   hadoop:
   - apiVersion: v1
     appVersion: 2.7.3
-    created: 2018-11-07T15:20:12.264593563-07:00
+    created: 2018-11-07T15:39:22.377263763-07:00
     description: The Apache Hadoop software library is a framework that allows for
       the distributed processing of large data sets across clusters of computers using
       simple programming models.
-    digest: f4246b245c57d15152be95948ae733bb3b8c61c33963064d5bdb6688830770b9
+    digest: a0a861d9345230be190a693b7ca489077e036595d819a267316b358b0fcb0967
     home: https://hadoop.apache.org/
     icon: http://hadoop.apache.org/images/hadoop-logo.jpg
     maintainers:
@@ -157,16 +157,16 @@ entries:
   htcondor:
   - apiVersion: v1
     appVersion: 8.6.12
-    created: 2018-11-07T15:20:12.265437921-07:00
+    created: 2018-11-07T15:39:22.379391814-07:00
     description: HTCondor distributed high-throughput computing system
-    digest: cac8817b72fba77d8285cb70447ad6ad9f78a8745cf85937d35cc1ca4f2a206f
+    digest: e6e08cdfffddc484ea5e7cd3fd1c916fee3c584c0e543f6b041da260c8126a53
     name: htcondor
     urls:
     - htcondor-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-07T15:20:12.265018449-07:00
+    created: 2018-11-07T15:39:22.378788133-07:00
     description: A Helm chart for Kubernetes
     digest: 51769a48db818b01ae1933e3f4a914ba4b11a357274f4f4b13de206692469df8
     name: htcondor
@@ -176,18 +176,18 @@ entries:
   htcondor-submit-node:
   - apiVersion: v1
     appVersion: 8.6.12
-    created: 2018-11-07T15:20:12.265878645-07:00
+    created: 2018-11-07T15:39:22.38010982-07:00
     description: HTCondor Schedd / Central Manager + SSH
-    digest: 9e518e4c813a8e9bcd3d09f97fc02958134108d009469b5b055a67f8be0cbb86
+    digest: 291f995710eb44f1d2b8a12a9b8348838ac0d3f05b04fe6f023ee387c3eebdd0
     name: htcondor-submit-node
     urls:
     - htcondor-submit-node-0.1.0.tgz
     version: 0.1.0
   influxdb:
   - appVersion: "1.6"
-    created: 2018-11-07T15:20:12.266949485-07:00
+    created: 2018-11-07T15:39:22.381324721-07:00
     description: Scalable datastore for metrics, events, and real-time analytics.
-    digest: 729afa35c98d2d17a84a35dea2246f6a89ee95eb2f24b7468e6a03ba7dc5da88
+    digest: 82d9272161cb8d630013cea7fd2e8234a53dae11fa07d24457a34b1e42410c78
     engine: gotpl
     home: https://www.influxdata.com/time-series-platform/influxdb/
     keywords:
@@ -205,11 +205,11 @@ entries:
     version: 0.11.0
   jenkins:
   - appVersion: 2.121.3
-    created: 2018-11-07T15:20:12.272751448-07:00
+    created: 2018-11-07T15:39:22.383269417-07:00
     description: Open source continuous integration server. It supports multiple SCM
       tools including CVS, Subversion and Git. It can execute Apache Ant and Apache
       Maven-based projects as well as arbitrary scripts.
-    digest: 39dc0e2ac92bae8b7da2e951b0c3eae003c3f6c4ad818bcdf3ff9e283b6914a9
+    digest: 46518daf099c0c76fce1b35cba8aa5be2062299d8401b8661bb22ee1653ab949
     home: https://jenkins.io/
     icon: https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png
     maintainers:
@@ -226,9 +226,9 @@ entries:
     version: 0.18.0
   jupyterhub:
   - appVersion: 0.9.4
-    created: 2018-11-07T15:20:12.2789298-07:00
+    created: 2018-11-07T15:39:22.393833739-07:00
     description: Multi-user Jupyter installation
-    digest: 4c7fd4502f0f296bece0d1bd554d38946f6f86bf43f3484e5f008426da0495c7
+    digest: fa04f2b65c517352977604daabe408fabe4cc86fc35030ff733452b4b294ebb5
     home: https://z2jh.jupyter.org
     icon: https://jupyter.org/assets/hublogo.svg
     kubeVersion: '>=1.8.0-0'
@@ -240,7 +240,7 @@ entries:
     - jupyterhub-0.8.0.tgz
     version: 0.8.0
   - appVersion: 0.9.4
-    created: 2018-11-07T15:20:12.282155075-07:00
+    created: 2018-11-07T15:39:22.397099573-07:00
     description: Multi-user Jupyter installation
     digest: 2a0c8614f448471e8bdb57329e318d639f0e599288f0b1cfd2264f36096f5441
     home: https://z2jh.jupyter.org
@@ -254,7 +254,7 @@ entries:
     - jupyterhub-0.8.tgz
     version: "0.8"
   - appVersion: 0.9.4
-    created: 2018-11-07T15:20:12.275920429-07:00
+    created: 2018-11-07T15:39:22.3870023-07:00
     description: Multi-user Jupyter installation
     digest: 0f9bc4bbe07dd9d698873ce75215f10814725686547170e0e3fc3bf1589bcb24
     home: https://z2jh.jupyter.org
@@ -269,12 +269,12 @@ entries:
     version: 0.8-dev
   mariadb:
   - appVersion: 10.1.36
-    created: 2018-11-07T15:20:12.284071315-07:00
+    created: 2018-11-07T15:39:22.398962613-07:00
     description: Fast, reliable, scalable, and easy to use open-source relational
       database system. MariaDB Server is intended for mission-critical, heavy-load
       production systems as well as for embedding into mass-deployed software. Highly
       available MariaDB cluster.
-    digest: 07ab054361233b6c64995b11bbdb6a98f3a64d4a02f9c19a3292edecb2c2d466
+    digest: d4a952bead67dabfd227cae4587732d5990a144450d1f1742244acbc60b7e4cf
     engine: gotpl
     home: https://mariadb.org
     icon: https://bitnami.com/assets/stacks/mariadb/img/mariadb-stack-220x234.png
@@ -296,11 +296,11 @@ entries:
     version: 5.0.3
   mongodb:
   - appVersion: 4.0.2
-    created: 2018-11-07T15:20:12.285792128-07:00
+    created: 2018-11-07T15:39:22.404856925-07:00
     description: NoSQL document-oriented database that stores JSON-like documents
       with dynamic schemas, simplifying the integration of data in content-driven
       applications.
-    digest: 715c55cdd5f18f31bd69fa49199aa16a501898f13014b47db6eb003e2461bc8f
+    digest: ecb1489747f917e058f3b21f0f4eb9c45fcaf7192ac63bb957671c932af9d10d
     engine: gotpl
     home: https://mongodb.org
     icon: https://bitnami.com/assets/stacks/mongodb/img/mongodb-stack-220x234.png
@@ -322,11 +322,11 @@ entries:
     version: 4.3.5
   moodle:
   - appVersion: 3.5.2
-    created: 2018-11-07T15:20:12.288455468-07:00
+    created: 2018-11-07T15:39:22.409565468-07:00
     description: Moodle is a learning platform designed to provide educators, administrators
       and learners with a single robust, secure and integrated system to create personalised
       learning environments
-    digest: ca98abdf3fa26c7eb35dfb92a891d1dcd704ae07eb574460cc965b0f76b1dabd
+    digest: de918f9cd6b702423ca76bbe7e394dd9f0ee179c636468c370b6ab68830a8a91
     engine: gotpl
     home: http://www.moodle.org/
     icon: https://bitnami.com/assets/stacks/moodle/img/moodle-stack-110x117.png
@@ -345,10 +345,10 @@ entries:
     version: 2.0.5
   mysql:
   - appVersion: 5.7.14
-    created: 2018-11-07T15:20:12.289946383-07:00
+    created: 2018-11-07T15:39:22.411088729-07:00
     description: Fast, reliable, scalable, and easy to use open-source relational
       database system.
-    digest: 2978c9ee125f09aba789ddafbfebb0427434059cfd2071be68eb049eb0243e84
+    digest: c717840f5c011f3a6e1a6fb0fcc8eae25e776227108e163205e927987922d870
     engine: gotpl
     home: https://www.mysql.com/
     icon: https://www.mysql.com/common/logos/logo-mysql-170x115.png
@@ -370,15 +370,15 @@ entries:
     version: 0.10.1
   nginx:
   - apiVersion: v1
-    created: 2018-11-07T15:20:12.290902164-07:00
+    created: 2018-11-07T15:39:22.412432175-07:00
     description: A simple nginx deployment which serves a static page
-    digest: 105c04f71b2ce9b0d722c119f9f9ddf164dbe6c180a874b704e2f98e5e448981
+    digest: af410a10236031f50a3ea0c1629d46cc85a7f15803b2eb25c027053184b094f6
     name: nginx
     urls:
     - nginx-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
-    created: 2018-11-07T15:20:12.290484315-07:00
+    created: 2018-11-07T15:39:22.411946391-07:00
     description: A simple nginx deployment which serves a static page
     digest: 40e2d24ddb75d6a98bea39479ee2f2fd57b170e6d60e35a8b3dcc240423f8d89
     name: nginx
@@ -388,17 +388,17 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-11-07T15:20:12.294095487-07:00
+    created: 2018-11-07T15:39:22.414980544-07:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
-    digest: 16bfe46ce93d9e1b279611b6bd5453d9423b5659de1a648b6d4f591e1e9ef704
+    digest: 66dc7863628ef683a5f9238488c4d1e2e89f11f28dc00f3cf205b3a40e61c165
     name: osg-frontier-squid
     urls:
     - osg-frontier-squid-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-11-07T15:20:12.293128445-07:00
+    created: 2018-11-07T15:39:22.414104418-07:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
     digest: 7ff0dedef756096c2e961c0aee42c07fa5a22baf9d0f4b3ad51f5b08d813454f
@@ -408,7 +408,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-07T15:20:12.291764979-07:00
+    created: 2018-11-07T15:39:22.413215939-07:00
     description: A Helm chart for Kubernetes
     digest: 54e9450e3530e61ddd004c9fedc06660b20f1ef1420b432ed1d273ebad5e1387
     name: osg-frontier-squid
@@ -418,19 +418,19 @@ entries:
   osiris-unis:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-07T15:20:12.294548573-07:00
+    created: 2018-11-07T15:39:22.415464986-07:00
     description: Unified Network Information Service (UNIS)
-    digest: 4316ac440bf1eef2ec0ee736caefe81f2ec6f8e19ab5007a55ff0af5c50f6132
+    digest: 818bce479c22f21a428383abc2aad2fd6f409068586003a264eba14841ef9fab
     name: osiris-unis
     urls:
     - osiris-unis-0.1.0.tgz
     version: 0.1.0
   owncloud:
   - appVersion: 10.0.10
-    created: 2018-11-07T15:20:12.29738231-07:00
+    created: 2018-11-07T15:39:22.418764097-07:00
     description: A file sharing server that puts the control and security of your
       own data back into your hands.
-    digest: 3964a9547661640ec2e42b5936f236ab13646b0b72105d5a9d5e7f0b86882430
+    digest: 2b9b901baf71e791a5a4fdfe90fe1e9a981ba44a68308308ac3d29704d80c4ab
     engine: gotpl
     home: https://owncloud.org/
     icon: https://bitnami.com/assets/stacks/owncloud/img/owncloud-stack-220x234.png
@@ -452,20 +452,20 @@ entries:
   perfsonar:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-07T15:20:12.297950384-07:00
+    created: 2018-11-07T15:39:22.419259617-07:00
     description: A test and measurement infrastructure to monitor and ensure network
       performance
-    digest: 2e79aa41e96975c889e5c6d70236bc8661626360d04809a3053708c541aaee44
+    digest: 0292662fd2da679f117647670bc365f843a578fd6b34c5d9a9cb348260020d86
     name: perfsonar
     urls:
     - perfsonar-0.1.0.tgz
     version: 0.1.0
   phabricator:
   - appVersion: 2018.34.0
-    created: 2018-11-07T15:20:12.306218891-07:00
+    created: 2018-11-07T15:39:22.421891359-07:00
     description: Collection of open source web applications that help software companies
       build better software.
-    digest: 76f973f50d08081bcbe2c01db9f188f96f02922d2cf24c2fbafb0814bced13f0
+    digest: b7cf9d59078604a13585711989dd2abea4985f389682567d0513f7c449c78347
     engine: gotpl
     home: https://www.phacility.com/phabricator/
     icon: https://bitnami.com/assets/stacks/phabricator/img/phabricator-stack-110x117.png
@@ -494,9 +494,9 @@ entries:
     version: 2.1.9
   prometheus:
   - appVersion: 2.4.0
-    created: 2018-11-07T15:20:12.308933644-07:00
+    created: 2018-11-07T15:39:22.424668814-07:00
     description: Prometheus is a monitoring system and time series database.
-    digest: ac1bdd958a01c8d398eca6c1fa3f1dd6e943effc2ab31c77f5f73c516d68835b
+    digest: f512d8972008330f3ff8eff619764f212dbec31a70d4bb933bd202e2925b8bd3
     engine: gotpl
     home: https://prometheus.io/
     icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
@@ -518,11 +518,11 @@ entries:
     version: 7.1.0
   redis:
   - appVersion: 4.0.11
-    created: 2018-11-07T15:20:12.310879472-07:00
+    created: 2018-11-07T15:39:22.426533804-07:00
     description: Open source, advanced key-value store. It is often referred to as
       a data structure server since keys can contain strings, hashes, lists, sets
       and sorted sets.
-    digest: eeded3e977f5b811aea4348b2369f7a1085721c3e2bdd2c971b3ffab21264264
+    digest: 39189708ed0ac256f96b915d5fd989bfbb3de07f412222364cf1a6644cff7600
     engine: gotpl
     home: http://redis.io/
     icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
@@ -541,9 +541,9 @@ entries:
     version: 3.10.0
   redmine:
   - appVersion: 3.4.6
-    created: 2018-11-07T15:20:12.31949582-07:00
+    created: 2018-11-07T15:39:22.430196831-07:00
     description: A flexible project management web application.
-    digest: 0949a27a466f3cdf730aaa1e0d45bdb787a95c926437eebfda66c1a8e944deea
+    digest: 4efcb13a2a233d3f083f1dabb5ed50bd465c06525d81e79d13a777c110e9e4d7
     engine: gotpl
     home: http://www.redmine.org/
     icon: https://bitnami.com/assets/stacks/redmine/img/redmine-stack-220x234.png
@@ -567,9 +567,9 @@ entries:
     version: 4.1.0
   spark:
   - appVersion: 1.5.1
-    created: 2018-11-07T15:20:12.320488324-07:00
+    created: 2018-11-07T15:39:22.431220741-07:00
     description: Fast and general-purpose cluster computing system.
-    digest: e9752271d20f64435246cc3ac244f02d59c3e0e1aa4b3a9b081e05b9761f1c7e
+    digest: 5c3aba4cd5520f61d327aa75500234b71ceea4a27f06223dc07aee91706bc6c9
     home: http://spark.apache.org
     icon: http://spark.apache.org/images/spark-logo-trademark.png
     maintainers:
@@ -585,9 +585,9 @@ entries:
   stashcache:
   - apiVersion: v1
     appVersion: "0.9"
-    created: 2018-11-07T15:20:12.321010301-07:00
+    created: 2018-11-07T15:39:22.431676035-07:00
     description: StashCache is an xrootd based caching service
-    digest: 8a21f1d7cc67abfd097456c6ac646cfc51f36961a3ef961fe810310d6097f2df
+    digest: 0e5bae559759aa810f7ec1ebe5da11fb04cc5863b22207ebfe545d58f7a00ee1
     home: https://opensciencegrid.org/docs/data/stashcache/overview/
     name: stashcache
     urls:
@@ -596,9 +596,9 @@ entries:
   xcache:
   - apiVersion: v1
     appVersion: 4.8.3
-    created: 2018-11-07T15:20:12.321709737-07:00
+    created: 2018-11-07T15:39:22.432278197-07:00
     description: XCache is a xrootd based caching service for k8s
-    digest: 19cd70ce038b53384006f589fd373a48cf73ba2fd9b3103c12af5d7270328fe5
+    digest: 71f872017eb772a67336ed0489e9e17b08eeb24a6c80ba6c7ba22a344a3569a3
     home: http://slateci.io/XCache/
     maintainers:
     - email: ivukotic@uchicago.edu
@@ -607,4 +607,4 @@ entries:
     urls:
     - xcache-0.1.0.tgz
     version: 0.1.0
-generated: 2018-11-07T15:20:12.252720303-07:00
+generated: 2018-11-07T15:39:22.343523202-07:00
