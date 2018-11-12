@@ -1,8 +1,18 @@
 apiVersion: v1
 entries:
+  htcondor:
+  - apiVersion: v1
+    appVersion: 8.6.12
+    created: 2018-11-12T16:39:48.619969328-06:00
+    description: HTCondor distributed high-throughput computing system
+    digest: 72fa5d054a20b683ed7e464417d3b7f7cf0aafe9cbbb3c712c48d84b0d5d4e29
+    name: htcondor
+    urls:
+    - htcondor-0.2.0.tgz
+    version: 0.2.0
   nginx:
   - apiVersion: v1
-    created: 2018-10-31T16:46:37.143465172-04:00
+    created: 2018-11-12T16:39:48.628419345-06:00
     description: A simple nginx deployment which serves a static page
     digest: 0edb313c4ddaca0987f81be69ce5e763a3140017464894f76c038a762243c989
     name: nginx
@@ -12,7 +22,7 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: squid-3
-    created: 2018-10-31T16:46:37.144049545-04:00
+    created: 2018-11-12T16:39:48.629222237-06:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
     digest: 01dba1538c01b3b8fe1879f31e6520d52ada505270dcd4384f35595a8e31c33c
@@ -20,4 +30,29 @@ entries:
     urls:
     - osg-frontier-squid-1.0.0.tgz
     version: 1.0.0
-generated: 2018-10-31T16:46:37.142170694-04:00
+  stashcache:
+  - apiVersion: v1
+    appVersion: "0.9"
+    created: 2018-11-12T16:39:48.629415931-06:00
+    description: StashCache is an xrootd based caching service
+    digest: 339b7c11481ff822ef09b610bf02c506c1c18fa08da3b27e9bf0350c59d380bc
+    home: https://opensciencegrid.org/docs/data/stashcache/overview/
+    name: stashcache
+    urls:
+    - stashcache-0.1.0.tgz
+    version: 0.1.0
+  xcache:
+  - apiVersion: v1
+    appVersion: 4.8.3
+    created: 2018-11-12T16:39:48.629690058-06:00
+    description: XCache is a xrootd based caching service for k8s
+    digest: 57fae1ebe9c3a41d43fdb716dae1ac1a70c58aaa498de16f990cd019c0a2e437
+    home: http://slateci.io/XCache/
+    maintainers:
+    - email: ivukotic@uchicago.edu
+      name: Ilija Vukotic
+    name: xcache
+    urls:
+    - xcache-0.1.0.tgz
+    version: 0.1.0
+generated: 2018-11-12T16:39:48.61906986-06:00
