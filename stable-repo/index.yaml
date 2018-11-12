@@ -3,7 +3,7 @@ entries:
   htcondor:
   - apiVersion: v1
     appVersion: 8.6.12
-    created: 2018-11-12T17:24:53.414643204-06:00
+    created: 2018-11-12T17:32:46.400029935-06:00
     description: HTCondor distributed high-throughput computing system
     digest: 72fa5d054a20b683ed7e464417d3b7f7cf0aafe9cbbb3c712c48d84b0d5d4e29
     name: htcondor
@@ -13,7 +13,7 @@ entries:
   nginx:
   - apiVersion: v1
     appVersion: 1.7.9
-    created: 2018-11-12T17:24:53.414893858-06:00
+    created: 2018-11-12T17:32:46.400463793-06:00
     description: A simple nginx deployment which serves a static page
     digest: ae45d862a459c1393c33bb18352f51585b3184b460d96700ae5e3e32de574a42
     name: nginx
@@ -22,11 +22,11 @@ entries:
     version: 1.0.0
   osg-frontier-squid:
   - apiVersion: v1
-    appVersion: squid-3
-    created: 2018-11-12T17:24:53.415777101-06:00
+    appVersion: 3.5.27
+    created: 2018-11-12T17:32:46.400925348-06:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
-    digest: 01dba1538c01b3b8fe1879f31e6520d52ada505270dcd4384f35595a8e31c33c
+    digest: 22b04098f0f2f8ad0b9ca5d4489ee7b77912e75c05c77f8765a4d4866fe00e8b
     name: osg-frontier-squid
     urls:
     - osg-frontier-squid-1.0.0.tgz
@@ -34,7 +34,7 @@ entries:
   stashcache:
   - apiVersion: v1
     appVersion: "0.9"
-    created: 2018-11-12T17:24:53.416148426-06:00
+    created: 2018-11-12T17:32:46.401355153-06:00
     description: StashCache is an xrootd based caching service
     digest: 339b7c11481ff822ef09b610bf02c506c1c18fa08da3b27e9bf0350c59d380bc
     home: https://opensciencegrid.org/docs/data/stashcache/overview/
@@ -45,7 +45,7 @@ entries:
   xcache:
   - apiVersion: v1
     appVersion: 4.8.3
-    created: 2018-11-12T17:24:53.416685338-06:00
+    created: 2018-11-12T17:32:46.401961596-06:00
     description: XCache is a xrootd based caching service for k8s
     digest: 57fae1ebe9c3a41d43fdb716dae1ac1a70c58aaa498de16f990cd019c0a2e437
     home: http://slateci.io/XCache/
@@ -56,4 +56,4 @@ entries:
     urls:
     - xcache-0.1.0.tgz
     version: 0.1.0
-generated: 2018-11-12T17:24:53.41388191-06:00
+generated: 2018-11-12T17:32:46.398026662-06:00
