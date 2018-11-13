@@ -65,8 +65,8 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "grafana/grafana:5.2.3"
+          imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: config
               mountPath: "/etc/grafana/grafana.ini"

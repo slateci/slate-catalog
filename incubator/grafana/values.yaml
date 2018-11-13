@@ -3,11 +3,6 @@
 # Enables unique instances of Grafana in one namespace
 Instance: global
 
-image:
-  repository: grafana/grafana
-  tag: 5.2.3
-  pullPolicy: IfNotPresent
-
 securityContext:
   runAsUser: 472
   fsGroup: 472
