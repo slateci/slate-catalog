@@ -41,8 +41,8 @@ spec:
 {{- if .Values.dashboards }}
       initContainers:
         - name: download-dashboards
-          image: "{{ .Values.downloadDashboardsImage.repository }}:{{ .Values.downloadDashboardsImage.tag }}"
-          imagePullPolicy: {{ .Values.downloadDashboardsImage.pullPolicy }}
+          image: "appropriate/curl:latest"
+          imagePullPolicy: IfNotPresent
           command: ["sh", "/etc/grafana/download_dashboards.sh"]
           volumeMounts:
             - name: config

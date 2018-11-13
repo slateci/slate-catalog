@@ -7,11 +7,6 @@ securityContext:
   runAsUser: 472
   fsGroup: 472
 
-downloadDashboardsImage:
-  repository: appropriate/curl
-  tag: latest
-  pullPolicy: IfNotPresent
-
 Service:
   # Port that the service will utilize.
   Port: 80
