@@ -183,11 +183,7 @@ spec:
         {{- end }}
         - name: ldap
           secret:
-            {{- if .Values.ldap.existingSecret }}
-            secretName: {{ .Values.ldap.existingSecret }}
-            {{- else }}
             secretName: {{ template "grafana.fullname" . }}
-            {{- end }}
             items:
               - key: ldap-toml
                 path: ldap.toml
