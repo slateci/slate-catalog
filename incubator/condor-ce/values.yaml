@@ -1,0 +1,62 @@
+# The label to apply to this deployment, 
+# used to manage multiple instances of the same application
+Instance: default
+
+# Settings realted to interfacing with the Open Science Grid
+CE:
+  SiteName: 
+  # Host name at which the CE will run
+  HostName: 
+  # Name of the person responsible for the CE
+  Contact:
+  # Address for the contact person
+  Email:
+  # City where the CE will be located
+  City: 
+  # COutry where the CE will be located
+  Country:
+  # Position of the CE
+  Latitude: 0
+  # Position of the CE
+  Longitude: 0
+
+# Settings related to the batch system to which the CE will connect
+RemoteHost:
+  # Batch scheduling software with which the CE will interface
+  Batch: "condor"
+  MaxJobs: 10
+  # Name of the user acocunt the CE will use to connect to the batch system
+  User: 
+  # Host name at which to contact the batch system
+  HostName:
+  # The batch system host's public ssh key
+  HostKey: 
+  # The name of a secret containing the private SSH key used to connect to the batch system
+  # (The key data should be stored under the name 'private_key' in the secret)
+  PrivateKeySecret: 
+
+# Information about the batch system
+Cluster: |-
+  name = Grid
+  node_count = 1
+  ram_mb = 4000
+  cpu_model = Intel(R) Xeon(R) CPU X5550
+  cpu_vendor = Intel
+  cpu_speed_mhz = 2600
+  cpus_per_node = 1
+  cores_per_node = 1
+  inbound_network = FALSE
+  outbound_network = TRUE
+  cpu_platform = x86_64
+  max_wall_time = 1440
+  allowed_vos = osg
+
+# Settings for using a caching proxy
+Proxy:
+  # Whether to use the proxy
+  Enabled: False
+  # The address, including the hostanem and port, at which to contact the proxy
+  Address: "squid.chpc.utah.edu:3128"
+
+# The SSH public key to install in the CE to allow SSH access. The user name will be 'osg'. 
+PublicKey:  
