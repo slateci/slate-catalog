@@ -48,8 +48,8 @@ affinity: {}
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
-persistence:
-  enabled: false
+#persistence:
+#  enabled: false
   # storageClassName: default
   # accessModes:
   #   - ReadWriteOnce
@@ -58,6 +58,8 @@ persistence:
   # subPath: ""
   # existingClaim:
 
+# Default Username and Password for Grafana account
+# May be used to login to Grafana web portal this app launches, but should be changed afterwards
 adminUser: slate
 adminPassword: changeme
 

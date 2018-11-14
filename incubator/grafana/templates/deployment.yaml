@@ -50,7 +50,7 @@ spec:
               subPath: download_dashboards.sh
             - name: storage
               mountPath: "/var/lib/grafana"
-              subPath: {{ .Values.persistence.subPath }}
+              subPath: "" 
           {{- range .Values.extraSecretMounts }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -97,7 +97,7 @@ spec:
 {{- end }}
             - name: storage
               mountPath: "/var/lib/grafana"
-              subPath: {{ .Values.persistence.subPath }}
+              subPath: "" 
           {{- range .Values.extraSecretMounts }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -188,12 +188,7 @@ spec:
               - key: ldap-toml
                 path: ldap.toml
         - name: storage
-      {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "grafana.fullname" .) }}
-      {{- else }}
           emptyDir: {}
-      {{- end -}}
       {{- range .Values.extraSecretMounts }}
         - name: {{ .name }}
           secret:
