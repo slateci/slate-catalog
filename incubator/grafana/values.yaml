@@ -156,3 +156,6 @@ grafana.ini:
     mode: console
   grafana_net:
     url: https://grafana.net
+ldap:
+  config: ""
+
