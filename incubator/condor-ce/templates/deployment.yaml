@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "condor-ce.fullname" . }}
+  labels:
+    app: {{ template "condor-ce.fullname" . }}
+    chart: {{ template "condor-ce.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "condor-ce.fullname" . }}
+      chart: {{ template "condor-ce.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
+  template:
+    metadata:
+      labels: 
+        app: {{ template "condor-ce.fullname" . }}
+        chart: {{ template "condor-ce.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      containers:
+      - name: condor-ce
+        image: "slateci/container-condor-ce"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: ssh
+          containerPort: 22
+          protocol: TCP
+        volumeMounts:
+        - name: remote-host-key
+          mountPath: "/etc/osg/bosco.key"
+          subPath: bosco.key
+        - name: condor-ce-{{ .Values.Instance }}-configuration
+          mountPath: /etc/osg/config.d/99-local.ini
+          subPath: 99-local.ini
+        - name: condor-ce-{{ .Values.Instance }}-configuration
+          mountPath: /tmp/ProbeConfig
+          subPath: ProbeConfig
+        - name: condor-ce-{{ .Values.Instance }}-configuration
+          mountPath: /etc/ssh/ssh_known_hosts
+          subPath: ssh_known_hosts
+        - name: condor-ce-{{ .Values.Instance }}-configuration
+          mountPath: /tmp/access-key
+          subPath: access-key
+      volumes:
+      - name: remote-host-key
+        secret:
+          secretName: {{ .Values.RemoteHost.PrivateKeySecret }}
+          items:
+          - key: private_key
+            path: bosco.key
+      - name: condor-ce-{{ .Values.Instance }}-configuration
+        configMap: 
+          name: condor-ce-{{ .Values.Instance }}-configuration
+      restartPolicy: Always
