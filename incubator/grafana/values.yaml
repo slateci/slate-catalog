@@ -58,8 +58,8 @@ persistence:
   # subPath: ""
   # existingClaim:
 
-adminUser: admin
-# adminPassword: strongpassword
+adminUser: slate
+adminPassword: changeme
 
 ## Extra environment variables that will be pass onto deployment pods
 env: {}
@@ -157,5 +157,6 @@ grafana.ini:
   grafana_net:
     url: https://grafana.net
 ldap:
+  # `config` is the content of `ldap.toml` that will be stored in the created secret
   config: ""
 
