@@ -127,10 +127,6 @@ spec:
                   name: {{ template "grafana.fullname" . }}
                   key: plugins
             {{- end }}
-{{- range $key, $value := .Values.env }}
-            - name: "{{ $key }}"
-              value: "{{ $value }}"
-{{- end }}
           {{- if .Values.envFromSecret }}
           envFrom:
             - secretRef:
