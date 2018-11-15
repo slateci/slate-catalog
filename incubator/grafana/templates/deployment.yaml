@@ -127,11 +127,6 @@ spec:
                   name: {{ template "grafana.fullname" . }}
                   key: plugins
             {{- end }}
-          {{- if .Values.envFromSecret }}
-          envFrom:
-            - secretRef:
-                name: {{ .Values.envFromSecret }}
-          {{- end }}
           livenessProbe:
             httpGet:
               path: /api/health
