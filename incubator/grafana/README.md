@@ -10,6 +10,8 @@ $ slate app install --vo <vo-name> --cluster <cluster-name> grafana
 
 The `adminuser` and `adminPassword` fields in Grafana's `values.yaml` file (lines 23 & 24) are the username and password for the admin account created to login to the instance of Grafana that is installed. These should be changed from their defaults.
 
+After installing the app, use `slate instance info <instance-id>` to get the IP Address where Grafana may be accessed at. 
+
 
 ## Configuration:
 These are options that may be configured in Grafana's `values.yaml` and/or `deployment.yaml` if desired.
