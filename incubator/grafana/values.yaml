@@ -16,7 +16,7 @@ Service:
   # - ClusterIP - Your service will only be accessible on the cluster's internal 
   #               kubernetes network. Use this if you only want to connect to 
   #               your service from other services running on the same cluster. 
-  ExternalVisibility: NodePort
+  ExternalVisibility: LoadBalancer
 
 # Default Username and Password for Grafana account
 # May be used to login to Grafana web portal this app launches, but should be changed afterwards
