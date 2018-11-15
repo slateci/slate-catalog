@@ -110,13 +110,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "grafana.fullname" . }}
                   key: admin-password
-            {{- if .Values.plugins }}
-            - name: GF_INSTALL_PLUGINS
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "grafana.fullname" . }}
-                  key: plugins
-            {{- end }}
           livenessProbe:
             httpGet:
               path: /api/health
