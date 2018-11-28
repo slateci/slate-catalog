@@ -69,7 +69,7 @@ spec:
       nodePort: {{ .Values.proxy.service.nodePorts.https }}
       {{- end }}
     {{- end }}
-  type: {{ .Values.proxy.service.type }}
+  type: NodePort
   {{- if .Values.proxy.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.proxy.service.loadBalancerIP }}
   {{- end }}
