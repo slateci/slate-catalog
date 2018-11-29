@@ -66,6 +66,8 @@ spec:
             value: "{{ .Values.XCacheConfig.BlockSize }}"
           - name: XC_PREFETCH
             value: "{{ .Values.XCacheConfig.Prefetch }}"
+          - name: AGIS_PROTOCOL_ID
+            value: "{{ .Values.SiteConfig.AGISprotocolID }}"
          # livenessProbe:
          #   tcpSocket:
          #     port: {{ .Values.Service.Port }}
