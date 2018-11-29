@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   grafana:
   - appVersion: 5.2.3
-    created: 2018-11-15T11:35:20.706322333-07:00
+    created: 2018-11-29T09:44:38.505264025-06:00
     description: The leading tool for querying and visualizing time series and metrics.
     digest: ddbac0966f521b0cb32e323f708efe478dc8e306e2c217e5d067503ab76b832d
     engine: gotpl
@@ -23,7 +23,7 @@ entries:
   htcondor:
   - apiVersion: v1
     appVersion: 8.6.12
-    created: 2018-11-15T11:35:20.706919479-07:00
+    created: 2018-11-29T09:44:38.50573663-06:00
     description: HTCondor distributed high-throughput computing system
     digest: 72fa5d054a20b683ed7e464417d3b7f7cf0aafe9cbbb3c712c48d84b0d5d4e29
     name: htcondor
@@ -33,7 +33,7 @@ entries:
   nginx:
   - apiVersion: v1
     appVersion: 1.7.9
-    created: 2018-11-15T11:35:20.707436994-07:00
+    created: 2018-11-29T09:44:38.506198192-06:00
     description: A simple nginx deployment which serves a static page
     digest: ae45d862a459c1393c33bb18352f51585b3184b460d96700ae5e3e32de574a42
     name: nginx
@@ -43,7 +43,7 @@ entries:
   osg-frontier-squid:
   - apiVersion: v1
     appVersion: 3.5.27
-    created: 2018-11-15T11:35:20.708345979-07:00
+    created: 2018-11-29T09:44:38.507074234-06:00
     description: A Helm chart for configuration and deployment of the Open Science
       Grid's Frontier Squid application.
     digest: 22b04098f0f2f8ad0b9ca5d4489ee7b77912e75c05c77f8765a4d4866fe00e8b
@@ -54,7 +54,7 @@ entries:
   stashcache:
   - apiVersion: v1
     appVersion: "0.9"
-    created: 2018-11-15T11:35:20.708734355-07:00
+    created: 2018-11-29T09:44:38.507516933-06:00
     description: StashCache is an xrootd based caching service
     digest: 339b7c11481ff822ef09b610bf02c506c1c18fa08da3b27e9bf0350c59d380bc
     home: https://opensciencegrid.org/docs/data/stashcache/overview/
@@ -65,7 +65,20 @@ entries:
   xcache:
   - apiVersion: v1
     appVersion: 4.8.3
-    created: 2018-11-15T11:35:20.709439222-07:00
+    created: 2018-11-29T09:44:38.508326069-06:00
+    description: XCache is a xrootd based caching service for k8s
+    digest: e27fc989138a20210d127a57acb70b55767bb4bb7524fee3b4a17e8d65c4535d
+    home: http://slateci.io/XCache/
+    maintainers:
+    - email: ivukotic@uchicago.edu
+      name: Ilija Vukotic
+    name: xcache
+    urls:
+    - xcache-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v1
+    appVersion: 4.8.3
+    created: 2018-11-29T09:44:38.50802082-06:00
     description: XCache is a xrootd based caching service for k8s
     digest: 57fae1ebe9c3a41d43fdb716dae1ac1a70c58aaa498de16f990cd019c0a2e437
     home: http://slateci.io/XCache/
@@ -76,4 +89,4 @@ entries:
     urls:
     - xcache-0.1.0.tgz
     version: 0.1.0
-generated: 2018-11-15T11:35:20.70430257-07:00
+generated: 2018-11-29T09:44:38.50418277-06:00
