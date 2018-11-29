@@ -13,6 +13,9 @@ Service:
 
 SiteConfig:
   Name: MWT2
+  # AGIS protocol ID. 433 is a dummy value. 
+  # can be looked up in this URL: http://atlas-agis.cern.ch/agis/serviceprotocol/edit/433/
+  AGISprotocolID: 433
 
 Monitoring:
   Collector: http://uct2-collectd.mwt2.org:8080
@@ -24,7 +27,7 @@ XCacheConfig:
   HighWaterMark: 0.95
   LowWaterMark: 0.90
   # The amount of memory XCache is allowed to use (in GB)
-  RamSize: 1g
+  RamSize: 16g
   # Minimal chunk size that will be prefetched/cached.
   BlockSize: 1M
   # to prefetch even chunks that were not requested
@@ -37,4 +40,4 @@ XCacheConfig:
 image:
   repository: slateci/xcache
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
