@@ -47,6 +47,13 @@ spec:
         - name: condor-ce-{{ .Values.Instance }}-configuration
           mountPath: /tmp/access-key
           subPath: access-key
+        - name: grid-certs
+          mountPath: /etc/grid-security/certificates
+      - name: fetchcrl
+        image: edquist/fetchcrl-container
+        volumeMounts:
+        - name: grid-certs
+          mountPath: /etc/grid-security/certificates
       volumes:
       - name: remote-host-key
         secret:
@@ -57,4 +64,6 @@ spec:
       - name: condor-ce-{{ .Values.Instance }}-configuration
         configMap: 
           name: condor-ce-{{ .Values.Instance }}-configuration
+      - name: grid-certs
+        emptyDir: {}
       restartPolicy: Always
