@@ -106,3 +106,14 @@ spec:
             readOnly: true
 
         - name: reporter
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["/run_cache_reporter.sh"]
+          env:
+          - name: XC_SITE
+            value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_REPORT_COLLECTOR
+            value: "{{ .Values.Monitoring.Collector }}"
+          volumeMounts:
+          - name: xcache-meta
+            mountPath: "/xcache-meta"
+            readOnly: true
