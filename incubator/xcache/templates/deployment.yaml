@@ -56,8 +56,8 @@ spec:
       
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "slateci/xcache"
+          imagePullPolicy: "Always"
           env:
           - name: XC_SPACE_HIGH_WM
             value: "{{ .Values.XCacheConfig.HighWaterMark }}"
@@ -95,7 +95,7 @@ spec:
             mountPath: "/xcache-meta"
 
         - name: x509
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "slateci/xcache"
           command: ["/run_x509_updater.sh"]
           volumeMounts:
           - name: x509-data
@@ -106,7 +106,7 @@ spec:
             readOnly: true
 
         - name: reporter
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "slateci/xcache"
           command: ["/run_cache_reporter.sh"]
           env:
           - name: XC_SITE
