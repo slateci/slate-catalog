@@ -45,14 +45,19 @@ spec:
             mode: 256 
           - key: usercert
             path: usercert.pem
-      - name: xcache-data
+      {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
+      - name: xcache-data-{{ $index }}
         hostPath:
-          path: {{ .Values.XCacheConfig.CacheDirectory }}
+          path: {{ $dir }}
+      {{- end }}
+      - name: xcache-meta
+        hostPath:
+          path: {{ .Values.XCacheConfig.MetaDirectory }}
       
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "slateci/xcache"
+          imagePullPolicy: "Always"
           env:
           - name: XC_SPACE_HIGH_WM
             value: "{{ .Values.XCacheConfig.HighWaterMark }}"
@@ -68,11 +73,11 @@ spec:
             value: "{{ .Values.XCacheConfig.Prefetch }}"
           - name: AGIS_PROTOCOL_ID
             value: "{{ .Values.SiteConfig.AGISprotocolID }}"
-         # livenessProbe:
-         #   tcpSocket:
-         #     port: {{ .Values.Service.Port }}
-         #   initialDelaySeconds: 180
-         #   periodSeconds: 60
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.Service.Port }}
+            initialDelaySeconds: 180
+            periodSeconds: 60
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
@@ -82,12 +87,15 @@ spec:
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
             readOnly: true
-          - name: xcache-data
-            mountPath: "/cache"
-            readOnly: false
+          {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $index }}
+            mountPath: "/xcache-data_{{ $index }}"
+          {{- end }}
+          - name: xcache-meta
+            mountPath: "/xcache-meta"
 
         - name: x509
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "slateci/xcache"
           command: ["/run_x509_updater.sh"]
           volumeMounts:
           - name: x509-data
@@ -98,7 +106,7 @@ spec:
             readOnly: true
 
         - name: reporter
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "slateci/xcache"
           command: ["/run_cache_reporter.sh"]
           env:
           - name: XC_SITE
@@ -106,6 +114,6 @@ spec:
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
           volumeMounts:
-          - name: xcache-data
-            mountPath: "/cache"
+          - name: xcache-meta
+            mountPath: "/xcache-meta"
             readOnly: true

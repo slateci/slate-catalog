@@ -1,0 +1,46 @@
+# The label to apply to this deployment, 
+# used to manage multiple instances of the same application
+Instance: default
+
+# The number of copies of the server to run together
+Replicas: 1
+
+# Settings pertaining to the DynamoDB instance which will be used for persistent 
+# data storage
+PesistentStore:
+  # The AWS region in which the Dynamo instance is located
+  AWSRegion: "us-east-1"
+  # The URL scheme to use when forming the address of the Dynamo instance
+  AWSURLScheme: "https"
+  # The domain name of the Dynamo instance
+  AWSEndpoint: "dynamodb.us-east-1.amazonaws.com"
+
+# Settings related to the API server's interface
+Service:
+  # The port on which the API should be made available
+  # Must be in the range 30000-32767, or left blank to be selected randomly
+  Port: 
+
+# Settings related to logging for applications run by SLATE
+Logging:
+  # Domain name of the server to which applications should send logs. 
+  # Leave blank to disable this logging. 
+  ServerName: ""
+  # Port on the log server to which applications should send their logs. 
+  ServerPort: 9200
+  
+# The name of the secret in which sensitive settings for SLATE are stored. 
+# The secret should contain the following keys:
+# - awsAccessKey: The access key to be used for DynamoDB
+# - awsSecretKey: The secret key to be used for DynamoDB
+# - encryptionKey: The key to be used when encrypting sensitive data in the 
+#                  database
+SecretName:
+
+# The name of the secret containing the SSL/TLS certifcate the server should
+# use to secure the SLATE API. This secret is optional: If not specified the
+# server will use HTTP, but as this is insecure it should be used only for 
+# testing purposes in this mode. 
+# - sslCertificate: The SSL/TLS certificate the server should use
+# - sslKey: The key corresponding to the SSL/TLS certificate
+TLSSecretName: 

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "slate-api.fullname" . }}
+  labels:
+    app: {{ template "slate-api.fullname" . }}
+    chart: {{ template "slate-api.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  type: NodePort
+  ports:
+  - port: 18080
+    targetPort: rest
+    {{ if .Values.Service.Port }}
+    nodePort: {{ .Values.Service.Port }}
+    {{ end }}
+    protocol: TCP
+    name: rest
+  selector:
+    app: {{ template "slate-api.fullname" . }}
+    instance: {{ .Values.Instance }}
+release: {{ .Release.Name }}
