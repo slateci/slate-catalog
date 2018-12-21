@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "applications-onboarding.fullname" . }}
+  labels:
+    app: {{ template "applications-onboarding.name" . }}
+    chart: {{ template "applications-onboarding.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "applications-onboarding.name" . }}
+      instance: {{ .Values.Instance }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "applications-onboarding.name" . }}
+        instance: {{ .Values.Instance }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: applications-onboarding
+        image: slateci/applications-onboarding:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+      restartPolicy: Always
