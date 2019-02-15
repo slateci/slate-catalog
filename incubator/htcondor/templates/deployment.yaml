@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.CondorConfig.Instances }}
   selector:
     matchLabels:
       app: {{ template "condor.fullname" . }}
@@ -32,6 +32,20 @@ spec:
         {{ else }}
         emptyDir: {}
         {{ end }}  
+      {{ if .Values.CondorConfig.Cvmfs }}
+      - name: config-osg
+        hostPath:
+          path: /cvmfs/config-osg.opensciencegrid.org
+      - name: oasis
+        hostPath:
+          path: /cvmfs/oasis.opensciencegrid.org
+      - name: spt
+        hostPath:
+          path: /cvmfs/spt.opensciencegrid.org
+      - name: connect
+        hostPath:
+          path: /cvmfs/connect.opensciencegrid.org
+      {{ end }}
       - name: condor-passwordfile-volume
         secret:
           secretName: {{ .Values.CondorConfig.PasswordFileSecret }}
@@ -54,21 +68,39 @@ spec:
         - name: htcondor-{{ .Values.Instance}}-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
+        {{ if .Values.CondorConfig.Cvmfs }}
+        - name: config-osg
+          mountPath: /cvmfs/config-osg.opensciencegrid.org
+        - name: oasis
+          mountPath: /cvmfs/oasis.opensciencegrid.org
+        - name: spt
+          mountPath: /cvmfs/spt.opensciencegrid.org
+        - name: connect
+          mountPath: /cvmfs/connect.opensciencegrid.org
+        {{ end }}
         env:
         - name: _CONDOR_COLLECTOR_HOST
           value: {{ .Values.CondorConfig.CollectorHost | quote }}
+        {{ if .Values.CondorConfig.MemoryLimit }}
         - name: _CONDOR_MEMORY
           value: {{ .Values.CondorConfig.MemoryLimit | quote }}
+        {{ end}}
+        {{ if .Values.CondorConfig.NumCPUs }}
         - name: _CONDOR_NUM_CPUS
           value: {{ .Values.CondorConfig.NumberCPUs | quote }}
+        {{ end}}
         - name: _CONDOR_NODEID
           value: {{ .Values.CondorConfig.NodeID | quote }}
         - name: _CONDOR_STARTD_ATTRS
           value: '$(STARTD_ATTRS) NODEID'
         resources:
           requests:
+            {{ if .Values.CondorConfig.MemoryLimit }}
             memory: "{{ .Values.CondorConfig.MemoryLimit }}Mi"
+            {{ end}}
+            {{ if .Values.CondorConfig.NumCPUs }}
             cpu:    "{{ .Values.CondorConfig.NumCPUs }}000m"
+            {{ end}}
           {{ if .Values.CondorConfig.UseGPU }}
           limits:
             nvidia.com/gpu: {{ .Values.CondorConfig.NumGPUs }}

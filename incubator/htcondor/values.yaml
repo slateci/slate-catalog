@@ -4,6 +4,8 @@
 Instance: global
 
 CondorConfig:
+  # The number of HTCondor worker pods to run
+  Instances: 1
   # The address of your HTCondor Central Manager
   CollectorHost: localhost
   # The name of the secret that was created for your HTCondor password file
@@ -15,6 +17,8 @@ CondorConfig:
   NumberCPUs: 1
   # The ID of the Node or cluster you are deploying on
   NodeID: SLATE-CONDOR
+  # If CVMFS is available for bind mounting, you can specify that here
+  Cvmfs: true
   # If there is a GPU available on the cluster, you can specify use of that
   # resource
   UseGPU: true
