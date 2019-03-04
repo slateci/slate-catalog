@@ -88,6 +88,7 @@ function(add_repository name)
 	add_custom_target("${name}-repo" ALL DEPENDS ${repo_charts} "${index_file}" "${fingerprint_file}")
 	# Define publishing the repository
 	add_custom_target("publish_${name}" DEPENDS "${name}-repo"
+	                  COMMAND mkdir -p "${catalog_path}/${name}"
 	                  COMMAND cp "${CMAKE_BINARY_DIR}/${name}/*.tgz" "${catalog_path}/${name}/"
 	                  COMMAND cp "${index_file}" "${fingerprint_file}" "${catalog_path}/${name}/")
 	# Add publishing this repository as a dependency of the overall publish

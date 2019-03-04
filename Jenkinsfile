@@ -10,6 +10,7 @@ pipeline{
 					dir('build'){
 						sh 'cmake3 ..'
 						sh 'make'
+						sh 'make publish'
 					}
 				}
 			}
