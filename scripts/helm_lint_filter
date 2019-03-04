@@ -1,0 +1,15 @@
+#!/bin/sh
+
+RAW=`helm lint "$@"`
+RESULT=$?
+OUTPUT=`echo "$RAW" | sed  '
+/Chart.yaml: icon is recommended/d
+/^$/d
+/^==> Linting/d
+/1 chart(s) linted, no failures/d
+/Lint OK/d
+'`
+if [ "$OUTPUT" ]; then
+	echo "$OUTPUT"
+fi
+exit $RESULT

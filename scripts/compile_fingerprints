@@ -1,0 +1,8 @@
+output="$1"
+shift
+for hash in "$@"
+do
+	name=$(echo "$hash" | sed 's|.*/\(.*\).tgz.hash$|\1|')
+	value=`cat "$hash"`
+	echo "$name $value" >> "$output"
+done

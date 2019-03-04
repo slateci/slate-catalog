@@ -4,37 +4,28 @@ This repository contains all the applications that are packaged to be installed 
 
 # How to use
 
-The slate-cli already points to this repository. To install packages using helm directly simply add the repositories
-
-```bash
-> helm repo add slate-dev `https://raw.githubusercontent.com/slateci/slate-catalog/master/incubator-repo/`
-> helm repo add slate `https://raw.githubusercontent.com/slateci/slate-catalog/master/stable-repo/`
-```
-
-NOTE: the stable repo is currently empty
+The slate-cli already points to this repository. 
 
 # Repository layout
 
-As for the [main kubernates helm repository](https://github.com/kubernetes/charts), there are two directories: stable and incubator. Stable is currently empty and therefore is not shown in the github repository. Stable holds application that are fully vetted while incubator holds those that are still under development. Each application is a subdirectory within one of those two directories.
+As for the [main kubernates helm repository](https://github.com/kubernetes/charts), there are two repositories: stable and incubator. Stable holds application that are fully vetted while incubator holds those that are still under development. Each application is a subdirectory within one of those two directories.
 
-There are also other two directories which hold the built packages: incubator-repo and stable repo. These should contain only packages built by the corresponding sources in the stable/incubator directories.
+Each application subdirectory must contain another subdirectory _with the same name_ which contains the helm chart sources.
+This enables future extensions in the form of including other data besides chart sources for an application, however, because helm requires a chart source directory to have a name matching the chart name nested directories with the same names are unavoidable.
 
 # How to rebuild the packages
 
 To rebuild all packages from sources:
 
-On Linux:
-
 ```bash
-> helm package ../incubator/*
-> helm repo index .
+> mkdir build
+> cd build
+> cmake ..
+> make
 ```
 
-On windows:
+CMake 3 is required, so on some systems it may be necessary to replace `cmake` above with `cmake3`.
 
-```powershell
-> helm package (get-item ..\incubator\*).FullName
-> helm repo index .
-```
+## Known limitations
 
-The first command creates all the package while the second one creates the index file
+When a chart is added or a file is added to a chart the cmake scripts will not take notice until `make rebuild_cache` is run.  
