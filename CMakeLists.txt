@@ -6,6 +6,20 @@ set(catalog_path "/usr/share/nginx/html/catalog" CACHE PATH "The base path from 
 
 set(helm_dir "${CMAKE_BINARY_DIR}/helm")
 
+find_program(SHASUM_PROGRAM NAMES "sha512sum" "shasum")
+if(SHASUM_PROGRAM STREQUAL "SHASUM_PROGRAM-NOTFOUND")
+	message(FATAL_ERROR "Unable to find a SHA-512 program")
+else()
+	message(STATUS "Found SHA sum program: ${SHASUM_PROGRAM}")
+endif()
+# If using the generic shasum we must specify the algorithm
+if(SHASUM_PROGRAM MATCHES "shasum$")
+	set(SHASUM_OPTIONS "-a512" CACHE STRING "Options to pass to SHASUM_PROGRAM")
+else()
+	set(SHASUM_OPTIONS "" CACHE STRING "Options to pass to SHASUM_PROGRAM")
+endif()
+message(STATUS "+ SHA options: ${SHASUM_OPTIONS}")
+
 add_custom_command(OUTPUT "${helm_dir}"
                    COMMAND helm init -c --home "${helm_dir}" --skip-refresh)
 
@@ -26,7 +40,12 @@ function(add_repository name)
 	                   COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/scripts/fetch_fingerprints" "${catalog_url}/${name}/fingerprints" "${existing_fingerprints}")
 
 	# Collect the charts which belong in this repository
-	file(GLOB manifest "${CMAKE_CURRENT_SOURCE_DIR}/${name}/*")
+	file(GLOB raw_manifest "${CMAKE_CURRENT_SOURCE_DIR}/${name}/*")
+	foreach(chart ${raw_manifest}) # filter out any loose files
+		if(IS_DIRECTORY "${chart}")
+			list(APPEND manifest "${chart}")
+		endif()
+	endforeach()
 	foreach(chart ${manifest})
 		get_filename_component(chart_name "${chart}" NAME)
 		message(STATUS "+ ${chart_name}")
@@ -62,7 +81,7 @@ function(add_repository name)
 		set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${chart_files})
 		add_custom_command(OUTPUT "${compiled_chart}.hash"
 		                   COMMAND cat ${chart_files} > "${compiled_chart}.hash_input"
-                                   COMMAND cat ${chart_files} | sha512sum | awk '{print $$1}' > "${compiled_chart}.hash"
+                                   COMMAND cat ${chart_files} | ${SHASUM_PROGRAM} ${SHASUM_OPTIONS} | awk '{print $$1}' > "${compiled_chart}.hash"
 		                   DEPENDS ${chart_files} "${name}_existing_fingerprints")
 		list(APPEND repo_hashes "${compiled_chart}.hash")
 		add_custom_command(OUTPUT "${compiled_chart}"
