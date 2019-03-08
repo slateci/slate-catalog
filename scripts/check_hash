@@ -1,0 +1,19 @@
+old_hash_list="$1"
+new_hash_file="$2"
+
+if [ ! -f "$old_hash_list" ]; then
+	# if the old hash list does not exist we cannot check, so assume okay
+	exit 0
+fi
+name=`echo "$new_hash_file" | sed 's|.*/\(.*\).tgz.hash$|\1|'`
+new_hash=`cat "$new_hash_file"`
+old_hash=`grep "$name" "$old_hash_list" | awk '{print $2}'`
+if [ ! "$old_hash" ]; then
+	#if we don't have an old hash then any new hash has to be considered okay
+	exit 0
+fi
+if [ "$new_hash" != "$old_hash" ]; then
+	# different hashes for the same version number is bad
+	echo "Hash of $name has changed but chart version has not"
+	exit 1
+fi

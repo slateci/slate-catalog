@@ -1,0 +1,7 @@
+#TODO: assumes curl present, should actually check, try wget as a fallback
+source_url="$1"
+dest_path="$2"
+result=$(curl -Ls "${source_url}" -o "${dest_path}" -w "%{http_code}")
+if [ "$result" -ne 200 ]; then
+	rm -f "${dest_path}"
+fi
