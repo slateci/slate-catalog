@@ -7,7 +7,11 @@ pipeline{
 				dir('build'){
 					sh 'cmake3 ..'
 					sh 'make'
-					sh 'make publish'
+					script{
+						if(env.BRANCH_NAME == 'master'){
+							sh 'make publish'
+						}
+					}
 				}
 			}
 		}
