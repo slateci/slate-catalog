@@ -1,1 +1,2 @@
-A useless application intended only for use during testing.
+A minimal webserver which serves a single static page. 
+Intended for testing and demonstration purposes. 
