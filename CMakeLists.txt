@@ -23,7 +23,11 @@ message(STATUS "+ SHA options: ${SHASUM_OPTIONS}")
 add_custom_command(OUTPUT "${helm_dir}"
                    COMMAND helm init -c --home "${helm_dir}" --skip-refresh)
 
-add_custom_target(publish COMMAND true)
+# This assumes the existence of a program/script called update_slate_catalog
+# which notifies the SLATE API server(s) that they should pull the newest 
+# version of the catalog. That script is _not_ a part of this repository because 
+# it is expected to contain credentials used to authorize the update. 
+add_custom_target(publish COMMAND update_slate_catalog)
 
 # define a repository using all of the charts found in the corresponding directory
 # Minor flaw: the resulting makefile will not automatically rerun cmake if the 
