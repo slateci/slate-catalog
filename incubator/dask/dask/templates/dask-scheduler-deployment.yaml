@@ -26,8 +26,8 @@ spec:
     spec:
       containers:
         - name: {{ template "dask.fullname" . }}-scheduler
-          image: "{{ .Values.scheduler.image.repository }}:{{ .Values.scheduler.image.tag }}"
-          imagePullPolicy: {{ .Values.scheduler.image.pullPolicy }}
+          image: "daskdev/dask:0.18.1"
+          imagePullPolicy: IfNotPresent
           args:
             - dask-scheduler
             - --port

@@ -23,13 +23,15 @@ spec:
     spec:
       initContainers:
       - name: create-syncdb
-        image: {{ .Values.image.repository }}
+        image: "graphiteapp/graphite-statsd:1.1.3"
+        imagePullPolicy: IfNotPresent
         command: [ "sh", "-c", "test -f /opt/graphite/storage/graphite.db || /usr/bin/expect /usr/local/bin/django_admin_init.exp"]
         volumeMounts:
           - name: {{ template "graphite.fullname" . }}-pvc
             mountPath: /opt/graphite/storage/
       containers:
-      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+      - image: "graphiteapp/graphite-statsd:1.1.3"
+        imagePullPolicy: IfNotPresent
         name: {{ .Chart.Name }}
         ports:
         - name: graphite-gui

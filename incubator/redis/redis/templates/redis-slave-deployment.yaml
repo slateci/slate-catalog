@@ -30,12 +30,6 @@ spec:
 {{ toYaml (.Values.slave.podAnnotations | default .Values.master.podAnnotations) | indent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.image.pullSecrets }}
-      imagePullSecrets:
-        {{- range .Values.image.pullSecrets }}
-        - name: {{ . }}
-        {{- end}}
-      {{- end}}
       {{- /* Include master securityContext if slave securityContext not defined */ -}}
       {{ include "redis.slave.securityContext" . | indent 6 }}
       serviceAccountName: "{{ template "redis.serviceAccountName" . }}"
@@ -56,8 +50,8 @@ spec:
     {{- end }}
       containers:
       - name: {{ template "redis.fullname" . }}
-        image: {{ template "redis.image" . }}
-        imagePullPolicy: {{ .Values.image.pullPolicy | default "" | quote }}
+        image: "docker.io/bitnami/redis:4.0.11-debian-9"
+        imagePullPolicy: "Always"
         {{- if (.Values.slave.args | default .Values.master.args) }}
         args:
 {{ toYaml (.Values.slave.args | default .Values.master.args) | indent 10 }}

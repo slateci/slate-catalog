@@ -65,16 +65,10 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
       {{- end }}
-      {{- if .Values.image.pullSecrets }}
-      imagePullSecrets:
-      {{- range .Values.image.pullSecrets }}
-        - name: {{ . }}
-      {{- end}}
-      {{- end }}
       containers:
       - name: "mariadb"
-        image: {{ template "mariadb.image" . }}
-        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        image: "docker.io/bitnami/mariadb:10.1.36-debian-9"
+        imagePullPolicy: "IfNotPresent"
         env:
         - name: MARIADB_ROOT_PASSWORD
           valueFrom:
@@ -144,8 +138,8 @@ spec:
 {{- end }}
 {{- if .Values.metrics.enabled }}
       - name: metrics
-        image: {{ template "metrics.image" . }}
-        imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
+        image: "docker.io/prom/mysqld-exporter:v0.10.0"
+        imagePullPolicy: "IfNotPresent"
         env:
         - name: MARIADB_ROOT_PASSWORD
           valueFrom:

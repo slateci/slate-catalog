@@ -19,10 +19,6 @@ spec:
 {{ toYaml . | indent 8 }}
 {{- end }}
     spec:
-      {{- if .Values.imagePullSecrets }}
-      imagePullSecrets:
-{{ toYaml .Values.imagePullSecrets | indent 8 }}
-      {{- end }}
       initContainers:
       - name: "remove-lost-found"
         image: "busybox:1.25.0"
@@ -43,8 +39,8 @@ spec:
       {{- end }}
       containers:
       - name: {{ template "mysql.fullname" . }}
-        image: "{{ .Values.image }}:{{ .Values.imageTag }}"
-        imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+        image: "mysql:5.7.14"
+        imagePullPolicy: "IfNotPresent"
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         env:
@@ -129,8 +125,8 @@ spec:
         {{- end }}
       {{- if .Values.metrics.enabled }}
       - name: metrics
-        image: "{{ .Values.metrics.image }}:{{ .Values.metrics.imageTag }}"
-        imagePullPolicy: {{ .Values.metrics.imagePullPolicy | quote }}
+        image: "prom/mysqld-exporter:v0.10.0"
+        imagePullPolicy: "IfNotPresent"
         {{- if .Values.mysqlAllowEmptyPassword }}
         command: [ 'sh', '-c', 'DATA_SOURCE_NAME="root@(localhost:3306)/" /bin/mysqld_exporter' ]
         {{- else }}

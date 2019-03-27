@@ -18,16 +18,10 @@ spec:
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
     spec:
-      {{- if .Values.image.pullSecrets }}
-      imagePullSecrets:
-      {{- range .Values.image.pullSecrets }}
-        - name: {{ . }}
-      {{- end}}
-      {{- end }}
       containers:
       - name: {{ template "phabricator.fullname" . }}
-        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        image: "docker.io/bitnami/phabricator:2018.34.0-debian-9"
+        imagePullPolicy: "IfNotPresent"
         env:
         - name: MARIADB_HOST
           value: {{ template "phabricator.mariadb.fullname" . }}

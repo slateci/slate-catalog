@@ -6,11 +6,6 @@ Instance: global
 
 replicaCount: 1
 
-image:
-  repository: perfsonar/tools
-#  tag: latest
-  pullPolicy: IfNotPresent
-
 #service:
 #  type: ClusterIP
 #  port: 80

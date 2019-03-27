@@ -43,8 +43,8 @@ spec:
       {{- include "jupyterhub.coreAffinity" . | nindent 6 }}
       containers:
         - name: nginx
-          image: "{{ .Values.proxy.nginx.image.name }}:{{ .Values.proxy.nginx.image.tag }}"
-          imagePullPolicy: {{ .Values.proxy.nginx.image.pullPolicy }}
+          image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.15.0"
+          imagePullPolicy: IfNotPresent
           resources:
             {{- .Values.proxy.nginx.resources | toYaml | trimSuffix "\n" | nindent 12 }}
           args:
@@ -85,8 +85,8 @@ spec:
               containerPort: 443
               protocol: TCP
         - name: kube-lego
-          image: "{{ .Values.proxy.lego.image.name }}:{{ .Values.proxy.lego.image.tag }}"
-          imagePullPolicy: {{ .Values.proxy.lego.image.pullPolicy }}
+          image: "jetstack/kube-lego:0.1.7"
+          imagePullPolicy: IfNotPresent
           resources:
             {{- .Values.proxy.lego.resources | toYaml | trimSuffix "\n" | nindent 12 }}
           env:

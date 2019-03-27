@@ -44,21 +44,11 @@ hub:
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
-  image:
-    name: jupyterhub/k8s-hub
-    tag: 0.8.0-beta.1
   resources:
     requests:
       cpu: 200m
       memory: 512Mi
   services: {}
-  imagePullPolicy: IfNotPresent
-  imagePullSecret:
-    enabled: false
-    registry:
-    username:
-    email:
-    password:
   pdb:
     enabled: true
     minAvailable: 1
@@ -86,26 +76,14 @@ proxy:
       https:
     loadBalancerIP:
   chp:
-    image:
-      name: jupyterhub/configurable-http-proxy
-      tag: 3.0.0
-      pullPolicy: IfNotPresent
     resources:
       requests:
         cpu: 200m
         memory: 512Mi
   nginx:
-    image:
-      name: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
-      tag: 0.15.0
-      pullPolicy: IfNotPresent
     proxyBodySize: 64m
     resources: {}
   lego:
-    image:
-      name: jetstack/kube-lego
-      tag: 0.1.7
-      pullPolicy: IfNotPresent
     resources: {}
   labels: {}
   nodeSelector: {}
@@ -166,9 +144,6 @@ singleuser:
     required: []
     preferred: []
   networkTools:
-    image:
-      name: jupyterhub/k8s-network-tools
-      tag: 0.8.0-beta.1 
   cloudMetadata:
     enabled: false
     ip: 169.254.169.254
@@ -207,16 +182,6 @@ singleuser:
       pvcNameTemplate: claim-{username}{servername}
       volumeNameTemplate: volume-{username}{servername}
       storageAccessModes: [ReadWriteOnce]
-  image:
-    name: jupyterhub/k8s-singleuser-sample
-    tag: 0.8.0-beta.1
-    pullPolicy: IfNotPresent
-  imagePullSecret:
-    enabled: false
-    registry:
-    username:
-    email:
-    password:
   startTimeout: 300
   cpu:
     limit:
@@ -236,9 +201,6 @@ scheduling:
     enabled: false
     replicas: 1
     logLevel: 4
-    image:
-      name: gcr.io/google_containers/kube-scheduler-amd64
-      tag: v1.11.2
     nodeSelector: {}
     pdb:
       enabled: true
@@ -266,16 +228,10 @@ scheduling:
 prePuller:
   hook:
     enabled: true
-    image:
-      name: jupyterhub/k8s-image-awaiter
-      tag: 0.8.0-beta.1
   continuous:
     enabled: false
   extraImages: {}
   pause:
-    image:
-      name: gcr.io/google_containers/pause
-      tag: '3.0'
 
 
 ingress:

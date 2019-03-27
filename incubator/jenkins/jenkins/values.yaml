@@ -4,9 +4,6 @@ Instance: global
 
 Master:
   Name: jenkins-master
-  Image: "jenkins/jenkins"
-  ImageTag: "lts"
-  ImagePullPolicy: "Always"
   Component: "jenkins-master"
   UseSecurity: true
   HostNetworking: false

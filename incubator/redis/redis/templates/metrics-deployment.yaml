@@ -25,12 +25,6 @@ spec:
 {{ toYaml .Values.metrics.podAnnotations | indent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.metrics.image.pullSecrets }}
-      imagePullSecrets:
-        {{- range .Values.metrics.image.pullSecrets }}
-        - name: {{ . }}
-        {{- end}}
-      {{- end}}
       {{- if .Values.metrics.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.metrics.nodeSelector | indent 8 }}
@@ -42,8 +36,8 @@ spec:
       {{- end }}
       containers:
       - name: metrics
-        image: {{ template "metrics.image" . }}
-        imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
+        image: "docker.io/oliver006/redis_exporter:v0.20.2"
+        imagePullPolicy: "IfNotPresent"
         args:
         {{- range $key, $value := .Values.metrics.extraArgs }}
           - --{{ $key }}={{ $value }}

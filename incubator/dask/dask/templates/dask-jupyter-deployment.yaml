@@ -28,8 +28,8 @@ spec:
     spec:
       containers:
         - name: {{ template "dask.fullname" . }}-jupyter
-          image: "{{ .Values.jupyter.image.repository }}:{{ .Values.jupyter.image.tag }}"
-          imagePullPolicy: {{ .Values.jupyter.image.pullPolicy }}
+          image: "daskdev/dask-notebook:0.18.1"
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8888
           resources:

@@ -38,16 +38,10 @@ spec:
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
       {{- end }}
-      {{- if .Values.image.pullSecrets }}
-      imagePullSecrets:
-      {{- range .Values.image.pullSecrets }}
-        - name: {{ . }}
-      {{- end}}
-      {{- end }}
       containers:
         - name: {{ template "mongodb.name" . }}-arbiter
-          image: {{ template "mongodb.image" . }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "docker.io/bitnami/mongodb:4.0.2-debian-9"
+          imagePullPolicy: "Always"
           ports:
           - containerPort: {{ .Values.service.port }}
             name: mongodb

@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
       - name: {{ template "influxdb.fullname" . }}
-        image: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        image: "influxdb:1.6-alpine"
+        imagePullPolicy: "IfNotPresent"
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         ports:

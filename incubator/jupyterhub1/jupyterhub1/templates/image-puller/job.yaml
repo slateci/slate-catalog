@@ -29,7 +29,7 @@ spec:
       serviceAccountName: hook-image-awaiter
       {{- end }}
       containers:
-        - image: {{ .Values.prePuller.hook.image.name }}:{{ .Values.prePuller.hook.image.tag }}
+        - image: jupyterhub/k8s-image-awaiter:0.8.0-beta.1
           name: hook-image-awaiter
           imagePullPolicy: IfNotPresent
           command:

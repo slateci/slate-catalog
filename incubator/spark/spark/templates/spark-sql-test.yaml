@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
     - name: {{ .Release.Name }}-sql-test
-      image: {{ .Values.Master.Image }}:{{ .Values.Master.ImageTag }}
+      image: "k8s.gcr.io/spark:1.5.1_v3"
       command: ["{{ .Values.Spark.Path }}/bin/spark-sql", "--master",
                 "spark://{{ .Release.Name }}-master:{{ .Values.Master.ServicePort }}", "-e",
                 "show databases;"]

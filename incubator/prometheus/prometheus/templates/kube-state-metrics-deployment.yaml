@@ -35,8 +35,8 @@ spec:
 {{- end }}
       containers:
         - name: {{ template "prometheus.name" . }}-{{ .Values.kubeStateMetrics.name }}
-          image: "{{ .Values.kubeStateMetrics.image.repository }}:{{ .Values.kubeStateMetrics.image.tag }}"
-          imagePullPolicy: "{{ .Values.kubeStateMetrics.image.pullPolicy }}"
+          image: "quay.io/coreos/kube-state-metrics:v1.4.0"
+          imagePullPolicy: "IfNotPresent"
         {{- if .Values.kubeStateMetrics.args }}
           args:
           {{- range $key, $value := .Values.kubeStateMetrics.args }}

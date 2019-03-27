@@ -1,13 +1,6 @@
 # Instance to label use case of InfluxDB deployment on SLATE
 Instance: global
 
-## influxdb image version
-## ref: https://hub.docker.com/r/library/influxdb/tags/
-image:
-  repo: "influxdb"
-  tag: "1.6-alpine"
-  pullPolicy: IfNotPresent
-
 ## Specify a service type
 ## NodePort is default
 ## ref: http://kubernetes.io/docs/user-guide/services/
@@ -29,11 +22,6 @@ persistence:
 ##
 setDefaultUser:
   enabled: false
-
-  ## Image of the container used for job
-  ## Default: appropriate/curl:latest
-  ##
-  image: appropriate/curl:latest
 
   ## Deadline for job so it does not retry forever.
   ## Default: activeDeadline: 300

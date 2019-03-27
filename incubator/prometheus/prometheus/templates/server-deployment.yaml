@@ -43,8 +43,8 @@ spec:
       {{- if .Values.initChownData.enabled }}
       initContainers:
       - name: "{{ .Values.initChownData.name }}"
-        image: "{{ .Values.initChownData.image.repository }}:{{ .Values.initChownData.image.tag }}"
-        imagePullPolicy: "{{ .Values.initChownData.image.pullPolicy }}"
+        image: "busybox:latest"
+        imagePullPolicy: "IfNotPresent"
         resources:
 {{ toYaml .Values.initChownData.resources | indent 12 }}
         # 65534 is the nobody user that prometheus uses.
@@ -56,8 +56,8 @@ spec:
       {{- end }}
       containers:
         - name: {{ template "prometheus.name" . }}-{{ .Values.server.name }}-{{ .Values.configmapReload.name }}
-          image: "{{ .Values.configmapReload.image.repository }}:{{ .Values.configmapReload.image.tag }}"
-          imagePullPolicy: "{{ .Values.configmapReload.image.pullPolicy }}"
+          image: "jimmidyson/configmap-reload:v0.2.2"
+          imagePullPolicy: "IfNotPresent"
           args:
             - --volume-dir=/etc/config
             - --webhook-url=http://127.0.0.1:9090{{ .Values.server.prefixURL }}/-/reload
@@ -77,8 +77,8 @@ spec:
           {{- end }}
 
         - name: {{ template "prometheus.name" . }}-{{ .Values.server.name }}
-          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
-          imagePullPolicy: "{{ .Values.server.image.pullPolicy }}"
+          image: "prom/prometheus:v2.4.0"
+          imagePullPolicy: "IfNotPresent"
           args:
           {{- if .Values.server.retention }}
             - --storage.tsdb.retention={{ .Values.server.retention }}

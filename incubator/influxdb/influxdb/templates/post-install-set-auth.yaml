@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: {{ template "influxdb.fullname" . }}-set-auth
-        image: "{{ .Values.setDefaultUser.image }}"
+        image: "appropriate/curl:latest"
         env:
           - name: INFLUXDB_USER
             valueFrom:

@@ -2,21 +2,6 @@
 ## ref: https://hub.docker.com/r/bitnami/mariadb/tags/
 ##
 Instance: global
-image:
-  registry: docker.io
-  repository: bitnami/mariadb
-  tag: 10.1.36-debian-9
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  pullPolicy: IfNotPresent
-  ## Optionally specify an array of imagePullSecrets.
-  ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-  ##
-  # pullSecrets:
-  #   - myRegistrKeySecretName
 
 service:
   ## Kubernetes service type, ClusterIP and NodePort are supported at present
@@ -261,11 +246,6 @@ slave:
 
 metrics:
   enabled: false
-  image:
-    registry: docker.io
-    repository: prom/mysqld-exporter
-    tag: v0.10.0
-    pullPolicy: IfNotPresent
   resources: {}
   annotations:
     prometheus.io/scrape: "true"

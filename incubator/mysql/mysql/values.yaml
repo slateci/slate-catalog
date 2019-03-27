@@ -1,17 +1,5 @@
 Instance: global
 
-## mysql image version
-## ref: https://hub.docker.com/r/library/mysql/tags/
-##
-image: "mysql"
-imageTag: "5.7.14"
-
-## Specify an imagePullPolicy (Required)
-## It's recommended to change this to 'Always' if the image tag is 'latest'
-## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
-##
-imagePullPolicy: IfNotPresent
-
 extraVolumes: |
   # - name: extras
   #   emptyDir: {}
@@ -81,9 +69,6 @@ initializationFiles: {}
 
 metrics:
   enabled: false
-  image: prom/mysqld-exporter
-  imageTag: v0.10.0
-  imagePullPolicy: IfNotPresent
   resources: {}
   annotations: {}
     # prometheus.io/scrape: "true"

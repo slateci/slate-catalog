@@ -2,10 +2,6 @@ Instance: global
 
 scheduler:
   name: scheduler
-  image:
-    repository: "daskdev/dask"
-    tag: "0.18.1"
-    pullPolicy: IfNotPresent
   replicas: 1
   serviceType: "LoadBalancer"
   servicePort: 8786
@@ -17,10 +13,6 @@ webUI:
 
 worker:
   name: worker
-  image:
-    repository: "daskdev/dask"
-    tag: "0.18.1"
-    pullPolicy: IfNotPresent
   replicas: 3
   aptPackages: >-
   default_resources:  # overwritten by resource limits if they exist
@@ -42,10 +34,6 @@ worker:
 jupyter:
   name: jupyter
   enabled: true
-  image:
-    repository: "daskdev/dask-notebook"
-    tag: "0.18.1"
-    pullPolicy: IfNotPresent
   replicas: 1
   serviceType: "LoadBalancer"
   servicePort: 80

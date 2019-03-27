@@ -46,7 +46,7 @@ To connect to your Redis server:
    kubectl run --namespace {{ .Release.Namespace }} {{ template "redis.fullname" . }}-client --rm --tty -i \
    {{ if .Values.usePassword }} --env REDIS_PASSWORD=$REDIS_PASSWORD \{{ end }}
    {{- if and (.Values.networkPolicy.enabled) (not .Values.networkPolicy.allowExternal) }}--labels="{{ template "redis.name" . }}-client=true" \{{- end }}
-   --image {{ template "redis.image" . }} -- bash
+   --image docker.io/bitnami/redis:4.0.11-debian-9 -- bash
 
 2. Connect using the Redis CLI:
 

@@ -44,7 +44,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: pause
-          image: {{ .Values.prePuller.pause.image.name }}:{{ .Values.prePuller.pause.image.tag }}
+          image: "gcr.io/google_containers/pause:3.0"
           resources:
             {{- include "jupyterhub.resources" . | nindent 12 }}
 {{- end }}

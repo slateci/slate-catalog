@@ -38,8 +38,8 @@ spec:
 {{- end }}
       containers:
         - name: {{ template "prometheus.name" . }}-{{ .Values.nodeExporter.name }}
-          image: "{{ .Values.nodeExporter.image.repository }}:{{ .Values.nodeExporter.image.tag }}"
-          imagePullPolicy: "{{ .Values.nodeExporter.image.pullPolicy }}"
+          image: "prom/node-exporter:v0.16.0"
+          imagePullPolicy: "IfNotPresent"
           args:
             - --path.procfs=/host/proc
             - --path.sysfs=/host/sys

@@ -22,8 +22,8 @@ spec:
       hostNetwork: true
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "perfsonar/tools"
+          imagePullPolicy: IfNotPresent
 #          ports:
 #            - name: http
 #              containerPort: 80

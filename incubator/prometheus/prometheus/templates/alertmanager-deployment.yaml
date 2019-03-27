@@ -39,8 +39,8 @@ spec:
 {{- end }}
       containers:
         - name: {{ template "prometheus.name" . }}-{{ .Values.alertmanager.name }}
-          image: "{{ .Values.alertmanager.image.repository }}:{{ .Values.alertmanager.image.tag }}"
-          imagePullPolicy: "{{ .Values.alertmanager.image.pullPolicy }}"
+          image: "prom/alertmanager:v0.15.2"
+          imagePullPolicy: "IfNotPresent"
           env:
             {{- range $key, $value := .Values.alertmanager.extraEnv }}
             - name: {{ $key }}
@@ -74,8 +74,8 @@ spec:
               subPath: "{{ .Values.alertmanager.persistentVolume.subPath }}"
 
         - name: {{ template "prometheus.name" . }}-{{ .Values.alertmanager.name }}-{{ .Values.configmapReload.name }}
-          image: "{{ .Values.configmapReload.image.repository }}:{{ .Values.configmapReload.image.tag }}"
-          imagePullPolicy: "{{ .Values.configmapReload.image.pullPolicy }}"
+          image: "jimmidyson/configmap-reload:v0.2.2"
+          imagePullPolicy: "IfNotPresent"
           args:
             - --volume-dir=/etc/config
             - --webhook-url=http://localhost:9093{{ .Values.alertmanager.prefixURL }}/-/reload

@@ -1,17 +1,5 @@
 Instance: global
 
-## Bitnami Redmine image version
-## ref: https://hub.docker.com/r/bitnami/redmine/tags/
-##
-image:
-  registry: docker.io
-  repository: bitnami/redmine
-  tag: 3.4.6-debian-9
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  pullPolicy: IfNotPresent
 ## User of the application
 ## ref: https://github.com/bitnami/bitnami-docker-redmine/#environment-variables
 ##

@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
         - name: {{ template "master-fullname" . }}
-          image: "{{ .Values.Master.Image }}:{{ .Values.Master.ImageTag }}"
+          image: "k8s.gcr.io/spark:1.5.1_v3"
           command: ["/bin/sh","-c"]
           args: ["echo $(hostname -i) {{ template "master-fullname" . }} >> /etc/hosts; {{ .Values.Spark.Path }}/bin/spark-class org.apache.spark.deploy.master.Master"]
           ports:

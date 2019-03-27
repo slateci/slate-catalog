@@ -26,8 +26,8 @@ spec:
     spec:
       containers:
         - name: {{ template "dask.fullname" . }}-worker
-          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
-          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          image: "daskdev/dask:0.18.1"
+          imagePullPolicy: IfNotPresent
           args:
             - dask-worker
             - {{ template "dask.fullname" . }}-scheduler:{{ .Values.scheduler.servicePort }}

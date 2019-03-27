@@ -31,8 +31,8 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: "datadog/agent:6.3.2"
+        imagePullPolicy: IfNotPresent
         resources:
 {{ toYaml .Values.datadog.resources | indent 12 }}
         ports:

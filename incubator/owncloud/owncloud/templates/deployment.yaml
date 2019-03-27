@@ -19,16 +19,10 @@ spec:
         release: "{{ .Release.Name }}"
         instance: {{ .Values.Instance }}
     spec:
-      {{- if .Values.image.pullSecrets }}
-      imagePullSecrets:
-      {{- range .Values.image.pullSecrets }}
-        - name: {{ . }}
-      {{- end}}
-      {{- end }}
       containers:
       - name: {{ template "owncloud.fullname" . }}
-        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        image: "docker.io/bitnami/owncloud:10.0.10-debian-9"
+        imagePullPolicy:"IfNotPresent"
         env:
         - name: ALLOW_EMPTY_PASSWORD
           value: {{ .Values.allowEmptyPassword | quote }}

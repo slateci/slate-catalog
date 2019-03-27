@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: {{ template "worker-fullname" . }}
-          image: "{{ .Values.Worker.Image }}:{{ .Values.Worker.ImageTag }}"
+          image: "k8s.gcr.io/spark:1.5.1_v3"
           command: ["{{ .Values.Spark.Path }}/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://{{ template "master-fullname" . }}:{{ .Values.Master.ServicePort }}"]
           ports:
             - containerPort: {{ .Values.Worker.ContainerPort }}

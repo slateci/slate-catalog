@@ -19,7 +19,6 @@ data:
 {{- end }}
 {{- /* copy values.singleuser */ -}}
 {{- $_ := set $values "singleuser" (omit .Values.singleuser "imagePullSecret") }}
-{{- $_ := set $values.singleuser "imagePullSecret" (omit .Values.singleuser.imagePullSecret "password") }}
 {{- /* preserve behavior of deprecated hub.extraConfigMap */ -}}
 {{- $_ := set $values "custom" (merge dict $values.custom .Values.hub.extraConfigMap) }}
 {{- /* passthrough subset of Chart / Release */ -}}

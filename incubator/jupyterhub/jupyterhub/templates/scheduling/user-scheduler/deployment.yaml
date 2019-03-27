@@ -29,7 +29,7 @@ spec:
       {{- include "jupyterhub.coreAffinity" . | nindent 6 }}
       containers:
         - name: user-scheduler
-          image: {{ include "jupyterhub.scheduler.image" . }}
+          image: "gcr.io/google_containers/kube-scheduler-amd64:v1.11.2"
           command:
             - /usr/local/bin/kube-scheduler
             - --scheduler-name={{ .Release.Name }}-user-scheduler

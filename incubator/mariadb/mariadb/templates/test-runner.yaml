@@ -20,8 +20,8 @@ spec:
         name: tools
   containers:
     - name: mariadb-test
-      image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-      imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+      image: "docker.io/bitnami/mariadb:10.1.36-debian-9"
+      imagePullPolicy: "IfNotPresent"
       command: ["/tools/bats/bats", "-t", "/tests/run.sh"]
       env:
         - name: MARIADB_ROOT_PASSWORD

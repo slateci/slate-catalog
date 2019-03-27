@@ -5,9 +5,3 @@
 Instance: global
 
 replicaCount: 1
-
-image:
-  repository: miosiris/unis
-  tag: latest
-
-

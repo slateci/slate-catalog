@@ -21,7 +21,7 @@ To connect to your database:
 
   1. Run a pod that you can use as a client:
 
-      kubectl run {{ template "mariadb.fullname" . }}-client --rm --tty -i --image  {{ template "mariadb.image" . }} --namespace {{ .Release.Namespace }} --command -- bash
+      kubectl run {{ template "mariadb.fullname" . }}-client --rm --tty -i --image docker.io/bitnami/mariadb:10.1.36-debian-9 --namespace {{ .Release.Namespace }} --command -- bash
 
   2. To connect to master service (read/write):
 

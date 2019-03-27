@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
         - name: {{ template "zeppelin-fullname" . }}
-          image: "{{ .Values.Zeppelin.Image }}:{{ .Values.Zeppelin.ImageTag }}"
+          image: "apache/zeppelin:0.7.3"
           ports:
             - containerPort: {{ .Values.Zeppelin.ContainerPort }}
               name: http
