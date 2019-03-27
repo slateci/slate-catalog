@@ -20,6 +20,13 @@ else()
 endif()
 message(STATUS "+ SHA options: ${SHASUM_OPTIONS}")
 
+find_program(CLAIR_SCANNER NAMES "clair-scanner")
+if(CLAIR_SCANNER STREQUAL "CLAIR_SCANNER-NOTFOUND")
+	message(STATUS "clair-scanner not found, images will not be scanned")
+else()
+	message(STATUS "Found clair-scanner: ${CLAIR_SCANNER}")
+endif()
+
 add_custom_command(OUTPUT "${helm_dir}"
                    COMMAND helm init -c --home "${helm_dir}" --skip-refresh)
 
@@ -28,6 +35,10 @@ add_custom_command(OUTPUT "${helm_dir}"
 # version of the catalog. That script is _not_ a part of this repository because 
 # it is expected to contain credentials used to authorize the update. 
 add_custom_target(publish COMMAND update_slate_catalog)
+
+if(CLAIR_SCANNER)
+	add_custom_target(scan-images COMMAND true)
+endif()
 
 # define a repository using all of the charts found in the corresponding directory
 # Minor flaw: the resulting makefile will not automatically rerun cmake if the 
@@ -83,17 +94,36 @@ function(add_repository name)
 		file(GLOB_RECURSE chart_files "${chart}/${chart_name}/*")
 		list(SORT chart_files)
 		set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${chart_files})
+		# TODO: This will miss sub-charts
+		file(GLOB_RECURSE template_files "${chart}/${chart_name}/templates/*")
+
 		add_custom_command(OUTPUT "${compiled_chart}.hash"
 		                   COMMAND cat ${chart_files} > "${compiled_chart}.hash_input"
                                    COMMAND cat ${chart_files} | ${SHASUM_PROGRAM} ${SHASUM_OPTIONS} | awk '{print $$1}' > "${compiled_chart}.hash"
 		                   DEPENDS ${chart_files} "${name}_existing_fingerprints")
 		list(APPEND repo_hashes "${compiled_chart}.hash")
+		set(chart_dependencies "")
+		list(APPEND chart_dependencies ${chart_files} ${helm_dir} "${compiled_chart}.hash")
+
+		if(CLAIR_SCANNER AND template_files)
+			add_custom_command(OUTPUT "${compiled_chart}.images"
+			                   COMMAND cat ${template_files} | sed -n -f ${CMAKE_CURRENT_SOURCE_DIR}/scripts/find_images.sed | sort | uniq > "${compiled_chart}.images"
+			                   DEPENDS ${template_files})
+			add_custom_target("scan-${name}-${chart_name}-images"
+			                  COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/scripts/scan_images" "${CLAIR_SCANNER}" "${compiled_chart}.images"
+			                  DEPENDS "${compiled_chart}.images")
+			# Use the next line to force images to be scanned
+			#list(APPEND chart_dependencies "scan-${name}-${chart_name}-images")
+			# Use the next line to accumulate image scans as a separate, top-level target
+			add_dependencies(scan-images "scan-${name}-${chart_name}-images")
+		endif()
+
 		add_custom_command(OUTPUT "${compiled_chart}"
 		                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/helm_lint_filter "${chart}/${chart_name}"
 		                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/check_hash "${existing_fingerprints}" "${compiled_chart}.hash"
 		                   COMMAND rm -f "${CMAKE_BINARY_DIR}/${name}/${chart_name}*.tgz"
 		                   COMMAND helm package "${chart}/${chart_name}" -d "${CMAKE_BINARY_DIR}/${name}" --home "${helm_dir}"
-		                   DEPENDS ${chart_files} ${helm_dir} "${compiled_chart}.hash")
+		                   DEPENDS ${chart_dependencies})
 		list(APPEND repo_charts "${compiled_chart}")
 	endforeach()
 
