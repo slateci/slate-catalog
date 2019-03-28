@@ -53,7 +53,7 @@ spec:
           name: varlog
         # Container for fluent-bit logging sidecar. Enabled/disabled within values.yaml
       - name: fluent-bit
-        image: fluent/fluent-bit:0.13.4
+        image: fluent/fluent-bit:1.0.6
         imagePullPolicy: IfNotPresent
         securityContext:
           runAsUser: 0
