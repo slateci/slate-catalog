@@ -91,11 +91,30 @@ function(add_repository name)
 		set(compiled_chart "${CMAKE_BINARY_DIR}/${name}/${chart_name}-${chart_version}.tgz")
 
 		# Collect the names of all files in the chart to use as dependencies for rebuilding it
-		file(GLOB_RECURSE chart_files "${chart}/${chart_name}/*")
+		file(GLOB_RECURSE chart_files FOLLOW_SYMLINKS "${chart}/${chart_name}/*")
+		foreach(file ${chart_files})
+			if((file MATCHES ".*/requirements.yaml") OR (file MATCHES ".*/requirements.lock"))
+				message(FATAL_ERROR "${file}: requirements files are forbidden")
+			endif()
+		endforeach()
+		file(GLOB_RECURSE archived_charts "${chart}/${chart_name}/charts/*.tgz")
+		if(archived_charts)
+			message(FATAL_ERROR "${archived_charts}: Archived charts are forbidden; all chart dependencies should be unpacked")
+		endif()
 		list(SORT chart_files)
 		set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${chart_files})
 		# TODO: This will miss sub-charts
 		file(GLOB_RECURSE template_files "${chart}/${chart_name}/templates/*")
+		# Collect stuff from subcharts. This is not fully general; it will fail if there are sub-sub-charts
+		if(IS_DIRECTORY "${chart}/${chart_name}/charts")
+			file(GLOB subcharts "${chart}/${chart_name}/charts/*")
+			foreach(subchart ${subcharts})
+				get_filename_component(subchart_name "${subchart}" NAME)
+				message(STATUS "  Subchart: ${subchart_name}")
+				file(GLOB_RECURSE subchart_template_files FOLLOW_SYMLINKS "${subchart}/templates/*")
+				list(APPEND template_files ${subchart_template_files})
+			endforeach()
+		endif()
 
 		add_custom_command(OUTPUT "${compiled_chart}.hash"
 		                   COMMAND cat ${chart_files} > "${compiled_chart}.hash_input"

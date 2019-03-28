@@ -5,12 +5,6 @@ fluent-bit:
   # enable if started in minikube.
   on_minikube: false
   
-  image:
-    fluent_bit:
-      repository: fluent/fluent-bit
-      tag: 0.13.0
-    pullPolicy: Always
-  
   # When enabled, exposes json and prometheus metrics on {{ .Release.Name }}-metrics service
   metrics:
     enabled: false
@@ -136,11 +130,6 @@ fluent-bit:
     name:
 
 kibana:
-  image:
-    repository: "docker.elastic.co/kibana/kibana-oss"
-    tag: "6.0.0"
-    pullPolicy: "IfNotPresent"
-  
   commandline:
     args:
   
