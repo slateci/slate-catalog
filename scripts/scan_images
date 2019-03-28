@@ -1,0 +1,11 @@
+#!/bin/sh
+SCAN_PROG=$1
+IMAGES_FILE=$2
+HOSTNAME=$(hostname)
+
+IMAGES=$(cat $IMAGES_FILE)
+for IMAGE in $IMAGES
+do
+	docker pull "$IMAGE" && "$SCAN_PROG" -t Medium --ip "$HOSTNAME" "$IMAGE"
+done
+exit 0
