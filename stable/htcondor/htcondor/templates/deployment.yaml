@@ -103,7 +103,7 @@ spec:
             {{ end}}
           {{ if .Values.CondorConfig.UseGPU }}
           limits:
-            nvidia.com/gpu: {{ .Values.CondorConfig.NumGPUs }}
+            nvidia.com/gpu: {{ .Values.CondorConfig.NumberGPUs }}
           {{ end }}
         lifecycle:
           preStop:
