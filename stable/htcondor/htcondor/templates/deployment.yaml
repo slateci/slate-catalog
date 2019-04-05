@@ -89,7 +89,7 @@ spec:
         - name: _CONDOR_NUM_CPUS
           value: {{ .Values.CondorConfig.NumberCPUs | quote }}
         {{ end}}
-        - name: _CONDOR_FULL_HOSTNAME
+        - name: _CONDOR_HOSTNAME
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
