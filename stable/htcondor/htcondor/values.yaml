@@ -15,8 +15,6 @@ CondorConfig:
   MemoryLimit: 512
   # The number of CPUs that this condor instance may take advantage of.
   NumberCPUs: 1
-  # The ID of the Node or cluster you are deploying on
-  NodeID: SLATE-CONDOR
   # If CVMFS is available for bind mounting, you can specify that here
   Cvmfs: true
   # If there is a GPU available on the cluster, you can specify use of that
