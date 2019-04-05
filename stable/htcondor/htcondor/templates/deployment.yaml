@@ -56,6 +56,7 @@ spec:
       - name: htcondor-{{ .Values.Instance }}-configuration
         configMap:
           name: htcondor-{{ .Values.Instance}}-configuration
+      hostname: $(HOSTNAME)
       containers:
       - name: htcondor-worker
         image: lincolnbryant/htcondor-docker-cuda:390.12
@@ -89,7 +90,7 @@ spec:
         - name: _CONDOR_NUM_CPUS
           value: {{ .Values.CondorConfig.NumberCPUs | quote }}
         {{ end}}
-        - name: _CONDOR_HOSTNAME
+        - name: HOSTNAME
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
