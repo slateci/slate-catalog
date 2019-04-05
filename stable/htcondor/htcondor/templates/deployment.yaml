@@ -89,10 +89,10 @@ spec:
         - name: _CONDOR_NUM_CPUS
           value: {{ .Values.CondorConfig.NumberCPUs | quote }}
         {{ end}}
-        - name: _CONDOR_NODEID
-          value: {{ .Values.CondorConfig.NodeID | quote }}
-        - name: _CONDOR_STARTD_ATTRS
-          value: '$(STARTD_ATTRS) NODEID'
+        - name: _CONDOR_FULL_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         resources:
           requests:
             {{ if .Values.CondorConfig.MemoryLimit }}

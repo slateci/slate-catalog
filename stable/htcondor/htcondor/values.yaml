@@ -55,3 +55,6 @@ CondorConfigFile: |-
   NUM_SLOTS_TYPE_1                    = 1
   SLOT_TYPE_1                         = cpus=100%
   SLOT_TYPE_1_PARTITIONABLE           = TRUE
+  GLIDEIN_NAME                        = glidein_$RANDOM_INTEGER(10000,99999,1)
+  MASTER_NAME                         = $(GLIDEIN_NAME)
+  STARTD_NAME                         = $(GLIDEIN_NAME)
