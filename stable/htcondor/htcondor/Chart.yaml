@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "8.6.12"
 description: HTCondor distributed high-throughput computing system
 name: htcondor
-version: 0.4.4
+version: 0.4.5
