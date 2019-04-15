@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: influxdb
+  name: influxdb
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: influxdb
+    spec:
+      containers:
+      - env:
+        - name: INFLUXDB_ADMIN_PASSWORD
+          value: faucet
+        - name: INFLUXDB_ADMIN_USER
+          value: faucet
+        - name: INFLUXDB_DB
+          value: faucet
+        - name: INFLUXDB_HTTP_AUTH_ENABLED
+          value: "true"
+        image: influxdb:1.6-alpine
+        name: influxdb
+        ports:
+        - containerPort: 8086
+        - containerPort: 8083
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/influxdb
+          name: influxdb-claim0
+      restartPolicy: Always
+      volumes:
+      - name: influxdb-claim0
+        persistentVolumeClaim:
+          claimName: influxdb-claim0
+status: {}
