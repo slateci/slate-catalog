@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: gauge
+  name: gauge
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: gauge
+    spec:
+      containers:
+      - env:
+        - name: GAUGE_CONFIG
+          value: /etc/faucet/gauge.yaml
+        image: faucet/gauge:latest
+        name: gauge
+        ports:
+        - containerPort: 6653
+        - containerPort: 9303
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/log/faucet
+          name: gauge-claim0
+        - mountPath: /etc/faucet
+          name: gauge-claim1
+      restartPolicy: Always
+      volumes:
+      - name: gauge-claim0
+        persistentVolumeClaim:
+          claimName: gauge-claim0
+      - name: gauge-claim1
+        persistentVolumeClaim:
+          claimName: gauge-claim1
+status: {}
