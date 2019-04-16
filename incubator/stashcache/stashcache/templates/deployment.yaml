@@ -36,12 +36,9 @@ spec:
         {{ end }}
       containers:
       - name: stashcache
-#        image: slateci/stashcache
         image: opensciencegrid/prp-stashcache
         imagePullPolicy: Always
-#        command: ["/run_stashcache.sh"]
         command: ['su', '-p', 'xrootd', '-s', '/bin/sh', '-c', '/usr/bin/xrootd -c /etc/xrootd/xrootd-stashcache-cache-server.cfg -k fifo -s /var/run/xrootd/xrootd-stashcache-cache-server.pid -n stashcache-cache-server']
-#        command: ["sleep", "1d"]
         env:
         - name: STASHCACHE_SPACE_HIGH_WM
           value: {{ .Values.StashCache.HighWaterMark | quote }}
