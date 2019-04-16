@@ -24,6 +24,9 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       volumes:
+      - name: stashcache-config-{{ .Values.Instance }}
+        configMap:
+          name: stashcache-config-{{ .Values.Instance }}
       - name: stashcache-data
         {{ if .Values.StashCache.CacheDirectory }}
         hostPath:
@@ -55,6 +58,10 @@ spec:
         - name: STASHCACHE_MONITORING_ENDPOINT
           value: "uct2-collectd.mwt2.org"
         volumeMounts:
+        - mountPath: "/etc/xrootd/xrootd-stashcache-cache-server.cfg"
+          name: stashcache-config-{{ .Values.Instance }}
+          subPath: "xrootd-stashcache-cache-server.cfg"
+          readOnly: true
         - mountPath: "/stash"
           name: stashcache-data
           readOnly: false
