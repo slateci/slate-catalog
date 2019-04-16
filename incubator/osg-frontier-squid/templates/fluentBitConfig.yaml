@@ -1,0 +1,116 @@
+{{ if .Values.SLATE.Logging.Enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "osg-frontier-squid.fullname" .}}-fluent-bit-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    k8s-app: fluent-bit
+data:
+  # Nothing in fluent-bit.conf should need to be changed for a sidecar
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush         1
+        Log_Level     info
+        Daemon        off
+        Parsers_File  parsers.conf
+        HTTP_Server   On
+        HTTP_Listen   0.0.0.0
+        HTTP_Port     2020
+
+    @INCLUDE input-kubernetes.conf
+    @INCLUDE filter-kubernetes.conf
+    @INCLUDE output-elasticsearch.conf
+
+  # The input's path variable is set to the path of the logs for the application you are sending, and the parser repsectively to an appropriate parser defined below
+  input-kubernetes.conf: |
+    [INPUT]
+        Name              tail
+        Tag               *
+        Path              /var/log/squid/*.log
+        Parser            squid
+        DB                /var/log/flb_kube.db
+        Mem_Buf_Limit     5MB
+        Skip_Long_Lines   On
+        Refresh_Interval  10
+
+  # The values in the filter should be supplied by SLATE standards within the values.yaml, and shoulnd't be edited
+  filter-kubernetes.conf: |
+    [FILTER]
+        Name                modify
+        Match               *
+        Add_if_not_present  application_name {{- .Chart.Name | indent 1 }}
+        Add_if_not_present  instance_name   {{- .Values.Instance | indent 1 }}
+        Add_if_not_present  cluster_name    {{- .Values.SLATE.Cluster.Name | indent 1 }}
+        Add_if_not_present  vo              {{- template "namespace" . }}
+
+  # Output to the elasticsearch endpoint defined by the SLATE instance in use, changes will either come from slate or your values.yaml file
+  output-elasticsearch.conf: |
+    [OUTPUT]
+        Name            es
+        Logstash_Prefix slate-app-logs
+        Match           *
+        Host            {{ .Values.SLATE.Logging.Server.Name }}
+        Port            {{ .Values.SLATE.Logging.Server.Port }}
+        Logstash_Format On
+        Retry_Limit     False
+
+  # A custom parser should be defined if your application logs do not fit any of these, for proper itemization of fields to be sent to elasticsearch.
+  parsers.conf: |
+    [PARSER]
+        Name   apache
+        Format regex
+        Regex  ^(?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name   apache2
+        Format regex
+        Regex  ^(?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^ ]*) +\S*)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name   apache_error
+        Format regex
+        Regex  ^\[[^ ]* (?<time>[^\]]*)\] \[(?<level>[^\]]*)\](?: \[pid (?<pid>[^\]]*)\])?( \[client (?<client>[^\]]*)\])? (?<message>.*)$
+
+    [PARSER]
+        Name   nginx
+        Format regex
+        Regex ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name   json
+        Format json
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z¬
+
+    [PARSER]
+        Name        docker
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L
+        Time_Keep   On
+        # Command      |  Decoder | Field | Optional Action
+        # =============|==================|=================
+        Decode_Field_As   escaped    log
+
+    [PARSER]
+        Name        syslog
+        Format      regex
+        Regex       ^\<(?<pri>[0-9]+)\>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
+        Time_Key    time
+        Time_Format %b %d %H:%M:%S
+
+    [PARSER]
+        Name        squid
+        Format      regex
+        Regex       (?<ip>.+)\s(?<username_ident>[^\s]+)\s(?<username_ssl>[^\s]+)\s\[(?<time>\d{2}\/[a-zA-Z]{3}\/\d{4}:\d{2}:\d{2}:\d{2}\.\d{3}).{8}\"(?<req_method>[^\s]+)\s(?<req_url>[^\s]+)\s(?<protocol>[^\s]+)\"\s(?<http_result>\d+)\s(?<reply_size>\d+)\s(?<squid_status>[^\s]+)\s(?<response_time_ms>\d+)\s\"(?<x_frontier_head>.+)\s(?<cvmfs_head>.+)\"\s\"(?<referer_head>.+)\"\s\"(?<user_agent_head>.+)\"$
+        Time_Key    time
+        Time_Format %d/%B/%Y:%H:%M:%S.%L
+
+{{ end }}
