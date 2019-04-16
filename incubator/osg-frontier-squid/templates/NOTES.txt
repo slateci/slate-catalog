@@ -1,0 +1,14 @@
+Installed {{ template "osg-frontier-squid.fullname" . }}.
+
+Your release is named "{{ .Release.Name }}".
+
+To use, set your http_proxy environment variable to this service's address.
+
+The service's internal address can be found using the DNS as:
+{{ .Chart.Name }}-{{ .Values.Instance }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.Service.Port }}
+
+{{- if .Values.Service.ExternallyVisible }}
+The service's external address can be found by running these instructions:
+export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "osg-frontier-squid.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo http://$SERVICE_IP:{{ .Values.Service.Port }}
+{{- end }}
