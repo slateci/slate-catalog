@@ -5,4 +5,4 @@ appVersion: 3.5.27
 description: A Helm chart for configuration and deployment of the Open Science Grid's Frontier Squid application.
 name: osg-frontier-squid
 # Chart version
-version: 1.0.1
+version: 1.1.0
