@@ -5,7 +5,7 @@ data:
   Authfile-noauth: |-
 {{ .Values.authfileNoAuth | indent 4 }}
   Authfile-auth: |-
-{{ .Values.authfileAuth | indext 4 }}
+{{ .Values.authfileAuth | indent 4 }}
 kind: ConfigMap
 metadata:
   name: stashcache-config-{{ .Values.Instance }}
