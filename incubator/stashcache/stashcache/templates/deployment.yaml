@@ -24,6 +24,9 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       volumes:
+      - name: stashcache-config-{{ .Values.Instance }}
+        configMap:
+          name: stashcache-config-{{ .Values.Instance }}
       - name: stashcache-data
         {{ if .Values.StashCache.CacheDirectory }}
         hostPath:
@@ -33,12 +36,9 @@ spec:
         {{ end }}
       containers:
       - name: stashcache
-#        image: slateci/stashcache
         image: opensciencegrid/prp-stashcache
         imagePullPolicy: Always
-#        command: ["/run_stashcache.sh"]
         command: ['su', '-p', 'xrootd', '-s', '/bin/sh', '-c', '/usr/bin/xrootd -c /etc/xrootd/xrootd-stashcache-cache-server.cfg -k fifo -s /var/run/xrootd/xrootd-stashcache-cache-server.pid -n stashcache-cache-server']
-#        command: ["sleep", "1d"]
         env:
         - name: STASHCACHE_SPACE_HIGH_WM
           value: {{ .Values.StashCache.HighWaterMark | quote }}
@@ -55,6 +55,10 @@ spec:
         - name: STASHCACHE_MONITORING_ENDPOINT
           value: "uct2-collectd.mwt2.org"
         volumeMounts:
+        - mountPath: "/etc/xrootd/xrootd-stashcache-cache-server.cfg"
+          name: stashcache-config-{{ .Values.Instance }}
+          subPath: "xrootd-stashcache-cache-server.cfg"
+          readOnly: true
         - mountPath: "/stash"
           name: stashcache-data
           readOnly: false
