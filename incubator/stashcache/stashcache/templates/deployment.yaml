@@ -59,6 +59,14 @@ spec:
           name: stashcache-config-{{ .Values.Instance }}
           subPath: "xrootd-stashcache-cache-server.cfg"
           readOnly: true
+	- mountPath: "/etc/xrootd/Authfile-auth"
+	  name: stashcache-config-{{ .Values.Instance }}
+	  subPath: "Authfile-auth"
+	  readOnly: true
+	- mountPath: "/etc/xrootd/Auth-noauth"
+	  name: stashcache-config-{{ .Values.Instance }}
+	  subPath: "Authfile-noauth"
+	  readOnly: true
         - mountPath: "/stash"
           name: stashcache-data
           readOnly: false

@@ -2,6 +2,10 @@ apiVersion: v1
 data:
   xrootd-stashcache-cache-server.cfg: |-
 {{ .Values.stashcacheConfig | indent 4 }}
+  Authfile-noauth: |-
+{{ .Values.authfileNoAuth | indent 4 }}
+  Authfile-auth: |-
+{{ .Values.authfileAuth | indext 4 }}
 kind: ConfigMap
 metadata:
   name: stashcache-config-{{ .Values.Instance }}

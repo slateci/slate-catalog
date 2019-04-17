@@ -22,6 +22,12 @@ StashCache:
   # to prefetch chunks that were not requested
   Prefetch: 0
 
+authfileNoAuth: |-
+  u * / rl
+
+authfileAuth: |-
+  u * / rl
+
 stashcacheConfig: |-
   set eSITENAME=$STASHCACHE_SITE_NAME
   set eRAMSIZE=$STASHCACHE_RAMSIZE
