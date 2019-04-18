@@ -5,7 +5,8 @@
 ## Usage:
 
 ```console
-$ slate app install --vo <vo-name> --cluster <cluster-name> grafana
+$ slate app get-conf grafana > grafana.yaml
+$ slate app install --group <group-name> --cluster <cluster-name> grafana.yaml
 ```
 
 The `adminuser` and `adminPassword` fields in Grafana's `values.yaml` file (lines 23 & 24) are the username and password for the admin account created to login to the instance of Grafana that is installed. These should be changed from their defaults.
