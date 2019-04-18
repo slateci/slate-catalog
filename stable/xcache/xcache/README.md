@@ -1,6 +1,6 @@
 # XCache
 
-**NOTE**: This SLATE application requires a pool password secret to be
+**NOTE**: This SLATE application requires a X509 certificate to be
 installed on the target cluster in order to successfully deploy. Click [here](https://portal.slateci.io/secrets) to add a secret in the SLATE portal.
 
 *Image source*: https://github.com/slateci/XCache
