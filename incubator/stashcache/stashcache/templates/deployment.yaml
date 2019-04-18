@@ -24,9 +24,18 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       volumes:
-      - name: stashcache-config-{{ .Values.Instance }}
+      - name: stashcache-config
         configMap:
           name: stashcache-config-{{ .Values.Instance }}
+          items:
+          - key: xrootd-stashcache-cache-server.cfg
+            path: xrootd-stashcache-cache-server.cfg
+          - key: Authfile-noauth
+            path: Authfile-noauth
+          - key: Authfile-auth
+            path: Authfile-auth
+          - key: stashcache-robots.txt
+            path: stashcache-robots.txt
       - name: stashcache-data
         {{ if .Values.StashCache.CacheDirectory }}
         hostPath:
@@ -55,18 +64,9 @@ spec:
         - name: STASHCACHE_MONITORING_ENDPOINT
           value: "uct2-collectd.mwt2.org"
         volumeMounts:
-        - mountPath: "/etc/xrootd/xrootd-stashcache-cache-server.cfg"
-          name: stashcache-config-{{ .Values.Instance }}
-          subPath: "xrootd-stashcache-cache-server.cfg"
-          readOnly: true
-        - mountPath: "/etc/xrootd/Authfile-auth"
-          name: stashcache-config-{{ .Values.Instance }}
-          subPath: "Authfile-auth"
-          readOnly: true
-        - mountPath: "/etc/xrootd/Auth-noauth"
-          name: stashcache-config-{{ .Values.Instance }}
-          subPath: "Authfile-noauth"
-          readOnly: true
+        - mountPath: "/etc/xrootd/"
+          name: stashcache-config
+          readOnly: false
         - mountPath: "/stash"
           name: stashcache-data
           readOnly: false

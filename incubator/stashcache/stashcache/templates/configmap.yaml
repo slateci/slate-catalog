@@ -6,6 +6,8 @@ data:
 {{ .Values.authfileNoAuth | indent 4 }}
   Authfile-auth: |-
 {{ .Values.authfileAuth | indent 4 }}
+  stashcache-robots.txt: |-
+{{ .Values.stashcacheRobots | indent 4 }}
 kind: ConfigMap
 metadata:
   name: stashcache-config-{{ .Values.Instance }}

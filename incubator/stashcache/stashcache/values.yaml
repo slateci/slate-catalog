@@ -26,6 +26,10 @@ authfileNoAuth: u * / rl
 
 authfileAuth: u * / rl
 
+stashcacheRobots: |-
+  User-agent: *
+  Disallow: /
+
 stashcacheConfig: |-
   set eSITENAME=$STASHCACHE_SITE_NAME
   set eRAMSIZE=$STASHCACHE_RAMSIZE
