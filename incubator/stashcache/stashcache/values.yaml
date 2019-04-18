@@ -8,7 +8,7 @@ Instance: global
 # The keys must be:
 #    hostcert
 #    hostkey
-# run 'slate secrete create --help' for usage
+# run 'slate secret create --help' for usage
 hostCertSecret: stashcache-cert-secret
 hostKeySecret: stashcache-key-secret
 
