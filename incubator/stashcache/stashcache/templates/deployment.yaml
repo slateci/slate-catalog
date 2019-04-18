@@ -43,6 +43,18 @@ spec:
         {{ else }}
         emptyDir: {}
         {{ end }}
+      - name: host-certificate
+        secret:
+          secretName: {{ .Values.hostCertSecret }}
+          items:
+          - key: hostcert
+            path: hostcert.pem
+      - name: host-key
+        secret:
+          secretName: {{ .Values.hostKeySecret }} 
+          items:
+          - key: hostkey
+            path: hostkey.pem
       containers:
       - name: stashcache
         image: opensciencegrid/prp-stashcache
@@ -72,6 +84,14 @@ spec:
         - mountPath: "/stash"
           name: stashcache-data
           readOnly: false
+        - mountPath: /etc/grid-security/hostcert.pem
+          name: host-certificate
+          readOnly: false
+          subPath: hostcert.pem 
+        - mountPath: /etc/grid-security/hostkey.pem
+          name: host-key
+          readOnly: false
+          subPath: hostkey.pem
         livenessProbe:
           tcpSocket:
             port: {{ .Values.Service.Port }}

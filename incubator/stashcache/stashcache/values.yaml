@@ -3,6 +3,15 @@
 # Enables multiple instances of StashCache in one namespace
 Instance: global
 
+# Host Certificate and Key
+# The following secrets are required
+# The keys must be:
+#    hostcert
+#    hostkey
+# run 'slate secret create --help' for usage
+hostCertSecret: stashcache-cert-secret
+hostKeySecret: stashcache-key-secret
+
 Service:
   Port: 1094
 
