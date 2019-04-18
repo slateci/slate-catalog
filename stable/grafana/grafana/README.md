@@ -1,6 +1,7 @@
-# Grafana Helm Chart
+# Grafana
 
 * Installs the web dashboarding system [Grafana](http://grafana.org/)
+* Image source: https://hub.docker.com/r/grafana/grafana
 
 ## Usage:
 
