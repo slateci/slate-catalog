@@ -1,5 +1,16 @@
 # XCache
 
+**NOTE**: This SLATE application requires a pool password secret to be
+installed on the target cluster in order to successfully deploy. Click [here](https://portal.slateci.io/secrets) to add a secret in the SLATE portal.
+
+*Image source*: https://github.com/slateci/XCache
+
+## Usage
+```console
+$ slate app get-conf xcache > xcache.yaml
+$ slate app install --group <group-name> --cluster <cluster-name> xcache.yaml
+```
+
 ## Introduction
 XCache is a service that provides caching of data accessed using [xrootd protocol](http://xrootd.org/). It sits in between client and an upstream xrootd servers and can cache/prefetch full files or only blocks already requested. 
 
