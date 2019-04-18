@@ -8,6 +8,7 @@ data:
     set eBLOCKSIZE=$STASHCACHE_BLOCKSIZE
     set ePREFETCH=$STASHCACHE_PREFETCH
     set eMONITORDEST=$STASHCACHE_MONITORING_ENDPOINT
+    set LOCAL_CACHE_DIR=$STASHCACHE_LOCAL_CACHE_DIR
     all.export    /
     xrd.allow     host *
     sec.protocol  host

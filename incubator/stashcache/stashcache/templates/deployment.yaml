@@ -49,6 +49,8 @@ spec:
         imagePullPolicy: Always
         command: ['su', '-p', 'xrootd', '-s', '/bin/sh', '-c', '/usr/bin/xrootd -c /etc/xrootd/xrootd-stashcache-cache-server.cfg -k fifo -s /var/run/xrootd/xrootd-stashcache-cache-server.pid -n stashcache-cache-server']
         env:
+        - name: STASHCACHE_LOCAL_CACHE_DIR
+          value: {{ .Values.StashCache.CacheDirectory | quote }}
         - name: STASHCACHE_SPACE_HIGH_WM
           value: {{ .Values.StashCache.HighWaterMark | quote }}
         - name: STASHCACHE_SPACE_LOW_WM
