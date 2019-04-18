@@ -6,8 +6,18 @@ installed on the target cluster in order to successfully deploy. Click [here](ht
 
 *Image source*: https://github.com/LincolnBryant/htcondor-docker/
 
+
 This chart will install an HTCondor executor (startd) that uses a shared pool
 password to connect back to an existing HTCondor central manager.
+
+---
+## Usage:
+
+```console
+$ slate app get-conf htcondor > htcondor.yaml
+$ slate app install --group <group-name> --cluster <cluster-name> htcondor.yaml
+```
+---
 
 ## Central manager configuration
 Your central manager will need the following configuration in order for execute
