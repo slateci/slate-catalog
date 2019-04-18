@@ -19,7 +19,7 @@ CondorConfig:
   Cvmfs: true
   # If there is a GPU available on the cluster, you can specify use of that
   # resource
-  UseGPU: true
+  UseGPU: false
   # Only used if UseGPU is set to true
   NumberGPUs: 2
   # Path to scratch storage on the local node used by the HTCondor worker
