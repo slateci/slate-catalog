@@ -31,6 +31,7 @@ SEC_DEFAULT_INTEGRITY = OPTIONAL
 SEC_ENABLE_MATCH_PASSWORD_AUTHENTICATION = TRUE
 SEC_PASSWORD_FILE = /etc/condor/condor_password
 ```
+---
 
 ## Configuration options
 | Parameter | Description | Default |
