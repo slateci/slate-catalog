@@ -1,7 +1,7 @@
 apiVersion: v1
 name: stashcache
 # Chart version
-version: 0.1.6
+version: 0.1.7
 description: StashCache is an XRootD-based caching service
 # Version of application packaged for installation
 appVersion: "0.9"

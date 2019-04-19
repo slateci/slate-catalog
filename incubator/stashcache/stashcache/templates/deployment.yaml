@@ -28,8 +28,6 @@ spec:
         configMap:
           name: stashcache-config-{{ .Values.Instance }}
           items:
-          - key: xrootd-stashcache-cache-server.cfg
-            path: xrootd-stashcache-cache-server.cfg
           - key: Authfile-noauth
             path: Authfile-noauth
           - key: Authfile-auth
@@ -42,56 +40,62 @@ spec:
           path: {{ .Values.StashCache.CacheDirectory }}
         {{ else }}
         emptyDir: {}
-        {{ end }}
+        {{ end }}  
+      {{ if .Values.hostCertSecret}}
       - name: host-certificate
         secret:
           secretName: {{ .Values.hostCertSecret }}
           items:
-          - key: hostcert
+          - key: hostcert.pem
             path: hostcert.pem
-      - name: host-key
-        secret:
-          secretName: {{ .Values.hostKeySecret }} 
-          items:
-          - key: hostkey
+          - key: hostkey.pem
             path: hostkey.pem
+      {{ end }}
       containers:
       - name: stashcache
-        image: opensciencegrid/stash-cache:20190416-2322
+        image: opensciencegrid/stash-cache:20190419-1555
         imagePullPolicy: Always
-        command: ['su', '-p', 'xrootd', '-s', '/bin/sh', '-c', '/usr/bin/xrootd -c /etc/xrootd/xrootd-stashcache-cache-server.cfg -k fifo -s /var/run/xrootd/xrootd-stashcache-cache-server.pid -n stashcache-cache-server']
         env:
-        - name: STASHCACHE_LOCAL_CACHE_DIR
-          value: {{ .Values.StashCache.CacheDirectory | quote }}
-        - name: STASHCACHE_SPACE_HIGH_WM
-          value: {{ .Values.StashCache.HighWaterMark | quote }}
-        - name: STASHCACHE_SPACE_LOW_WM
-          value: {{ .Values.StashCache.LowWaterMark | quote }}
-        - name: STASHCACHE_RAMSIZE
-          value: {{ .Values.StashCache.RamSize | quote }}
-        - name: STASHCACHE_BLOCKSIZE
-          value: {{ .Values.StashCache.BlockSize | quote }}
-        - name: STASHCACHE_PREFETCH
-          value: {{ .Values.StashCache.Prefetch | quote }}
-        - name: STASHCACHE_SITE_NAME
+        - name: XC_ROOTDIR
+          value: "/stash"
+        # These Settings are not yet supported in the OSG image
+        #- name: STASHCACHE_SPACE_HIGH_WM
+        #  value: {{ .Values.StashCache.HighWaterMark | quote }}
+        #- name: STASHCACHE_SPACE_LOW_WM
+        #  value: {{ .Values.StashCache.LowWaterMark | quote }}
+        #- name: STASHCACHE_RAMSIZE
+        #  value: {{ .Values.StashCache.RamSize | quote }}
+        #- name: STASHCACHE_BLOCKSIZE
+        #  value: {{ .Values.StashCache.BlockSize | quote }}
+        #- name: STASHCACHE_PREFETCH
+        #  value: {{ .Values.StashCache.Prefetch | quote }}
+        - name: XC_RESOURCENAME
           value: {{ .Values.Site.Name | quote }}
-        - name: STASHCACHE_MONITORING_ENDPOINT
-          value: "uct2-collectd.mwt2.org"
+        #- name: STASHCACHE_MONITORING_ENDPOINT
+        #  value: "uct2-collectd.mwt2.org"
         volumeMounts:
-        - mountPath: "/etc/xrootd/"
-          name: stashcache-config
-          readOnly: false
+        - name: stashcache-config
+          mountPath: "/etc/xrootd/Authfile-noauth"
+          subPath: Authfile-noauth
+        - name: stashcache-config
+          mountPath: "/etc/xrootd/Authfile-auth"
+          subPath: Authfile-auth
+        - name: stashcache-config
+          mountPath: "/etc/xrootd/stashcache-robots.txt"
+          subPath: stashcache-robots.txt
         - mountPath: "/stash"
           name: stashcache-data
           readOnly: false
+        {{ if .Values.hostCertSecret }}
         - mountPath: /etc/grid-security/hostcert.pem
           name: host-certificate
-          readOnly: false
+          readOnly: true
           subPath: hostcert.pem 
         - mountPath: /etc/grid-security/hostkey.pem
-          name: host-key
-          readOnly: false
+          name: host-certificate
+          readOnly: true
           subPath: hostkey.pem
+        {{ end }}
         livenessProbe:
           tcpSocket:
             port: {{ .Values.Service.Port }}

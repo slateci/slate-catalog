@@ -4,13 +4,11 @@
 Instance: global
 
 # Host Certificate and Key
-# The following secrets are required
-# The keys must be:
-#    hostcert
-#    hostkey
+# The keys contained in the secret must be:
+#    hostcert.pem
+#    hostkey.pem
 # run 'slate secret create --help' for usage
-hostCertSecret: stashcache-cert-secret
-hostKeySecret: stashcache-key-secret
+hostCertSecret: stashcache-cert
 
 Service:
   Port: 1094
@@ -18,9 +16,8 @@ Service:
 Site:
   Name: "stashcache"
 
+# Warning: These settings are not yet honored
 StashCache:
-  # Local directory to be used as a cache
-  CacheDirectory: /scratch
   # Space usage
   HighWaterMark: 0.95
   LowWaterMark: 0.80
