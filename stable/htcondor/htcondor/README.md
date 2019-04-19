@@ -19,7 +19,7 @@ $ slate app install --group <group-name> --cluster <cluster-name> htcondor.yaml
 ```
 ---
 
-## Central manager configuration testing
+## Central manager configuration
 Your central manager will need the following configuration in order for execute
 nodes to successfully connect back and begin accepting jobs:
 ```console
