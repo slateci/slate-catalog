@@ -23,13 +23,13 @@ $ slate app install --group <group-name> --cluster <cluster-name> htcondor.yaml
 Your central manager will need the following configuration in order for execute
 nodes to successfully connect back and begin accepting jobs:
 ```
-    ALLOW_DAEMON = $(ALLOW_DAEMON), condor_pool@*
-    SEC_DEFAULT_AUTHENTICATION = PREFERRED
-    SEC_DEFAULT_AUTHENTICATION_METHODS = $(SEC_DEFAULT_AUTHENTICATION_METHODS) PASSWORD
-    SEC_DEFAULT_ENCRYPTION = OPTIONAL
-    SEC_DEFAULT_INTEGRITY = OPTIONAL
-    SEC_ENABLE_MATCH_PASSWORD_AUTHENTICATION = TRUE
-    SEC_PASSWORD_FILE = /etc/condor/condor_password
+ALLOW_DAEMON = $(ALLOW_DAEMON), condor_pool@*
+SEC_DEFAULT_AUTHENTICATION = PREFERRED
+SEC_DEFAULT_AUTHENTICATION_METHODS = $(SEC_DEFAULT_AUTHENTICATION_METHODS) PASSWORD
+SEC_DEFAULT_ENCRYPTION = OPTIONAL
+SEC_DEFAULT_INTEGRITY = OPTIONAL
+SEC_ENABLE_MATCH_PASSWORD_AUTHENTICATION = TRUE
+SEC_PASSWORD_FILE = /etc/condor/condor_password
 ```
 ---
 
