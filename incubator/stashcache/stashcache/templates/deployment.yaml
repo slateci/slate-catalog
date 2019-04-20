@@ -34,6 +34,9 @@ spec:
             path: Authfile-auth
           - key: stashcache-robots.txt
             path: stashcache-robots.txt
+          - key: xcache_image_init.sh
+            path: xcache_image_init.sh
+          defaultMode: 493
       - name: stashcache-data
         {{ if .Values.StashCache.CacheDirectory }}
         hostPath:
@@ -83,6 +86,10 @@ spec:
         - name: stashcache-config
           mountPath: "/etc/xrootd/stashcache-robots.txt"
           subPath: stashcache-robots.txt
+        - name: stashcache-config
+          mountPath: "/usr/local/sbin/xcache_image_init.sh"
+          subPath: xcache_image_init.sh
+          mode: 493
         - mountPath: "/stash"
           name: stashcache-data
           readOnly: false
