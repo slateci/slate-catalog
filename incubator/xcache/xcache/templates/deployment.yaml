@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "xcache.fullname" . }}
+  labels:
+    app: {{ template "xcache.name" . }}
+    chart: {{ template "xcache.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "xcache.name" . }}
+      chart: {{ template "xcache.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
+    
+  template:
+    metadata:
+      labels:
+        app: {{ template "xcache.name" . }}
+        chart: {{ template "xcache.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+
+      nodeSelector:
+        xcache-capable: "true"
+      
+      tolerations:
+      - key: "special"
+        operator: "Exists"
+        effect: PreferNoSchedule
+
+      volumes:
+      - name: x509-data
+        emptyDir: {}
+      - name: x509-certs-volume
+        secret:
+          secretName: xcache-cert-secret
+          items:
+          - key: userkey
+            path: userkey.pem
+            mode: 256 
+          - key: usercert
+            path: usercert.pem
+      {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
+      - name: xcache-data-{{ $index }}
+        hostPath:
+          path: {{ $dir }}
+      {{- end }}
+      - name: xcache-meta
+        hostPath:
+          path: {{ .Values.XCacheConfig.MetaDirectory }}
+      
+      containers:
+        - name: {{ .Chart.Name }}
+          image: opensciencegrid/atlas-xcache:development
+          imagePullPolicy: "Always"
+          env:
+          - name: XC_SPACE_HIGH_WM
+            value: "{{ .Values.XCacheConfig.HighWaterMark }}"
+          - name: XC_SPACE_LOW_WM
+            value: "{{ .Values.XCacheConfig.LowWaterMark }}"
+          - name: XC_PORT
+            value: "{{ .Values.Service.Port }}"
+          - name: XC_RAMSIZE
+            value: "{{ .Values.XCacheConfig.RamSize }}"
+          - name: XC_BLOCKSIZE
+            value: "{{ .Values.XCacheConfig.BlockSize }}"
+          - name: XC_PREFETCH
+            value: "{{ .Values.XCacheConfig.Prefetch }}"
+          - name: AGIS_PROTOCOL_ID
+            value: "{{ .Values.SiteConfig.AGISprotocolID }}"
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.Service.Port }}
+            initialDelaySeconds: 180
+            periodSeconds: 60
+          ports:
+            - containerPort: {{ .Values.Service.Port }}         
+          volumeMounts:
+          - name: x509-data
+            mountPath: "/etc/grid-security/"
+            readOnly: false
+          - name: x509-certs-volume
+            mountPath: "/etc/grid-certs/"
+            readOnly: true
+          {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $index }}
+            mountPath: "/xcache-data_{{ $index }}"
+          {{- end }}
+          - name: xcache-meta
+            mountPath: "/xcache-meta"
+
+        - name: x509
+          image: "slateci/xcache"
+          command: ["/run_x509_updater.sh"]
+          volumeMounts:
+          - name: x509-data
+            mountPath: "/etc/grid-security/"
+            readOnly: false
+          - name: x509-certs-volume
+            mountPath: "/etc/grid-certs/"
+            readOnly: true
+
+        - name: reporter
+          image: "slateci/xcache"
+          command: ["/run_cache_reporter.sh"]
+          env:
+          - name: XC_SITE
+            value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_REPORT_COLLECTOR
+            value: "{{ .Values.Monitoring.Collector }}"
+          volumeMounts:
+          - name: xcache-meta
+            mountPath: "/xcache-meta"
+            readOnly: true
