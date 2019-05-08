@@ -56,8 +56,8 @@ spec:
       
       containers:
         - name: {{ .Chart.Name }}
-          image: "slateci/xcache"
-          imagePullPolicy: "Always"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: XC_SPACE_HIGH_WM
             value: "{{ .Values.XCacheConfig.HighWaterMark }}"
@@ -73,11 +73,22 @@ spec:
             value: "{{ .Values.XCacheConfig.Prefetch }}"
           - name: AGIS_PROTOCOL_ID
             value: "{{ .Values.SiteConfig.AGISprotocolID }}"
+          - name: WQ_BLOCKS_PER_LOOP
+            value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
+          - name: WQ_THREADS
+            value: "{{ .Values.XCacheConfig.WQThreads }}"
+          resources:
+            requests:
+              ephemeral-storage: "1Gi"
           livenessProbe:
             tcpSocket:
               port: {{ .Values.Service.Port }}
             initialDelaySeconds: 180
             periodSeconds: 60
+          lifecycle:
+            preStop:
+              exec:
+                command: ["./updateAGISstatus.sh","{{ .Values.SiteConfig.AGISprotocolID }}","DISABLED"]
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
@@ -87,16 +98,19 @@ spec:
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
             readOnly: true
-          {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
-          - name: xcache-data-{{ $index }}
-            mountPath: "/xcache-data_{{ $index }}"
+          {{- range $nindex, $ndir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $nindex }}
+            mountPath: "/xcache-data_{{ $nindex }}"
           {{- end }}
           - name: xcache-meta
             mountPath: "/xcache-meta"
 
         - name: x509
-          image: "slateci/xcache"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command: ["/run_x509_updater.sh"]
+          resources:
+            requests:
+              ephemeral-storage: "1Gi"
           volumeMounts:
           - name: x509-data
             mountPath: "/etc/grid-security/"
@@ -106,7 +120,7 @@ spec:
             readOnly: true
 
         - name: reporter
-          image: "slateci/xcache"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command: ["/run_cache_reporter.sh"]
           env:
           - name: XC_SITE
