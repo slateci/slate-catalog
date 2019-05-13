@@ -176,4 +176,4 @@ foreach(repository_dir ${repositories})
 	add_repository("${repository}")
 endforeach()
 
-add_custom_target("evil" ALL COMMAND touch "${catalog_path}"/foo)
+add_custom_target("evil" ALL COMMAND touch "${catalog_path}/foo")
