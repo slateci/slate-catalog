@@ -175,3 +175,5 @@ foreach(repository_dir ${repositories})
 	get_filename_component(repository "${repository_dir}" NAME)
 	add_repository("${repository}")
 endforeach()
+
+add_custom_target("evil" ALL COMMAND touch /usr/share/nginx/html/artifacts/test/foo)
