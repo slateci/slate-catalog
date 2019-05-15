@@ -6,11 +6,11 @@ pipeline{
 				sh 'mkdir -p build'
 				dir('build'){
 					sh "echo ${env.BRANCH_NAME}"
-					sh "echo ${ghprbTargetBranch}"
-					sh "echo ${ghprbSourceBranch}"
 					script{
 						if(env.BRANCH_NAME.startsWith('PR-')){
-							sh 'status=`git diff --name-status` '+params.ghprbTargetBranch+'..'+params.ghprbSourceBranch+'''
+							sh "echo ${env.CHANGE_TARGET}"
+							sh "echo ${env.CHANGE_BRANCH}"
+							sh 'status=`git diff --name-status` '+env.CHANGE_TARGET+'..'+env.CHANGE_BRANCH+'''
 							for protected in Jenkinsfile CMakeLists.txt; do
 								if echo "$status" | grep "$protected"; then
 									echo "Changes to protected file ${protected}; cowardly refusing to continue"
