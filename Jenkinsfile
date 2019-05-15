@@ -8,7 +8,7 @@ pipeline{
 					sh "echo ${env.BRANCH_NAME}"
 					script{
 						if(env.BRANCH_NAME.startsWith('PR-')){
-							sh '''status=`git status`
+							sh 'status=`git diff --name-status`'+params.ghprbTargetBranch+'..'+params.ghprbSourceBranch+'''
 							for protected in Jenkinsfile CMakeLists.txt; do
 								if echo "$status" | grep "$protected"; then
 									echo "Changes to protected file ${protected}; cowardly refusing to continue"
