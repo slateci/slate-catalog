@@ -5,7 +5,7 @@ pipeline{
 			steps{
 				sh 'mkdir -p build'
 				dir('build'){
-					sh echo env.BRANCH_NAME
+					sh "echo ${env.BRANCH_NAME}"
 					sh 'cmake3 ..'
 					sh 'make'
 					script{
