@@ -31,6 +31,9 @@ spec:
         - name: ssh
           containerPort: 22
           protocol: TCP
+        - name: collector
+          containerPort: 9619
+          protocol: TCP
         volumeMounts:
         - name: remote-host-key
           mountPath: "/etc/osg/bosco.key"
