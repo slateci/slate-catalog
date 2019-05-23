@@ -1,12 +1,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "check-mk.fullname" . }}
+  name: check-mk
   labels:
     app: {{ template "check-mk.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   template:
