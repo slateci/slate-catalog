@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: check-mk
+  name: {{ template "check-mk.fullname" . }}
   labels:
     app: {{ template "check-mk.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
