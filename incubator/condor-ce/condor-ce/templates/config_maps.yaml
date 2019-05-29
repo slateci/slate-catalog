@@ -6,6 +6,8 @@ metadata:
     app: nginx
     instance: {{ .Values.Instance }}
 data:
+  hostcert.pem: |-
+{{ .Values.Host.HostCertificate | indent 4 }}
   ssh_known_hosts: {{ .Values.RemoteHost.HostName }} {{ .Values.RemoteHost.HostKey }}
   # OSG config
   99-local.ini: |-

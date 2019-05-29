@@ -52,12 +52,25 @@ spec:
           subPath: access-key
         - name: grid-certs
           mountPath: /etc/grid-security/certificates
+        - name: condor-ce-{{ .Values.Instance }}-configuration
+          mountPath: /etc/grid-security/hostcert.pem
+          subPath: hostcert.pem
+        - name: host-key
+          mountPath: /etc/grid-security/hostkey.pem
+          subPath: hostkey.pem
       - name: fetchcrl
         image: edquist/fetchcrl-container
         volumeMounts:
         - name: grid-certs
           mountPath: /etc/grid-security/certificates
       volumes:
+      - name: host-key
+        secret:
+          secretName: {{ .Values.Host.PrivateKeySecret }}
+          items:
+            - key: private_key
+              path: hostkey.pem 
+          defaultMode: 384
       - name: remote-host-key
         secret:
           secretName: {{ .Values.RemoteHost.PrivateKeySecret }}
