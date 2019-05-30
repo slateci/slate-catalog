@@ -35,6 +35,14 @@ RemoteHost:
   # (The key data should be stored under the name 'private_key' in the secret)
   PrivateKeySecret: 
 
+# Host
+Host:
+  # The name of a secret containing the host certificate and private key
+  # The key data should be stored under:
+  # cert and private_key
+  hostCertificateSecret:
+
+
 # Information about the batch system
 Cluster: |-
   name = Grid

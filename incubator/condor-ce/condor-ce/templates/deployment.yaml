@@ -52,12 +52,31 @@ spec:
           subPath: access-key
         - name: grid-certs
           mountPath: /etc/grid-security/certificates
+        - name: host-cert
+          mountPath: /etc/grid-security/hostcert.pem
+          subPath: hostcert.pem
+        - name: host-key
+          mountPath: /etc/grid-security/hostkey.pem
+          subPath: hostkey.pem
       - name: fetchcrl
         image: edquist/fetchcrl-container
         volumeMounts:
         - name: grid-certs
           mountPath: /etc/grid-security/certificates
       volumes:
+      - name: host-key
+        secret:
+          secretName: {{ .Values.Host.hostCertificateSecret }}
+          items:
+            - key: private_key
+              path: hostkey.pem 
+          defaultMode: 384
+      - name: host-cert
+        secret:
+          secretName: {{ .Values.Host.hostCertificateSecret }}
+          items:
+            - key: cert
+              path: hostcert.pem
       - name: remote-host-key
         secret:
           secretName: {{ .Values.RemoteHost.PrivateKeySecret }}
