@@ -23,6 +23,9 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
+      hostNetwork: true
+      nodeSelector: 
+        kubernetes.io/hostname: {{ .Values.NodeSelector }}
       containers:
       - name: condor-ce
         image: "slateci/container-condor-ce"
@@ -60,6 +63,14 @@ spec:
           subPath: hostkey.pem
       - name: fetchcrl
         image: edquist/fetchcrl-container
+        volumeMounts:
+        - name: grid-certs
+          mountPath: /etc/grid-security/certificates
+      initContainers:
+      - name: fetchcrl
+        image: edquist/fetchcrl-container
+        command: ["/bin/sh"]
+        args: ["-c", "osg-ca-manage setupCA --url osg; fetch-crl -p10 -T10"]
         volumeMounts:
         - name: grid-certs
           mountPath: /etc/grid-security/certificates
