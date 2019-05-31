@@ -37,6 +37,11 @@ spec:
         - name: collector
           containerPort: 9619
           protocol: TCP
+        env:
+        - name: _CONDOR_NETWORK_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         volumeMounts:
         - name: remote-host-key
           mountPath: "/etc/osg/bosco.key"
