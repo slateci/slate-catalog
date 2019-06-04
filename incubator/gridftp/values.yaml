@@ -1,0 +1,56 @@
+# Instance to label use case of Frontier Squid deployment
+# Generates app name as "condor-[Instance]"
+# Enables unique instances of Frontier Squid in one namespace
+Instance: global
+
+GridFTPConfig:
+  # The number of GridFTP pods to run
+  Instances: 1
+  # Striping: Whether or not to run data nodes (advanced config)
+  Striping: false
+  # The number of GridFTP data nodes to run & configure
+  DataNodes: 0
+  # The FQDN of the GridFTP front end
+  GridFTPFrontend: localhost
+  # Whether to use the Kubernetes HostNetwork interface.
+  # Disabling HostNetwork will require advanced config; so it defaults to true.
+  HostNetwork: true
+  # The name of the secret that was created for the front end SSL certificate and key.
+  # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
+  # This must be created *BEFORE* you instantiate the chart.
+  HostSecretName: gridftp-host-pems 
+  # The name of the secret that was created for the user X509 certificate and key.
+  # These must be PEM files named 'usercert.pem' and 'userkey.pem' respectively.
+  # This must be created *BEFORE* you instantiate the chart.
+  UserSecretName: rucio-test-x509
+  # The port GridFTP will use. 
+  GridFTPPort: 2811
+  # If a particular mount point is available for distributed storage, you can specify that here
+  DataMountPoint: /scratch
+  # Authentication can be GSISSH, userpass, or anonymous 
+  Authentication: gsissh
+  # Autoscaling can increase resources automatically
+  DataNodeScaling: false
+  FrontEndScaling: false
+
+# The entrypoint which will configure the GridFTP instance
+GridFTPEntrypoint: |-
+  #!/bin/bash -e
+  
+  cp /opt/gridftp/x509/usercert.pem /home/gridftp/.globus/usercert.pem
+  chmod 644 /home/gridftp/.globus/usercert.pem
+  cp /opt/gridftp/x509/userkey.pem /home/gridftp/.globus/userkey.pem
+  chmod 400 /home/gridftp/.globus/userkey.pem
+  chown gridftp:gridftp /home/gridftp/.globus/userkey.pem
+  chown gridftp:gridftp /home/gridftp/.globus/usercert.pem
+  chown gridftp:gridftp /scratch
+  cp /tmp/gridftp-host-pems/hostcert.pem /etc/grid-security/
+  chmod 644 /etc/grid-security/hostcert.pem
+  chown root:root /etc/grid-security/hostcert.pem
+  cp /tmp/gridftp-host-pems/hostkey.pem /etc/grid-security/
+  chmod 400 /etc/grid-security/hostkey.pem
+  chown root:root /etc/grid-security/hostkey.pem
+  opensslDN=$(openssl x509 -in /home/gridftp/.globus/usercert.pem -subject -noout)
+  echo ${opensslDN:9}
+  echo -e "\"${opensslDN:9}\" gridftp" > /etc/grid-security/grid-mapfile
+  globus-gridftp-server
