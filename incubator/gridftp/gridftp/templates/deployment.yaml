@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment 
+metadata:
+  name: {{ template "gridftp.fullname" . }} 
+  labels:
+    app: {{ template "gridftp.fullname" . }} 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "gridftp.fullname" . }}
+        chart: {{ template "gridftp.chart" . }}
+    spec:
+      hostNetwork: {{ .Values.GridFTPConfig.HostNetwork }} 
+      hostname: {{ template "gridftp.fullname" . }} 
+      volumes:
+        - name: rucio-test-x509
+          secret:
+            secretName: {{ .Values.GridFTPConfig.UserSecretName }} 
+            defaultMode: 256
+        - name: gridftp-host-pems
+          secret:
+            secretName: {{ .Values.GridFTPConfig.HostSecretName}} 
+            defaultMode: 256
+      containers:
+        - name: rucio-gridftp2
+          image: davidmanglano/gridftp 
+          volumeMounts:
+            - name: rucio-test-x509
+              mountPath: /opt/gridftp/x509/
+            - name: gridftp-host-pems
+              mountPath: /tmp/gridftp-host-pems/
+      nodeSelector:
+        gridftp: "true"
