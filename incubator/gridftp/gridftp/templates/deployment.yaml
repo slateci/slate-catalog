@@ -29,15 +29,9 @@ spec:
       containers:
         - name: rucio-gridftp2
           image: davidmanglano/gridftp 
-          command: ["/bin/sh"]
-          args: ["/tmp/entrypoint/docker-entrypoint.sh"]
           volumeMounts:
             - name: gridftp-user-x509
               mountPath: /opt/gridftp/x509
-            - name: gridftp-entrypoint
-              mountPath: /tmp/entrypoint/
-#            - name: gridftp-persistent-storage
-#              mountPath: /scratch
             - name: gridftp-host-pems
               mountPath: /tmp/gridftp-host-pems/
       nodeSelector:
