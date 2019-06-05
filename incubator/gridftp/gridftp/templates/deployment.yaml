@@ -15,7 +15,7 @@ spec:
       hostNetwork: {{ .Values.GridFTPConfig.HostNetwork }} 
       hostname: {{ template "gridftp.fullname" . }} 
       volumes:
-        - name: rucio-test-x509
+        - name: gridftp-users
           secret:
             secretName: {{ .Values.GridFTPConfig.UserSecretName }} 
             defaultMode: 256
@@ -27,8 +27,8 @@ spec:
         - name: rucio-gridftp2
           image: davidmanglano/gridftp 
           volumeMounts:
-            - name: rucio-test-x509
-              mountPath: /opt/gridftp/x509/
+            - name: gridftp-users
+              mountPath: /opt/gridftp/users/
             - name: gridftp-host-pems
               mountPath: /tmp/gridftp-host-pems/
       nodeSelector:

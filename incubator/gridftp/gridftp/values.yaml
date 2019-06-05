@@ -1,6 +1,4 @@
-# Instance to label use case of Frontier Squid deployment
-# Generates app name as "condor-[Instance]"
-# Enables unique instances of Frontier Squid in one namespace
+# Generates app name as "gridftp-[Instance]"
 Instance: global
 
 GridFTPConfig:
@@ -13,10 +11,10 @@ GridFTPConfig:
   # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
   # This must be created *BEFORE* you instantiate the chart.
   HostSecretName: gridftp-host-pems 
-  # The name of the secret that was created for the user X509 certificate and key.
-  # These must be PEM files named 'usercert.pem' and 'userkey.pem' respectively.
+  # The name of the secret that was created for the files `grid-mapfile` and `/etc/passwd`.
+  # These must be named 'grid-mapfile' and 'etc-passwd' respectively.
   # This must be created *BEFORE* you instantiate the chart.
-  UserSecretName: rucio-test-x509
+  UserSecretName: gridftp-users
   # The port GridFTP will use. 
   GridFTPPort: 2811
   # If a particular mount point is available for distributed storage, you can specify that here
