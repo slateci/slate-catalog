@@ -34,17 +34,17 @@ spec:
         {{ end }}  
       {{ if .Values.CondorConfig.Cvmfs }}
       - name: config-osg
-        hostPath:
-          path: /cvmfs/config-osg.opensciencegrid.org
+        persistentVolumeClaim:
+          claimName: csi-cvmfs-pvc-config-osg
       - name: oasis
-        hostPath:
-          path: /cvmfs/oasis.opensciencegrid.org
+        persistentVolumeClaim:
+          claimName: csi-cvmfs-pvc-oasis
       - name: spt
         hostPath:
           path: /cvmfs/spt.opensciencegrid.org
       - name: connect
-        hostPath:
-          path: /cvmfs/connect.opensciencegrid.org
+        persistentVolumeClaim:
+          claimName: csi-cvmfs-pvc-connect
       {{ end }}
       - name: condor-passwordfile-volume
         secret:
