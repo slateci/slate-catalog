@@ -40,8 +40,8 @@ spec:
         persistentVolumeClaim:
           claimName: csi-cvmfs-pvc-oasis
       - name: spt
-        hostPath:
-          path: /cvmfs/spt.opensciencegrid.org
+        persistentVolumeClaim:
+          claimName: csi-cvmfs-pvc-spt
       - name: connect
         persistentVolumeClaim:
           claimName: csi-cvmfs-pvc-connect
