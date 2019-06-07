@@ -37,6 +37,11 @@ spec:
         - name: collector
           containerPort: 9619
           protocol: TCP
+        env:
+        - name: _CONDOR_NETWORK_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         volumeMounts:
         - name: remote-host-key
           mountPath: "/etc/osg/bosco.key"
@@ -67,7 +72,7 @@ spec:
         - name: grid-certs
           mountPath: /etc/grid-security/certificates
       initContainers:
-      - name: fetchcrl
+      - name: initfetchcrl
         image: edquist/fetchcrl-container
         command: ["/bin/sh"]
         args: ["-c", "osg-ca-manage setupCA --url osg; fetch-crl -p10 -T10"]
