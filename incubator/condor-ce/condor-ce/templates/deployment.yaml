@@ -39,7 +39,7 @@ spec:
         - name: collector
           containerPort: 9619
           protocol: TCP
-        #command: ["sh", "-c", "ln -s /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/certificates /etc/grid-security/certificates"]
+        command: ["sh", "-c", "ln -s /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/certificates /etc/grid-security/certificates && /usr/bin/supervisord -c /etc/supervisord.conf"]
         env:
         - name: _CONDOR_NETWORK_HOSTNAME
           valueFrom:
