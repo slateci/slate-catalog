@@ -24,8 +24,10 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       hostNetwork: true
+      {{ if .Values.NodeSelector }}
       nodeSelector: 
         kubernetes.io/hostname: {{ .Values.NodeSelector }}
+      {{ end }}
       containers:
       - name: condor-ce
         image: "slateci/container-condor-ce"
@@ -37,7 +39,7 @@ spec:
         - name: collector
           containerPort: 9619
           protocol: TCP
-        command: ["sh", "-c", "ln -s /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/certificates /etc/grid-security/certificates"]
+        #command: ["sh", "-c", "ln -s /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/certificates /etc/grid-security/certificates"]
         env:
         - name: _CONDOR_NETWORK_HOSTNAME
           valueFrom:
