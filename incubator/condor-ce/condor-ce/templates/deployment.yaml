@@ -46,7 +46,7 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         - name: _CONDOR_GSI_SKIP_HOST_CHECK
-          value: true
+          value: "true"
         volumeMounts:
         - name: remote-host-key
           mountPath: "/etc/osg/bosco.key"
