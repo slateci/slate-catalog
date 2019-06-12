@@ -9,7 +9,7 @@ This chart will install and configure a GridFTP front end, with the option of in
 
 ```console
 $ slate app get-conf --dev gridftp > gridftp.yaml
-$ slate app install --dev --group <group-name> --cluster <cluster-name> gridftp.yaml
+$ slate app install --dev --group <group-name> --cluster <cluster-name> gridftp
 ```
 ---
 
@@ -22,7 +22,8 @@ $ slate app install --dev --group <group-name> --cluster <cluster-name> gridftp.
 | UserSecretName | The SLATE secret that contains the User certificate and keys (may be a tarball if MultiUserTar) is `true` | `gridftp-test-x509` |
 | MultiUserTar | If true, the Docker image will unwrap a 'user_info.tar.gz' located at UserSecretName. | `false` |
 | GridFTPPort | The port for data & control channel access to GridFTP. These can be decoupled by advanced configuration | `2811` |
-| DataMountPoint | Where Kubernetes should mount additional storage | `/scratch` | 
+| DFSPath | Where on the Kubernetes local host additional Distributed File System storage was mounted. Will become a Kubernetes volume by HostPath. | `/cephfs/test`| 
+| DFSMountPoint | Where Kubernetes should mount additional storage from DFS Path. | `/scratch` | 
 | Authentication | Authentication can be GSISSH, userpass, or anonymous | `gsissh` |
 | DataNodeScaling | Autoscale data node resources | `false` |
 | FrontEndScaling | Autoscaling front end resources | `false` |
