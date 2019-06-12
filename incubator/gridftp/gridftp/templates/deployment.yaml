@@ -23,13 +23,19 @@ spec:
           secret:
             secretName: {{ .Values.GridFTPConfig.HostSecretName}} 
             defaultMode: 256
+        - name: dfs-volume
+          hostPath:
+          # directory location on host
+            path: {{ .Values.GridFTPConfig.DFSPath }}
       containers:
-        - name: rucio-gridftp2
+        - name: gridftp
           image: davidmanglano/gridftp 
           volumeMounts:
             - name: gridftp-users
               mountPath: /opt/gridftp/users/
             - name: gridftp-host-pems
               mountPath: /tmp/gridftp-host-pems/
+            - name: dfs-volume
+              mountPath: {{ .Values.GridFTPConfig.DFSMountPath }}
       nodeSelector:
         gridftp: "true"
