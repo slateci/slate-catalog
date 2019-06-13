@@ -26,7 +26,7 @@ spec:
         - name: dfs-volume
           hostPath:
           # directory location on host
-            path: {{ .Values.GridFTPConfig.DFSPath }}
+            path: {{ .Values.GridFTPConfig.ExternalPath }}
       containers:
         - name: gridftp
           image: davidmanglano/gridftp 
@@ -36,6 +36,6 @@ spec:
             - name: gridftp-host-pems
               mountPath: /tmp/gridftp-host-pems/
             - name: dfs-volume
-              mountPath: {{ .Values.GridFTPConfig.DFSMountPath }}
+              mountPath: {{ .Values.GridFTPConfig.InternalPath }}
       nodeSelector:
         gridftp: "true"
