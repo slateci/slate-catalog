@@ -58,7 +58,7 @@ spec:
           name: htcondor-{{ .Values.Instance}}-configuration
       containers:
       - name: htcondor-worker
-        image: lincolnbryant/htcondor-docker-cuda:390.12
+        image: slateci/container-condor:latest
         volumeMounts:
         - name: executedir
           mountPath: /var/lib/condor/execute
