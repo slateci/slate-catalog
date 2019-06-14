@@ -37,7 +37,7 @@ Configuration: |-
 
 Now that you have your configuration the way you want it, you can setup your instance on a SLATE cluster. You will need to know the cluster name and group name you wish to deploy with.
 
-`slate app install faucet --group <YOUR GROUP> --cluster <YOUR CLUSTER> --conf conf
+`slate app install faucet --group <YOUR GROUP> --cluster <YOUR CLUSTER> --conf conf`
 
 If the command executed properly, your faucet instance is now running!
 
