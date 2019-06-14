@@ -4,9 +4,6 @@ Instance: global
 GridFTPConfig:
   # The number of GridFTP pods to run
   Instances: 1
-  # Whether to use the Kubernetes HostNetwork interface.
-  # Disabling HostNetwork will require advanced config; so it defaults to true.
-  HostNetwork: true
   # The name of the secret that was created for the front end SSL certificate and key.
   # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
   # This must be created *BEFORE* you instantiate the chart.
@@ -18,6 +15,6 @@ GridFTPConfig:
   # The port GridFTP will use. 
   GridFTPPort: 2811
   # A path for a hostPath-available DFS mount point.
-  ExternalPath: /cephfs/test
+  ExternalPath: /export
   # If a particular mount point is for distributed storage, you can specify that here
-  InternalPath: /scratch
+  InternalPath: /mnt
