@@ -64,6 +64,8 @@ You want to grab the instance ID which looks like `instance_nnqnaMF8e_Q`. Once y
 
 `slate instance info <YOUR INSTANCE ID>`
 
+You should be able to simply point your swithc at `NodeIP:NodePort`
+
 ## Configuration and Use
 
 For configuration of Faucet visit
