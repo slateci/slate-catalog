@@ -1,0 +1,24 @@
+# Generates app name as "fts3-[Instance]"
+Instance: global
+
+FTS3Config:
+  # Whether to use the Kubernetes HostNetwork interface.
+  # Disabling HostNetwork will require advanced config; so it defaults to true.
+  HostNetwork: true
+  # The name of the secret create for the config files
+  # These must be called fts3config, fts-msg-monitoring.conf, grid-mapfile, and 
+  # etc-passwd
+  # See https://fts3-docs.web.cern.ch/fts3-docs/docs/install/quick.html
+  # for more information about the first two files.
+  # See http://toolkit.globus.org/toolkit/docs/2.4/gsi/grid-mapfile_v11.html
+  # for information about the grid-mapfile, and the UNIX docs for information
+  # about /etc/passwd
+  ConfigSecretName: fts3-configs
+  # The name of the secret that was created for the front end SSL certificate and key.
+  # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
+  # This must be created *BEFORE* you instantiate the chart.
+  HostSecretName: fts3-host-pems 
+  # The name of the secret that was created for the files `grid-mapfile` and `/etc/passwd`.
+  # These must be named 'grid-mapfile' and 'etc-passwd' respectively.
+  # This must be created *BEFORE* you instantiate the chart.
+  UserSecretName: rucio-test-x509

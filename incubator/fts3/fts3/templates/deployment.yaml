@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment 
+metadata:
+  name: {{ template "fts3.fullname" . }} 
+  labels:
+    app: {{ template "fts3.fullname" . }} 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "fts3.fullname" . }}
+        chart: {{ template "fts3.chart" . }}
+    spec:
+      hostNetwork: {{ .Values.FTS3Config.HostNetwork }} 
+      hostname: {{ template "fts3.fullname" . }} 
+      volumes:
+        - name: fts3-user-pems
+          secret:
+            secretName: {{ .Values.FTS3Config.UserSecretName }} 
+            defaultMode: 256
+        - name: fts3-host-pems
+          secret:
+            secretName: {{ .Values.FTS3Config.HostSecretName }}
+            defaultMode: 256
+        - name: fts3-configs
+          secret:
+            secretName: {{ .Values.FTS3Config.ConfigSecretName }}
+            default: 256
+      containers:
+        - name: fts3
+          image: davidmanglano/fts3
+          volumeMounts:
+            - name: fts3-configs
+              mountPath: /tmp/fts3-configs/
+            - name: fts3-user-pems
+              mountPath: /tmp/fts3-user-pems/
+            - name: fts3-host-pems
+              mountPath: /tmp/fts3-host-pems/
+      nodeSelector:
+        fts3: "true"
