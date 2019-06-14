@@ -17,9 +17,8 @@ $ slate app install --dev --group <group-name> --cluster <cluster-name> gridftp
 | Parameter | Description | Default |
 | --------  | ----------  | ------- |
 | Instances | Number of GridFTP servers (Increased in striping or cloud config) | `1` |
-| HostNetwork | Whether to use the Kubernetes HostNetwork interface | `true` |
 | HostSecretName | The SLATE secret that contains the Host certificate and keys | `gridftp-host-pems` |
 | UserSecretName | The SLATE secret that contains the grid-mapfile for GridFTP, and the /etc/passwd file for the server, named 'grid-mapfile' and 'etc-passwd' respectively | `gridftp-users` |
 | GridFTPPort | The port for data & control channel access to GridFTP. These can be decoupled by advanced configuration | `2811` |
-| InternalPath | Where on the Kubernetes local host additional Distributed File System storage was mounted. Will become a Kubernetes volume by HostPath. | `/cephfs/test`| 
-| ExternalPath | Where Kubernetes should mount additional storage from. | `/scratch` | 
+| InternalPath | Where on the Kubernetes local host additional Distributed File System storage was mounted. Will become a Kubernetes volume by HostPath. | `/export`| 
+| ExternalPath | Where Kubernetes should mount additional storage from. | `/mnt` | 
