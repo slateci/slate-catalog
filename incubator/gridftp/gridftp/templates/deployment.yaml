@@ -28,7 +28,7 @@ spec:
             path: {{ .Values.GridFTPConfig.ExternalPath }}
       containers:
         - name: gridftp
-          image: davidmanglano/gridftp 
+          image: slateci/gridftp 
           volumeMounts:
             - name: gridftp-users
               mountPath: /opt/gridftp/users/
