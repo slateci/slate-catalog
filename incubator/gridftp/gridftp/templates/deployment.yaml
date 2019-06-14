@@ -12,8 +12,7 @@ spec:
         app: {{ template "gridftp.fullname" . }}
         chart: {{ template "gridftp.chart" . }}
     spec:
-      hostNetwork: {{ .Values.GridFTPConfig.HostNetwork }} 
-      hostname: {{ template "gridftp.fullname" . }} 
+      hostNetwork: "true"
       volumes:
         - name: gridftp-users
           secret:
