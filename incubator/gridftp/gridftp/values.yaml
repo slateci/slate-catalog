@@ -18,11 +18,6 @@ GridFTPConfig:
   # The port GridFTP will use. 
   GridFTPPort: 2811
   # A path for a hostPath-available DFS mount point.
-  DFSPath: /cephfs/test
+  ExternalPath: /cephfs/test
   # If a particular mount point is for distributed storage, you can specify that here
-  DFSMountPath: /scratch
-  # Authentication can be GSISSH, userpass, or anonymous 
-  Authentication: gsissh
-  # Autoscaling can increase resources automatically
-  DataNodeScaling: false
-  FrontEndScaling: false
+  InternalPath: /scratch
