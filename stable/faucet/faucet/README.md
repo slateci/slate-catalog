@@ -10,7 +10,7 @@ Instructions for writing the faucet.yaml configuration can be found here.
 
 https://docs.faucet.nz/en/latest/configuration.html
 
-Once you have a configuration prepared you can use the SLATE client to setup your faucet instance as a SLATE app.
+Once you have a configuration prepared you can use the SLATE client to set up your faucet instance as a SLATE app.
 
 First fetch the configuration file.
 
@@ -35,7 +35,7 @@ Configuration: |-
   # REPLACE WITH YOUR FAUCET.YAML
 ```
 
-Now that you have your configuration the way you want it, you can setup your instance on a SLATE cluster. You will need to know the cluster name and group name you wish to deploy with.
+Now that you have your configuration the way you want it, you can set up your instance on a SLATE cluster. You will need to know the cluster name and group name you wish to deploy with.
 
 `slate app install faucet --group <YOUR GROUP> --cluster <YOUR CLUSTER> --conf conf`
 
@@ -43,7 +43,7 @@ If the command executed properly, your faucet instance is now running!
 
 ## Connecting an OpenFlow Switch
 
-Now you will need the IP and NodePort foor your faucet instance. You can use these to connect your switch. 
+Now you will need the IP and NodePort for your faucet instance. You can use these to connect your switch. 
 
 First get the instance ID of your faucet instance.
 
