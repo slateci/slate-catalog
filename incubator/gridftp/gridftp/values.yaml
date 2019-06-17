@@ -1,7 +1,7 @@
 # Generates app name as "gridftp-[Instance]"
 Instance: global
 
-GridFTPConfig:`
+GridFTPConfig:
   # The name of the secret that was created for the front end SSL certificate and key.
   # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
   # This must be created *BEFORE* you instantiate the chart.
