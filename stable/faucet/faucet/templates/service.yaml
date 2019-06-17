@@ -13,9 +13,6 @@ spec:
   - name: "6653"
     port: 6653
     targetPort: 6653
-  - name: "9302"
-    port: 9302
-    targetPort: 9302
   selector:
     app: {{ template "faucet.name" . }}
     instance: {{ .Values.Instance }}
