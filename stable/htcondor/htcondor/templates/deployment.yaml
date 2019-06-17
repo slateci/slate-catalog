@@ -35,16 +35,16 @@ spec:
       {{ if .Values.CondorConfig.Cvmfs }}
       - name: config-osg
         persistentVolumeClaim:
-          claimName: csi-cvmfs-pvc-config-osg
+          claimName: csi-cvmfs-pvc-config-osg-{{ .Values.Instance }}
       - name: oasis
         persistentVolumeClaim:
-          claimName: csi-cvmfs-pvc-oasis
+          claimName: csi-cvmfs-pvc-oasis-{{ .Values.Instance }}
       - name: spt
         persistentVolumeClaim:
-          claimName: csi-cvmfs-pvc-spt
+          claimName: csi-cvmfs-pvc-spt-{{ .Values.Instance }}
       - name: connect
         persistentVolumeClaim:
-          claimName: csi-cvmfs-pvc-connect
+          claimName: csi-cvmfs-pvc-connect-{{ .Values.Instance }}
       {{ end }}
       - name: condor-passwordfile-volume
         secret:
