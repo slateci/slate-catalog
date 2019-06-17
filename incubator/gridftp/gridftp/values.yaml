@@ -1,9 +1,7 @@
 # Generates app name as "gridftp-[Instance]"
 Instance: global
 
-GridFTPConfig:
-  # The number of GridFTP pods to run
-  Instances: 1
+GridFTPConfig:`
   # The name of the secret that was created for the front end SSL certificate and key.
   # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
   # This must be created *BEFORE* you instantiate the chart.
@@ -14,7 +12,7 @@ GridFTPConfig:
   UserSecretName: gridftp-users
   # The port GridFTP will use. 
   GridFTPPort: 2811
-  # A path for a hostPath-available DFS mount point.
-  ExternalPath: /export
-  # If a particular mount point is for distributed storage, you can specify that here
+  # The path for a backing filesystem to be mounted from the host system. 
   InternalPath: /mnt
+  # The path at which the storage should be mounted. 
+  ExternalPath: /export
