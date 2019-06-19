@@ -85,7 +85,7 @@ spec:
         - name: _CONDOR_MEMORY
           value: {{ .Values.CondorConfig.MemoryLimit | quote }}
         {{ end}}
-        {{ if .Values.CondorConfig.NumCPUs }}
+        {{ if .Values.CondorConfig.NumberCPUs }}
         - name: _CONDOR_NUM_CPUS
           value: {{ .Values.CondorConfig.NumberCPUs | quote }}
         {{ end}}
