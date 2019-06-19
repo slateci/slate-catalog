@@ -29,6 +29,7 @@ spec:
         - containerPort: 6653
         - containerPort: 9302
         resources: {}
+        command: ["sh", "-c", "faucet"]
         volumeMounts:
         - mountPath: /var/log/faucet
           name: faucet-claim0
