@@ -4,8 +4,7 @@
 **NOTE**: This SLATE application requires a pool password secret to be
 installed on the target cluster in order to successfully deploy. Click [here](https://portal.slateci.io/secrets) to add a secret in the SLATE portal.
 
-*Image source*: https://github.com/LincolnBryant/htcondor-docker/
-
+*Image source*: https://github.com/slateci/container-condor
 
 This chart will install an HTCondor executor (startd) that uses a shared pool
 password to connect back to an existing HTCondor central manager.
