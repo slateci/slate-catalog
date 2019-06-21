@@ -98,8 +98,8 @@ spec:
             {{ if .Values.CondorConfig.MemoryLimit }}
             memory: "{{ .Values.CondorConfig.MemoryLimit }}Mi"
             {{ end}}
-            {{ if .Values.CondorConfig.NumCPUs }}
-            cpu:    "{{ .Values.CondorConfig.NumCPUs }}000m"
+            {{ if .Values.CondorConfig.NumberCPUs }}
+            cpu:    "{{ .Values.CondorConfig.NumberCPUs }}000m"
             {{ end}}
           {{ if .Values.CondorConfig.UseGPU }}
           limits:
