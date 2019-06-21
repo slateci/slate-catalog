@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "3.9.0"
 description: FTS3 data movement system 
 name: fts3
-version: 0.1.1
+version: 0.1.2
