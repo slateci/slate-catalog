@@ -2,9 +2,6 @@
 Instance: global
 
 FTS3Config:
-  # Whether to use the Kubernetes HostNetwork interface.
-  # Disabling HostNetwork will require advanced config; so it defaults to true.
-  HostNetwork: true
   # The name of the secret create for the config files
   # These must be called fts3config, fts-msg-monitoring.conf 
   # See https://fts3-docs.web.cern.ch/fts3-docs/docs/install/quick.html
