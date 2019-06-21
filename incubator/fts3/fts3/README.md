@@ -16,6 +16,8 @@ $ slate app install --dev --group <group-name> --cluster <cluster-name> fts3
 ## Configuration options
 | Parameter | Description | Default |
 | --------  | ----------  | ------- |
-| HostNetwork | Whether to use the Kubernetes HostNetwork interface | `true` |
 | HostSecretName | The SLATE secret that contains the Host certificate and keys | `fts3-host-pems` |
-| UserSecretName | The SLATE secret that contains the User X509 credentials for FTS3 transfers between GridFTP servers | `fts3-user-pems` |
+| ConfigSecretName | The SLATE secret that contains the config files for fts3 | `fts3-configs` |
+| DatabaseUpgrade | Whether or not to run the FTS3 database upgrade when FTS3 starts | `` |
+| WebInterface | Whether or not to run the FTS3 web interface at container port 8449 | `` |
+| RESTHost | The hostname to set in /etc/httpd/conf.d/fts3rest.conf | `` | 
