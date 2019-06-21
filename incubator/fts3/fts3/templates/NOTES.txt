@@ -1,0 +1,1 @@
+The Deployment.yaml is populated by the values.yaml in the directory one level above the one containing this file. Reference the Helm documentation to understand the double-bracket notation if you are unfamiliar with things. The _helpers.tpl file contains some functions to create names. It has explanations in the comments.

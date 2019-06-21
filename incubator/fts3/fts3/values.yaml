@@ -1,0 +1,23 @@
+# Generates app name as "fts3-[Instance]"
+Instance: global
+
+FTS3Config:
+  # The name of the secret created for the config files
+  # These must be called fts3config, fts-msg-monitoring.conf 
+  # See https://fts3-docs.web.cern.ch/fts3-docs/docs/install/quick.html
+  # for more information.
+  ConfigSecretName: fts3-configs
+  # The name of the secret that was created for the front end SSL certificate and key.
+  # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
+  # This must be created *BEFORE* you instantiate the chart.
+  HostSecretName: fts3-host-pems
+  # Experimental: The FTS3 REST interface seems not to work from Kubernetes unless it
+  # is given a name in /etc/httpd/conf.d/fts3rest.conf which matches the certificate.
+  # Default: unset.
+  RESTHost:
+  # Whether or not to run /usr/share/fts/fts-database-upgrade.py when the fts3 container starts.
+  # This creates the database, but may have unexpected results. Default: false. Set to "true" to toggle.
+  DatabaseUpgrade: false
+  # Whether or not to create the fts3 web interface when the container starts.
+  # Default: false.
+  WebInterface: false

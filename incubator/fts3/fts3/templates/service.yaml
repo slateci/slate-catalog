@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fts3.fullname" . }}-ssh
+  labels:
+    app: {{ template "fts3.fullname" . }}
+    chart: {{ template "fts3.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  type: NodePort
+  ports:
+  {{ if .Values.FTS3Config.WebInterface }}
+  - name: web-interface
+    targetPort: 8449 
+    port: 8449
+    protocol: TCP
+  {{ end }}
+  - name: rest-interface
+    targetPort: 8446 
+    port: 8446
+    protocol: TCP
+  selector:
+    app: {{ template "fts3.fullname" . }}
+    instance: {{ .Values.Instance }}
+release: {{ .Release.Name }}

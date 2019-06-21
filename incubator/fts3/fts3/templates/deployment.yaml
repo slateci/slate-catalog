@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment 
+metadata:
+  name: {{ template "fts3.fullname" . }} 
+  labels:
+    app: {{ template "fts3.fullname" . }}
+    chart: {{ template "fts3.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "fts3.fullname" . }}
+        chart: {{ template "fts3.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      hostname: {{ template "fts3.fullname" . }} 
+      volumes:
+        - name: fts3-host-pems
+          secret:
+            secretName: {{ .Values.FTS3Config.HostSecretName }}
+            defaultMode: 256
+        - name: fts3-configs
+          secret:
+            secretName: {{ .Values.FTS3Config.ConfigSecretName }}
+            default: 256
+      containers:
+        - name: fts3
+          image: slateci/fts3
+          env:
+          {{ if .Values.FTS3Config.DatabaseUpgrade }}
+          - name: DATABASE_UPGRADE
+            value: "true" 
+          {{ end }}
+          {{ if .Values.FTS3Config.WebInterface }}
+          - name: WEB_INTERFACE
+            value: "true"
+          {{ end }}
+          {{ if .Values.FTS3Config.RESTHost }}
+          - name: REST_HOST
+            value: {{ .Values.FTS3Config.RESTHost }}
+          {{ end }}
+          volumeMounts:
+            - name: fts3-configs
+              mountPath: /tmp/fts3-configs/
+            - name: fts3-host-pems
+              mountPath: /tmp/fts3-host-pems/
+      nodeSelector:
+        fts3: "true"
