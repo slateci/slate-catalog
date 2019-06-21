@@ -2,7 +2,7 @@
 Instance: global
 
 FTS3Config:
-  # The name of the secret create for the config files
+  # The name of the secret created for the config files
   # These must be called fts3config, fts-msg-monitoring.conf 
   # See https://fts3-docs.web.cern.ch/fts3-docs/docs/install/quick.html
   # for more information.
