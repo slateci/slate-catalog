@@ -23,7 +23,7 @@ spec:
       - env:
         - name: FAUCET_CONFIG_STAT_RELOAD
         - name: FAUCET_EVENT_SOCK
-        image: faucet/faucet:1.9.6
+        image: faucet/faucet:1.9.9
         name: faucet
         ports:
         - containerPort: 6653
