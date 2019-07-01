@@ -9,3 +9,16 @@ Data: |-
   <h1>Hello world!</h1>
   </body>
   </html>
+
+# Ingress control settings  
+Ingress:
+  # If true, use ingress control.
+  # Otherwise, generic NodePort networking will be used, 
+  # and the other settings in this section will be ignored. 
+  Enabled: true
+  # The subdomain to associate with this service.
+  # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
+  Subdomain: hello
+  # The class of the ingress controller to use. 
+  # For SLATE this should be 'slate'. 
+  Class: slate
