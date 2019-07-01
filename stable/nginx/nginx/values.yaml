@@ -24,7 +24,7 @@ Ingress:
   Class: slate
   
 ### SLATE-START ###
-Slate:
+SLATE:
   Cluster:
-    DNSName: some-cluster.slateci.net
+    DNSName: "some-cluster.slateci.net"
 ### SLATE-END ###
