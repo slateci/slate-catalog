@@ -22,3 +22,9 @@ Ingress:
   # The class of the ingress controller to use. 
   # For SLATE this should be 'slate'. 
   Class: slate
+  
+### SLATE-START ###
+Slate:
+  Cluster:
+    DNSName: some-cluster.slateci.net
+### SLATE-END ###
