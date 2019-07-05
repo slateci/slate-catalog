@@ -93,7 +93,7 @@ spec:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
           - name: x509-data
-            mountPath: "/etc/grid-security/"
+            mountPath: "/etc/proxy/"
             readOnly: false
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
@@ -113,7 +113,7 @@ spec:
               ephemeral-storage: "1Gi"
           volumeMounts:
           - name: x509-data
-            mountPath: "/etc/grid-security/"
+            mountPath: "/etc/proxy/"
             readOnly: false
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
