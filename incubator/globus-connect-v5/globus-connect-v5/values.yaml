@@ -6,14 +6,14 @@ Instance: global
 
 Client:
   # Your Globus ID
-  ClientId: b4d7e8ce-9c32-4620-b2b9-7a98687a4643
+  ClientId: << Your Client ID >>
   # The name of the secret created using slate secret, that contains your globus generated secret with key 'globus-password'
-  ClientSecret: N3WY8bTimaWaDgMdjDyjUFuaF43FRYVoAfMyOm8TXks=
+  ClientSecret: << Your Client Secret >>
   # Endpoint name
-  EndpointName: slate-gcs5-jul19
+  EndpointName: << Your Endpoint Name >>
   # Lets Encrypt email address
-  Email: lincolnb@uchicago.edu
+  Email: << Your Email Address >>
   # Agree to Terms of Service 
   AgreeToS: true
   # If true, all transactions not encrypted will fail
-  RequireEncryption:  true
+  RequireEncryption:  false
