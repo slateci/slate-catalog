@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "perfsonar-testpoint.fullname" . }}
+  labels:
+    app: {{ template "perfsonar-testpoint.name" . }}
+    chart: {{ template "perfsonar-testpoint.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{ template "perfsonar-testpoint.name" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      hostNetwork: true
+      containers:
+      - name: perfsonar-testpoint
+        image: perfsonar/testpoint:nightly-minor
+        imagePullPolicy: IfNotPresent  
+      restartPolicy: Always
+status: {}
