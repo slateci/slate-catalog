@@ -1,7 +1,6 @@
 # Faucet SDN Controller
 
-This chart contains a basic installation of Faucet packaged for SLATE.
-
+This chart contains a basic installation of Faucet packaged for SLATE. Facuet is an OpenFlow Controller designed to work with compliant switches. It needs to be configured with a set of OpenFlow rules that define the functions of the network, and these rules can be dynamically pushed on the controller, allowing the changes to automatically propagate to configred OpenFlow switches. This gives the user a granular level of control over their network.
 # Installation
 
 Faucet should be installed as a SLATE application. First you will need to describe the desired configuration of your network in faucet.yaml. 
@@ -75,3 +74,7 @@ https://docs.faucet.nz/en/latest/configuration.html
 Additional tutorials can be found at
 
 https://docs.faucet.nz/en/latest/tutorials/index.html
+
+Faucet is designed to work with a specific set of switches that can be found at
+
+https://docs.faucet.nz/en/latest/vendors/index.html
