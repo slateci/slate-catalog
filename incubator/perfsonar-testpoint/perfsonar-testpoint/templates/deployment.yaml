@@ -26,6 +26,8 @@ spec:
         image: perfsonar/testpoint:staging
         imagePullPolicy: IfNotPresent  
       restartPolicy: Always
+      {{ if .Values.nodeSelection }}
       nodeSelector:
         perfsonar: enabled
+      {{ end }}
 status: {}
