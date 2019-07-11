@@ -30,27 +30,11 @@ spec:
         - name: varlog
           emptyDir: {}
       hostNetwork: true
-      initContainers:
-      - name: init-configmap
-        image: busybox
-        command: ['sh', '-c', 'cp /etc/globus/globus-connect-server.conf /tmp/globus/globus-connect-server.conf; sed -i "s/%(GLOBUS_PASSWORD)s/$GLOBUS_PASSWORD/g" /tmp/globus/globus-connect-server.conf' ]
-        volumeMounts:
-          - name: {{ template "globus-connect.fullname" . }}-config
-            mountPath: /etc/globus
-          - name: tmp-conf
-            mountPath: /tmp/globus
-        env:
-          - name: GLOBUS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.GlobusConnect.Client.Secret }}
-                key: globus-password
       containers:
       - name: "gcs5"
         image: slateci/gcs5:latest
         securityContext:
           privileged: true
-        #command: ["/usr/bin/supervisord","-n"]
         command: ["/usr/sbin/init"]
         volumeMounts:
           - name: {{ template "globus-connect.fullname" . }}-config
