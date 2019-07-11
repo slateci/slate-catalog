@@ -22,7 +22,7 @@ spec:
       hostNetwork: true
       containers:
       - name: perfsonar-testpoint
-        image: perfsonar/testpoint:nightly-minor
+        image: perfsonar/testpoint:staging
         imagePullPolicy: IfNotPresent  
       restartPolicy: Always
 status: {}
