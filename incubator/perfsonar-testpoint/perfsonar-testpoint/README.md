@@ -14,3 +14,25 @@ You can manually label your node using this command:
 
 `kubectl label nodes <node-name> perfsonar=true`
 
+Additionally you must run the NTPD service on the perfSONAR node. You can start this by running:
+
+`systemctl start ntpd`
+
+Then simply install the application.
+
+`slate app install perfsonar-testpoint --cluster <cluster name> --group <group name>`
+
+## Usage and Documentation
+
+This is the full user guide for the application.
+
+http://docs.perfsonar.net/index.html#running-measurements-with-pscheduler
+
+How to use pscheduler to run tasks
+
+http://docs.perfsonar.net/pscheduler_client_tasks.html
+
+Additional tools reference
+
+http://docs.perfsonar.net/pscheduler_ref_tests_tools.html
+
