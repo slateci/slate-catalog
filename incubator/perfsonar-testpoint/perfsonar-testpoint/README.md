@@ -8,7 +8,7 @@ Runs a perfSONAR Testpoint on your SLATE cluster. This provides a collection of 
 
 ## Installation
 
-You must have a cluster node dedicated for running perfSONAR, this node needs to have the node label `perfsonar: enabled`.
+If you have a cluster node dedicated for running perfSONAR, this node needs to have the node label `perfsonar: enabled`.
 
 You can manually label your node using this command:
 
@@ -20,7 +20,25 @@ Additionally you must run the NTPD service on the perfSONAR node. You can start 
 
 Then simply install the application.
 
-`slate app install perfsonar-testpoint --cluster <cluster name> --group <group name>`
+Once that is complete you need to edit the values configuration file to enable node selection.
+
+`slate app get-conf -o conf`
+
+Edit that file to enable node selection
+
+```
+# Default values for perfsonar-testpoint.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+Instance: ''
+
+nodeSelection: true
+```
+
+Then simply install.
+
+`slate app install perfsonar-testpoint --cluster <cluster name> --group <group name> --conf conf`
 
 ## Usage and Documentation
 
