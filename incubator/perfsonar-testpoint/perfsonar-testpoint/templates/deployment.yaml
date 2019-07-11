@@ -27,5 +27,5 @@ spec:
         imagePullPolicy: IfNotPresent  
       restartPolicy: Always
       nodeSelector:
-        perfsonar: true
+        perfsonar: enabled
 status: {}

@@ -8,11 +8,11 @@ Runs a perfSONAR Testpoint on your SLATE cluster. This provides a collection of 
 
 ## Installation
 
-You must have a cluster node dedicated for running perfSONAR, this node needs to have the node label `perfsonar: true`.
+You must have a cluster node dedicated for running perfSONAR, this node needs to have the node label `perfsonar: enabled`.
 
 You can manually label your node using this command:
 
-`kubectl label nodes <node-name> perfsonar=true`
+`kubectl label nodes <node-name> perfsonar=enabled`
 
 Additionally you must run the NTPD service on the perfSONAR node. You can start this by running:
 
