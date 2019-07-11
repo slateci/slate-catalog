@@ -1,0 +1,19 @@
+# Instance to label use case of Globus Connect deployment
+# Generates app name as "globus-connect-[Instance]"
+# Enables unique instances of Globus Connect in one namespace
+
+Instance: global
+
+Client:
+  # Your Globus ID
+  ClientId: b4d7e8ce-9c32-4620-b2b9-7a98687a4643
+  # The name of the secret created using slate secret, that contains your globus generated secret with key 'globus-password'
+  ClientSecret: N3WY8bTimaWaDgMdjDyjUFuaF43FRYVoAfMyOm8TXks=
+  # Endpoint name
+  EndpointName: slate-gcs5-jul19
+  # Lets Encrypt email address
+  Email: lincolnb@uchicago.edu
+  # Agree to Terms of Service 
+  AgreeToS: true
+  # If true, all transactions not encrypted will fail
+  RequireEncryption:  true

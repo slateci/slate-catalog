@@ -16,13 +16,13 @@ data:
     ;        application located at https://auth.globus.org/v2/web/developers and
     ;        selecting the New GCS option
     ;        
-    ClientId = {{ .Values.GlobusConnect.Client.ID }}
+    ClientId = {{ .Values.Client.ClientId }}
     ;
     ;        The Client Secret of the Globus Connect Server. This is created using
     ;        the application located at https://auth.globus.org/v2/web/developers
     ;        and selecting the New GCS option
     ;        
-    ClientSecret = %(GLOBUS_PASSWORD)s
+    ClientSecret = {{ .Values.Client.ClientSecret }}
     ;-----------------------------------------------------------------------------
     ;                                   Endpoint
     ;-----------------------------------------------------------------------------
@@ -49,14 +49,14 @@ data:
     ;
     ;        The user must supply an email address for LetsEncrypt.
     ;        
-    Email = {{ .Values.GlobusConnect.Administration.MaintainerEmail }}
+    Email = {{ .Values.Client.Email }}
     ;
     ;        The user must explicitly agree to the Lets Encrypt Terms of Service.
     ;        If not set to True, the globus-connect-server-setup scripts will
     ;        provide a link to `https://letsencrypt.org/repository/` so user can
     ;        view and acknowledge the ToS.
     ;        
-    AgreeToS = True
+    AgreeToS = {{ .Values.Client.AgreeToS }}
     ;-----------------------------------------------------------------------------
     ;                                   GridFTP
     ;-----------------------------------------------------------------------------
@@ -99,4 +99,4 @@ data:
     ;        Require an encrypted data connection for all transfers. Transfers
     ;        attempted without encryption will result in error.
     ;        
-    RequireEncryption = {{ .Values.GlobusConnect.Administration.EncryptionRequired }}
+    RequireEncryption = {{ .Values.Client.RequireEncryption }}
