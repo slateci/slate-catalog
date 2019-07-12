@@ -18,8 +18,6 @@ Additionally you must run the NTPD service on the perfSONAR node. You can start 
 
 `systemctl start ntpd`
 
-Then simply install the application.
-
 Once that is complete you need to edit the values configuration file to enable node selection.
 
 `slate app get-conf -o conf`
