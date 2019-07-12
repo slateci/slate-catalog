@@ -9,28 +9,45 @@ data:
   xcache_image_init.sh: |-
     #!/bin/sh
     
-    export HOSTNAME=$(openssl x509 -noout -subject -nameopt multiline -in /etc/grid-security/hostcert.pem | sed -n 's/ *commonName *= //p')
-    if [ "$?" -ne 0 ]; then
-     echo "Failed to extract common name from /etc/grid-security/hostcert.pem" 1>&2
-     exit 1
+    if [ ! -e /etc/grid-security/hostcert.pem ]; then
+     echo "No host certificate, authenticated cache will not function"
+    # echo "No host certificate, disabling authenticated cache"
+     < /etc/supervisord.d/10-stash-cache.conf sed \
+     -e '/\[program:stash-cache-auth\]/,/^$/ d' \
+     -e '/\[program:stash-cache-authfile-update\]/,/^$/ d' \
+     -e '/^\[program/ a \
+    stdout_logfile=/dev/stdout \
+    stdout_logfile_maxbytes=0' > /etc/supervisord.d/10-stash-cache.conf.new
+     mv /etc/supervisord.d/10-stash-cache.conf.new /etc/supervisord.d/10-stash-cache.conf
+    else 
+     export HOSTNAME=$(openssl x509 -noout -subject -nameopt multiline -in /etc/grid-security/hostcert.pem | sed -n 's/ *commonName *= //p')
+     if [ "$?" -ne 0 ]; then
+      echo "Failed to extract common name from /etc/grid-security/hostcert.pem" 1>&2
+      exit 1
+     fi
+     if grep -q 'stashcache' '/etc/hosts'; then
+       true # do nothing, all good
+     else
+      echo "Could not detect original host name in /etc/hosts" 1>&2
+      exit 1
+     fi
+     sed 's|stashcache.*$|'"${HOSTNAME}"'|' < /etc/hosts > /etc/hosts.1
+     if [ "$?" -ne 0 ]; then
+      echo "Failed to replace host name in /etc/hosts" 1>&2
+      exit 1
+     fi
+     cat /etc/hosts.1 > /etc/hosts
+     export CACHE_FQDN="$HOSTNAME"
     fi
-    if grep -q 'stashcache' '/etc/hosts'; then
-      true # do nothing, all good
-    else
-     echo "Could not detect original host name in /etc/hosts" 1>&2
-     exit 1
-    fi
-    sed 's|stashcache.*$|'"${HOSTNAME}"'|' < /etc/hosts > /etc/hosts.1
-    if [ "$?" -ne 0 ]; then
-     echo "Failed to replace host name in /etc/hosts" 1>&2
-     exit 1
-    fi
-    cat /etc/hosts.1 > /etc/hosts
-    export CACHE_FQDN="$HOSTNAME"
+  90-local.cfg: |-
+    pfc.diskusage {{ .Values.StashCache.LowWaterMark }} {{ .Values.StashCache.HighWaterMark }}
+    pfc.ram {{ .Values.StashCache.RamSize }}
+    pfc.blocksize {{ .Values.StashCache.BlockSize }}
+    pfc.prefetch {{ .Values.StashCache.Prefetch }}
     
 kind: ConfigMap
 metadata:
-  name: stashcache-config-{{ .Values.Instance }}
+  name: {{ template "stashcache.fullname" . }}-config
   labels:
     app: {{ template "stashcache.name" . }}
     chart: {{ template "stashcache.chart" . }}
