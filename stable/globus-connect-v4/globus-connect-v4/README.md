@@ -31,11 +31,6 @@ The encrypted password hash can be generated via:
 openssl passwd -1
 ```
 
-Stronger sha256 hashes can be generated via the following Python script:
-```
-python -c "import crypt; print crypt.crypt('PASSWORD HERE')"
-```
-
 You can then copy users out of /etc/passwd or create them by hand. From the passwd(5) manual:
 ```
        Each line of the file describes  a  single  user,  and  contains  seven
