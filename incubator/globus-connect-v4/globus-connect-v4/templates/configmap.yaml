@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: globus-{{ .Values.Instance}}-configuration
+data:
+  globus-connect-server.conf: |-
+{{ .Values.GlobusConfigFile | indent 4 }}
