@@ -1,5 +1,16 @@
 Instance: ""
 
+# The following must be created *before* instantiating a GCSv4 container. 
+# Create a new file with the contents:
+#   GLOBUS_USER=<username>
+#   GLOBUS_PASSWORD=<password>
+# And then create the credential with:
+#   slate secret create <secret-name> --group <group> --cluster <cluster> \
+#    --from-env-file <filename>
+GlobusCredentialSecret: globus-creds # maps to <secret-name> as in the above
+
+# Below is a default GCS configuration file with comments removed.
+# You can customize this to your liking.
 GlobusConfigFile: |-
   [Globus]
   User = %(GLOBUS_USER)s
