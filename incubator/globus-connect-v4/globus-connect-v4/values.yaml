@@ -9,6 +9,17 @@ Instance: ""
 #    --from-env-file <filename>
 GlobusCredentialSecret: globus-creds # maps to <secret-name> as in the above
 
+# The following file must contain usernames and encrypted passwords for any 
+# users who may log in to the system. This user will be used to generate a
+# MyProxy certificate for the end user who will transfer files.
+# The file must follow passwd(5) format, with one user per line with an 
+# encrypted password in the second field:
+#   slateci:ENCRYPTEDPASSWORDHERE:1001:1001:SLATE CI:/home/slateci:/bin/bash
+# Once this file has been created, store it as a SLATE secret with:
+#   slate secret create <secret-name> --group <group> --cluster <cluster> \
+#     --from-file <filename>
+GlobusPasswdSecret: globus-passwd # maps to <secret-name> as in the above
+
 # Below is a default GCS configuration file with comments removed.
 # You can customize this to your liking.
 GlobusConfigFile: |-
