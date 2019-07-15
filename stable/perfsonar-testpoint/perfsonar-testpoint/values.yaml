@@ -4,4 +4,8 @@
 
 Instance: ''
 
-nodeSlection: false
+# Whether to run only on specially marked nodes. 
+# If nodeSelection is true, this service will only run on a node
+# which has the `perfsonar: enabled` label applied to it. 
+# Otherwise, it will allow itself to be scheduled on any node. 
+nodeSelection: false
