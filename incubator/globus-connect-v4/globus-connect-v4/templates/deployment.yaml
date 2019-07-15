@@ -27,7 +27,7 @@ spec:
             path: globus-connect-server.conf
       - name: {{ .Values.GlobusPasswdFile }}
         secret:
-          secretName: {{ .Values.GlobusPasswdFile }}
+          secretName: {{ .Values.GlobusPasswdSecret }}
           items: 
           - key: passwd
             path: passwd
@@ -54,6 +54,6 @@ spec:
         - name: {{ template "globus-connect.fullname" . }}-config
           mountPath: "/etc/globus-connect-server.conf"
           subPath: globus-connect-server.conf
-        - name: {{ .Values.GlobusPasswdFile }}
+        - name: {{ .Values.GlobusPasswdSecret }}
           mountPath: "/root/passwd"
           subPath: passwd
