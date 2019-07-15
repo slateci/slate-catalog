@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "globus-connect.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "globus-connect.fullname" . }}
+      chart: {{ template "globus-connect.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "globus-connect.fullname" . }}
+        chart: {{ template "globus-connect.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      volumes:
+      - name: {{ template "globus-connect.fullname" . }}-config
+        configMap:
+          name: globus-{{ .Values.Instance}}-configuration
+          items:
+          - key: globus-connect-server.conf
+            path: globus-connect-server.conf
+      - name: passwd
+        secret:
+          secretName: globus-passwd
+          items: 
+          - key: passwd
+            path: passwd
+      hostNetwork: true
+      containers:
+      - name: "gcs4"
+        image: slateci/gcs4:latest
+        imagePullPolicy: Always
+        command: ["/usr/local/bin/supervisord_startup.sh"]
+        env: 
+        - name: GLOBUS_USER
+          valueFrom:
+            secretKeyRef:
+              name: globus-credentials
+              key: username
+        - name: GLOBUS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: globus-credentials
+              key: password
+        - name: TERM
+          value: 'xterm'
+        volumeMounts:
+        - name: config
+          mountPath: "/etc/globus-connect-server.conf"
+          subPath: globus-connect-server.conf
+        - name: passwd
+          mountPath: "/root/passwd"
+          subPath: passwd
