@@ -21,11 +21,11 @@ spec:
       volumes:
       - name: {{ template "globus-connect.fullname" . }}-config
         configMap:
-          name: globus-{{ .Values.Instance}}-configuration
+          name: globus-{{ .Values.Instance }}-configuration
           items:
           - key: globus-connect-server.conf
             path: globus-connect-server.conf
-      - name: {{ .Values.GlobusPasswdFile }}
+      - name: {{ template "globus-connect.fullname" . }}-passwd
         secret:
           secretName: {{ .Values.GlobusPasswdSecret }}
           items: 
@@ -54,6 +54,6 @@ spec:
         - name: {{ template "globus-connect.fullname" . }}-config
           mountPath: "/etc/globus-connect-server.conf"
           subPath: globus-connect-server.conf
-        - name: {{ .Values.GlobusPasswdSecret }}
+        - name: {{ template "globus-connect.fullname" . }}-passwd
           mountPath: "/root/passwd"
           subPath: passwd
