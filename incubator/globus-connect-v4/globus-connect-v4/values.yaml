@@ -38,7 +38,7 @@ GlobusConfigFile: |-
 
   [GridFTP]
   Server = %(HOSTNAME)s
-  RestrictPaths = /etc
+  RestrictPaths = 
 
   [MyProxy]
   Server = %(HOSTNAME)s
