@@ -51,7 +51,7 @@ spec:
         - name: TERM
           value: 'xterm'
         volumeMounts:
-        - name: config
+        - name: {{ template "globus-connect.fullname" . }}-config
           mountPath: "/etc/globus-connect-server.conf"
           subPath: globus-connect-server.conf
         - name: passwd
