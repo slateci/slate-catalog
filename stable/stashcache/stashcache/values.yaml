@@ -1,23 +1,25 @@
 # Label for this particular deployed instance
 # Results in a name like "stashcache-[Instance]"
-# Enables multiple instances of StashCache in one namespace
-Instance: global
+Instance: ""
 
 # Host Certificate and Key
 # The keys contained in the secret must be:
 #    hostcert.pem
 #    hostkey.pem
 # run 'slate secret create --help' for usage
-hostCertSecret: stashcache-cert
-
-Service:
-  Port: 1094
+# Leaving this as the empty string will disable the authenticated cache.
+hostCertSecret:
 
 Site:
+  # The name that the cache will use for itself ehen reporting to OSG 
+  # infrastructure
   Name: "stashcache"
 
-# Warning: These settings are not yet honored
 StashCache:
+  # The directory on the host system in which the cache should store its data. 
+  # If unspecified, ephemeral storage will be used, meaning that the cache 
+  # contents will be lost any time the application is restarted. 
+  CacheDirectory:
   # Space usage
   HighWaterMark: 0.95
   LowWaterMark: 0.80
@@ -28,10 +30,13 @@ StashCache:
   # to prefetch chunks that were not requested
   Prefetch: 0
 
+# Authorization settings for the un-authenticated cache interface
 authfileNoAuth: u * / rl
 
+# Authorization settings for the authenticated cache interface
 authfileAuth: u * / rl
 
+# Robots policy configuration
 stashcacheRobots: |-
   User-agent: *
   Disallow: /

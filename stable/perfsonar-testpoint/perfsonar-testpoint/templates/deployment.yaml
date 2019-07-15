@@ -20,9 +20,14 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       hostNetwork: true
+      privileged: true
       containers:
       - name: perfsonar-testpoint
-        image: perfsonar/testpoint:nightly-minor
+        image: perfsonar/testpoint:staging
         imagePullPolicy: IfNotPresent  
       restartPolicy: Always
+      {{ if .Values.nodeSelection }}
+      nodeSelector:
+        perfsonar: enabled
+      {{ end }}
 status: {}

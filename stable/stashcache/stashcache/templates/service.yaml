@@ -17,5 +17,5 @@ spec:
   ports:
     - protocol: TCP
       name: xrootd
-      port: {{ .Values.Service.Port }}
-      targetPort: {{ .Values.Service.Port }}
+      port: 1094
+      targetPort: 1094
