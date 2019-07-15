@@ -1,25 +1,25 @@
 Instance: ""
 
-GlobusConfigFile:
-    [Globus]
-    User = %(GLOBUS_USER)s
-    Password = %(GLOBUS_PASSWORD)s
+GlobusConfigFile: |-
+  [Globus]
+  User = %(GLOBUS_USER)s
+  Password = %(GLOBUS_PASSWORD)s
 
-    [Endpoint]
-    Name = %(SHORT_HOSTNAME)s
-    Public = True
-    DefaultDirectory = /~/
+  [Endpoint]
+  Name = %(SHORT_HOSTNAME)s
+  Public = True
+  DefaultDirectory = /~/
 
-    [Security]
-    FetchCredentialFromRelay = True
-    IdentityMethod = MyProxy
+  [Security]
+  FetchCredentialFromRelay = True
+  IdentityMethod = MyProxy
 
-    [GridFTP]
-    Server = %(HOSTNAME)s
-    RestrictPaths = /etc
+  [GridFTP]
+  Server = %(HOSTNAME)s
+  RestrictPaths = /etc
 
-    [MyProxy]
-    Server = %(HOSTNAME)s
+  [MyProxy]
+  Server = %(HOSTNAME)s
 
-    [OAuth]
+  [OAuth]
 
