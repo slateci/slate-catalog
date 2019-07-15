@@ -34,7 +34,10 @@ add_custom_command(OUTPUT "${helm_dir}"
 # which notifies the SLATE API server(s) that they should pull the newest 
 # version of the catalog. That script is _not_ a part of this repository because 
 # it is expected to contain credentials used to authorize the update. 
-add_custom_target(publish COMMAND update_slate_catalog)
+add_custom_target(publish COMMAND update_slate_catalog
+                  COMMAND if [ -e '${CMAKE_BINARY_DIR}'/images_to_push ]\; then < '${CMAKE_BINARY_DIR}'/images_to_push xargs -n 1 docker push \; fi
+                  COMMAND rm -rf ${CMAKE_BINARY_DIR}/images_to_push
+                  )
 
 if(CLAIR_SCANNER)
 	add_custom_target(scan-images COMMAND true)
@@ -137,6 +140,35 @@ function(add_repository name)
 			add_dependencies(scan-images "scan-${name}-${chart_name}-images")
 		endif()
 
+		# Next, try to collect all docker images associated with the chart
+		if(IS_DIRECTORY "${chart}/images")
+			file(GLOB chart_image_sources "${chart}/images/*")
+			foreach(image ${chart_image_sources})
+				if(NOT EXISTS "${image}/Dockerfile")
+					continue()
+				endif()
+				if(NOT EXISTS "${image}/image_nametag")
+					message(WARNING "${image} has no 'image_nametag' file to indicate the name to be used; it will not be built")
+					continue()
+				endif()
+				get_filename_component(image_name "${image}" NAME)
+				message(STATUS "   Container image: ${image_name}")
+				file(READ "${image}/image_nametag" image_nametag LIMIT 256)
+				string(STRIP "${image_nametag}" image_nametag)
+				message(STATUS "    Name:tag will be: ${image_nametag}")
+				set(image_placeholder "${CMAKE_BINARY_DIR}/${name}/${chart_name}-${image_name}.dummy")
+				file(GLOB_RECURSE image_files "${image}/*")
+				add_custom_command(OUTPUT "${image_placeholder}"
+				                   WORKING_DIRECTORY "${image}"
+				                   COMMAND docker build "${image}" -t "slateci/${image_nametag}"
+				                   COMMAND touch "${image_placeholder}"
+				                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/record_updated_image "${CMAKE_BINARY_DIR}/images_to_push" "slateci/${image_nametag}"
+				                   DEPENDS ${image_files})
+				list(APPEND chart_dependencies "${image_placeholder}")
+			endforeach()
+		endif()
+
+		# Finally, set up packaging the chart itself
 		add_custom_command(OUTPUT "${compiled_chart}"
 		                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/helm_lint_filter "${chart}/${chart_name}"
 		                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/check_hash "${existing_fingerprints}" "${compiled_chart}.hash"
@@ -162,7 +194,8 @@ function(add_repository name)
 	add_custom_target("publish_${name}" DEPENDS "${name}-repo"
 	                  COMMAND mkdir -p "${catalog_path}/${name}"
 	                  COMMAND cp "${CMAKE_BINARY_DIR}/${name}/*.tgz" "${catalog_path}/${name}/"
-	                  COMMAND cp "${index_file}" "${fingerprint_file}" "${catalog_path}/${name}/")
+	                  COMMAND cp "${index_file}" "${fingerprint_file}" "${catalog_path}/${name}/"
+	                  )
 	# Add publishing this repository as a dependency of the overall publish
 	add_dependencies(publish "publish_${name}")
 endfunction(add_repository)

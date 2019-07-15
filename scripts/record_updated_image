@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Add a line to a target file, preventing duplicates and serializing concurrent
+# modifications by multiple invocations. 
+
+TARGET_FILE="$1"
+ENTRY="$2"
+
+# obtain a 'lock' for the target file
+
+LOCK="${TARGET_FILE}.lock"
+while true; do
+	if mkdir "$LOCK"; then
+		# lock obtained
+		break
+	else
+		sleep 1
+	fi
+done
+
+if [ ! -e "$TARGET_FILE" ]; then
+	echo "$ENTRY" > "$TARGET_FILE"
+else
+	echo "$ENTRY" | cat "$TARGET_FILE" - | sort | uniq > "$TARGET_FILE.tmp"
+	mv "$TARGET_FILE.tmp" "$TARGET_FILE"
+fi
+
+# release the 'lock'
+rmdir "$LOCK"
