@@ -2,7 +2,7 @@
 
 ** NOTE ** : This SLATE application requires the creation of two secrets in order to be used. Before deploying this chart, you will need to create a passwd(5)-like user list with encrypted passwords, and you will additionally need to have your Globus credentials stored in SLATE for endpoint deployment. 
 
-*Image source*: https://github.com/slateci/container-condor
+*Image source*: https://github.com/slateci/container-gcs4
 
 The initial release of this chart will only configure Globus Connect to transfer files to an ephemeral container volume. A future release will allow mounting other filesystems present on the host system into the container.
 
