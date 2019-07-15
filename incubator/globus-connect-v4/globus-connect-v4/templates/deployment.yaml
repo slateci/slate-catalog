@@ -41,13 +41,13 @@ spec:
         - name: GLOBUS_USER
           valueFrom:
             secretKeyRef:
-              name: globus-credentials
-              key: username
+              name: {{ .Values.GlobusCredentialSecret }}
+              key: GLOBUS_USER
         - name: GLOBUS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: globus-credentials
-              key: password
+              name: {{ .Values.GlobusCredentialSecret }}
+              key: GLOBUS_PASSWORD
         - name: TERM
           value: 'xterm'
         volumeMounts:
