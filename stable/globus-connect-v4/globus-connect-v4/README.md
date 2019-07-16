@@ -30,11 +30,13 @@ This chart will consume a file in the format of /etc/passwd, with the notable ex
 This chart requires UNIX passwords in order to allow MyProxy to authenticate users who wish to transfer files against the SLATE-deployed endpoint.
 
 The encrypted password hash can be generated via:
+
 ```
 openssl passwd -1
 ```
 
 You can then copy users out of /etc/passwd or create them by hand. From the passwd(5) manual:
+
 ```
 Each line of the file describes  a  single  user,  and  contains  seven
 colon-separated fields:
@@ -76,11 +78,13 @@ Note that only name, password, UID, and directory are respected in the current r
 
 ### Deploying 
 To deploy the chart, first get the values file and store it:
+
 ```
 slate app get-conf --dev globus-connect-v4 > gcs.yaml
 ```
 
 Edit to your liking (notably the GlobusPasswdSecret and GlobusConfigFile must match what you have created in previous steps) and deploy with:
+
 ```
 slate app install --cluster <cluster> --group <group> globus-connect-v4 --conf gcs.yaml
 ```
@@ -99,6 +103,7 @@ Find the endpoint you just created, and then click the arrow ( ">" ) on the righ
 
 
 At your console, you will need to tail the logs with:
+
 ```
 slate instance logs <instance id>
 ```
