@@ -1,6 +1,6 @@
 # Globus Connect Server v4
 
-** NOTE ** : This SLATE application requires the creation of two secrets in order to be used. Before deploying this chart, you will need to create a passwd(5)-like user list with encrypted passwords, and you will additionally need to have your Globus credentials stored in SLATE for endpoint deployment. 
+**NOTE** : This SLATE application requires the creation of two secrets in order to be used. Before deploying this chart, you will need to create a passwd(5)-like user list with encrypted passwords, and you will additionally need to have your Globus credentials stored in SLATE for endpoint deployment. 
 
 *Image source*: https://github.com/slateci/container-gcs4
 
@@ -12,11 +12,14 @@ To deploy this chart, you will need to first create the administrator credential
 
 ### Storing the admin credentials
 To add the admin credentials, Create a new file with the contents:
+
 ```
 GLOBUS_USER=<username>
 GLOBUS_PASSWORD=<password>
 ```
+
 And then create the credential with:
+
 ```
 slate secret create <secret-name> --group <group> --cluster <cluster> --from-env-file <filename>
 ```
@@ -33,48 +36,40 @@ openssl passwd -1
 
 You can then copy users out of /etc/passwd or create them by hand. From the passwd(5) manual:
 ```
-       Each line of the file describes  a  single  user,  and  contains  seven
-       colon-separated fields:
+Each line of the file describes  a  single  user,  and  contains  seven
+colon-separated fields:
 
-              name:password:UID:GID:GECOS:directory:shell
+       name:password:UID:GID:GECOS:directory:shell
 
-       The field are as follows:
+The field are as follows:
 
-       name        This is the user's login name.  It should not contain capi‐
-                   tal letters.
+name        This is the user's login name.  It should not contain capi‐
+            tal letters.
 
-       password    This is either the encrypted  user  password,  an  asterisk
-                   (*),  or the letter 'x'.  (See pwconv(8) for an explanation
-                   of 'x'.)
+password    This is either the encrypted  user  password,  an  asterisk
+            (*),  or the letter 'x'.  (See pwconv(8) for an explanation
+            of 'x'.)
 
-       UID         The privileged root login account (superuser) has the  user
-                   ID 0.
+UID         The privileged root login account (superuser) has the  user
+            ID 0.
 
-       GID         This is the numeric primary group ID for this user.  (Addi‐
-                   tional groups for the user are defined in the system  group
-                   file; see group(5)).
+GID         This is the numeric primary group ID for this user.  (Addi‐
+            tional groups for the user are defined in the system  group
+            file; see group(5)).
 
-       GECOS       This  field  (sometimes  called  the  "comment  field")  is
-                   optional and used only for  informational  purposes.   Usu‐
-                   ally,  it  contains  the full username.  Some programs (for
-                   example, finger(1)) display information from this field.
+GECOS       This  field  (sometimes  called  the  "comment  field")  is
+            optional and used only for  informational  purposes.   Usu‐
+            ally,  it  contains  the full username.  Some programs (for
+            example, finger(1)) display information from this field.
 
-                   GECOS stands for "General Electric Comprehensive  Operating
-                   System",  which was renamed to GCOS when GE's large systems
-                   division  was  sold  to  Honeywell.   Dennis  Ritchie   has
-                   reported:  "Sometimes  we sent printer output or batch jobs
-                   to the GCOS machine.  The gcos field in the  password  file
-                   was  a  place  to stash the information for the $IDENTcard.
-                   Not elegant."
+directory   This is the user's home directory:  the  initial  directory
+            where  the  user  is placed after logging in.  The value in
+            this field is used to set the HOME environment variable.
 
-       directory   This is the user's home directory:  the  initial  directory
-                   where  the  user  is placed after logging in.  The value in
-                   this field is used to set the HOME environment variable.
-
-       shell       This is  the  program  to  run  at  login  (if  empty,  use
-                   /bin/sh).   If  set  to  a nonexistent executable, the user
-                   will be unable to login through  login(1).   The  value  in
-                   this field is used to set the SHELL environment variable.
+shell       This is  the  program  to  run  at  login  (if  empty,  use
+            /bin/sh).   If  set  to  a nonexistent executable, the user
+            will be unable to login through  login(1).   The  value  in
+            this field is used to set the SHELL environment variable.
 ```
 
 Note that only name, password, UID, and directory are respected in the current release.
