@@ -33,7 +33,7 @@ and kubectl describe pod [pod_name].
 
 #Adding users 
 To add users, modify the values.yaml file. Currently there are dummy values in the config file data, make sure to replace these before ssh'ing. 
-The format for adding a user is [user_name]:[password]:[user_id]:[group_id]::[/bin/bash]:[user_public_key]. Make sure to leave an empty line 
+The format for adding a user is [user_name]:[password]:[user_id]:[group_id]::/home/[user_name]:/bin/bash:[user_public_key]. Make sure to leave an empty line 
 after each user you add. 
 
 # SSH
