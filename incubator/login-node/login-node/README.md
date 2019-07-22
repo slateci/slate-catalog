@@ -29,7 +29,7 @@ dining-ragdoll-login-node-686bfd4c87-zc99f  0/1    ContainerCreating  0         
 NAME                               TYPE      CLUSTER-IP      EXTERNAL-IP  PORT(S)       AGE
 dining-ragdoll-login-node-service  NodePort  10.109.171.119  <none>       22:32125/TCP  1s
 
-Check that the deployment has been been created, and the pod is running by using kubectl describe deployment deployment_name,
+Check that the deployment has been been created, and the pod is running by using kubectl describe deployment [deployment_name],
 and kubectl describe pod [pod_name]. 
 
 # Adding users 
