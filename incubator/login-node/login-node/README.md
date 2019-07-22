@@ -1,7 +1,8 @@
 # Login node 
+This chart contains an installation of an SSH login to a CentOS container, provisioned by Kubernetes. 
+
 # Installation
-This chart contains an installation of a login to a CentOS container through ssh, provisioned by Kubernetes. 
-To use it, install the helm chart on your Kubernetes cluster by moving outside this directory and using the command:
+To install the helm chart on your Kubernetes cluster, move outside this directory and use the command:
 $ helm install ./login-node
 
 You should see something like this - 
