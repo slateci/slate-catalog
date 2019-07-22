@@ -1,5 +1,5 @@
 # Login node 
-#Installation
+# Installation
 This chart contains an installation of a login to a CentOS container through ssh, provisioned by Kubernetes. 
 To use it, install the helm chart on your Kubernetes cluster by moving outside this directory and using the command:
 $ helm install ./login-node
@@ -31,7 +31,7 @@ dining-ragdoll-login-node-service  NodePort  10.109.171.119  <none>       22:321
 Check that the deployment has been been created, and the pod is running by using kubectl describe deployment deployment_name,
 and kubectl describe pod [pod_name]. 
 
-#Adding users 
+# Adding users 
 To add users, modify the values.yaml file. Currently there are dummy values in the config file data, make sure to replace these before ssh'ing. 
 The format for adding a user is [user_name]:[password]:[user_id]:[group_id]::[/bin/bash]:[user_public_key]. Make sure to leave an empty line 
 after each user you add. 
