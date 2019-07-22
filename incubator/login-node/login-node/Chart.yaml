@@ -1,6 +1,6 @@
 apiVersion: v1
 description: login is
-name: login
+name: login-node
 version: 3.0.4
 appVersion: 1.0.0
 maintainers:
