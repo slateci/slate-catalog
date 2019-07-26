@@ -33,8 +33,8 @@ spec:
       containers:
       # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid
-        image: opensciencegrid/frontier-squid:development
-        imagePullPolicy: IfNotPresent
+        image: opensciencegrid/frontier-squid:fresh
+        imagePullPolicy: Always
         ports:
         - containerPort: 3128
           name: squid
