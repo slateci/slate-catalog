@@ -1,7 +1,8 @@
+#This is for the slate API instance name
+Instance: ''
 # Default values for rucio.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
 ## replicaCount gives the number of server pods to run
 replicaCount: 2
 ## authReplicaCount gives the number of authentication server pods to run
