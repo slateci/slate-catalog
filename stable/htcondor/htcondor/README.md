@@ -14,7 +14,7 @@ password to connect back to an existing HTCondor central manager.
 
 ```console
 $ slate app get-conf htcondor > htcondor.yaml
-$ slate app install --group <group-name> --cluster <cluster-name> htcondor.yaml
+$ slate app install --group <group-name> --cluster <cluster-name> --conf htcondor.yaml htcondor
 ```
 ---
 
