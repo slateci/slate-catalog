@@ -20,7 +20,7 @@ Additionally you must run the NTPD service on the perfSONAR node. You can start 
 
 Once that is complete you need to edit the values configuration file to enable node selection.
 
-`slate app get-conf -o conf`
+`slate app get-conf -o conf perfsonar-testpoint`
 
 Edit that file to enable node selection
 
