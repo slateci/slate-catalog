@@ -4,7 +4,7 @@
 ## Usage:
 ```console
 $ slate app get-conf osg-frontier-squid > squid.yaml
-$ slate app install --group <group-name> --cluster <cluster-name> --conf squid.yaml
+$ slate app install osg-frontier-squid --group <group-name> --cluster <cluster-name> --conf squid.yaml
 ```
 
 ----
