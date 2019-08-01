@@ -14,6 +14,9 @@ The `adminuser` and `adminPassword` fields in Grafana's `values.yaml` file (line
 
 After installing the app, use `slate instance info <instance-id>` to get the IP Address where Grafana may be accessed at. 
 
+After the instance has been set up you can log in via the IP address provided using the credentials set up under `adminuser` and `adminPassword`. This will take you to a web portal were you can set up all your data sources and prefered visualization settings.
+
+For the grafana instance set up through SLATE all of the data source and visualization settings are ephemaral by nature. If the instance gets blown away those settings will all be lost and even if a new instance is set up with the same grafana.yaml file these settings will need to be reset.
 
 ## Configuration:
 These are options that may be configured in Grafana's `values.yaml` and/or `deployment.yaml` if desired.
