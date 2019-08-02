@@ -40,7 +40,9 @@ Now that you have your configuration the way you want it, you can set up your in
 
 If the command executed properly, your faucet instance is now running!
 
-## Connecting an OpenFlow Switch
+# Usage
+
+### Connecting an OpenFlow Switch
 
 Now you will need the IP and NodePort for your faucet instance. You can use these to connect your switch. 
 
@@ -65,7 +67,7 @@ You want to grab the instance ID which looks like `instance_nnqnaMF8e_Q`. Once y
 
 You should be able to simply point your switch at `NodeIP:NodePort`
 
-## Configuration and Use
+### Configuration and Use
 
 For configuration of Faucet visit
 

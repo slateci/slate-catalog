@@ -6,7 +6,7 @@ Runs a perfSONAR Testpoint on your SLATE cluster. This provides a collection of 
             Participate in a centrally managed set of tests
             Publish the existence of a measurement node
 
-## Installation
+# Installation
 
 If you have a cluster node dedicated for running perfSONAR, this node needs to have the node label `perfsonar: enabled`.
 
@@ -38,7 +38,7 @@ Then simply install.
 
 `slate app install perfsonar-testpoint --cluster <cluster name> --group <group name> --conf conf`
 
-## Usage and Documentation
+# Configuration and usage 
 
 This is the full user guide for the application.
 
