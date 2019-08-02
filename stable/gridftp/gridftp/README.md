@@ -1,5 +1,6 @@
 # GridFTP - Secure, Robust, Fast, Efficient Data Transfer 
 
+This chart installs an endpoint for the GridFTP high-performance, secure  data-transfer protocol. GridFTP uses X509 certificates to authenticate communications, and a 'gridmap' to associate user certificates' distinguished names to local unix accounts. 
 
 ---
 # Installation
@@ -12,7 +13,6 @@
 **NOTE**: This application currently uses host networking, so two instances configured to use the same port cannot coexist on the same node. No mechanism is currently in place to ensure that multiple instances are scheduled to different nodes even if multiple suitable nodes are available. 
 
 ### The host secret
-This chart will install and configure a GridFTP front end allowing data to be sent and received. 
 
 The host secret should contain two keys: `hostcert.pem` and `hostkey.pem`, containing the server certificate and secret key, respectively. 
 
@@ -20,8 +20,8 @@ The user secret should contain the 'gridmap' file under the key `grid-mapfile`. 
 
 ### Deployment
 ```console
-$ slate app get-conf --dev gridftp > gridftp.yaml
-$ slate app install --dev --group <group-name> --cluster <cluster-name> gridftp
+$ slate app get-conf gridftp > gridftp.yaml
+$ slate app install --group <group-name> --cluster <cluster-name> gridftp
 ```
 ---
 # Configuration and usage
