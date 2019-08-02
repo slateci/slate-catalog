@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 spec:
-  replicas: {{ .Values.CondorConfig.Instances }}
+  replicas: 1
   selector:
     matchLabels:
       app: {{ template "hostedce.fullname" . }}
