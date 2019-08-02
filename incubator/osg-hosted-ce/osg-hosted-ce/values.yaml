@@ -1,0 +1,24 @@
+Site:
+  Group: OSG
+  Resource: UCHICAGO-SLATE
+  ResourceGroup: UCHICAGO
+  Sponsor: osg:100
+  Contact: Lincoln Bryant
+  ContactEmail: lincolnb@uchicago.edu
+  City: Chicago
+  Country: US
+  Latitutde: 41.8781
+  Longitude: 87.6298
+
+Cluster:
+  Endpoint: lincolnb@slate-micro-condor.slateci.io
+  PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
+  Batch: condor
+  MaxJobs: 10
+  MaxWallTime: 1440
+  WorkerNodeTemp: /tmp
+  AllowedVOs: osg, cms, atlas, glow
+
+Squid:
+  Enabled: True
+  Location: squid.grid.uchicago.edu
