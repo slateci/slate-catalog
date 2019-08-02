@@ -3,8 +3,7 @@
 
 *Image source*: https://github.com/slateci/container-condor
 
-This chart will install an HTCondor executor (startd) that uses a shared pool
-password to connect back to an existing HTCondor central manager.
+HTCondor is a distributed computing framework for High Throughput Computing (HTC). This chart will install an HTCondor execute node (startd) that uses a shared pool password to connect back to an existing HTCondor central manager.
 
 ---
 # Installation
