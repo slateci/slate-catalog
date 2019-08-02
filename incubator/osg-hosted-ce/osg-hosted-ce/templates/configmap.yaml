@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hostedce-{{ .Values.Instance }}-configuration
+  labels:
+    app: hostedce
+    instance: {{ .Values.Instance }}
+data:
+  99-local.ini: |-
+    [Site Information]
+    group = {{ .Values.Site.Group }}
+    host_name = localhost
+    resource = {{ .Values.Site.Resource }}
+    resource_group = {{ .Values.Site.ResourceGroup }}
+    sponsor = {{ .Values.Site.Sponsor }}
+    site_policy = UNAVAILABLE
+    contact = {{ .Values.Site.Contact }}
+    email = {{ .Values.Site.ContactEmail }}
+    city = {{ .Values.Site.City }}
+    country = {{ .Values.Site.Country }}
+    latitude = {{ .Values.Site.Latitude }}
+    longitude = {{ .Values.Site.Longitude }}
+
+    [BOSCO]
+    enabled = True
+    users = {{ .Values.Cluster.Users }}
+    endpoint =  {{ .Values.Cluster.Endpoint }}
+    batch =  {{ .Values.Cluster.Batch }}
+    ssh_key = /etc/osg/bosco.key
+    max_jobs = {{ .Values.Cluster.MaxJobs }}
+
+    [Misc Services]
+    glexec_location = None
+    edit_lcmaps_db = True
+    authorization_method = vomsmap
+
+    [Storage]
+    se_available = False
+    default_se = None
+    grid_dir = /home/osg/osg-wn-client/
+    app_dir = UNSET
+    data_dir = None
