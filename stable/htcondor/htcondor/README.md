@@ -1,7 +1,5 @@
 # HTCondor - High Throughput Computing 
-## Worker Node Chart
 
-**NOTE**: This SLATE application requires a pool password secret to be
 installed on the target cluster in order to successfully deploy. Click [here](https://portal.slateci.io/secrets) to add a secret in the SLATE portal.
 
 *Image source*: https://github.com/slateci/container-condor
@@ -10,15 +8,19 @@ This chart will install an HTCondor executor (startd) that uses a shared pool
 password to connect back to an existing HTCondor central manager.
 
 ---
-## Usage:
+# Installation
 
+### Dependency Notes
+This SLATE application requires a pool password secret to be
+
+### Deployment
 ```console
 $ slate app get-conf htcondor > htcondor.yaml
 $ slate app install --group <group-name> --cluster <cluster-name> --conf htcondor.yaml htcondor
 ```
 ---
-
-## Central manager configuration
+# Configuration and usage
+### Central manager configuration
 Your central manager will need the following configuration in order for execute
 nodes to successfully connect back and begin accepting jobs:
 
@@ -31,9 +33,8 @@ SEC_DEFAULT_INTEGRITY = OPTIONAL
 SEC_ENABLE_MATCH_PASSWORD_AUTHENTICATION = TRUE
 SEC_PASSWORD_FILE = /etc/condor/condor_password
 ```
----
 
-## Configuration options
+### Configuration options
 | Parameter | Description | Default |
 | --------  | ----------  | ------- |
 | Instances | Number of HTCondor worker nodes | `1` |
@@ -45,3 +46,7 @@ SEC_PASSWORD_FILE = /etc/condor/condor_password
 | NumberGPUs | The number of GPUs requested via the nvidia-docker plugin | `2` | 
 | ExecuteDir | An external hostPath mounted into the container for scratch | Container default storage location |
 | CondorConfigFile | Any HTCondor-specific configuration macros may be set here. | - | 
+
+### Usage
+For more instructions on using HTCondor please read this [documentation](https://research.cs.wisc.edu/htcondor/manual/)
+
