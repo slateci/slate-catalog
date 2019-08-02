@@ -1,0 +1,5 @@
+apiVersion: v1
+appVersion: "8.6.12"
+description: OSG Hosted Compute Element
+name: osg-hosted-ce
+version: 0.1.1
