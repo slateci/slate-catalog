@@ -5,7 +5,10 @@ metadata:
   name: {{ template "osg-frontier-squid.fullname" .}}-fluent-bit-config
   namespace: {{ .Release.Namespace }}
   labels:
-    k8s-app: fluent-bit
+    app: {{ template "osg-frontier-squid.name" . }}
+    chart: {{ template "osg-frontier-squid.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
 data:
   # Nothing in fluent-bit.conf should need to be changed for a sidecar
   fluent-bit.conf: |
