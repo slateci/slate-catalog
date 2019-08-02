@@ -29,3 +29,11 @@ CMake 3 is required, so on some systems it may be necessary to replace `cmake` a
 ## Known limitations
 
 When a chart is added or a file is added to a chart the cmake scripts will not take notice until `make rebuild_cache` is run.  
+
+## Incubator vs Stable
+
+When a new application is packaged as a helm chart and is added to the SLATE catalog it is initially placed into the Incubator. It will stay in the incubator until it has been thouroughly tested to prove that the application works in SLATE the same way it is supposed to outside of SLATE. Once all parties involved agree that the application functions it will be moved to the Stable repository where it can be easily accessed from the portal and command line interface
+
+## Chart Version
+
+Whenever a change is made to a chart in any way, from templates to documentation, the version value in Chart.yaml must be incremented so that Helm will update the helm charts used by the API Server
