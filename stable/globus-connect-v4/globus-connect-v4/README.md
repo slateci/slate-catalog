@@ -1,14 +1,17 @@
 # Globus Connect Server v4
 
-**NOTE** : This SLATE application requires the creation of two secrets in order to be used. Before deploying this chart, you will need to create a passwd(5)-like user list with encrypted passwords, and you will additionally need to have your Globus credentials stored in SLATE for endpoint deployment. 
 
 *Image source*: https://github.com/slateci/container-gcs4
 
 The initial release of this chart will only configure Globus Connect to transfer files to an ephemeral container volume. A future release will allow mounting other filesystems present on the host system into the container.
 
 ---
-## Usage
+# Installation
+
+### Dependency Notes
 To deploy this chart, you will need to first create the administrator credentials and user passwd file with the SLATE secret command. 
+
+This SLATE application requires the creation of two secrets in order to be used. Before deploying this chart, you will need to create a passwd(5)-like user list with encrypted passwords, and you will additionally need to have your Globus credentials stored in SLATE for endpoint deployment. 
 
 ### Storing the admin credentials
 To add the admin credentials, Create a new file with the contents:
@@ -91,8 +94,10 @@ slate app install --cluster <cluster> --group <group> globus-connect-v4 --conf g
 
 This will return an instance ID, please note this as it will be needed later.
 
---- 
-## Activating the endpoint
+---
+# Configuration and Usage
+ 
+### Activating the endpoint
 Once the application has deployed, you will need to visit globus.org to activate the endpoint.
 
 Click log in, and log in with the same credentials used to deploy the GCSv4 container.
@@ -113,3 +118,6 @@ Copy the Distinguished Name from the log output that says "Server DN: /C=US/O=Gl
 On the Overview page, click "Activate Endpoint". You will need to enter your admin credentials and then the endpoint should be activated.
 
 Once this has been completed, you can transfer files between the SLATE-deployed Globus endpoint and any other Globus endpoint where you have access.
+
+###Usage
+For further instrucions on how to use globus please read this [documentation](https://docs.globus.org/)
