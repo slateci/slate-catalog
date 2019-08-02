@@ -18,6 +18,7 @@ spec:
     metadata:
       labels:
         app: {{ template "nginx.name" . }}
+        chart: {{ template "nginx.chart" . }}
         instance: {{ .Values.Instance }}
         release: {{ .Release.Name }}
     spec:

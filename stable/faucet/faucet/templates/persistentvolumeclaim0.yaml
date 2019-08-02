@@ -3,6 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
+    app: {{ template "faucet.name" . }}
+    chart: {{ template "faucet.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
     io.kompose.service: faucet-claim0
   name: faucet-claim0
 spec:

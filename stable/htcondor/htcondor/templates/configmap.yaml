@@ -3,7 +3,9 @@ kind: ConfigMap
 metadata:
   name: htcondor-{{ .Values.Instance }}-configuration
   labels:
-    app: htcondor
+    app: {{ template "htcondor.name" . }}
+    chart: {{ template "htcondor.chart" . }}
+    release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 data:
   condor_config.local: |-

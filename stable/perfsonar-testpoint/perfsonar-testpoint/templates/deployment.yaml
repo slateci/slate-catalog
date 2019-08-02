@@ -16,6 +16,7 @@ spec:
       creationTimestamp: null
       labels:
         app: {{ template "perfsonar-testpoint.name" . }}
+        chart: {{ template "perfsonar-testpoint.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:

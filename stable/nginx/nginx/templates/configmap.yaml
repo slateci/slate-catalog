@@ -3,7 +3,9 @@ kind: ConfigMap
 metadata:
   name: nginx-{{ .Values.Instance }}-configuration
   labels:
-    app: nginx
+    app: {{ template "nginx.name" . }}
+    chart: {{ template "nginx.chart" . }}
+    release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 data:
   index.html: |-

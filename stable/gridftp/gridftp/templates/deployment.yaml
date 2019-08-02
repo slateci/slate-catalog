@@ -3,7 +3,10 @@ kind: Deployment
 metadata:
   name: {{ template "gridftp.fullname" . }} 
   labels:
-    app: {{ template "gridftp.fullname" . }} 
+    app: {{ template "gridftp.fullname" . }}
+    chart: {{ template "gridftp.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
 spec:
   replicas: 1
   template:
@@ -11,6 +14,8 @@ spec:
       labels:
         app: {{ template "gridftp.fullname" . }}
         chart: {{ template "gridftp.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
     spec:
       hostNetwork: true
       volumes:
