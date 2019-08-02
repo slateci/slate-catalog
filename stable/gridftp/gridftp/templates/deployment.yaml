@@ -27,10 +27,12 @@ spec:
           secret:
             secretName: {{ .Values.GridFTPConfig.HostSecretName}} 
             defaultMode: 256
+        {{ if .Values.GridFTPConfig.ExternalPath }}
         - name: dfs-volume
           hostPath:
           # directory location on host
             path: {{ .Values.GridFTPConfig.ExternalPath }}
+        {{ end }}
       containers:
         - name: gridftp
           image: slateci/gridftp 
@@ -39,7 +41,9 @@ spec:
               mountPath: /opt/gridftp/users/
             - name: gridftp-host-pems
               mountPath: /tmp/gridftp-host-pems/
+            {{ if .Values.GridFTPConfig.InternalPath }}
             - name: dfs-volume
               mountPath: {{ .Values.GridFTPConfig.InternalPath }}
+            {{ end }}
       nodeSelector:
         gridftp: "true"
