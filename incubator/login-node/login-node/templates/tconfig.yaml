@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name:  {{ include "login-node.fullname" . }}
+  name:  {{ include "login.fullname" . }}-config
   namespace: default
 data:
   tconfig-file.conf: |-

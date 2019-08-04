@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "login-node.name" -}}
+{{- define "login.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "login-node.fullname" -}}
+{{- define "login.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -25,8 +25,18 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Create login mesh setup
+*/}}
+{{- define "login.mesh" -}}
+    {{- $fullname := include "login.fullname" . -}}
+    {{- range $i, $e := until (.Values.replicaCount|int) }}
+    {{ printf "mesh-seed-address-port %s-%d.%s-mesh 3002" $fullname $i $fullname }}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "login-node.chart" -}}
+{{- define "login.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
