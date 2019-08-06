@@ -9,10 +9,6 @@ metadata:
     instance:  {{ .Values.Instance }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      name: {{ include "login-node.name" . }}
-      instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:
