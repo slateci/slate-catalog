@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
-    app: {{ template "osg-hosted-ce.fullname" . }}
+    app: {{ template "osg-hosted-ce.name" . }}
     chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
@@ -11,14 +11,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "osg-hosted-ce.fullname" . }}
+      app: {{ template "osg-hosted-ce.name" . }}
       chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
   template:
     metadata:
       labels: 
-        app: {{ template "osg-hosted-ce.fullname" . }}
+        app: {{ template "osg-hosted-ce.name" . }}
         chart: {{ template "osg-hosted-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
@@ -27,6 +27,11 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance}}-configuration
+      {{ if .Values.Cluster.CustomizationScript }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
+      {{ end }}
       containers:
       - name: osg-hosted-ce
         image: slateci/container-osg-hostedce:latest
@@ -34,8 +39,18 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance}}-configuration
           mountPath: /etc/osg/config.d/99-local.ini
           subPath: 99-local.ini
+        {{ if .Values.Cluster.CustomizationScript }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
+          mountPath: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
+          subPath: {{ .Values.Cluster.Batch }}_local_submit_attributes.sh
+        {{ end }}
         env:
         - name: _CONDOR_NETWORK_HOSTNAME
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        {{ if .Values.Cluster.CustomizationScript }}
+        env:
+        - name: LOCAL_ATTRIBUTES_FILE
+          value: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
+        {{ end }}
