@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        name: {{ include "login-node.name" . }}
+        app: {{ include "login-node.name" . }}
         instance: {{ .Values.Instance }}
     spec:
       volumes:
