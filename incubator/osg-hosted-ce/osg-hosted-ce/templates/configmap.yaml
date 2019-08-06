@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hostedce-{{ .Values.Instance }}-configuration
+  name: osg-hosted-ce-{{ .Values.Instance }}-configuration
   labels:
-    app: hostedce
+    app: osg-hosted-ce
     chart: {{ template "osg-hosted-ce.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
@@ -47,9 +47,9 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hostedce-{{ .Values.Instance }}-cluster-configuration
+  name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
   labels:
-    app: hostedce
+    app: osg-hosted-ce
     chart: {{ template "osg-hosted-ce.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
