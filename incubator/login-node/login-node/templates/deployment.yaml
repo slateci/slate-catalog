@@ -20,9 +20,9 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       volumes:
-      - name: config-vol
+      - name: {{ include "login-node.name" . }}-config
         configMap:
-          name: new2-config
+          name: {{ include "login-node.fullname" . }}-config
           items:
            - key: tconfig-file.conf
              path: tconfig-file.conf
@@ -31,8 +31,9 @@ spec:
           env:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
-          image: "slateci/login-node"
+          image: "slate-ci/login-node"
+          imagePullPolicy: IfNotPresent
           volumeMounts:
-            - name: config-vol
+            - name: {{ include "login-node.name" . }}-config
               mountPath:  /root/tconfig-file.conf
               subPath: tconfig-file.conf
