@@ -4,9 +4,11 @@ metadata:
   name: hostedce-{{ .Values.Instance }}-configuration
   labels:
     app: hostedce
+    chart: {{ template "osg-hosted-ce.chart" . }}
     instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
 data:
-  99-local.ini: |-
+  99-local.ini: |
     [Site Information]
     group = {{ .Values.Site.Group }}
     host_name = localhost
@@ -40,3 +42,18 @@ data:
     grid_dir = /home/osg/osg-wn-client/
     app_dir = UNSET
     data_dir = None
+{{ if .Values.Cluster.CustomizationScript}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hostedce-{{ .Values.Instance }}-cluster-configuration
+  labels:
+    app: hostedce
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  {{ .Values.Cluster.Batch }}-local-submit-attributes.sh: |
+{{ .Values.Cluster.CustomizationScript | indent 4 }}
+{{ end }}

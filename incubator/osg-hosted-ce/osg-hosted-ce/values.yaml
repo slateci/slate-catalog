@@ -18,6 +18,11 @@ Cluster:
   MaxWallTime: 1440
   WorkerNodeTemp: /tmp
   AllowedVOs: osg, cms, atlas, glow
+  # The following script will run on the _remote_ cluster when jobs are
+  # submitted
+  #CustomizationScript: |+
+  #  #!/bin/sh 
+  #  ... 
 
 Squid:
   Enabled: True

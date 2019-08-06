@@ -1,37 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "hostedce.fullname" . }}
+  name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
-    app: {{ template "hostedce.fullname" . }}
-    chart: {{ template "hostedce.chart" . }}
+    app: {{ template "osg-hosted-ce.fullname" . }}
+    chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "hostedce.fullname" . }}
-      chart: {{ template "hostedce.chart" . }}
+      app: {{ template "osg-hosted-ce.fullname" . }}
+      chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
   template:
     metadata:
       labels: 
-        app: {{ template "hostedce.fullname" . }}
-        chart: {{ template "hostedce.chart" . }}
+        app: {{ template "osg-hosted-ce.fullname" . }}
+        chart: {{ template "osg-hosted-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
       volumes:
-      - name: hostedce-{{ .Values.Instance }}-configuration
+      - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
-          name: hostedce-{{ .Values.Instance}}-configuration
+          name: osg-hosted-ce-{{ .Values.Instance}}-configuration
       containers:
-      - name: hostedce
+      - name: osg-hosted-ce
         image: slateci/container-osg-hostedce:latest
         volumeMounts:
-        - name: hostedce-{{ .Values.Instance}}-configuration
+        - name: osg-hosted-ce-{{ .Values.Instance}}-configuration
           mountPath: /etc/osg/config.d/99-local.ini
           subPath: 99-local.ini
         env:
