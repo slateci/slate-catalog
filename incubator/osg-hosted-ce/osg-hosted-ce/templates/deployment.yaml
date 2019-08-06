@@ -32,6 +32,12 @@ spec:
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
       {{ end }}
+      - name: bosco-ssh-private-key-volume
+        secret: 
+          secretName: {{ .Values.Cluster.PrivateKeySecret }}
+          items:
+          - key: bosco.key
+            path: bosco.key
       containers:
       - name: osg-hosted-ce
         image: slateci/container-osg-hostedce:latest
@@ -39,6 +45,9 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance}}-configuration
           mountPath: /tmp/99-local.ini
           subPath: 99-local.ini
+        - name: bosco-ssh-private-key-volume
+          mountPath: /etc/osg/bosco.key
+          subPath: bosco.key
         {{ if .Values.Cluster.CustomizationScript }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
           mountPath: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
@@ -56,7 +65,7 @@ spec:
         - name: ENDPOINT
           value: {{ .Values.Cluster.Endpoint }}
         - name: CE_CONTACT
-          value: {{ .Values.Cluster.ContactEmail }}
+          value: {{ .Values.Site.ContactEmail }}
         - name: CE_USERS
           value: {{ .Values.Cluster.Users }}
         {{ if .Values.Cluster.CustomizationScript }}
