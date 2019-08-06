@@ -9,18 +9,16 @@ metadata:
     instance:  {{ .Values.Instance }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      name: {{ include "login-node.name" . }}
-      instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:
-        name: {{ include "login-node.name" . }}
+        app: {{ template "login-node.name" . }}
+        chart: {{ template "login-node.chart" . }}
+        release: {{ Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
       volumes:
-      - name: {{ include "login-node.fullname" . }}-config
+      - name: {{ include "login-node.name" . }}-config
         configMap:
           name: {{ include "login-node.fullname" . }}-config
           items:
