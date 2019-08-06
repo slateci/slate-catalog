@@ -5,8 +5,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app.kubernetes.io/name: {{ include "login-node.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    name: {{ include "login-node.name" . }}
+    instance: {{ .Values.Instance }}
   ports:
   - protocol: TCP
     port: {{ .Values.service.port }}
