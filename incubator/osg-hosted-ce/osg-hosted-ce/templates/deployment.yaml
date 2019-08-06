@@ -37,7 +37,7 @@ spec:
         image: slateci/container-osg-hostedce:latest
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance}}-configuration
-          mountPath: /etc/osg/config.d/99-local.ini
+          mountPath: /tmp/99-local.ini
           subPath: 99-local.ini
         {{ if .Values.Cluster.CustomizationScript }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
@@ -49,6 +49,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: ENDPOINT
+          value: {{ .Values.Cluster.Endpoint }}
         {{ if .Values.Cluster.CustomizationScript }}
         env:
         - name: LOCAL_ATTRIBUTES_FILE
