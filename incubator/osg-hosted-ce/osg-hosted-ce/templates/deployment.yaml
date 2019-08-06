@@ -49,8 +49,16 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: CE_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         - name: ENDPOINT
           value: {{ .Values.Cluster.Endpoint }}
+        - name: CE_CONTACT
+          value: {{ .Values.Cluster.ContactEmail }}
+        - name: CE_USERS
+          value: {{ .Values.Cluster.Users }}
         {{ if .Values.Cluster.CustomizationScript }}
         env:
         - name: LOCAL_ATTRIBUTES_FILE
