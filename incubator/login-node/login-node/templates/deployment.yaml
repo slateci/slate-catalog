@@ -20,7 +20,7 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       volumes:
-      - name: {{ include "login-node.name" . }}-config
+      - name: {{ include "login-node.fullname" . }}-config
         configMap:
           name: {{ include "login-node.fullname" . }}-config
           items:
