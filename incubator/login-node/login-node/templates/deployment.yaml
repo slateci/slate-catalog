@@ -3,21 +3,21 @@ kind: Deployment
 metadata:
   name: {{ include "login-node.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "login-node.name" . }}
-    helm.sh/chart: {{ include "login-node.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app: {{ template "login-node.name" . }}
+    chart: {{ template "login-node.chart" . }}
+    release: {{ .Release.Name }}
+    instance:  {{ .Values.Instance }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "login-node.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      name: {{ include "login-node.name" . }}
+      instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "login-node.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        name: {{ include "login-node.name" . }}
+        instance: {{ .Values.Instance }}
     spec:
       volumes:
       - name: {{ include "login-node.name" . }}-config
