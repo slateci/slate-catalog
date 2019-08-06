@@ -38,6 +38,8 @@ spec:
           items:
           - key: bosco.key
             path: bosco.key
+            mode: 256
+      hostNetwork: true
       containers:
       - name: osg-hosted-ce
         image: slateci/container-osg-hostedce:latest
