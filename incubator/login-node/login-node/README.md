@@ -42,4 +42,4 @@ Once the instance is running you can get the correct port and IP address by runn
 
 To log in to the SLATE Login Node, ssh into the instance's External IP. The NodePort will be the mapped port for in the application. For example, if the port listed is 22:12345/TCP, NodePort will be 12345.
 
-`ssh myuser@NodeIP -p NodePort
+`ssh myuser@NodeIP -p NodePort`
