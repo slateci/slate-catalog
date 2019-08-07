@@ -8,5 +8,5 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 data:
-  tconfig-file.conf: |-
+  tconfig-file.conf: |+
 {{ .Values.LoginConfigFile | indent 4 }}
