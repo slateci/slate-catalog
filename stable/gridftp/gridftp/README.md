@@ -31,30 +31,30 @@ The expected passwd format is as follows:
 > 
 > The fields are as follows:
 > 
-> name        This is the user's login name.  It should not contain capi‐
->             tal letters.
+> name:        This is the user's login name.  It should not contain capital
+>              letters.
 > 
-> password    This is either the encrypted  user  password,  an  asterisk
+> password:    This is either the encrypted  user  password,  an  asterisk
 >             (*),  or the letter 'x'.  (See pwconv(8) for an explanation
 >             of 'x'.)
 > 
-> UID         The privileged root login account (superuser) has the  user
+> UID:         The privileged root login account (superuser) has the  user
 >             ID 0.
 > 
-> GID         This is the numeric primary group ID for this user.  (Addi‐
->             tional groups for the user are defined in the system  group
+> GID:         This is the numeric primary group ID for this user.  (Additional
+>              groups for the user are defined in the system  group
 >             file; see group(5)).
 > 
-> GECOS       This  field  (sometimes  called  the  "comment  field")  is
->             optional and used only for  informational  purposes.   Usu‐
->             ally,  it  contains  the full username.  Some programs (for
+> GECOS:       This  field  (sometimes  called  the  "comment  field")  is
+>             optional and used only for  informational  purposes.   Usually
+>             ,  it  contains  the full username.  Some programs (for
 >             example, finger(1)) display information from this field.
 > 
-> directory   This is the user's home directory:  the  initial  directory
+> directory:   This is the user's home directory:  the  initial  directory
 >             where  the  user  is placed after logging in.  The value in
 >             this field is used to set the HOME environment variable.
 > 
-> shell       This is  the  program  to  run  at  login  (if  empty,  use
+> shell:       This is  the  program  to  run  at  login  (if  empty,  use
 >             /bin/sh).   If  set  to  a nonexistent executable, the user
 >             will be unable to login through  login(1).   The  value  in
 >             this field is used to set the SHELL environment variable.
