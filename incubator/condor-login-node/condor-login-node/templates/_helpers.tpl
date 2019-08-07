@@ -28,7 +28,7 @@ If release name contains chart name it will be used as a full name.
 Create login mesh setup
 */}}
 {{- define "condor-login-node.mesh" -}}
-    {{- $fullname := include "login-node.fullname" . -}}
+    {{- $fullname := include "condor-login-node.fullname" . -}}
     {{- range $i, $e := until (.Values.replicaCount|int) }}
     {{ printf "mesh-seed-address-port %s-%d.%s-mesh 3002" $fullname $i $fullname }}
     {{- end -}}
