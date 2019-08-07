@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "login-node.fullname" . }}
+  labels:
+    app: {{ template "login-node.name" . }}
+    chart: {{ template "login-node.chart" . }}
+    release: {{ .Release.Name }}
+    instance:  {{ .Values.Instance }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "login-node.name" . }}
+      instance: {{ .Values.Instance }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "login-node.name" . }}
+        chart: {{ template "login-node.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      volumes:
+      - name: {{ include "login-node.name" . }}-config
+        configMap:
+          name: {{ include "login-node.fullname" . }}-config
+          items:
+           - key: tconfig-file.conf
+             path: tconfig-file.conf
+      containers:
+        - name: {{ .Chart.Name }}
+          env:
+           - name: PASSWDFILE
+             value: "root/tconfig-file.conf"
+          image: "slateci/login-node"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: {{ include "login-node.name" . }}-config
+              mountPath:  /root/tconfig-file.conf
+              subPath: tconfig-file.conf

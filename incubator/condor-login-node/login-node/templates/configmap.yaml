@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ include "login-node.fullname" . }}-config
+  labels: 
+    app: {{ template "login-node.fullname" . }}
+    chart: {{ template "login-node.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+data:
+  tconfig-file.conf: |+
+{{ .Values.LoginConfigFile | indent 4 }}
