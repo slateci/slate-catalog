@@ -56,6 +56,9 @@ spec:
       - name: htcondor-{{ .Values.Instance }}-configuration
         configMap:
           name: htcondor-{{ .Values.Instance}}-configuration
+      {{ if .Values.CondorConfig.PriorityClass }}
+      priorityClassName: {{ .Values.CondorConfig.PriorityClass }}
+      {{ end }}
       containers:
       - name: htcondor-worker
         image: slateci/container-condor:latest
