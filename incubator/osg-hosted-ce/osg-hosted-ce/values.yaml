@@ -18,15 +18,28 @@ Cluster:
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
   Batch: condor
   MaxJobs: 10
-  MaxWallTime: 1440
-  WorkerNodeTemp: /tmp
-  AllowedVOs: osg, cms, atlas, glow
-  # The following script will run on the _remote_ cluster when jobs are
-  # submitted
-  #CustomizationScript: |+
-  #  #!/bin/sh 
-  #  ... 
 
+Storage:
+  GridDir: /home/lincolnb/osg-wn-client
+  WorkerNodeTemp: /tmp
+
+Subcluster:
+  Name: UCHICAGO-SLATE
+  NodeCount: 1
+  Memory: 1024
+  CpusPerNode: 4
+  CoresPerNode: 4
+  MaxWallTime: 1440
+  AllowedVOs: osg, cms, atlas, glow
+  
 Squid:
   Enabled: True
   Location: squid.grid.uchicago.edu
+
+ # The following script will run on the _remote_ cluster when jobs are
+ # submitted. The script will get stored into:
+ #    ~${username}/bosco/glite/bin/${batch}_local_submit_attributes.sh
+ # on the remote cluster
+ #CustomizationScript: |+
+ #  #!/bin/sh 
+ #  ... 
