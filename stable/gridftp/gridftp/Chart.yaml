@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "6.0"
 description: Globus GridFTP data management system 
 name: gridftp
-version: 0.2.10
+version: 0.2.12
