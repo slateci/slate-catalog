@@ -10,7 +10,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ include "login-node.name" . }}
+    app: {{ template "login-node.name" . }}
     instance: {{ .Values.Instance }}
   ports:
   - protocol: TCP
