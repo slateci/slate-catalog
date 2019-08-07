@@ -1,30 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "login-node.fullname" . }}
+  name: {{ include "condor-login-node.fullname" . }}
   labels:
-    app: {{ template "login-node.name" . }}
-    chart: {{ template "login-node.chart" . }}
+    app: {{ template "condor-login-node.name" . }}
+    chart: {{ template "condor-login-node.chart" . }}
     release: {{ .Release.Name }}
     instance:  {{ .Values.Instance }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "login-node.name" . }}
+      app: {{ template "condor-login-node.name" . }}
       instance: {{ .Values.Instance }}
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ template "login-node.name" . }}
-        chart: {{ template "login-node.chart" . }}
+        app: {{ template "condor-login-node.name" . }}
+        chart: {{ template "condor-login-node.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
       volumes:
-      - name: {{ include "login-node.name" . }}-config
+      - name: {{ include "condor-login-node.name" . }}-config
         configMap:
-          name: {{ include "login-node.fullname" . }}-config
+          name: {{ include "condor-login-node.fullname" . }}-config
           items:
            - key: tconfig-file.conf
              path: tconfig-file.conf
@@ -36,6 +36,6 @@ spec:
           image: "slateci/login-node"
           imagePullPolicy: IfNotPresent
           volumeMounts:
-            - name: {{ include "login-node.name" . }}-config
+            - name: {{ include "condor-login-node.name" . }}-config
               mountPath:  /root/tconfig-file.conf
               subPath: tconfig-file.conf
