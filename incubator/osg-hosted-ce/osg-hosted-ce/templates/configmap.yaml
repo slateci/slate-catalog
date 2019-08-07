@@ -39,9 +39,42 @@ data:
     [Storage]
     se_available = False
     default_se = None
-    grid_dir = /home/osg/osg-wn-client/
+    grid_dir = {{ .Values.Storage.GridDir }}
     app_dir = UNSET
     data_dir = None
+    worker_node_temp = {{ .Values.Storage.WorkerNodeTemp }}
+
+    [ Subcluster {{ .Values.Subcluster.Name }} ]
+    name = {{ .Values.Subcluster.Name }}
+    node_count = {{ .Values.Subcluster.NodeCount }}
+    ram_mb = {{ .Values.Subcluster.Memory }}
+    cpu_model = Intel
+    cpu_vendor = Intel
+    cpu_speed_mhz =  2500
+    cpus_per_node = {{ .Values.Subcluster.CpusPerNode }}
+    cores_per_node = {{ .Values.Subcluster.CoresPerNode }}
+    inbound_network = FALSE
+    outbound_network = TRUE
+    cpu_platform = x86_64
+    max_wall_time = {{ .Values.Subcluster.MaxWallTime }}
+    allowed_vos = {{ .Values.Subcluster.AllowedVOs }}
+
+
+    [SE_dummy]
+    enabled = False
+    name = dummy
+    srm_endpoint =  srm://srm.example.com:8443/srm/v2/server
+    provider_implementation  = bestman
+    implementation  = bestman
+
+
+    [Squid]
+    enabled = {{ .Values.Squid.Enabled }} 
+    location =  {{ .Values.Squid.Location }}
+    policy = DEFAULT
+    cache_size = DEFAULT
+    memory_size = DEFAULT
+
 {{ if .Values.Cluster.CustomizationScript}}
 ---
 apiVersion: v1
