@@ -8,6 +8,10 @@ metadata:
     release: {{ .Release.Name }}
     instance:  {{ .Values.Instance }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "login-node.name" . }}
+      instance: {{ .Values.Instance }}
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
