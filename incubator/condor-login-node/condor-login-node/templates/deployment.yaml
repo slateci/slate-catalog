@@ -33,7 +33,7 @@ spec:
           env:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
-          image: "slateci/login-node"
+          image: "slateci/condor-login-node"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: {{ include "condor-login.name" . }}-config
