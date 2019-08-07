@@ -1,4 +1,4 @@
-FROM centos:latest 
+FROM opensciencegrid/osg-wn:3.4-devel-el7
 
 RUN \
   yum update -y && \
@@ -17,7 +17,6 @@ RUN \
 
 ADD container-files /
 
-RUN sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/osg.repo
 RUN echo -e "[osg-upcoming]\nname=OSG Software for Enterprise Linux 7 - Upcoming - x86_64\nmirrorlist=https://repo.opensciencegrid.org/mirror/osg/upcoming/el7/release/x86_64\nfailovermethod=priority\npriority=97\nenabled=1\ngpgcheck=1\ngpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-OSG" > /etc/yum.repos.d/osg-upcoming.repo
 
 RUN yum -y install condor \ 
