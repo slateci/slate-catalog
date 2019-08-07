@@ -1,4 +1,4 @@
-instance: ''
+Instance: ''
 replicaCount: 1
 service:
   type: NodePort
