@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name:  {{ include "condor-login-node.fullname" . }}
+  name:  {{ include "condor-login.fullname" . }}
   labels: 
-    app: {{ template "condor-login-node.name" . }}
-    chart: {{ template "condor-login-node.name" . }}
+    app: {{ template "condor-login.name" . }}
+    chart: {{ template "condor-login.name" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ template "condor-login-node.name" . }}
+    app: {{ template "condor-login.name" . }}
     instance: {{ .Values.Instance }}
   ports:
   - protocol: TCP

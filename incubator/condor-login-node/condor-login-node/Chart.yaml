@@ -1,6 +1,6 @@
 apiVersion: v1
 description: login is
-name: condor-login-node
+name: condor-login
 version: 3.1.0
 appVersion: 1.0.0
 maintainers:
