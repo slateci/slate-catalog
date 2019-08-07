@@ -25,6 +25,10 @@ CondorConfig:
   # Path to scratch storage on the local node used by the HTCondor worker
   # If left commented, will use storage within the container
   # ExecuteDir: "/scratch/condor"
+  #
+  # If your Kubernetes cluster has priority classes defined, you can modify
+  # that here
+  # PriorityClass: "backfill"
 
 # The following is some extra configuration that we expose to users, but
 # generally is not necessary to get an HTCondor worker node running. You might
