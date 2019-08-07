@@ -5,8 +5,8 @@ service:
   port: 22
   annotations: login-service
 LoginConfigFile: |+
-   user_name:password:user_id:group_id::/home/user_name:/bin/bash:user_public_key
+   user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
 
-   user_name:password:user_id:group_id::/home/user_name:/bin/bash:user_public_key
+   user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
 
-   user_name:password:user_id:group_id::/home/user_name:/bin/bash:user_public_key
+   user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
