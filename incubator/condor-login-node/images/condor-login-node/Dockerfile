@@ -28,7 +28,6 @@ RUN yum -y install condor \
   gcc \
   libXpm \
   libXpm-devel \
-  supervisor \
   unzip && \
   yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm -y && \
   yum install HEP_OSlibs -y && \
