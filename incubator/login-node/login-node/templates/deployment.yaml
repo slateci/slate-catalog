@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ include "login-node.name" . }}
+        app: {{ template "login-node.name" . }}
         chart: {{ template "login-node.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
