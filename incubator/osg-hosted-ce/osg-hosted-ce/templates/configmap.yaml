@@ -44,7 +44,7 @@ data:
     data_dir = None
     worker_node_temp = {{ .Values.Storage.WorkerNodeTemp }}
 
-    [ Subcluster {{ .Values.Subcluster.Name }} ]
+    [Subcluster {{ .Values.Subcluster.Name }}]
     name = {{ .Values.Subcluster.Name }}
     node_count = {{ .Values.Subcluster.NodeCount }}
     ram_mb = {{ .Values.Subcluster.Memory }}
