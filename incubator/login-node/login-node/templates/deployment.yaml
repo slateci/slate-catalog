@@ -9,14 +9,12 @@ metadata:
     instance:  {{ .Values.Instance }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      name: {{ include "login-node.name" . }}
-      instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:
-        name: {{ include "login-node.name" . }}
+        app: {{ include "login-node.name" . }}
+        chart: {{ template "login-node.chart" . }}
+        release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
       volumes:
