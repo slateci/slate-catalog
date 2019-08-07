@@ -33,7 +33,7 @@ spec:
           env:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
-          image: "slate-ci/login-node"
+          image: "slateci/login-node"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: {{ include "login-node.name" . }}-config
