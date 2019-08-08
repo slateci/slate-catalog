@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "login.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "login.name" . }}
+    helm.sh/chart: {{ include "login.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "login.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "login.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      volumes:
+      - name: {{ include "login.name" . }}-config
+        configMap:
+          name: {{ include "login.fullname" . }}-config
+          items:
+           - key: tconfig-file.conf
+             path: tconfig-file.conf
+      containers:
+        - name: {{ .Chart.Name }}
+          env:
+           - name: PASSWDFILE
+             value: "root/tconfig-file.conf"
+          image: "slate-ci/login-node"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: {{ include "login.name" . }}-config
+              mountPath:  /root/tconfig-file.conf
+              subPath: tconfig-file.conf

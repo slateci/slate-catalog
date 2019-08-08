@@ -8,10 +8,28 @@ The slate-cli already points to this repository.
 
 # Repository layout
 
+Example:
+
+	stable/
+		my_app/
+			my_app/
+				(chart sources)
+			images/
+				my_app/
+					Dockerfile
+					image_nametag
+					(other container image source files)
+				a_helper_image/
+					Dockerfile
+					image_nametag
+					(other container image source files)
+
 As for the [main kubernetes helm repository](https://github.com/kubernetes/charts), there are two repositories: stable and incubator. Stable holds application that are fully vetted while incubator holds those that are still under development. Each application is a subdirectory within one of those two directories.
 
 Each application subdirectory must contain another subdirectory _with the same name_ which contains the helm chart sources.
-This enables future extensions in the form of including other data besides chart sources for an application, however, because helm requires a chart source directory to have a name matching the chart name nested directories with the same names are unavoidable.
+This enables including other data besides chart sources for an application, however, because helm requires a chart source directory to have a name matching the chart name nested directories with the same names are unavoidable.
+
+Besides the subdirectory for the chart sources, an application's directory can contain a subdirectory named 'images', which contains further subdirectories for any container image sources, one per image. The image source directories may have any names. Each image source directory should contain the Dockerfile which defines the image, any supporting files, and one special file named 'image\_nametag' which contains the name and tag to be used for the image, like "my\_app:latest". 
 
 # How to rebuild the packages
 

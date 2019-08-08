@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: login-node-n
+  labels:
+    app: login-node-n
+spec:
+  selector:
+    matchLabels:
+      app: login-node-n
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: login-node-n
+    spec:
+      volumes:
+      - name: config-vol 
+        configMap: 
+          name: new2-config
+          items: 
+           - key: tconfig-file.conf
+             path: tconfig-file.conf
+      containers:
+        - name: new-container
+          env:
+           - name: PASSWDFILE
+             value: "root/tconfig-file.conf"
+          image: nlingareddy/ssh-login-node
+          volumeMounts:
+            - name: config-vol
+              mountPath:  /root/tconfig-file.conf
+              subPath: tconfig-file.conf  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: login-node-service
+spec:
+  type: NodePort
+  selector:
+    app: login-node-n
+  ports:
+  - protocol: TCP
+    port: 22

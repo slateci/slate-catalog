@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ include "condor-login.fullname" . }}-config
+  labels: 
+    app: {{ template "condor-login.fullname" . }}
+    chart: {{ template "condor-login.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+data:
+  tconfig-file.conf: |+
+{{ .Values.LoginConfigFile | indent 4 }}
