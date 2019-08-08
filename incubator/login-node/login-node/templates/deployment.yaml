@@ -34,7 +34,7 @@ spec:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
           image: "slateci/login-node"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           volumeMounts:
             - name: {{ include "login-node.name" . }}-config
               mountPath:  /root/tconfig-file.conf
