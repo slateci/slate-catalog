@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-config-atlas-{{ .Values.Instance }}
+  name: csi-cvmfs-pvc-atlas-{{ .Values.Instance }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
@@ -18,7 +18,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-config-atlas-condb-{{ .Values.Instance }}
+  name: csi-cvmfs-pvc-atlas-condb-{{ .Values.Instance }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
@@ -35,7 +35,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-config-atlas-nightlies-{{ .Values.Instance }}
+  name: csi-cvmfs-pvc-atlas-nightlies-{{ .Values.Instance }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
