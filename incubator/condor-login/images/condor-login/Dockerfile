@@ -1,23 +1,22 @@
 FROM opensciencegrid/osg-wn:3.4-devel-el7
 
-RUN \
-  yum update -y && \
-  yum install -y epel-release
+RUN yum update -y 
+ 
+#RUN yum install -y epel-release
 
-RUN \
-  yum install -y openssh-server pwgen supervisor
+RUN yum install -y openssh-server pwgen supervisor
   
 RUN yum install openssl -y
 
-RUN \
-  echo > /etc/sysconfig/i18n
+# not sure what this does. can we remove it?
+RUN echo > /etc/sysconfig/i18n
 
-RUN \
-  yum clean all && rm -rf /tmp/yum*
+RUN yum clean all && rm -rf /tmp/yum*
 
 ADD container-files /
 
-RUN echo -e "[osg-upcoming]\nname=OSG Software for Enterprise Linux 7 - Upcoming - x86_64\nmirrorlist=https://repo.opensciencegrid.org/mirror/osg/upcoming/el7/release/x86_64\nfailovermethod=priority\npriority=97\nenabled=1\ngpgcheck=1\ngpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-OSG" > /etc/yum.repos.d/osg-upcoming.repo
+# we dont need osg-upcoming.
+#RUN echo -e "[osg-upcoming]\nname=OSG Software for Enterprise Linux 7 - Upcoming - x86_64\nmirrorlist=https://repo.opensciencegrid.org/mirror/osg/upcoming/el7/release/x86_64\nfailovermethod=priority\npriority=97\nenabled=1\ngpgcheck=1\ngpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-OSG" > /etc/yum.repos.d/osg-upcoming.repo
 
 RUN yum -y install condor \ 
   openssh-clients \ 
@@ -32,7 +31,8 @@ RUN yum -y install condor \
   yum install HEP_OSlibs -y && \
   yum clean all
 
-RUN mkdir -p /var/lib/condor/credentials
+# not needed for now
+#RUN mkdir -p /var/lib/condor/credentials
 
 COPY worker.conf /etc/condor/config.d/
 
