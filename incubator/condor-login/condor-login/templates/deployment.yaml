@@ -28,14 +28,34 @@ spec:
           items:
            - key: tconfig-file.conf
              path: tconfig-file.conf
+      - name: {{ include "condor-login.name" . }}-config-osg
+        persistentVolumeClaim:
+          claimName: cvmfs-config-osg-{{ .Values.Instance }}
+      - name: {{ include "condor-login.name" . }}-oasis
+        persistentVolumeClaim:
+          claimName: cvmfs-oasis-{{ .Values.Instance }}
+      - name: {{ include "condor-login.name" . }}-spt
+        persistentVolumeClaim:
+          claimName: cvmfs-spt-{{ .Values.Instance }}
+      - name: {{ include "condor-login.name" . }}-connect
+        persistentVolumeClaim: 
+          claimName: cvmfs-connect-{{ .Values.Instance }}
       containers:
         - name: {{ .Chart.Name }}
           env:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
           image: "slateci/condor-login-node"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           volumeMounts:
             - name: {{ include "condor-login.name" . }}-config
               mountPath:  /root/tconfig-file.conf
               subPath: tconfig-file.conf
+            - name: {{ include "condor-login.name" . }}-config-osg
+              mountPath: /cvmfs/config-osg.opensciencegrid.org
+            - name: {{ include "condor-login.name" . }}-oasis
+              mountPath: /cvmfs/oasis.opensciencegrid.org
+            - name: {{ include "condor-login.name" . }}-spt
+              mountPath: /cvmfs/spt.opensciencegrid.org
+            - name: {{ include "condor-login.name" . }}-connect
+              mountPath: /cvmfs/connect.opensciencegrid.org

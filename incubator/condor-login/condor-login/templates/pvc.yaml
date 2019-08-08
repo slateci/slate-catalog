@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cvmfs-config-osg-{{ .Values.Instance }}
+  labels:
+    app: {{ template "condor-login.name" . }}
+    chart: {{ template "condor-login.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-config-osg
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cvmfs-connect-{{ .Values.Instance }}
+  labels:
+    app: {{ template "condor-login.name" . }}
+    chart: {{ template "condor-login.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-connect
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cvmfs-oasis-{{ .Values.Instance }}
+  labels:
+    app: {{ template "condor-login.name" . }}
+    chart: {{ template "condor-login.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-oasis
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cvmfs-spt-{{ .Values.Instance }}
+  labels:
+    app: {{ template "condor-login.name" . }}
+    chart: {{ template "condor-login.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-spt
