@@ -30,16 +30,16 @@ spec:
              path: tconfig-file.conf
       - name: {{ include "condor-login.name" . }}-config-osg
         persistentVolumeClaim:
-          claimName: cvmfs-config-osg-{{ .Values.Instance }}
+          claimName: {{ template "condor-login.name" . }}-config-osg
       - name: {{ include "condor-login.name" . }}-oasis
         persistentVolumeClaim:
-          claimName: cvmfs-oasis-{{ .Values.Instance }}
+          claimName: {{ template "condor-login.name" . }}-oasis
       - name: {{ include "condor-login.name" . }}-spt
         persistentVolumeClaim:
-          claimName: cvmfs-spt-{{ .Values.Instance }}
+          claimName: {{ template "condor-login.name" . }}-spt
       - name: {{ include "condor-login.name" . }}-connect
         persistentVolumeClaim: 
-          claimName: cvmfs-connect-{{ .Values.Instance }}
+          claimName: {{ template "condor-login.name" . }}-connect
       containers:
         - name: {{ .Chart.Name }}
           env:
