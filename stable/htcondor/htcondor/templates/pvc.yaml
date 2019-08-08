@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-cvmfs-pvc-config-osg-{{ .Values.Instance }}
+  labels:
+    app: {{ template "htcondor.name" . }}
+    chart: {{ template "htcondor.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-config-osg
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-cvmfs-pvc-connect-{{ .Values.Instance }}
+  labels:
+    app: {{ template "htcondor.name" . }}
+    chart: {{ template "htcondor.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-connect
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-cvmfs-pvc-oasis-{{ .Values.Instance }}
+  labels:
+    app: {{ template "htcondor.name" . }}
+    chart: {{ template "htcondor.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-oasis
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-cvmfs-pvc-spt-{{ .Values.Instance }}
+  labels:
+    app: {{ template "htcondor.name" . }}
+    chart: {{ template "htcondor.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-spt
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-cvmfs-pvc-atlas-{{ .Values.Instance }}
+  labels:
+    app: {{ template "htcondor.name" . }}
+    chart: {{ template "htcondor.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-atlas
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-cvmfs-pvc-atlas-condb-{{ .Values.Instance }}
+  labels:
+    app: {{ template "htcondor.name" . }}
+    chart: {{ template "htcondor.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-atlas-condb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csi-cvmfs-pvc-atlas-nightlies-{{ .Values.Instance }}
+  labels:
+    app: {{ template "htcondor.name" . }}
+    chart: {{ template "htcondor.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-atlas-nightlies
