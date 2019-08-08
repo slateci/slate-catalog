@@ -13,7 +13,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: csi-cvmfs-config-atlas
+  storageClassName: csi-cvmfs-atlas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -30,7 +30,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: csi-cvmfs-config-atlas-condb
+  storageClassName: csi-cvmfs-atlas-condb
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -47,4 +47,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: csi-cvmfs-config-atlas-nightlies
+  storageClassName: csi-cvmfs-atlas-nightlies
