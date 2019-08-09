@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: cvmfs-config-osg-{{ .Values.Instance }}
+  name: {{ template "condor-login.name" . }}-config-osg
   labels:
     app: {{ template "condor-login.name" . }}
     chart: {{ template "condor-login.chart" . }}
@@ -18,7 +18,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: cvmfs-connect-{{ .Values.Instance }}
+  name: {{ template "condor-login.name" . }}-connect
   labels:
     app: {{ template "condor-login.name" . }}
     chart: {{ template "condor-login.chart" . }}
@@ -35,7 +35,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: cvmfs-oasis-{{ .Values.Instance }}
+  name: {{ template "condor-login.name" . }}-oasis
   labels:
     app: {{ template "condor-login.name" . }}
     chart: {{ template "condor-login.chart" . }}
@@ -52,7 +52,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: cvmfs-spt-{{ .Values.Instance }}
+  name: {{ template "condor-login.name" . }}-spt
   labels:
     app: {{ template "condor-login.name" . }}
     chart: {{ template "condor-login.chart" . }}
