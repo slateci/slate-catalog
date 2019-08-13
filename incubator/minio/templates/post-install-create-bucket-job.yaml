@@ -53,7 +53,7 @@ spec:
       containers:
       - name: minio-mc
         image: "{{ .Values.mcImage.repository }}:{{ .Values.mcImage.tag }}"
-        imagePullPolicy: {{ .Values.mcImage.pullPolicy }}
+        imagePullPolicy: Always
         command: ["/bin/sh", "/config/initialize"]
         env:
           - name: MINIO_ENDPOINT

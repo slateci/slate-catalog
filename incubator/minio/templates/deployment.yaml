@@ -58,7 +58,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: Always
           {{- if .Values.s3gateway.enabled }}
           command: [ "/bin/sh",
           "-ce",
