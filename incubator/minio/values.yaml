@@ -1,3 +1,6 @@
+# SLATE platform instance tag
+Instance: ""
+
 ## set kubernetes cluster domain where minio is running
 ##
 clusterDomain: cluster.local
