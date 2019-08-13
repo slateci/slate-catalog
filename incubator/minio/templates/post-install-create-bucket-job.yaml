@@ -52,7 +52,7 @@ spec:
         {{ end }}
       containers:
       - name: minio-mc
-        image: "{{ .Values.mcImage.repository }}:{{ .Values.mcImage.tag }}"
+        image: "minio/mc:{{ .Values.mcImage.tag }}"
         imagePullPolicy: Always
         command: ["/bin/sh", "/config/initialize"]
         env:

@@ -57,7 +57,7 @@ spec:
       serviceAccountName: {{ include "minio.serviceAccountName" . | quote }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "minio/minio:{{ .Values.image.tag }}"
           imagePullPolicy: Always
           {{- if .Values.s3gateway.enabled }}
           command: [ "/bin/sh",
