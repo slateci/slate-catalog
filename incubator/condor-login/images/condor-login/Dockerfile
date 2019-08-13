@@ -8,6 +8,10 @@ RUN yum install -y openssh-server pwgen supervisor
   
 RUN yum install openssl -y
 
+# Support flocking
+
+RUN yum install osg-flock
+
 # not sure what this does. can we remove it?
 RUN echo > /etc/sysconfig/i18n
 
