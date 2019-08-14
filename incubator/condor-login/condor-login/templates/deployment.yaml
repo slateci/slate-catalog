@@ -40,6 +40,20 @@ spec:
       - name: {{ include "condor-login.name" . }}-connect
         persistentVolumeClaim: 
           claimName: {{ template "condor-login.name" . }}-connect
+      - name: {{ template "condor-login.name" . }}-hostcert
+        secret:
+          secretName: {{ .Values.HostCertSecret }}
+          items:
+          - key: hostcert.pem
+            path: hostcert.pem
+            mode: 256
+      - name: {{ template "condor-login.name" . }}-hostkey
+        secret:
+          secretName: {{ .Values.HostKeySecret }}
+          items:
+          - key: hostkey.pem
+            path: hostkey.pem
+            mode: 256
       containers:
         - name: {{ .Chart.Name }}
           env:
@@ -59,3 +73,9 @@ spec:
               mountPath: /cvmfs/spt.opensciencegrid.org
             - name: {{ include "condor-login.name" . }}-connect
               mountPath: /cvmfs/connect.opensciencegrid.org
+            - name: {{ include "condor-login.name" . }}-hostcert
+              mountPath: /etc/grid-security/hostcert.pem
+              subPath: hostcert.pem
+            - name: {{ include "condor-login.name" . }}-hostkey
+              mountPath: /etc/grid-security/hostkey.pem
+              subPath: hostkey.pem
