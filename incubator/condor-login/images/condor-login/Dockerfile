@@ -41,4 +41,6 @@ RUN yum -y install condor \
 
 COPY worker.conf /etc/condor/config.d/
 
+ADD fetch-crl /etc/cron.d/
+
 ENTRYPOINT ["/config/bootstrap.sh"]
