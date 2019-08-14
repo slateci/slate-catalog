@@ -13,6 +13,9 @@ RUN yum install openssl -y
 RUN yum -y install osg-flock
 RUN yum -y install cronie
 
+# Copy the Gratia probe into the correct place
+RUN cp /etc/gratia/condor/ProbeConfig-flocking /etc/gratia/condor/ProbeConfig
+
 # not sure what this does. can we remove it?
 RUN echo > /etc/sysconfig/i18n
 
