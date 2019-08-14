@@ -42,6 +42,8 @@ RUN yum -y install condor \
 # not needed for now
 #RUN mkdir -p /var/lib/condor/credentials
 
+RUN sed -i 's/EnableProbe="0"/EnableProbe="1"/' /etc/gratia/condor/ProbeConfig
+
 COPY worker.conf /etc/condor/config.d/
 
 ADD fetch-crl /etc/cron.d/
