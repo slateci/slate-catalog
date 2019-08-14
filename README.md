@@ -24,7 +24,7 @@ Example:
 					image_nametag
 					(other container image source files)
 
-As for the [main kubernetes helm repository](https://github.com/kubernetes/charts), there are two repositories: stable and incubator. Stable holds application that are fully vetted while incubator holds those that are still under development. Each application is a subdirectory within one of those two directories.
+As for the [main kubernetes helm repository](https://github.com/kubernetes/charts), there are two repositories: stable and incubator. Stable holds applications that are fully vetted while incubator holds those that are still under development. Each application is a subdirectory within one of those two directories.
 
 Each application subdirectory must contain another subdirectory _with the same name_ which contains the helm chart sources.
 This enables including other data besides chart sources for an application, however, because helm requires a chart source directory to have a name matching the chart name nested directories with the same names are unavoidable.
