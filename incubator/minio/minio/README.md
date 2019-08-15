@@ -130,7 +130,9 @@ To start the client in a docker container on your machine run:
 
 This command will drop you into the shell for your MinIO Client container. Run `mc --help` to see more information about the client.
 
-To connect the client to your MinIO SLATE Server instance use `mc config host add <ALIAS> <YOUR-ENDPOINT> <YOUR-ACCESS-KEY> <YOUR-SECRET-KEY>`
+To connect the client to your MinIO SLATE Server instance use
+
+`mc config host add <ALIAS> <YOUR-ENDPOINT> <YOUR-ACCESS-KEY> <YOUR-SECRET-KEY>`
 
 Example: `mc config host add myMinio http://192.168.254.143:9000 AKIAIOSFODNN7EXAMPLE wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`
 
@@ -151,8 +153,6 @@ You should be able to see your file in the new bucket.
 This is a simple excercise to test your MinIO deployment. Complete documentation and usage can be found at:
 
 https://docs.min.io/docs/minio-client-complete-guide
-
-and
 
 https://docs.min.io/docs/minio-server-configuration-guide.html
 
