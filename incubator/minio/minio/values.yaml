@@ -5,11 +5,6 @@ Instance: ""
 ##
 clusterDomain: cluster.local
 
-## Set default image, imageTag, and imagePullPolicy. mode is used to indicate the
-##
-image:
-  tag: RELEASE.2019-08-07T01-59-21Z
-
 ## Set default image, imageTag, and imagePullPolicy for the `mc` (the minio
 ## client used to create a default bucket).
 ##
