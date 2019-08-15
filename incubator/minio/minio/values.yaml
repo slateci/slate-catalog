@@ -40,9 +40,7 @@ priorityClassName: ""
 ## number of nodes (only used for Minio distributed mode)
 ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
 ##
-existingSecret: ""
-accessKey: "AKIAIOSFODNN7EXAMPLE"
-secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+existingSecret: "miniosecret"
 configPath: "/root/.minio/"
 configPathmc: "/root/.mc/"
 mountPath: "/export"

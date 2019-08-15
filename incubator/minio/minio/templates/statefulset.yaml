@@ -57,7 +57,7 @@ spec:
       serviceAccountName: {{ include "minio.serviceAccountName" . | quote }}
       containers:
         - name: {{ .Chart.Name }}
-          image: minio/minio:{{ .Values.image.tag }}
+          image: minio:latest
           imagePullPolicy: Always
           {{- if .Values.tls.enabled }}
           command: [ "/bin/sh",
