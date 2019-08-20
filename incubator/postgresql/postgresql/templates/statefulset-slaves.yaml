@@ -63,7 +63,7 @@ spec:
       initContainers:
       - name: init-chmod-data
         image: docker.io/bitnami/minideb:latest
-        imagePullPolicy: "{{ .Values.volumePermissions.image.pullPolicy }}"
+        imagePullPolicy: Always
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         command:
@@ -84,7 +84,7 @@ spec:
       containers:
       - name: {{ template "postgresql.fullname" . }}
         image: docker.io/bitnami/postgresql:11.4.0-debian-9-r12
-        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+        imagePullPolicy: Always
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         {{- if .Values.securityContext.enabled }}
