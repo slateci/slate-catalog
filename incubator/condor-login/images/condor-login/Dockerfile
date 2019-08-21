@@ -8,6 +8,14 @@ RUN yum install -y openssh-server pwgen supervisor
   
 RUN yum install openssl -y
 
+# Support flocking
+
+RUN yum -y install osg-flock
+RUN yum -y install cronie
+
+# Copy the Gratia probe into the correct place
+RUN cp /etc/gratia/condor/ProbeConfig-flocking /etc/gratia/condor/ProbeConfig
+
 # not sure what this does. can we remove it?
 RUN echo > /etc/sysconfig/i18n
 
@@ -34,6 +42,10 @@ RUN yum -y install condor \
 # not needed for now
 #RUN mkdir -p /var/lib/condor/credentials
 
+RUN sed -i 's/EnableProbe="0"/EnableProbe="1"/' /etc/gratia/condor/ProbeConfig
+
 COPY worker.conf /etc/condor/config.d/
+
+ADD fetch-crl /etc/cron.d/
 
 ENTRYPOINT ["/config/bootstrap.sh"]

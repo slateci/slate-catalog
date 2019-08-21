@@ -4,6 +4,8 @@ service:
   type: NodePort
   port: 22
   annotations: login-service
+HostKeySecret: hostkey
+HostCertSecret: hostcert
 LoginConfigFile: |+
    user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
 
