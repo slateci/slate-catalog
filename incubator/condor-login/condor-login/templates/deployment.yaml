@@ -46,14 +46,14 @@ spec:
           items:
           - key: hostcert.pem
             path: hostcert.pem
-            mode: 256
+            mode: 420
       - name: {{ template "condor-login.name" . }}-hostkey
         secret:
           secretName: {{ .Values.HostKeySecret }}
           items:
           - key: hostkey.pem
             path: hostkey.pem
-            mode: 256
+            mode: 384
       hostNetwork: true
       containers:
         - name: {{ .Chart.Name }}
