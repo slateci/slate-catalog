@@ -1,7 +1,7 @@
 apiVersion: v1
 description: login is
 name: condor-login
-version: 3.2.3
+version: 3.2.4
 appVersion: 1.0.0
 maintainers:
   - name: neha lingareddy
