@@ -2,7 +2,7 @@ Instance: ''
 replicaCount: 1
 service:
   type: NodePort
-  port: 29001
+  port: 22
   annotations: login-service
 HostKeySecret: hostkey
 HostCertSecret: hostcert
