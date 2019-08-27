@@ -10,7 +10,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: nfs-provisioner
+  storageClassName: nfs-client
   resources:
     requests:
       storage: {{ .Values.PersistentVolumeClaim.Size }}
