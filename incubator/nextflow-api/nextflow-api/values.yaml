@@ -3,3 +3,6 @@
 
 # SLATE API Instance Tag
 Instance: ""
+
+PersistentVolumeClaim:
+  Size: 200Gi
