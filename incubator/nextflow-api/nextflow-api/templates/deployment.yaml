@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "nextflow-api.fullname" . }}
+  labels:
+    app: {{ template "nextflow-api.name" . }}
+    chart: {{ template "nextflow-api.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "nextflow-api.name" . }}
+      instance: {{ .Values.Instance }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "nextflow-api.name" . }}
+        chart: {{ template "nextflow-api.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      containers:
+      - name: nextflow-server
+        image: bentsherman/nextflow-gke
+        env:
+        - name: NEXTFLOW_K8S
+          value: "true"
+        command:
+        - /bin/bash
+        - -c
+        - cd /opt/nextflow-gke; python3 server.py
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+        volumeMounts:
+        - name: vol-1
+          mountPath: /workspace
+        ports:
+        - containerPort: 8080
+      volumes:
+      - name: vol-1
+        persistentVolumeClaim:
+          claimName: {{ template "nextflow-api.fullname" . }}-deepgtex-prp
