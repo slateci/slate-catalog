@@ -8,4 +8,4 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: 200Gi
+      storage: {{ .Values.PersistentVolumeClaim.Size }}
