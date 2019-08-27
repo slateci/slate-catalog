@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "netflow-api.fullname" . }}
+  name: {{ template "nextflow-api.fullname" . }}
   labels:
-    app: {{ template "netflow-api.name" . }}
-    chart: {{ template "netflow-api.chart" . }}
+    app: {{ template "nextflow-api.name" . }}
+    chart: {{ template "nextflow-api.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "netflow-api.name" . }}
+      app: {{ template "nextflow-api.name" . }}
       instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:
-        app: {{ template "netflow-api.name" . }}
-        chart: {{ template "netflow-api.chart" . }}
+        app: {{ template "nextflow-api.name" . }}
+        chart: {{ template "nextflow-api.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
