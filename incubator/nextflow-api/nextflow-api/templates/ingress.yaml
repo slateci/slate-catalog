@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: nextflow-server
+  name: {{ template "nextflow-api.name" . }}
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
@@ -11,5 +11,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: nextflow-server
+          serviceName: {{ template "nextflow-api.name" . }}
           servicePort: 8080
