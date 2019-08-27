@@ -43,4 +43,4 @@ spec:
       volumes:
       - name: vol-1
         persistentVolumeClaim:
-          claimName: {{ template "nextflow-api.name" . }}
+          claimName: {{ template "nextflow-api.name" . }}-deepgtex-prp

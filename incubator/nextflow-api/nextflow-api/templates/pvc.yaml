@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "nextflow-api.fullname"}}
+  name: {{ template "nextflow-api.fullname"}}-deepgtex-prp
   labels:
     app: {{ template "nextflow-api.name" . }}
     chart: {{ template "nextflow-api.chart" . }}
