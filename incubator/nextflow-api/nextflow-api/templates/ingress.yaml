@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "nextflow-api.name" . }}
+  name: {{ template "nextflow-api.fullname" . }}
   labels:
     app: {{ template "nextflow-api.name" . }}
     chart: {{ template "nextflow-api.chart" . }}
