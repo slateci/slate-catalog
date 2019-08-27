@@ -1,9 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nextflow-server
+  name: {{ template "netflow-api.fullname" . }}
   labels:
-    app: nextflow-server
+    app: {{ template "netflow-api.name" . }}
+    chart: {{ template "netflow-api.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
 spec:
   replicas: 1
   selector:
@@ -12,7 +15,10 @@ spec:
   template:
     metadata:
       labels:
-        app: nextflow-server
+        app: {{ template "netflow-api.name" . }}
+        chart: {{ template "netflow-api.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
     spec:
       containers:
       - name: nextflow-server
