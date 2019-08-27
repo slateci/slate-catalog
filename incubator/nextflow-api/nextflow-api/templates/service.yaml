@@ -1,12 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nextflow-server
+  name: {{ template "netflow-api.fullname" . }}
   labels:
-    app: nextflow-server
+    app: {{ template "netflow-api.name" . }}
+    chart: {{ template "neftlow-api.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
 spec:
   ports:
   - port: 8080
     targetPort: 8080
   selector:
-    app: nextflow-server
+    app: {{ template "netflow-api.name" . }}
+    instance: {{ .Values.Instance }}
