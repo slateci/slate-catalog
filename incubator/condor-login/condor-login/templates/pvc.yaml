@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ template "condor-login.name" . }}-config-osg
+  name: {{ template "condor-login.fullname" . }}-config-osg
   labels:
-    app: {{ template "condor-login.name" . }}
+    app: {{ template "condor-login.fullname" . }}
     chart: {{ template "condor-login.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
@@ -18,9 +18,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ template "condor-login.name" . }}-connect
+  name: {{ template "condor-login.fullname" . }}-connect
   labels:
-    app: {{ template "condor-login.name" . }}
+    app: {{ template "condor-login.fullname" . }}
     chart: {{ template "condor-login.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
@@ -35,9 +35,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ template "condor-login.name" . }}-oasis
+  name: {{ template "condor-login.fullname" . }}-oasis
   labels:
-    app: {{ template "condor-login.name" . }}
+    app: {{ template "condor-login.fullname" . }}
     chart: {{ template "condor-login.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
@@ -52,9 +52,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ template "condor-login.name" . }}-spt
+  name: {{ template "condor-login.fullname" . }}-spt
   labels:
-    app: {{ template "condor-login.name" . }}
+    app: {{ template "condor-login.fullname" . }}
     chart: {{ template "condor-login.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}

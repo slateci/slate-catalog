@@ -3,58 +3,75 @@ kind: Deployment
 metadata:
   name: {{ include "condor-login.fullname" . }}
   labels:
-    app: {{ template "condor-login.name" . }}
+    app: {{ template "condor-login.fullname" . }}
     chart: {{ template "condor-login.chart" . }}
     release: {{ .Release.Name }}
     instance:  {{ .Values.Instance }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "condor-login.name" . }}
+      app: {{ template "condor-login.fullname" . }}
       instance: {{ .Values.Instance }}
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ template "condor-login.name" . }}
+        app: {{ template "condor-login.fullname" . }}
         chart: {{ template "condor-login.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
       volumes:
-      - name: {{ include "condor-login.name" . }}-config
+      - name: {{ include "condor-login.fullname" . }}-config
         configMap:
           name: {{ include "condor-login.fullname" . }}-config
           items:
            - key: tconfig-file.conf
              path: tconfig-file.conf
-      - name: {{ include "condor-login.name" . }}-config-osg
+      - name: {{ include "condor-login.fullname" . }}-config-osg
         persistentVolumeClaim:
-          claimName: {{ template "condor-login.name" . }}-config-osg
-      - name: {{ include "condor-login.name" . }}-oasis
+          claimName: {{ template "condor-login.fullname" . }}-config-osg
+      - name: {{ include "condor-login.fullname" . }}-oasis
         persistentVolumeClaim:
-          claimName: {{ template "condor-login.name" . }}-oasis
-      - name: {{ include "condor-login.name" . }}-spt
+          claimName: {{ template "condor-login.fullname" . }}-oasis
+      - name: {{ include "condor-login.fullname" . }}-spt
         persistentVolumeClaim:
-          claimName: {{ template "condor-login.name" . }}-spt
-      - name: {{ include "condor-login.name" . }}-connect
+          claimName: {{ template "condor-login.fullname" . }}-spt
+      - name: {{ include "condor-login.fullname" . }}-connect
         persistentVolumeClaim: 
-          claimName: {{ template "condor-login.name" . }}-connect
-      - name: {{ template "condor-login.name" . }}-hostcert
+          claimName: {{ template "condor-login.fullname" . }}-connect
+      {{ if and .Values.AuthMethod (eq .Values.AuthMethod "token") }}
+      - name: {{ template "condor-login.fullname" . }}-token-config
+        configMap:
+          name: {{ template "condor-login.fullname" . }}-token-config
+          items:
+          - key: 90-token.conf
+            path: 90-token.conf
+            mode: 420
+      - name: {{ template "condor-login.fullname" . }}-token
+        secret:
+          secretName: {{ .Values.TokenSecret }}
+          items:
+          - key: token
+            path: token
+            mode: 384
+      {{ end }}
+      {{ if and .Values.AuthMethod (eq .Values.AuthMethod "gsi") }}
+      - name: {{ template "condor-login.fullname" . }}-hostcert
         secret:
           secretName: {{ .Values.HostCertSecret }}
           items:
           - key: hostcert.pem
             path: hostcert.pem
             mode: 420
-      - name: {{ template "condor-login.name" . }}-hostkey
+      - name: {{ template "condor-login.fullname" . }}-hostkey
         secret:
           secretName: {{ .Values.HostKeySecret }}
           items:
           - key: hostkey.pem
             path: hostkey.pem
             mode: 384
-      hostNetwork: true
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           env:
@@ -63,20 +80,30 @@ spec:
           image: "slateci/condor-login-node"
           imagePullPolicy: Always
           volumeMounts:
-            - name: {{ include "condor-login.name" . }}-config
+            - name: {{ include "condor-login.fullname" . }}-config
               mountPath:  /root/tconfig-file.conf
               subPath: tconfig-file.conf
-            - name: {{ include "condor-login.name" . }}-config-osg
+            - name: {{ include "condor-login.fullname" . }}-config-osg
               mountPath: /cvmfs/config-osg.opensciencegrid.org
-            - name: {{ include "condor-login.name" . }}-oasis
+            - name: {{ include "condor-login.fullname" . }}-oasis
               mountPath: /cvmfs/oasis.opensciencegrid.org
-            - name: {{ include "condor-login.name" . }}-spt
+            - name: {{ include "condor-login.fullname" . }}-spt
               mountPath: /cvmfs/spt.opensciencegrid.org
-            - name: {{ include "condor-login.name" . }}-connect
+            - name: {{ include "condor-login.fullname" . }}-connect
               mountPath: /cvmfs/connect.opensciencegrid.org
-            - name: {{ include "condor-login.name" . }}-hostcert
+            {{ if and .Values.AuthMethod (eq .Values.AuthMethod "gsi") }}
+            - name: {{ include "condor-login.fullname" . }}-hostcert
               mountPath: /etc/grid-security/hostcert.pem
               subPath: hostcert.pem
-            - name: {{ include "condor-login.name" . }}-hostkey
+            - name: {{ include "condor-login.fullname" . }}-hostkey
               mountPath: /etc/grid-security/hostkey.pem
               subPath: hostkey.pem
+            {{ end }}
+            {{ if and .Values.AuthMethod (eq .Values.AuthMethod "token") }}
+            - name: {{ include "condor-login.fullname" . }}-token-config
+              mountPath: /etc/condor/config.d/90-token.conf
+              subPath: 90-token.conf
+            - name: {{ include "condor-login.fullname" . }}-token
+              mountPath: /etc/condor/tokens.d/token
+              subPath: token
+            {{ end }} 

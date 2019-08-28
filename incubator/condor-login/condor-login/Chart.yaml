@@ -1,9 +1,11 @@
 apiVersion: v1
 description: login is
 name: condor-login
-version: 3.2.5
+version: 3.3.2
 appVersion: 1.0.0
 maintainers:
+  - name: lincoln bryant
+    email: lincolnb@uchicago.edu
   - name: neha lingareddy
     email: nlingareddy@uchicago.edu
   - name: mitchell steinman
