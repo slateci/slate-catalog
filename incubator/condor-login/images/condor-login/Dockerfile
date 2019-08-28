@@ -8,9 +8,16 @@ RUN yum install -y openssh-server pwgen supervisor
   
 RUN yum install openssl -y
 
-# Support flocking
+# from Mats
+RUN curl -s -o /etc/yum.repos.d/htcondor-development-rhel7.repo https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-development-rhel7.repo \
+ && echo "priority=10" >>/etc/yum.repos.d/htcondor-development-rhel7.repo \
+ && rpm --import http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor \
+ && yum -y install condor \
+ && mkdir -p /etc/condor/passwords.d /etc/condor/tokens.d \
+ && yum clean all
 
 RUN yum -y install osg-flock
+
 RUN yum -y install cronie
 
 # Copy the Gratia probe into the correct place
@@ -23,19 +30,7 @@ RUN yum clean all && rm -rf /tmp/yum*
 
 ADD container-files /
 
-# we dont need osg-upcoming.
-#RUN echo -e "[osg-upcoming]\nname=OSG Software for Enterprise Linux 7 - Upcoming - x86_64\nmirrorlist=https://repo.opensciencegrid.org/mirror/osg/upcoming/el7/release/x86_64\nfailovermethod=priority\npriority=97\nenabled=1\ngpgcheck=1\ngpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-OSG" > /etc/yum.repos.d/osg-upcoming.repo
-
-
-# from Mats
-RUN curl -s -o /etc/yum.repos.d/htcondor-development-rhel7.repo https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-development-rhel7.repo \
- && echo "priority=10" >>/etc/yum.repos.d/htcondor-development-rhel7.repo \
- && rpm --import http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor \
- && yum -y install condor
-
-RUN yum -y install condor \ 
-  openssh-clients \ 
-  openssh-server \
+RUN  openssh-clients \ 
   libXt \
   tcsh \
   gcc \
