@@ -10,7 +10,7 @@ metadata:
 data:
   tconfig-file.conf: |+
 {{ .Values.LoginConfigFile | indent 4 }}
-{{ if .Values.AuthMethod and (eq .Values.AuthMethod "token") }}
+{{ if and .Values.AuthMethod (eq .Values.AuthMethod "token") }}
 ---
 apiVersion: v1
 kind: ConfigMap

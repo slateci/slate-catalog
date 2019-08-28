@@ -3,14 +3,14 @@ kind: Service
 metadata:
   name:  {{ include "condor-login.fullname" . }}
   labels: 
-    app: {{ template "condor-login.name" . }}
-    chart: {{ template "condor-login.name" . }}
+    app: {{ template "condor-login.fullname" . }}
+    chart: {{ template "condor-login.fullname" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ template "condor-login.name" . }}
+    app: {{ template "condor-login.fullname" . }}
     instance: {{ .Values.Instance }}
   ports:
   - protocol: TCP
