@@ -14,7 +14,7 @@
 # SELinux about this change.
 # semanage port -a -t ssh_port_t -p tcp #PORTNUMBER
 #
-#Port 22
+Port 29001
 #AddressFamily any
 #ListenAddress 0.0.0.0
 #ListenAddress ::

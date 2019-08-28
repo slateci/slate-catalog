@@ -1,0 +1,8 @@
+# Default values for nextflow-api.
+# Declare variables to be passed into your templates.
+
+# SLATE API Instance Tag
+Instance: ""
+
+PersistentVolumeClaim:
+  Size: 200Gi

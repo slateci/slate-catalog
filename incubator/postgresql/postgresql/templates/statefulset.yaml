@@ -40,7 +40,6 @@ spec:
       {{- if .Values.schedulerName }}
       schedulerName: "{{ .Values.schedulerName }}"
       {{- end }}
-{{- include "postgresql.imagePullSecrets" . | indent 6 }}
       {{- if .Values.master.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.master.nodeSelector | indent 8 }}
@@ -67,7 +66,7 @@ spec:
       initContainers:
       - name: init-chmod-data
         image: docker.io/bitnami/minideb:latest
-        imagePullPolicy: "{{ .Values.volumePermissions.image.pullPolicy }}"
+        imagePullPolicy: Always
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         command:
@@ -88,7 +87,7 @@ spec:
       containers:
       - name: {{ template "postgresql.fullname" . }}
         image: docker.io/bitnami/postgresql:11.4.0-debian-9-r12
-        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+        imagePullPolicy: Always
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         {{- if .Values.securityContext.enabled }}
@@ -220,7 +219,7 @@ spec:
 {{- if .Values.metrics.enabled }}
       - name: metrics
         image: docker.io/wrouesnel/postgres_exporter:v0.4.7
-        imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
+        imagePullPolicy: Always
        {{- if .Values.metrics.securityContext.enabled }}
         securityContext:
           runAsUser: {{ .Values.metrics.securityContext.runAsUser }}

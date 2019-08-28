@@ -2,7 +2,7 @@ Instance: ''
 replicaCount: 1
 service:
   type: NodePort
-  port: 22
+  port: 29001
   annotations: login-service
 
 # valid AuthMethods are: token, gsi

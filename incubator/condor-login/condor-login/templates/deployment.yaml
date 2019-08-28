@@ -71,7 +71,6 @@ spec:
           - key: hostkey.pem
             path: hostkey.pem
             mode: 256
-      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           env:
