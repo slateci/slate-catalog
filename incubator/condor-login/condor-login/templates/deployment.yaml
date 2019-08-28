@@ -40,6 +40,15 @@ spec:
       - name: {{ include "condor-login.name" . }}-connect
         persistentVolumeClaim: 
           claimName: {{ template "condor-login.name" . }}-connect
+      {{ if .Values.AuthMethod and (eq .values.AuthMethod "token") }}
+      - name: {{ template "condor-login.fullname" }}-token-config
+        secret:
+          secretName: {{ .Values.HostCertSecret }}
+          items:
+          - key: token
+            path: token
+            mode: 384
+      {{ end }}
       - name: {{ template "condor-login.name" . }}-hostcert
         secret:
           secretName: {{ .Values.HostCertSecret }}
@@ -54,6 +63,7 @@ spec:
           - key: hostkey.pem
             path: hostkey.pem
             mode: 256
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           env:
@@ -73,9 +83,16 @@ spec:
               mountPath: /cvmfs/spt.opensciencegrid.org
             - name: {{ include "condor-login.name" . }}-connect
               mountPath: /cvmfs/connect.opensciencegrid.org
+            {{ if .Values.AuthMethod and (eq .Values.AuthMethod "gsi") }}
             - name: {{ include "condor-login.name" . }}-hostcert
               mountPath: /etc/grid-security/hostcert.pem
               subPath: hostcert.pem
             - name: {{ include "condor-login.name" . }}-hostkey
               mountPath: /etc/grid-security/hostkey.pem
               subPath: hostkey.pem
+            {{ end }}
+            {{ if .Values.AuthMethod and (eq .values.AuthMethod "token") }}
+            - name: {{ include "condor-login.name" . }}-hostcert
+              mountPath: /etc/condor/tokens.d/token
+              subPath: token
+            {{ end }} 
