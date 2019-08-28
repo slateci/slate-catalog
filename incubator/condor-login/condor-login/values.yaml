@@ -4,11 +4,18 @@ service:
   type: NodePort
   port: 22
   annotations: login-service
+
+# valid AuthMethods are: token, gsi
+AuthMethod: token
+
+# only relevant if GSI auth is chosen
 HostKeySecret: hostkey
 HostCertSecret: hostcert
+
+# maps to a SLATE secret, only relevant if Token auth is chosen
+TokenSecret: token
+
 LoginConfigFile: |+
-   user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
-
-   user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
-
-   user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
+   user1:x:1000:group_id::/home/user1:/bin/bash:user_public_key
+   user2:x:1001:group_id::/home/user2:/bin/bash:user_public_key
+   user3:x:1002:group_id::/home/user3:/bin/bash:user_public_key
