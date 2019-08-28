@@ -30,7 +30,7 @@ RUN yum clean all && rm -rf /tmp/yum*
 
 ADD container-files /
 
-RUN  openssh-clients \ 
+RUN yum install openssh-clients \ 
   libXt \
   tcsh \
   gcc \
