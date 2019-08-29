@@ -8,7 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     instance:  {{ .Values.Instance }}
 spec:
-  hostNetwork: true
   selector:
     matchLabels:
       app: {{ template "condor-login.fullname" . }}
@@ -82,6 +81,7 @@ spec:
             path: hostkey.pem
             mode: 384
       {{ end }}
+      hostNetwork: true
       containers:
         - name: {{ .Chart.Name }}
           env:
