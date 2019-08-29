@@ -14,6 +14,26 @@ data:
     SEC_CLIENT_AUTHENTICATION_METHODS = TOKEN,FS
 {{ end }}
 ---
+{{ if .Values.CollectorHost }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ include "condor-login.fullname" . }}-schedd-config
+  labels: 
+    app: {{ template "condor-login.fullname" . }}
+    chart: {{ template "condor-login.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+data:
+  99-schedd.conf: |+
+    DAMEON_LIST = MASTER, SCHEDD
+    CONDOR_HOST = {{ .Values.CollectorHost }}
+    CCB_ADDRESS = {{ .Values.CollectorHost }}
+    USE_SHARED_PORT = true
+    # undefine
+    FLOCK_TO =  
+{{ end }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:

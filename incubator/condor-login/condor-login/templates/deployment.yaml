@@ -56,6 +56,15 @@ spec:
             path: token
             mode: 420
       {{ end }}
+      {{ if .Values.CentralManager }}
+      - name: {{ template "condor-login.fullname" . }}-schedd-config
+        configMap:
+          name: {{ template "condor-login.fullname" . }}-schedd-config
+          items:
+          - key: 99-schedd.conf
+            path: 99-schedd.conf
+            mode: 420
+      {{ end }}
       {{ if and .Values.AuthMethod (eq .Values.AuthMethod "gsi") }}
       - name: {{ template "condor-login.fullname" . }}-hostcert
         secret:
@@ -77,18 +86,6 @@ spec:
           env:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
-           {{ if .Values.CentralManager }}
-           - name: _CONDOR_HOST
-             value: {{ .Values.CentralManager }}
-           - name: _CONDOR_CCB_ADDRESS
-             value: {{ .Values.CentralManager }}
-           - name: _CONDOR_DAEMON_LIST
-             value: "MASTER, SCHEDD"
-           - name: _CONDOR_USE_SHARED_PORT
-             value: "TRUE"
-           - name: _CONDOR_FLOCK_TO
-             value: ""
-           {{ end }}
           image: "slateci/condor-login-node"
           imagePullPolicy: Always
           volumeMounts:
@@ -119,3 +116,8 @@ spec:
               mountPath: /etc/condor/tokens.d/token
               subPath: token
             {{ end }} 
+            {{ if .Values.CentralManager }}
+            - name: {{ include "condor-login.fullname" . }}-schedd-config
+              mountPath: /etc/condor/config.d/99-schedd.conf
+              subPath: 99-schedd.conf
+            {{ end }}
