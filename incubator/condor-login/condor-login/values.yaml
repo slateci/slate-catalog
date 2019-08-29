@@ -7,14 +7,24 @@ service:
 
 # valid AuthMethods are: token, gsi
 AuthMethod: token
-
-# only relevant if GSI auth is chosen
-HostKeySecret: hostkey
-HostCertSecret: hostcert
-
 # maps to a SLATE secret, only relevant if Token auth is chosen
 TokenSecret: token
+# maps to a SLATE secret, only relevant if GSI auth is chosen
+#HostKeySecret: hostkey
+#HostCertSecret: hostcert
 
+
+# If you want worker nodes to connect to this pool, do not define a
+# CentralManager.  This will create a HTCondor collector and negotiator within
+# the container. 
+#
+# Otherwise, if you want to connect to an existing pool, set the CentralManager
+# to point to your existing HTCondor collector
+CentralManager: flock.opensciencegrid.org
+
+# The following file will create users in passwd(5)-style, with an additional
+# field for SSH public key that will automatically be added to the user's
+# authorized keys file
 LoginConfigFile: |+
    user1:x:1000:group_id::/home/user1:/bin/bash:user_public_key
    user2:x:1001:group_id::/home/user2:/bin/bash:user_public_key
