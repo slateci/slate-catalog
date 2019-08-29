@@ -28,7 +28,7 @@ data:
   99-schedd.conf: |+
     DAMEON_LIST = MASTER, SCHEDD
     CONDOR_HOST = {{ .Values.CollectorHost }}
-    CCB_ADDRESS = {{ .Values.CollectorHost }}
+    #CCB_ADDRESS = {{ .Values.CollectorHost }}
     USE_SHARED_PORT = true
     # undefine
     FLOCK_TO =  
