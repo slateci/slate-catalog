@@ -8,6 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     instance:  {{ .Values.Instance }}
 spec:
+  hostNetwork: true
   selector:
     matchLabels:
       app: {{ template "condor-login.fullname" . }}
