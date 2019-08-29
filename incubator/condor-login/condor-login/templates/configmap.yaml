@@ -9,9 +9,9 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 data:
-  90-token.conf: 
-  SEC_DEFAULT_AUTHENTICATION_METHODS = TOKEN,FS
-  SEC_CLIENT_AUTHENTICATION_METHODS = TOKEN,FS
+  90-token.conf: |
+    SEC_DEFAULT_AUTHENTICATION_METHODS = TOKEN,FS
+    SEC_CLIENT_AUTHENTICATION_METHODS = TOKEN,FS
 {{ end }}
 ---
 apiVersion: v1
