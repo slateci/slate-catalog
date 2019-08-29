@@ -54,7 +54,7 @@ spec:
           items:
           - key: token
             path: token
-            mode: 384
+            mode: 420
       {{ end }}
       {{ if and .Values.AuthMethod (eq .Values.AuthMethod "gsi") }}
       - name: {{ template "condor-login.fullname" . }}-hostcert
