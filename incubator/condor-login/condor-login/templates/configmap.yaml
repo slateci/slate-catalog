@@ -14,7 +14,7 @@ data:
     SEC_CLIENT_AUTHENTICATION_METHODS = TOKEN,FS
 {{ end }}
 ---
-{{ if .Values.CollectorHost }}
+{{ if .Values.CentralManager }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -27,8 +27,8 @@ metadata:
 data:
   99-schedd.conf: |+
     DAMEON_LIST = MASTER, SCHEDD
-    CONDOR_HOST = {{ .Values.CollectorHost }}
-    #CCB_ADDRESS = {{ .Values.CollectorHost }}
+    CONDOR_HOST = {{ .Values.CentralManager }}
+    #CCB_ADDRESS = {{ .Values.CentralManager }}
     USE_SHARED_PORT = true
     # undefine
     FLOCK_TO =  

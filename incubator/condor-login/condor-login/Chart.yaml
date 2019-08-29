@@ -1,7 +1,7 @@
 apiVersion: v1
 description: login is
 name: condor-login
-version: 3.3.10
+version: 3.3.11
 appVersion: 1.0.0
 maintainers:
   - name: lincoln bryant
