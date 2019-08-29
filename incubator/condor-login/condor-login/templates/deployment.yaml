@@ -77,6 +77,18 @@ spec:
           env:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
+           {{ if .Values.CentralManager }}
+           - name: _CONDOR_HOST
+             value: {{ .Values.CentralManager }}
+           - name: _CONDOR_CCB_ADDRESS
+             value: {{ .Values.CentralManager }}
+           - name: _CONDOR_DAEMON_LIST
+             value: "MASTER, SCHEDD"
+           - name: _CONDOR_USE_SHARED_PORT
+             value: "TRUE"
+           - name: _CONDOR_FLOCK_TO
+             value: ""
+           {{ end }}
           image: "slateci/condor-login-node"
           imagePullPolicy: Always
           volumeMounts:
