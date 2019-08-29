@@ -1,3 +1,19 @@
+{{ if and .Values.AuthMethod (eq .Values.AuthMethod "token") }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ include "condor-login.fullname" . }}-token-config
+  labels: 
+    app: {{ template "condor-login.fullname" . }}
+    chart: {{ template "condor-login.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+data:
+  90-token.conf: 
+  SEC_DEFAULT_AUTHENTICATION_METHODS = TOKEN,FS
+  SEC_CLIENT_AUTHENTICATION_METHODS = TOKEN,FS
+{{ end }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,19 +26,3 @@ metadata:
 data:
   tconfig-file.conf: |+
 {{ .Values.LoginConfigFile | indent 4 }}
-{{ if and .Values.AuthMethod (eq .Values.AuthMethod "token") }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name:  {{ include "condor-login.fullname" . }}-token-config
-  labels: 
-    app: {{ template "condor-login.fullname" . }}
-    chart: {{ template "condor-login.chart" . }}
-    release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
-data:
-  tconfig-file.conf: |+
-  SEC_DEFAULT_AUTHENTICATION_METHODS = TOKEN,FS
-  SEC_CLIENT_AUTHENTICATION_METHODS = TOKEN,FS
-{{ end }}
