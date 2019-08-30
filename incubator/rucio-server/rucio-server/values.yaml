@@ -10,8 +10,8 @@ authReplicaCount: 1
 
 # When set, run extra busybox containers in the relevant pods to also expose the error logs
 exposeErrorLogs:
-  server: True
-  authServer: True
+  server: False 
+  authServer: False
 
 authServer:
   # Run the authorization server on port 443 instead of 80 and accept X509 certificates and proxies
@@ -77,7 +77,7 @@ ingress:
   #     -----END CERTIFICATE-----
 
 authIngress:
-  enabled: false
+  enabled: true 
   annotations: {}
     # kubernetes.io/ingress.class: traefik
     # traefik.ingress.kubernetes.io/frontend-entry-points: http
