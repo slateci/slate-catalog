@@ -37,13 +37,13 @@ spec:
 {{- if .Values.authServer.useSSL }}
       - name: hostcert
         secret:
-          secretName: rucio-hostcert
+          secretName: {{.Values.SecretNames.hostcert}} 
       - name: hostkey
         secret:
-          secretName: rucio-hostkey
+          secretName: {{.Values.SecretNames.hostkey}}
       - name: cafile
         secret:
-          secretName: rucio-cafile
+          secretName: {{.Values.SecretNames.cafile}}
 {{- end }}
       containers:
 {{- if .Values.exposeErrorLogs.authServer }}

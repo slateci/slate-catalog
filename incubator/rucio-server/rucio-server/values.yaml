@@ -15,12 +15,16 @@ exposeErrorLogs:
 
 authServer:
   # Run the authorization server on port 443 instead of 80 and accept X509 certificates and proxies
-  useSSL: false
+  useSSL: true
   # For SSL, change to 443, https, and https respectively
   servicePort: 80
   targetPort: http
   portName: http
 
+SecretNames:
+  hostcert: rucio-hostcert
+  hostkey: rucio-hostkey
+  cafile: rucio-cafile
 image:
   repository: rucio/rucio-server
   tag: release-1.18.0
@@ -77,7 +81,7 @@ ingress:
   #     -----END CERTIFICATE-----
 
 authIngress:
-  enabled: true 
+  enabled: false 
   annotations: {}
     # kubernetes.io/ingress.class: traefik
     # traefik.ingress.kubernetes.io/frontend-entry-points: http
