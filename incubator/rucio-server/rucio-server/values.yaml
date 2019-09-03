@@ -1,5 +1,5 @@
 #This is for the slate API instance name
-Instance: ''
+Instance: 'global'
 # Default values for rucio.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -11,11 +11,10 @@ authReplicaCount: 1
 # When set, run extra busybox containers in the relevant pods to also expose the error logs
 exposeErrorLogs:
   server: False 
-  authServer: False
 
 authServer:
   # Run the authorization server on port 443 instead of 80 and accept X509 certificates and proxies
-  useSSL: true
+  useSSL: true 
   # For SSL, change to 443, https, and https respectively
   servicePort: 80
   targetPort: http
@@ -25,10 +24,6 @@ SecretNames:
   hostcert: rucio-hostcert
   hostkey: rucio-hostkey
   cafile: rucio-cafile
-image:
-  repository: rucio/rucio-server
-  tag: release-1.18.0
-  pullPolicy: Always
 
 service:
   type: NodePort

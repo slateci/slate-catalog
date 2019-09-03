@@ -46,17 +46,9 @@ spec:
           secretName: {{ .Values.SecretNames.cafile }}
 {{- end }}
       containers:
-{{- if .Values.exposeErrorLogs.authServer }}
-        - name: httpd-error-log
-          image: busybox
-          args: [/bin/sh, -c, 'tail -n+1 -f /var/log/httpd/error_log']
-          volumeMounts:
-          - name: httpdlog
-            mountPath: /var/log/httpd
-{{- end }}
         - name: {{ .Chart.Name }}-auth
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "rucio/rucio-server:release-1.18.0"
+          imagePullPolicy: Always 
           ports:
             - name: http
               containerPort: 80
