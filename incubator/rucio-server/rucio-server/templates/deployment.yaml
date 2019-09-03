@@ -42,7 +42,7 @@ spec:
 {{- end }}
         - name: {{ .Chart.Name }}
           image: "rucio/rucio-server:release-1.18.0"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: Always
           volumeMounts:
           - name: httpdlog
             mountPath: /var/log/httpd

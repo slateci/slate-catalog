@@ -24,10 +24,6 @@ SecretNames:
   hostcert: rucio-hostcert
   hostkey: rucio-hostkey
   cafile: rucio-cafile
-image:
-  repository: rucio/rucio-server
-  tag: release-1.18.0
-  pullPolicy: Always
 
 service:
   type: NodePort

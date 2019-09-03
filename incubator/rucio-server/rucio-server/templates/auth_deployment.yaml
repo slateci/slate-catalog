@@ -48,7 +48,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-auth
           image: "rucio/rucio-server:release-1.18.0"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: Always 
           ports:
             - name: http
               containerPort: 80
