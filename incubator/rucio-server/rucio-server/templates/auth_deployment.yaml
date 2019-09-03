@@ -47,7 +47,7 @@ spec:
 {{- end }}
       containers:
         - name: {{ .Chart.Name }}-auth
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "rucio/rucio-server:release-1.18.0"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

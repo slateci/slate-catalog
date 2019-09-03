@@ -1,5 +1,5 @@
 #This is for the slate API instance name
-Instance: 'rucio-server'
+Instance: 'global'
 # Default values for rucio.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -14,7 +14,7 @@ exposeErrorLogs:
 
 authServer:
   # Run the authorization server on port 443 instead of 80 and accept X509 certificates and proxies
-  useSSLi: true 
+  useSSL: true 
   # For SSL, change to 443, https, and https respectively
   servicePort: 80
   targetPort: http

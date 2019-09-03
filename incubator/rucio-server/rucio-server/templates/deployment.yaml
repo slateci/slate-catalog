@@ -41,7 +41,7 @@ spec:
             mountPath: /var/log/httpd
 {{- end }}
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "rucio/rucio-server:release-1.18.0"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
           - name: httpdlog
