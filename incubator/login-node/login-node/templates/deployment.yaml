@@ -33,12 +33,12 @@ spec:
           env:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
-          {{ if .Values.LDAP.enabled }}
+           {{ if .Values.LDAP.enabled }}
            - name: LDAPSERVER
              value: {{ .Values.LDAP.server }}
            - name: LDAPBASEDN
              value: {{ .Values.LDAP.basedn }}
-          {{ end }}}
+           {{ end }}}
           image: "slateci/login-node"
           imagePullPolicy: Always
           volumeMounts:
