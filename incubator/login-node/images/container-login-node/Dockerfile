@@ -7,7 +7,8 @@ RUN \
 RUN \
   yum install -y openssh-server pwgen supervisor
   
-RUN yum install openssl -y
+RUN yum install openssl -y \
+    yum install -y openldap-clients pam_ldap nss-pam-ldap authconfig 
 
 RUN \
   echo > /etc/sysconfig/i18n

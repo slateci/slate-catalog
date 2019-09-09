@@ -29,3 +29,10 @@ else
 fi
 
 supervisord -n $SUPERVISOR_PARAMS
+
+# Set-up LDAP
+if [ -n "$LDAPSERVER" ] && [ -n "$LDAPBASEDN" ]; then
+  authconfig --enableldap --enableldapauth --ldapserver=$LDAPSERVER --ldapbasedn=$LDAPBASEDN --enableldaptls --update
+else
+  echo 'No LDAP server specified. LDAP Auth is disabled!'
+fi

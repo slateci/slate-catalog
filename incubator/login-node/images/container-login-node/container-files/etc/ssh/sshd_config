@@ -109,6 +109,8 @@ GSSAPICleanupCredentials no
 # problems.
 #UsePAM no
 
+PAMAuthenticationViaKbdInt yes
+
 #AllowAgentForwarding yes
 #AllowTcpForwarding yes
 #GatewayPorts no
