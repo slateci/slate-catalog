@@ -4,6 +4,9 @@ service:
   type: NodePort
   port: 22
   annotations: login-service
+LDAP:
+  server: 10.0.0.1
+  basedn: "dc=example,dc=com"
 LoginConfigFile: |+
    user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
 
