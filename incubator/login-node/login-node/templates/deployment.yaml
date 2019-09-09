@@ -38,7 +38,7 @@ spec:
              value: {{ .Values.LDAP.server }}
            - name: LDAPBASEDN
              value: {{ .Values.LDAP.basedn }}
-           {{ end }}}
+           {{ end }}
           image: "slateci/login-node"
           imagePullPolicy: Always
           volumeMounts:
