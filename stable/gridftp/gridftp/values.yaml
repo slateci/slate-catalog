@@ -12,7 +12,14 @@ GridFTPConfig:
   UserSecretName: gridftp-users
   # The port GridFTP will use. 
   GridFTPPort: 2811
-  # The path for a backing filesystem to be mounted from the host system. 
-  InternalPath: /mnt
   # The path at which the storage should be mounted. 
   ExternalPath: /export
+  # The path for a backing filesystem to be mounted from the host system. 
+  InternalPath: /mnt
+  # The name of a PersistentVolumeClaim which should be mounted as backing storage.
+  PVCName: 
+  # If set, use a nodeSelector (`gridftp=true`) to run only on a matching nodes. 
+  # This is useful when only certain nodes on the cluster mount the appropriate 
+  # backing filesystem. It may be desirable to turn this off when using a PVC as
+  # backing storage, since this tends not to tie to a specific node. 
+  UseNodeSelector: true
