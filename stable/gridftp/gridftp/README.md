@@ -93,7 +93,8 @@ A typical grid-map entry might look like:
 | HostSecretName | The SLATE secret that contains the Host certificate and keys | `gridftp-host-pems` |
 | UserSecretName | The SLATE secret that contains the grid-mapfile for GridFTP, and the /etc/passwd file for the server, named 'grid-mapfile' and 'etc-passwd' respectively | `gridftp-users` |
 | GridFTPPort | The port for data & control channel access to GridFTP. These can be decoupled by advanced configuration | `2811` |
-| InternalPath | A path on the host system which should be mounted into the GridFTP container as back-end storage. | `/mnt`| 
+| InternalPath | A path on the host system which should be mounted into the GridFTP container as back-end storage. Cannot be set at the same time as PVCName. | `/mnt` |
+| PVCName | The name of a PersistentVolumeClaim which should be mounted into the GridFTP container as back-end storage. Cannot be set at the same time as InternalPath. | None | 
 | ExternalPath | The path inside the GridFTP container at which the filesystem specified by `InternalPath` should be mounted. This is the path which will be used in GridFTP URLs to manipulate data on that filesystem. | `/export` | 
 
 For more instructions on how to run GridFTP please see the [GridFTP System Administrator’s Guide](https://gridcf.org/gct-docs/6.2/gridftp/admin/index.html)
@@ -135,6 +136,8 @@ After which the file should be visible in the remote directory:
 	foo.txt
 	
 The ephemeral home directories are useful for testing, and can be used as temporary storage for small files, but for serious use it is normal to configure the `InternalPath` and `ExternalPath` in the values file to mount a non-ephemeral filesystem (typically a large, networked filesystem), and most file transfers will be to or from the base URL `gsiftp://<hostname>/<ExternalPath>/`. 
+
+Instead of using an external backing filesystem, it is also possible to use a PersistentVolumeClaim within Kubernetes as backing storage. This is more suitable for intermediate amounts of data, or for adding an authenticated interface to a PVC in which another application is storing data. 
 
 ### Error when connecting with the wrong hostname
 
