@@ -96,8 +96,12 @@ This will return an instance ID, please note this as it will be needed later.
 
 ---
 # Configuration and Usage
+
+## Backing Storage
+
+This application can use just the ephemeral storage of it own container, an external filesystem provided by the host system, or a PersistentVolumeClaim as the backing storage to (or from) which it can transfer data. If neither `InternalPath` nor `PVCName` is set, only ephemeral storage will be available. `InternalPath` can be set to refer to a path on the host system which should be mounted, or `PVCName` name can be set to mount a PVC by name. If either option is used to mount a volume, `ExternalPath` can be used to set the path within the container at which it will be mounted. 
  
-### Activating the endpoint
+## Activating the endpoint
 Once the application has deployed, you will need to visit globus.org to activate the endpoint.
 
 Click log in, and log in with the same credentials used to deploy the GCSv4 container.
@@ -119,5 +123,5 @@ On the Overview page, click "Activate Endpoint". You will need to enter your adm
 
 Once this has been completed, you can transfer files between the SLATE-deployed Globus endpoint and any other Globus endpoint where you have access.
 
-###Usage
+##Usage
 For further instrucions on how to use globus please read this [documentation](https://docs.globus.org/)
