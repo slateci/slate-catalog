@@ -11,6 +11,8 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
+  type: LoadBalancer
   selector:
     app: {{ template "nextflow-api.name" . }}
     instance: {{ .Values.Instance }}
+

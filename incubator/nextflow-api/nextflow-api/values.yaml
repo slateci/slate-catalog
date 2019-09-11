@@ -4,5 +4,18 @@
 # SLATE API Instance Tag
 Instance: ""
 
+# PVC Values
 PersistentVolumeClaim:
-  Size: 200Gi
+  Name: scidas-cole-helm-pvc
+  Size: 20Gi
+  StorageClass: nfs
+
+# Resource request per container
+Resources:
+  CPU: 250m
+  Memory: 1Gi
+
+# Number of containers
+Replicas: 1
+
+
