@@ -7,7 +7,7 @@ metadata:
     chart: {{ template "faucet.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
-  name: faucet-claim0
+  name: {{ template "faucet.name" . }}
 spec:
   accessModes:
   - ReadWriteOnce
