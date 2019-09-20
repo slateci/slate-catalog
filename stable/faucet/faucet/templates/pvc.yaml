@@ -7,7 +7,6 @@ metadata:
     chart: {{ template "faucet.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
-    io.kompose.service: faucet-claim0
   name: faucet-claim0
 spec:
   accessModes:
