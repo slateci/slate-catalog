@@ -18,7 +18,7 @@ RUN curl -s -o /etc/yum.repos.d/htcondor-testing-rhel7.repo https://research.cs.
 
 RUN yum -y install osg-flock
 
-RUN yum -y install cronie
+# ran into a weird problem here
 
 # Copy the Gratia probe into the correct place
 RUN cp /etc/gratia/condor/ProbeConfig-flocking /etc/gratia/condor/ProbeConfig
