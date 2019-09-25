@@ -1,8 +1,7 @@
 Instance: ''
 replicaCount: 1
 service:
-  type: NodePort
-  port: 29001
+  type: LoadBalancer
   annotations: login-service
 
 # valid AuthMethods are: token, gsi
