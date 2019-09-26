@@ -6,9 +6,13 @@ Instance: ""
 
 # PVC Values
 PersistentVolumeClaim:
-  Name: scidas-cole-helm-pvc
+  Name: scidas-cole-helm-pvc-new
   Size: 20Gi
   StorageClass: nfs
+
+Remote:
+  Context: nautilus
+  
 
 # Resource request per container
 Resources:
@@ -17,5 +21,4 @@ Resources:
 
 # Number of containers
 Replicas: 1
-
 
