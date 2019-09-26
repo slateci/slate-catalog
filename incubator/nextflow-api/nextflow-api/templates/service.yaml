@@ -15,4 +15,25 @@ spec:
   selector:
     app: {{ template "nextflow-api.name" . }}
     instance: {{ .Values.Instance }}
-
+---
+{{ if .Values.Ingress.Enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metdata:
+  name: {{ template "nextflow-api.fullname" . }}
+  labels:
+    app: {{ template "nextflow-api.name" . }}
+    chart: {{ template "nextflow-api.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.Ingress.Class }}
+  spec:
+    rules:
+    - host: {{ .Values.Ingress.Subdomain }}.{{ .Values.SLATE.Cluster.DNSName }}
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: {{ template "nextflow-api.fullname" . }}
+            servicePort: 8080
