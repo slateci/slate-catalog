@@ -37,3 +37,4 @@ metdata:
           backend:
             serviceName: {{ template "nextflow-api.fullname" . }}
             servicePort: 8080
+{{ end }}}
