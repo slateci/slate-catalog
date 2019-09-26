@@ -4,16 +4,21 @@
 # SLATE API Instance Tag
 Instance: ""
 
-# PVC Values
+# PVC
 PersistentVolumeClaim:
+  # If true, use PVC on local cluster.
+  # Otherwise, PVC on remote cluster will be used
+  # (temp, future will be dynamically configurable)
+  Enabled: true
   Name: scidas-cole-helm-pvc-new
   Size: 20Gi
   StorageClass: nfs
 
+# Remote cluster settings(temp, future will be dynamically configurable)
 Remote:
   Context: nautilus
+  PVC: deepgtex-prp
   
-
 # Resource request per container
 Resources:
   CPU: 250m
