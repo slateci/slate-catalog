@@ -11,6 +11,10 @@ spec:
   replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "faucet.name" . }}
+      instance: {{ .Values.Instance }}
   template:
     metadata:
       creationTimestamp: null
@@ -33,14 +37,14 @@ spec:
         command: ["sh", "-c", "faucet"]
         volumeMounts:
         - mountPath: /var/log/faucet
-          name: faucet-claim0
+          name: {{ template "faucet.name" . }}-claim
         - mountPath: /etc/faucet
           name: faucet-{{ .Values.Instance }}-configuration
       restartPolicy: Always
       volumes:
-      - name: faucet-claim0
+      - name: {{ template "faucet.name" . }}-claim
         persistentVolumeClaim:
-          claimName: faucet-claim0
+          claimName: {{ template "faucet.name" . }}
       - name: faucet-{{ .Values.Instance }}-configuration
         configMap:
           name: faucet-{{ .Values.Instance }}-configuration
