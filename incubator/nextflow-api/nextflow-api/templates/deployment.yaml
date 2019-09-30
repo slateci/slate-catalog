@@ -31,7 +31,7 @@ spec:
         command:
         - /bin/bash
         - -c
-        - cd /opt/nextflow-api; kubectl config current-context; python3 server.py
+        - cd /opt/nextflow-api; cp -R /etc/.kube /root; kubectl config --kubeconfig=/root/.kube/config use-context {{ .Values.Remote.Context }}; kubectl get pods; python3 server.py
         resources:
           requests:
             cpu: {{ .Values.Resources.CPU }}
@@ -39,9 +39,15 @@ spec:
         volumeMounts:
         - name: vol-1
           mountPath: /workspace
+        - name: conf
+          mountPath: "/etc/.kube"
         ports:
         - containerPort: 8080
       volumes:
       - name: vol-1
         persistentVolumeClaim:
           claimName: {{ .Values.PersistentVolumeClaim.Name }}
+      - name: conf
+        secret:
+          secretName: kubeconfig
+          defaultMode: 256

@@ -4,12 +4,21 @@
 # SLATE API Instance Tag
 Instance: ""
 
-# PVC Values
+# PVC
 PersistentVolumeClaim:
-  Name: scidas-cole-helm-pvc
+  # If true, use PVC on local cluster.
+  # Otherwise, PVC on remote cluster will be used
+  # (temp, future will be dynamically configurable)
+  Enabled: true
+  Name: scidas-cole-helm-pvc-new
   Size: 20Gi
   StorageClass: nfs
 
+# Remote cluster settings(temp, future will be dynamically configurable)
+Remote:
+  Context: nautilus
+  PVC: deepgtex-prp
+  
 # Resource request per container
 Resources:
   CPU: 250m
@@ -18,4 +27,22 @@ Resources:
 # Number of containers
 Replicas: 1
 
+# Ingress control settings
+Ingress:
+  # If true, use ingress control.
+  # Otherwise, generic LoadBalancer networking will be used, 
+  # and the other settings in this section will be ignored.
+  Enabled: true
+  # The subdomain to associate with this service.
+  # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
+  Subdomain: nextflow
+  # The class of the ingress controller to use. 
+  # For SLATE this should be 'slate'. 
+  Class: slate
+
+### SLATE-START ###
+SLATE:
+  Cluster:
+    DNSName: "some-cluster.slateci.net"
+### SLATE-END ###
 
