@@ -42,7 +42,6 @@ priorityClassName: ""
 ##
 existingSecret: "miniosecret"
 configPath: "/root/.minio/"
-configPathmc: "/root/.mc/"
 mountPath: "/export"
 replicas: 4
 
@@ -158,28 +157,6 @@ resources:
     memory: 256Mi
     cpu: 250m
 
-## Create a bucket after minio install
-##
-defaultBucket:
-  enabled: false
-  ## If enabled, must be a string with length > 0
-  name: bucket
-  ## Can be one of none|download|upload|public
-  policy: none
-  ## Purge if bucket exists already
-  purge: false
-
-## Create multiple buckets after minio install
-## Enabling `defaultBucket` will take priority over this list
-##
-buckets: []
-  # - name: bucket1
-  #   policy: none
-  #   purge: false
-  # - name: bucket2
-  #   policy: none
-  #   purge: false
-
 s3gateway:
   enabled: false
   replicas: 4
@@ -194,7 +171,6 @@ azuregateway:
 
 ## Use minio as GCS (Google Cloud Storage) gateway, you should disable data persistence so no volume claim are created.
 ## https://docs.minio.io/docs/minio-gateway-for-gcs
-
 gcsgateway:
   enabled: false
   # Number of parallel instances
@@ -212,7 +188,6 @@ ossgateway:
 
 ## Use minio on NAS backend
 ## https://docs.minio.io/docs/minio-gateway-for-nas
-
 nasgateway:
   enabled: false
   # Number of parallel instances
@@ -257,12 +232,3 @@ serviceAccount:
   ## The name of the service account to use. If 'create' is 'true', a service account with that name
   ## will be created. Otherwise, a name will be auto-generated.
   name:
-
-metrics:
-  # Metrics can not be disabled yet: https://github.com/minio/minio/issues/7493
-  serviceMonitor:
-    enabled: false
-    additionalLabels: {}
-    # namespace: monitoring
-    # interval: 30s
-    # scrapeTimeout: 10s
