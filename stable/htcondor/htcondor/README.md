@@ -14,6 +14,9 @@ This SLATE application requires a pool password secret to be installed on the ta
 ### Deployment
 ```console
 $ slate app get-conf htcondor > htcondor.yaml
+$ slate secret create condor-password --group <group-name> --cluster <cluster-name> --from-literal 'condor_password=<pool password>'
+#  OR, if your pool password is stored in a file
+$ slate secret create condor-password --group <group-name> --cluster <cluster-name> --from-file 'condor_password=<password file>'
 $ slate app install --group <group-name> --cluster <cluster-name> --conf htcondor.yaml htcondor
 ```
 ---
@@ -32,12 +35,14 @@ SEC_ENABLE_MATCH_PASSWORD_AUTHENTICATION = TRUE
 SEC_PASSWORD_FILE = /etc/condor/condor_password
 ```
 
+where /etc/condor/condor_password contains the password that is also stored in your PasswordFileSecret. 
+
 ### Configuration options
 | Parameter | Description | Default |
 | --------  | ----------  | ------- |
 | Instances | Number of HTCondor worker nodes | `1` |
 | CollectorHost | The HTCondor central manager | `localhost` |
-| PasswordFileSecret | The SLATE secret that contains the HTCondor pool password | `condor-password` |
+| PasswordFileSecret | The SLATE secret that contains the HTCondor pool password, which should be stored under the key `condor_password` | `condor-password` |
 | MemoryLimit | The total amount of memory that is requested by the HTCondor pod - **NOTE** the HTcondor slots are configured to be partitionable by default | `512` |
 | NumberCPUs | The total number of CPUs requested by the HTCondor pod. **NOTE** The HTCondor slots are configured to be partitionable by default. | `1` | 
 | UseGPUs | If enabled, will attempt to create expose request GPUs via the nvidia-docker plugin and expose them as a GPU classad. The image currently uses CUDA driver v9.1.85 which likely needs to match the driver version on the host  | `false` |  
