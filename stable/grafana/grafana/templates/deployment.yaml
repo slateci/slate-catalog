@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "grafana.fullname" . }}
@@ -6,7 +6,6 @@ metadata:
     app: {{ template "grafana.name" . }}
     chart: {{ template "grafana.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
     instance: {{ .Values.Instance }}
 {{- with .Values.annotations }}
   annotations:
@@ -27,7 +26,9 @@ spec:
     metadata:
       labels:
         app: {{ template "grafana.name" . }}
+        chart: {{ template "grafana.chart" . }}
         release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
 {{- with .Values.podAnnotations }}
       annotations:
 {{ toYaml . | indent 8 }}
