@@ -74,6 +74,7 @@ data:
     policy = DEFAULT
     cache_size = DEFAULT
     memory_size = DEFAULT
+{{ if .Values.Cluster.GridmapOverride}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -86,8 +87,9 @@ metadata:
     release: {{ .Release.Name }}
 data:
   gridmap-file: |+
-{{ .Values.GridmapOverride | ident 4 }}
-{{ if .Values.Cluster.CustomizationScript}}
+{{ .Values.GridmapOverride | indent 4 }}
+{{ end }}
+{{ if .Values.CustomizationScript}}
 ---
 apiVersion: v1
 kind: ConfigMap
