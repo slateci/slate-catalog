@@ -86,7 +86,7 @@ metadata:
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
-  gridmap-file: |+
+  grid-mapfile: |+
 {{ .Values.GridmapOverride | indent 4 }}
 {{ end }}
 {{ if .Values.CustomizationScript}}
