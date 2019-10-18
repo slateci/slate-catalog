@@ -74,7 +74,19 @@ data:
     policy = DEFAULT
     cache_size = DEFAULT
     memory_size = DEFAULT
-
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
+  labels:
+    app: osg-hosted-ce
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  gridmap-file: |+
+{{ .Values.GridmapOverride | ident 4 }}
 {{ if .Values.Cluster.CustomizationScript}}
 ---
 apiVersion: v1
@@ -87,6 +99,7 @@ metadata:
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
-  {{ .Values.Cluster.Batch }}-local-submit-attributes.sh: |
-{{ .Values.Cluster.CustomizationScript | indent 4 }}
+  {{ .Values.Cluster.Batch }}-local-submit-attributes.sh: |+
+{{ .Values.CustomizationScript | indent 4 }}
 {{ end }}
+---

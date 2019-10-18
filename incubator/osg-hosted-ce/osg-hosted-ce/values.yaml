@@ -36,10 +36,18 @@ Squid:
   Enabled: True
   Location: squid.grid.uchicago.edu
 
- # The following script will run on the _remote_ cluster when jobs are
- # submitted. The script will get stored into:
- #    ~${username}/bosco/glite/bin/${batch}_local_submit_attributes.sh
- # on the remote cluster
- #CustomizationScript: |+
- #  #!/bin/sh 
- #  ... 
+# If you wish to allow yourself to submit to this CE with your personal grid
+# proxy, you can put that in below. This will get directly mapped into
+# /etc/grid-security/grid-mapfile
+#
+#GridmapOverride: |+
+#  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osg
+
+# The following script will run on the _remote_ cluster when jobs are
+# submitted. The script will get stored into:
+#    ~${username}/bosco/glite/bin/${batch}_local_submit_attributes.sh
+# on the remote cluster
+#
+#CustomizationScript: |+
+#  #!/bin/sh 
+#  ... 
