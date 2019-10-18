@@ -81,7 +81,6 @@ spec:
         - name: CE_USERS
           value: {{ .Values.Cluster.Users }}
         {{ if .Values.CustomizationScript }}
-        env:
         - name: LOCAL_ATTRIBUTES_FILE
           value: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
         {{ end }}
