@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.Replicas }}
   selector:
     matchLabels:
       app: {{ template "nextflow-api.name" . }}
@@ -21,26 +21,33 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
+      serviceAccountName: nextflow-api-auth-svc
       containers:
       - name: nextflow-server
-        image: bentsherman/nextflow-gke
+        image: cbmckni/nextflow-api
         env:
         - name: NEXTFLOW_K8S
           value: "true"
         command:
         - /bin/bash
         - -c
-        - cd /opt/nextflow-gke; python3 server.py
+        - cd /opt/nextflow-api; cp -R /etc/.kube /root; kubectl config --kubeconfig=/root/.kube/config use-context {{ .Values.Remote.Context }}; kubectl get pods; python3 server.py
         resources:
           requests:
-            cpu: 1
-            memory: 4Gi
+            cpu: {{ .Values.Resources.CPU }}
+            memory: {{ .Values.Resources.Memory }}
         volumeMounts:
         - name: vol-1
           mountPath: /workspace
+        - name: conf
+          mountPath: "/etc/.kube"
         ports:
         - containerPort: 8080
       volumes:
       - name: vol-1
         persistentVolumeClaim:
-          claimName: {{ template "nextflow-api.fullname" . }}-deepgtex-prp
+          claimName: {{ .Values.PersistentVolumeClaim.Name }}
+      - name: conf
+        secret:
+          secretName: kubeconfig
+          defaultMode: 256

@@ -7,13 +7,12 @@ metadata:
     chart: {{ template "faucet.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
-    io.kompose.service: faucet-claim0
-  name: faucet-claim0
+  name: {{ template "faucet.name" . }}
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
       storage: 100Mi
-  storageClassName: nfs-provisioner
+  storageClassName: {{ .Values.storageClassName }}
 status: {}

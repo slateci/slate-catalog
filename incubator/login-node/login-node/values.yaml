@@ -1,16 +1,25 @@
 Instance: ''
+
+# Set the number of login nodes to run
 replicaCount: 1
+
+# You can configure NodePort or LoadBalancer here for your Login Node
 service:
   type: NodePort
   port: 22
   annotations: login-service
+
+# If you are using LDAP-based authentication, you can set `enabled=true` here
+# and plug in the appropriate values for your LDAP server
 LDAP: 
   enabled: true
   server: 10.0.0.1
   basedn: "dc=example,dc=com"
+
+# If you're using hand-crafted users with key-based authentication, you can
+# make a passwd(5) style file here and the container will parse it on startup
+# and create the appropriate users with their public keys
 LoginConfigFile: |+
    user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
-
    user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key
-
    user_name:x:user_id:group_id::/home/user_name:/bin/bash:user_public_key

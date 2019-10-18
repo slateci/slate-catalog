@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "nextflow-api.fullname" . }}-deepgtex-prp
+  name: {{ .Values.PersistentVolumeClaim.Name }}
   labels:
     app: {{ template "nextflow-api.name" . }}
     chart: {{ template "nextflow-api.chart" . }}
@@ -10,7 +10,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: nfs-client
+  storageClassName: {{ .Values.PersistentVolumeClaim.StorageClass }}
   resources:
     requests:
       storage: {{ .Values.PersistentVolumeClaim.Size }}

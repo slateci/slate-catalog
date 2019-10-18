@@ -1,7 +1,7 @@
 {{ if and .Values.GridFTPConfig.InternalPath .Values.GridFTPConfig.PVCName }}
   {{ required "InternalPath and PVCName should not both be set" .Values.Error_DoNotSet }}
 {{ end }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment 
 metadata:
   name: {{ template "gridftp.fullname" . }} 
@@ -12,6 +12,12 @@ metadata:
     instance: {{ .Values.Instance }}
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "gridftp.fullname" . }}
+      chart: {{ template "gridftp.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:

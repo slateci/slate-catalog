@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "perfsonar-testpoint.fullname" . }}
@@ -9,6 +9,12 @@ metadata:
     instance: {{ .Values.Instance }}
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "perfsonar-testpoint.name" . }}
+      chart: {{ template "perfsonar-testpoint.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
   strategy:
     type: Recreate
   template:
