@@ -25,7 +25,6 @@ Storage:
 
 Subcluster:
   Name: UCHICAGO-SLATE
-  NodeCount: 1
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
