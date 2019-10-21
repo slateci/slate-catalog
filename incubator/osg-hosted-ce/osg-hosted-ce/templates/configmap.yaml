@@ -83,7 +83,7 @@ metadata:
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
-  {{ .Values.Cluster.Batch }}-local-submit-attributes.sh: |+
+  {{ .Values.Cluster.Batch }}_local_submit_attributes.sh: |+
 {{ .Values.CustomizationScript | indent 4 }}
 {{ end }}
 ---
