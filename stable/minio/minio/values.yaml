@@ -5,17 +5,6 @@ Instance: ""
 ##
 clusterDomain: cluster.local
 
-## Set default image, imageTag, and imagePullPolicy. mode is used to indicate the
-##
-image:
-  tag: RELEASE.2019-08-07T01-59-21Z
-
-## Set default image, imageTag, and imagePullPolicy for the `mc` (the minio
-## client used to create a default bucket).
-##
-mcImage:
-  tag: RELEASE.2019-08-07T23-14-43Z
-
 ## minio server mode, i.e. standalone or distributed.
 ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
 ##
