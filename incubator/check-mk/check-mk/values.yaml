@@ -3,10 +3,6 @@
 # Declare variables to be passed into your templates.\
 Instance: global
 replicaCount: 1
-image:
-  repository: "nlmacamp/check_mk"
-  tag: "latest"
-  pullPolicy: IfNotPresent
 service:
   name: check-mk
   type: NodePort

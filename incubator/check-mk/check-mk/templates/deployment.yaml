@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: checkmk/check-mk-raw:1.5.0-latest
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: checkmk/check-mk-raw:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.service.internalPort }}
           livenessProbe:
