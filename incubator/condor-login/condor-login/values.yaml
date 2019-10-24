@@ -3,6 +3,7 @@ replicaCount: 1
 service:
   type: LoadBalancer
   annotations: login-service
+  port: 22
 
 # valid AuthMethods are: token, gsi
 AuthMethod: token
