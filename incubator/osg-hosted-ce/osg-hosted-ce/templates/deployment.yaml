@@ -83,4 +83,6 @@ spec:
         {{ if .Values.CustomizationScript }}
         - name: LOCAL_ATTRIBUTES_FILE
           value: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
+        - name: slurm_binpath
+          value: {{ .Values.SiteConfig.SlurmBinPath }}
         {{ end }}
