@@ -34,6 +34,11 @@ Squid:
   Enabled: True
   Location: squid.grid.uchicago.edu
 
+# Special site specific modifications
+
+SiteConfig:
+  SlurmBinPath: ''
+
 # If you wish to allow yourself to submit to this CE with your personal grid
 # proxy, you can put that in below. This will get directly mapped into
 # /etc/grid-security/grid-mapfile
