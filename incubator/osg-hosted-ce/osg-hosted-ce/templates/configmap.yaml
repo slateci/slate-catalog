@@ -87,15 +87,3 @@ data:
 {{ .Values.CustomizationScript | indent 4 }}
 {{ end }}
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: osg-hosted-ce-{{ .Values.Instance }}-site-variables
-  labels:
-    app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
-    instance: {{ .Values.Instance }}
-    release: {{ .Release.Name }}
-data:
-  slurm_binpath={{ .Values.SiteConfig.SlurmBinPath }}
----
