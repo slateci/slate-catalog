@@ -16,4 +16,16 @@ pipeline{
 			}
 		}
 	}
+	post{
+		always{
+			script{
+				if(currentBuild.currentResult == "SUCCESS"){
+					slackSend(channel: "jenkins", color: "good", message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} (Branch: ${env.GIT_BRANCH}) succeeded (${env.BUILD_URL})")
+				}
+				if(currentBuild.currentResult == "FAILURE"){
+					slackSend(channel: "jenkins", color: "danger", message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} (Branch: ${env.GIT_BRANCH}) failed (${env.BUILD_URL})")
+				}
+			}
+		}
+	}
 }
