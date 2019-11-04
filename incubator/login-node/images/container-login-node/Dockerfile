@@ -5,7 +5,7 @@ RUN \
   yum install -y epel-release
 
 RUN \
-  yum install -y openssh-server pwgen supervisor
+  yum install -y openssh-server pwgen supervisor authconfig
   
 RUN yum install openssl -y \
     yum install -y openldap-clients pam_ldap nss-pam-ldap authconfig 
