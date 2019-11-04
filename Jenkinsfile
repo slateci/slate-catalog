@@ -18,7 +18,7 @@ pipeline{
 		stage("Log"){
 			steps{
 				sh "mkdir -p /usr/share/nginx/html/buildresults/${env.JOB_NAME}"
-				sh "sed 's|.\[8m[^[]*.\[0m||g'../builds/${env.BUILD_NUMBER}/log > /usr/share/nginx/html/buildresults/${env.JOB_NAME}/${env.BUILD_NUMBER}-log.txt"
+				sh "cp ../builds/${env.BUILD_NUMBER}/log /usr/share/nginx/html/buildresults/${env.JOB_NAME}/${env.BUILD_NUMBER}-log.txt"
 			}
 		}
 	}
