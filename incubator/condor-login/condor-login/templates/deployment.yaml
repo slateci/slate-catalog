@@ -81,7 +81,6 @@ spec:
             path: hostkey.pem
             mode: 384
       {{ end }}
-      hostNetwork: true
       containers:
         - name: {{ .Chart.Name }}
           env:
