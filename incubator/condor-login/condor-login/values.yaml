@@ -3,6 +3,7 @@ replicaCount: 1
 service:
   type: LoadBalancer
   annotations: login-service
+  port: 22
 
 # valid AuthMethods are: token, gsi
 AuthMethod: token
@@ -12,6 +13,10 @@ TokenSecret: token
 #HostKeySecret: hostkey
 #HostCertSecret: hostcert
 
+Kerberos:
+  enabled: true
+  realm: "AD.UTAH.EDU"
+  kdc: "ring.ad.utah.edu:88,dc-ebc.ad.utah.edu:88,dc-dps.ad.utah.edu:88"
 
 # If you want worker nodes to connect to this pool, do not define a
 # CentralManager.  This will create a HTCondor collector and negotiator within

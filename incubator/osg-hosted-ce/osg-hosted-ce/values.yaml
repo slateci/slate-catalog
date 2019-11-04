@@ -13,7 +13,7 @@ Site:
   Longitude: 87.6298
 
 Cluster:
-  Users: osg
+  Users: osg, cmsuser, usatlas2, glow
   Endpoint: lincolnb@slate-micro-condor.slateci.io
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
   Batch: condor
