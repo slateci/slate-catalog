@@ -87,6 +87,12 @@ spec:
           env:
            - name: PASSWDFILE
              value: "root/tconfig-file.conf"
+           {{ if .Values.Kerberos.enabled }}
+           - name: KRBREALM
+             value: {{ .Values.Kerberos.realm }}
+           - name: KRBKDC
+             value: {{ .Values.Kerberos.kdc }} 
+           {{ end }}
           image: "slateci/condor-login-node"
           imagePullPolicy: Always
           volumeMounts:
