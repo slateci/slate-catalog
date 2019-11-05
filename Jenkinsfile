@@ -15,18 +15,14 @@ pipeline{
 				}
 			}
 		}
-		stage("Log"){
-			steps{
-				def RESULTS_URL = sh (
-					script: "/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER} ${currentbuild.currentResult}",
-					returnStdout: true
-				).trim()
-			}
-		}
 	}
 	post{
 		always{
 			script{
+				RESULTS_URL = sh (
+					script: "/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER} ${currentbuild.currentResult}",
+					returnStdout: true
+				).trim()
 				if(currentBuild.currentResult == "FAILURE"){
 					slackSend(channel: "jenkins", color: "danger", message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} (Branch: ${env.GIT_BRANCH}) failed (${RESULTS_URL})")
 				}
