@@ -17,7 +17,10 @@ pipeline{
 		}
 		stage("Log"){
 			steps{
-				RESULTS_URL = sh ("/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER} ${currentbuild.currentResult}").trim()
+				RESULTS_URL = sh (
+					script: "/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER} ${currentbuild.currentResult}"
+					returnStdout: true
+				).trim()
 			}
 		}
 	}
