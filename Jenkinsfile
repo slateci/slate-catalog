@@ -17,7 +17,7 @@ pipeline{
 		}
 		stage("Log"){
 			steps{
-				sh "/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+				RESULTS_URL = sh ("/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER} ${currentbuild.currentResult}").trim()
 			}
 		}
 	}
@@ -25,7 +25,7 @@ pipeline{
 		always{
 			script{
 				if(currentBuild.currentResult == "FAILURE"){
-					slackSend(channel: "jenkins", color: "danger", message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} (Branch: ${env.GIT_BRANCH}) failed (${env.BUILD_URL})")
+					slackSend(channel: "jenkins", color: "danger", message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} (Branch: ${env.GIT_BRANCH}) failed (${RESULTS_URL})")
 				}
 			}
 		}
