@@ -17,8 +17,7 @@ pipeline{
 		}
 		stage("Log"){
 			steps{
-				sh "mkdir -p /usr/share/nginx/html/buildresults/${env.JOB_NAME}"
-				sh "cp ../builds/${env.BUILD_NUMBER}/log /usr/share/nginx/html/buildresults/${env.JOB_NAME}/${env.BUILD_NUMBER}-log.txt"
+				sh "/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER}"
 			}
 		}
 	}
