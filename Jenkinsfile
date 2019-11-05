@@ -20,7 +20,7 @@ pipeline{
 		always{
 			script{
 				RESULTS_URL = sh (
-					script: "/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER} ${currentbuild.currentResult}",
+					script: "/usr/local/bin/log-jenkins.sh ${env.JOB_NAME} ${env.BUILD_NUMBER} ${currentBuild.currentResult}",
 					returnStdout: true
 				).trim()
 				if(currentBuild.currentResult == "FAILURE"){
