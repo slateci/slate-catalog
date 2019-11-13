@@ -34,6 +34,13 @@ Squid:
   Enabled: True
   Location: squid.grid.uchicago.edu
 
+# Options to allow override of the bosco directory from arbitrary git repos
+BoscoOverrides:
+  Enabled: true
+  GitEndpoint: git@gitlab.mwt2.org:osg/hosted-ce-config.git
+  Subdirectory: OSG_US_NEWJERSEY_ELSA
+  GitSecretKey: mwtGitLabSecret
+
 # If you wish to allow yourself to submit to this CE with your personal grid
 # proxy, you can put that in below. This will get directly mapped into
 # /etc/grid-security/grid-mapfile
