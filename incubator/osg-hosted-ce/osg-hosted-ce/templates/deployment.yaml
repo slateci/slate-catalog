@@ -44,7 +44,6 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
-      hostNetwork: true
       containers:
       - name: osg-hosted-ce
         image: slateci/container-osg-hostedce:latest
@@ -65,15 +64,18 @@ spec:
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
         {{ end }}
+        ports:
+        - name: htcondor-ce
+          containerPort: 9619
+          protocol: TCP
+        - name: http # needed to get a cert issued from Let's Encrypt
+          containerPort: 80
+          protocol: TCP
         env:
         - name: _CONDOR_NETWORK_HOSTNAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
+          value: {{ .Values.Networking.Hostname }}
         - name: CE_HOSTNAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
+          value: {{ .Values.Networking.Hostname }}
         - name: ENDPOINT
           value: {{ .Values.Cluster.Endpoint }}
         - name: CE_CONTACT
