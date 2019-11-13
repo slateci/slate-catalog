@@ -49,12 +49,17 @@ spec:
       - name: osg-hosted-ce
         image: slateci/container-osg-hostedce:latest
         volumeMounts:
-        - name: osg-hosted-ce-{{ .Values.Instance}}-configuration
+        - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
           mountPath: /tmp/99-local.ini
           subPath: 99-local.ini
         - name: bosco-ssh-private-key-volume
           mountPath: /etc/osg/bosco.key
           subPath: bosco.key
+        {{ if .Values.BoscoOverrides.RepoNeedsPrivKey}}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
+          mountPath: /etc/osg/git.key
+          subPath: git.key
+        {{ end }}
         {{ if .Values.CustomizationScript }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
           mountPath: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
@@ -83,4 +88,10 @@ spec:
         {{ if .Values.CustomizationScript }}
         - name: LOCAL_ATTRIBUTES_FILE
           value: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
+        {{ end }}
+        {{ if .Values.BoscoOverrides.Enabled }}
+        - name: BOSCO_GIT_ENDPOINT
+          value: {{ .Values.BoscoOverrides.GitEndpoint }}
+        - name: BOSCO_DIRECTORY
+          value: {{ .Values.BoscoOverrides.Subdirectory }}
         {{ end }}
