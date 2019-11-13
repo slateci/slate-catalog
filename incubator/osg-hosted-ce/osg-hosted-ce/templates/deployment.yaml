@@ -44,6 +44,15 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
+      {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
+        secret:
+          secretName: {{ .Values.BoscoOverrides.GitKeySecret }}
+          items:
+          - key: git.key
+            path: git.key
+            mode: 256 
+      {{ end }}
       hostNetwork: true
       containers:
       - name: osg-hosted-ce
@@ -55,7 +64,7 @@ spec:
         - name: bosco-ssh-private-key-volume
           mountPath: /etc/osg/bosco.key
           subPath: bosco.key
-        {{ if .Values.BoscoOverrides.RepoNeedsPrivKey}}
+        {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
           mountPath: /etc/osg/git.key
           subPath: git.key
