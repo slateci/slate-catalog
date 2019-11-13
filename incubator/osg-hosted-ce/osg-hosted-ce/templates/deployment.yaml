@@ -26,7 +26,7 @@ spec:
       volumes:
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
-          name: osg-hosted-ce-{{ .Values.Instance}}-configuration
+          name: osg-hosted-ce-{{ .Values.Instance }}-configuration
       {{ if .Values.CustomizationScript }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
         configMap:
