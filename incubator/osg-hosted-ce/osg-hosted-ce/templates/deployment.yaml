@@ -53,14 +53,14 @@ spec:
             path: git.key
             mode: 256 
       {{ end }}
-      {{ if .Values.HTTPLogging.Enabled }}
+      {{ if .Values.HTTPLogger.Enabled }}
       - name: log-volume
         emptydir: {} 
       - name: osg-hosted-ce-{{ .Values.Instance }}-logpasswd
         configMap:
           name: {{ template "application.fullname" . }}-logpasswd
       {{ end }}
-      {{ if .Values.HTTPLogging.Enabled }}
+      {{ if .Values.HTTPLogger.Enabled }}
       containers:
       - name: logging-sidecar
         volumeMounts:
