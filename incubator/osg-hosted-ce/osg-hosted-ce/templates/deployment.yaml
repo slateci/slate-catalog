@@ -55,7 +55,7 @@ spec:
       {{ end }}
       containers:
       - name: osg-hosted-ce
-        image: slateci/container-osg-hostedce:latest
+        image: opensciencegrid/hosted-ce:fresh
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
           mountPath: /tmp/99-local.ini
@@ -106,3 +106,7 @@ spec:
         - name: BOSCO_DIRECTORY
           value: {{ .Values.BoscoOverrides.Subdirectory }}
         {{ end }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/local/bin/drain-ce.sh"]
