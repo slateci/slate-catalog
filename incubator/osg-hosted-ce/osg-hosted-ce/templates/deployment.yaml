@@ -60,7 +60,7 @@ spec:
         emptydir: {} 
       - name: osg-hosted-ce-{{ .Values.Instance }}-logpasswd
         configMap:
-          name: {{ template "application.fullname" . }}-logpasswd
+          name: osg-hosted-ce-{{ .Values.Instance }}-logpasswd
       {{ end }}
       containers:
       {{ if .Values.HTTPLogger.Enabled }}
