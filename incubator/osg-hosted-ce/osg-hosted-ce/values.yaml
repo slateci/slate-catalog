@@ -52,6 +52,10 @@ BoscoOverrides:
   RepoNeedsPrivKey: true
   GitKeySecret: mwtGitLabSecret
 
+# Enable a logging sidecar
+HTTPLogger:
+  Enabled: false
+
 # If you wish to allow yourself to submit to this CE with your personal grid
 # proxy, you can put that in below. This will get directly mapped into
 # /etc/grid-security/grid-mapfile

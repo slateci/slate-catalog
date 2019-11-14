@@ -18,6 +18,12 @@ spec:
     port: 80
     targetPort: http
     protocol: TCP
+  {{ if .Values.HTTPLogger.Enabled }}
+  - port: 8080
+    targetPort: logs
+    protocol: TCP
+    name: logs
+  {{ end }}
   {{ if .Values.Networking.RequestIP }}
   loadBalancerIP: {{ .Values.Networking.RequestIP }}
   {{ end }}

@@ -86,4 +86,17 @@ data:
   {{ .Values.Cluster.Batch }}_local_submit_attributes.sh: |+
 {{ .Values.CustomizationScript | indent 4 }}
 {{ end }}
+{{ if .Values.HTTPLogger.Enabled }}
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-logpasswd
+  labels:
+    app: osg-hosted-ce
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  htpasswd: condor:$apr1$DCKqQH3N$28tCq.SR5dinWT9fwLurq0
+{{ end }}
