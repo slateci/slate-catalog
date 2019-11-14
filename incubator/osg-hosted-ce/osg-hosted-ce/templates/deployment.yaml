@@ -44,6 +44,7 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
+      {{ if .Values.BoscoOverrides.Enabled }}
       {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
         secret:
@@ -52,6 +53,7 @@ spec:
           - key: git.key
             path: git.key
             mode: 256 
+      {{ end }}
       {{ end }}
       {{ if .Values.HTTPLogger.Enabled }}
       - name: log-volume
