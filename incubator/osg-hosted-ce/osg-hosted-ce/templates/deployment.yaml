@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "osg-hosted-ce.fullname" . }}
+  name: sl-uu-hce1
   labels:
     app: {{ template "osg-hosted-ce.name" . }}
     chart: {{ template "osg-hosted-ce.chart" . }}
