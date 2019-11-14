@@ -67,7 +67,7 @@ spec:
       - name: logging-sidecar
         volumeMounts:
         - name: log-volume
-          mountPath: /var/log/condor-ce
+          mountPath: /usr/share/nginx/html
         - name: osg-hosted-ce-{{ .Values.Instance }}-logpasswd
           mountPath: /etc/nginx/auth
         ports: 
