@@ -57,7 +57,7 @@ spec:
       {{ end }}
       {{ if .Values.HTTPLogger.Enabled }}
       - name: log-volume
-        emptydir: {} 
+        emptyDir: {} 
       - name: osg-hosted-ce-{{ .Values.Instance }}-logpasswd
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-logpasswd
