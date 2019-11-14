@@ -107,6 +107,15 @@ spec:
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
         {{ end }}
+        {{ if .Values.HTTPLogger.Enabled }}
+        initContainers:
+        - name: logging-sidecar-init
+          image: opensciencegrid/hosted-ce:fresh
+          command: ['/bin/chown','condor:condor','/var/log/condor-ce']
+          volumeMounts:
+          - name: log-volume
+            mountPath: /var/log/condor-ce
+        {{ end }}
         ports:
         - name: htcondor-ce
           containerPort: 9619
