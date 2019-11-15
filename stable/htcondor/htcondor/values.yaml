@@ -3,6 +3,9 @@
 # Enables unique instances of Frontier Squid in one namespace
 Instance: global
 
+HTTPLogger:
+  Enabled: false
+
 CondorConfig:
   # The number of HTCondor worker pods to run
   Instances: 1
