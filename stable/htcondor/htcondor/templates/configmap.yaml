@@ -10,3 +10,31 @@ metadata:
 data:
   condor_config.local: |-
 {{ .Values.CondorConfigFile | indent 4 }}
+{{ if .Values.HTTPLogger.Enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: htcondor-{{ .Values.Instance }}-logger-startup
+  labels:
+    app: htcondor
+    chart: {{ template "htcondor.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+      #!/bin/bash -e
+
+      if [ -z $HTPASSWD ]; then
+        PASS=$(tr -dc 'a-f0-9' < /dev/urandom | head -c16) 
+        echo "Your randomly generated logger credentials are"
+        echo "**********************************************"
+        echo "logger:$PASS"
+        echo "**********************************************"
+        HTPASSWD=$(echo $PASS | md5sum | awk '{print "logger:"$1}')
+      fi
+
+      # maybe validate this
+      echo $HTPASSWD > /etc/nginx/auth/htpasswd
+
+      sed -i -e 's|\\(listen[^0-9]*\\)80|\\1 8080|' -e 's|index  index.html index.htm|autoindex  on|'  -e '/location \\/ {/ a\\        default_type         text/plain;\\\n\\        auth_basic           \"Restricted\";\\\n\\        auth_basic_user_file /etc/nginx/auth/htpasswd;' /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'
+{{ end }}
