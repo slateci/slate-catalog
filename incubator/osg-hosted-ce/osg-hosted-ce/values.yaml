@@ -71,3 +71,7 @@ HTTPLogger:
 #CustomizationScript: |+
 #  #!/bin/sh 
 #  ... 
+
+# FOR DEVELOPMENT PURPOSES ONLY
+Developer:
+  Enabled: false
