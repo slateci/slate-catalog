@@ -10,7 +10,11 @@ metadata:
 data:
   99-local.ini: |
     [Site Information]
-    group = {{ .Values.Site.Group }}
+    {{ if .Values.Developer.Enabled }}
+    group = OSG-ITB
+    {{ else }}
+    group = OSG
+    {{ end }}
     host_name = localhost
     resource = {{ .Values.Site.Resource }}
     resource_group = {{ .Values.Site.ResourceGroup }}
