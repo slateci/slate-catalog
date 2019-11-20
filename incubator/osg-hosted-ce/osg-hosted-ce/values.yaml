@@ -72,6 +72,9 @@ HTTPLogger:
 #  #!/bin/sh 
 #  ... 
 
-# FOR DEVELOPMENT PURPOSES ONLY
+# FOR DEVELOPMENT PURPOSES ONLY!
+# Setting 'Enabled: true' below does the following:
+# - Configures the CE as an ITB host
+# - Generates a test CA and self-signed host cert/key pair
 Developer:
   Enabled: false
