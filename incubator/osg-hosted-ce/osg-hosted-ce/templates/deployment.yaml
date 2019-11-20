@@ -134,6 +134,8 @@ spec:
           value: {{ .Values.Site.ContactEmail }}
         - name: CE_USERS
           value: {{ .Values.Cluster.Users }}
+        - name: DEVELOPER
+          value: {{ .Values.Developer.Enabled }}
         {{ if .Values.CustomizationScript }}
         - name: LOCAL_ATTRIBUTES_FILE
           value: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
