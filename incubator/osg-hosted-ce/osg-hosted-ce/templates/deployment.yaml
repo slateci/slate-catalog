@@ -136,9 +136,9 @@ spec:
           value: {{ .Values.Cluster.Users }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
-          value: true
+          value: "true"
           {{ else }}
-          value: false
+          value: "false"
           {{ end }}
         {{ if .Values.CustomizationScript }}
         - name: LOCAL_ATTRIBUTES_FILE
