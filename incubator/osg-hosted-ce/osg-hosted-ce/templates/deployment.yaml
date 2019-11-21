@@ -135,7 +135,11 @@ spec:
         - name: CE_USERS
           value: {{ .Values.Cluster.Users }}
         - name: DEVELOPER
-          value: {{ .Values.Developer.Enabled }}
+          {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
+          value: true
+          {{ else }}
+          value: false
+          {{ end }}
         {{ if .Values.CustomizationScript }}
         - name: LOCAL_ATTRIBUTES_FILE
           value: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
