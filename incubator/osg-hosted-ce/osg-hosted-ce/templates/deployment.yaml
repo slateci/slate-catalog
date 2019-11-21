@@ -90,6 +90,7 @@ spec:
       {{ end }}
       - name: osg-hosted-ce
         image: opensciencegrid/hosted-ce:fresh
+        imagePullPolicy: Always
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
           mountPath: /tmp/99-local.ini
