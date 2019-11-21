@@ -24,7 +24,6 @@ Storage:
   WorkerNodeTemp: /tmp
 
 Subcluster:
-  Name: UCHICAGO-SLATE
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
@@ -48,7 +47,6 @@ Networking:
 BoscoOverrides:
   Enabled: true
   GitEndpoint: git@gitlab.mwt2.org:osg/hosted-ce-config.git
-  Subdirectory: OSG_US_NEWJERSEY_ELSA
   RepoNeedsPrivKey: true
   GitKeySecret: mwtGitLabSecret
 

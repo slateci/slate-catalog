@@ -47,8 +47,8 @@ data:
     data_dir = None
     worker_node_temp = {{ .Values.Storage.WorkerNodeTemp }}
 
-    [Subcluster {{ .Values.Subcluster.Name }}]
-    name = {{ .Values.Subcluster.Name }}
+    [Subcluster {{ .Values.Site.Resource }}]
+    name = {{ .Values.Site.Resource }}
     ram_mb = {{ .Values.Subcluster.Memory }}
     cores_per_node = {{ .Values.Subcluster.CoresPerNode }}
     max_wall_time = {{ .Values.Subcluster.MaxWallTime }}
