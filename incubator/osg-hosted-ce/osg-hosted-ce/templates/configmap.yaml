@@ -60,6 +60,21 @@ data:
     policy = DEFAULT
     cache_size = DEFAULT
     memory_size = DEFAULT
+{{ if .Values.VomsmapOverride }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+  labels:
+    app: osg-hosted-ce
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  voms-mapfile: |+
+{{ .Values.VomsmapOverride | indent 4 }}
+{{ end }}
 {{ if .Values.GridmapOverride }}
 ---
 apiVersion: v1

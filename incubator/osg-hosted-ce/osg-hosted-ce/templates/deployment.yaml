@@ -112,6 +112,11 @@ spec:
           mountPath: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
           subPath: {{ .Values.Cluster.Batch }}_local_submit_attributes.sh
         {{ end }}
+        {{ if .Values.VomsmapOverride }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+          mountPath: /etc/grid-security/voms-mapfile
+          subPath: voms-mapfile
+        {{ end }}
         {{ if .Values.GridmapOverride }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
           mountPath: /etc/grid-security/grid-mapfile
