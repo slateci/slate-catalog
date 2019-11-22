@@ -1,5 +1,6 @@
 Instance: ""
 
+# Site information that should match the CE Topology registration
 Site:
   Group: OSG
   Resource: UCHICAGO-SLATE
@@ -24,7 +25,6 @@ Storage:
   WorkerNodeTemp: /tmp
 
 Subcluster:
-  Name: UCHICAGO-SLATE
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
@@ -45,10 +45,11 @@ Networking:
   RequestIP: null
 
 # Options to allow override of the bosco directory from arbitrary git repos
+# Bosco override dirs are expected in the following location in the git repo:
+#   <RESOURCE NAME>/bosco_override/
 BoscoOverrides:
   Enabled: true
   GitEndpoint: git@gitlab.mwt2.org:osg/hosted-ce-config.git
-  Subdirectory: OSG_US_NEWJERSEY_ELSA
   RepoNeedsPrivKey: true
   GitKeySecret: mwtGitLabSecret
 
