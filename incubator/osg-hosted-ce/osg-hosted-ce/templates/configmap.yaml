@@ -60,6 +60,19 @@ data:
     policy = DEFAULT
     cache_size = DEFAULT
     memory_size = DEFAULT
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+  labels:
+    app: osg-hosted-ce
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  99-instance.conf: |+
+{{ .Values.HTCondorCeConfig | indent 4 }}
 {{ if .Values.VomsmapOverride }}
 ---
 apiVersion: v1

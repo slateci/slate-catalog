@@ -44,6 +44,18 @@ Networking:
   # back the same IP address that was used previously. 
   RequestIP: null
 
+########### REQUIRED ###########
+# Specify additional HTCondor-CE configuration. JOB_ROUTER_ENTRIES is required!
+# HTCondorCeConfig: |+
+#   JOB_ROUTER_ENTRIES =@jre
+#   [
+#     GridResource = "batch <REMOTE USER>@<REMOTE HOST> <REMOTE BATCH>"
+#     Requirements = 'Owner == "<REMOTE USER>"'
+#   ]
+#   [
+#   ...
+#   @jre
+
 # Options to allow override of the bosco directory from arbitrary git repos
 # Bosco override dirs are expected in the following location in the git repo:
 #   <RESOURCE NAME>/bosco_override/
