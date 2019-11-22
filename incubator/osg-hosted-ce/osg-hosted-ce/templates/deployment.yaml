@@ -149,7 +149,7 @@ spec:
         - name: BOSCO_GIT_ENDPOINT
           value: {{ .Values.BoscoOverrides.GitEndpoint }}
         - name: BOSCO_DIRECTORY
-          value: {{ .Values.BoscoOverrides.Subdirectory }}
+          value: {{ .Values.Site.Resource }}
         {{ end }}
         lifecycle:
           preStop:
