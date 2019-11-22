@@ -72,7 +72,7 @@ metadata:
     release: {{ .Release.Name }}
 data:
   99-instance.conf: |+
-{{ .Values.HTCondorCeConfig | indent 4 }}
+{{ .Values.HTCondorCeConfig | default "" | indent 4 }}
 {{ if .Values.VomsmapOverride }}
 ---
 apiVersion: v1
