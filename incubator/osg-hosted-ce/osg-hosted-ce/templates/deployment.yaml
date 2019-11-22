@@ -35,6 +35,11 @@ spec:
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
       {{ end }}
+      {{ if .Values.VomsmapOverride }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+      {{ end }}
       {{ if .Values.GridmapOverride }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
         configMap:
