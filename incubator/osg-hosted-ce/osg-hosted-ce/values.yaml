@@ -26,7 +26,7 @@ Subcluster:
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
-  AllowedVOs: osg, cms, atlas, glow
+  AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
   
 Squid:
   Enabled: True
