@@ -28,12 +28,7 @@ data:
     longitude = {{ .Values.Site.Longitude }}
 
     [BOSCO]
-    enabled = True
-    users = {{ .Values.Cluster.Users }}
-    endpoint =  {{ .Values.Cluster.Endpoint }}
-    batch =  {{ .Values.Cluster.Batch }}
-    ssh_key = /etc/osg/bosco.key
-    max_jobs = {{ .Values.Cluster.MaxJobs }}
+    enabled = False
 
     [Misc Services]
     edit_lcmaps_db = True

@@ -23,7 +23,7 @@ Cluster:
   MaxJobs: 10
 
 Storage:
-  GridDir: /home/lincolnb/osg-wn-client
+  GridDir: $HOME/bosco-osg-wn-client
   WorkerNodeTemp: /tmp
 
 Subcluster:
