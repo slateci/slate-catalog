@@ -98,21 +98,6 @@ data:
   grid-mapfile: |+
 {{ .Values.GridmapOverride | indent 4 }}
 {{ end }}
-{{ if .Values.CustomizationScript }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
-  labels:
-    app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
-    instance: {{ .Values.Instance }}
-    release: {{ .Release.Name }}
-data:
-  {{ .Values.Cluster.Batch }}_local_submit_attributes.sh: |+
-{{ .Values.CustomizationScript | indent 4 }}
-{{ end }}
 {{ if .Values.HTTPLogger.Enabled }}
 ---
 apiVersion: v1

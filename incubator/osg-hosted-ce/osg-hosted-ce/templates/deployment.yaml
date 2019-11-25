@@ -30,11 +30,6 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      {{ if .Values.CustomizationScript }}
-      - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
-      {{ end }}
       {{ if .Values.VomsmapOverride }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
         configMap:
@@ -118,11 +113,6 @@ spec:
           mountPath: /etc/osg/git.key
           subPath: git.key
         {{ end }}
-        {{ if .Values.CustomizationScript }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
-          mountPath: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
-          subPath: {{ .Values.Cluster.Batch }}_local_submit_attributes.sh
-        {{ end }}
         {{ if .Values.VomsmapOverride }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
           mountPath: /etc/grid-security/voms-mapfile
@@ -145,8 +135,6 @@ spec:
           value: {{ .Values.Networking.Hostname }}
         - name: CE_HOSTNAME
           value: {{ .Values.Networking.Hostname }}
-        - name: ENDPOINT
-          value: {{ .Values.Cluster.Endpoint }}
         - name: CE_CONTACT
           value: {{ .Values.Site.ContactEmail }}
         - name: RESOURCE_NAME

@@ -16,9 +16,7 @@ Site:
 Cluster:
   # Major Enterprise Linux version of the remote cluster (6 or 7)
   OperatingSystem: 7
-  Endpoint: lincolnb@slate-micro-condor.slateci.io
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
-  Batch: condor
 
 Storage:
   GridDir: $HOME/bosco-osg-wn-client
@@ -93,15 +91,6 @@ VomsmapOverride: |+
 #
 #GridmapOverride: |+
 #  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osg
-
-# The following script will run on the _remote_ cluster when jobs are
-# submitted. The script will get stored into:
-#    ~${username}/bosco/glite/bin/${batch}_local_submit_attributes.sh
-# on the remote cluster
-#
-#CustomizationScript: |+
-#  #!/bin/sh 
-#  ... 
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
