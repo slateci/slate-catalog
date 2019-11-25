@@ -151,6 +151,10 @@ spec:
           value: {{ .Values.Site.ContactEmail }}
         - name: CE_USERS
           value: {{ .Values.Cluster.Users }}
+        - name: RESOURCE_NAME
+          value: {{ .Values.Site.Resource }}
+        - name: REMOTE_OS_VER
+          value: {{ .Values.Cluster.OperatingSystem }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"
