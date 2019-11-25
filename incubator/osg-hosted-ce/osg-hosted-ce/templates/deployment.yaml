@@ -149,8 +149,6 @@ spec:
           value: {{ .Values.Cluster.Endpoint }}
         - name: CE_CONTACT
           value: {{ .Values.Site.ContactEmail }}
-        - name: CE_USERS
-          value: {{ .Values.Cluster.Users }}
         - name: RESOURCE_NAME
           value: {{ .Values.Site.Resource }}
         - name: REMOTE_OS_VER
