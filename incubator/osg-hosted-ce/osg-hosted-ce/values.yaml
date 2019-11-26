@@ -14,21 +14,19 @@ Site:
   Longitude: 87.6298
 
 Cluster:
-  Users: osg, cmsuser, usatlas2, glow
-  Endpoint: lincolnb@slate-micro-condor.slateci.io
+  # Major Enterprise Linux version of the remote cluster (6 or 7)
+  OperatingSystem: 7
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
-  Batch: condor
-  MaxJobs: 10
 
 Storage:
-  GridDir: /home/lincolnb/osg-wn-client
+  GridDir: $HOME/bosco-osg-wn-client
   WorkerNodeTemp: /tmp
 
 Subcluster:
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
-  AllowedVOs: osg, cms, atlas, glow
+  AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
   
 Squid:
   Enabled: True
@@ -93,15 +91,6 @@ VomsmapOverride: |+
 #
 #GridmapOverride: |+
 #  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osg
-
-# The following script will run on the _remote_ cluster when jobs are
-# submitted. The script will get stored into:
-#    ~${username}/bosco/glite/bin/${batch}_local_submit_attributes.sh
-# on the remote cluster
-#
-#CustomizationScript: |+
-#  #!/bin/sh 
-#  ... 
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:

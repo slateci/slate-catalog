@@ -28,12 +28,7 @@ data:
     longitude = {{ .Values.Site.Longitude }}
 
     [BOSCO]
-    enabled = True
-    users = {{ .Values.Cluster.Users }}
-    endpoint =  {{ .Values.Cluster.Endpoint }}
-    batch =  {{ .Values.Cluster.Batch }}
-    ssh_key = /etc/osg/bosco.key
-    max_jobs = {{ .Values.Cluster.MaxJobs }}
+    enabled = False
 
     [Misc Services]
     edit_lcmaps_db = True
@@ -102,21 +97,6 @@ metadata:
 data:
   grid-mapfile: |+
 {{ .Values.GridmapOverride | indent 4 }}
-{{ end }}
-{{ if .Values.CustomizationScript }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
-  labels:
-    app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
-    instance: {{ .Values.Instance }}
-    release: {{ .Release.Name }}
-data:
-  {{ .Values.Cluster.Batch }}_local_submit_attributes.sh: |+
-{{ .Values.CustomizationScript | indent 4 }}
 {{ end }}
 {{ if .Values.HTTPLogger.Enabled }}
 ---
