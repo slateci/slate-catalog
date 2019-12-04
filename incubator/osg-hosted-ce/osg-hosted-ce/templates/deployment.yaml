@@ -147,10 +147,6 @@ spec:
           {{ else }}
           value: "false"
           {{ end }}
-        {{ if .Values.CustomizationScript }}
-        - name: LOCAL_ATTRIBUTES_FILE
-          value: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
-        {{ end }}
         {{ if .Values.BoscoOverrides.Enabled }}
         - name: BOSCO_GIT_ENDPOINT
           value: {{ .Values.BoscoOverrides.GitEndpoint }}
