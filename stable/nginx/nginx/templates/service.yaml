@@ -17,7 +17,6 @@ spec:
   selector:
     app: {{ template "nginx.name" . }}
     instance: {{ .Values.Instance }}
-release: {{ .Release.Name }}
 ---
 {{ if .Values.Ingress.Enabled }}
 apiVersion: extensions/v1beta1
