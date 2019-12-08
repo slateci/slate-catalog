@@ -79,7 +79,9 @@ spec:
             value: "{{ .Values.XCacheConfig.WQThreads }}"
           resources:
             requests:
-              ephemeral-storage: "1Gi"
+              ephemeral-storage: "5Gi"
+            limits:
+              ephemeral-storage: "10Gi"
           livenessProbe:
             tcpSocket:
               port: {{ .Values.Service.Port }}

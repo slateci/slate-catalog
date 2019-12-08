@@ -1,10 +1,10 @@
 apiVersion: v1
 name: xcache
 # Chart version
-version: 0.2.5
+version: 0.2.7
 description: XCache is a xrootd based caching service for k8s
 # Version of application packaged for installation
-appVersion: "4.9.1"
+appVersion: "4.11"
 home: http://slateci.io/XCache/
 maintainers:
   - name: Ilija Vukotic
