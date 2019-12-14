@@ -96,7 +96,7 @@ spec:
           volumeMounts:
           - name: x509-data
             mountPath: "/etc/proxy/"
-            readOnly: false
+            readOnly: true
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
             readOnly: true
