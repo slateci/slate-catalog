@@ -35,7 +35,9 @@ spec:
 
       volumes:
       - name: x509-data
-        emptyDir: {}
+        emptyDir:
+          medium: Memory
+          sizeLimit: "10Mi"
       - name: x509-certs-volume
         secret:
           secretName: xcache-cert-secret
