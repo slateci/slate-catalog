@@ -49,12 +49,15 @@ BoscoOverrides:
   Enabled: true
   GitEndpoint: git@gitlab.mwt2.org:osg/hosted-ce-config.git
   Subdirectory: OSG_US_NEWJERSEY_ELSA
-  RepoNeedsPrivKey: true
+  RepoNeedsPrivKey: false
   GitKeySecret: mwtGitLabSecret
 
 # Enable a logging sidecar
 HTTPLogger:
-  Enabled: false
+  Enabled: true
+  # If you want to insert a password instead of using a randomly generated one,
+  # point Secret to a K8S/SLATE secret below.
+  Secret: lincoln-test-secret
 
 # If you wish to allow yourself to submit to this CE with your personal grid
 # proxy, you can put that in below. This will get directly mapped into
