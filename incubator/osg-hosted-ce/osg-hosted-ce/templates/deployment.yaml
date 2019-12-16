@@ -37,13 +37,13 @@ spec:
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
       {{ end }}
-      #- name: bosco-ssh-private-key-volume
-      #  secret: 
-      #    secretName: {{ .Values.Cluster.PrivateKeySecret }}
-      #    items:
-      #    - key: bosco.key
-      #      path: bosco.key
-      #      mode: 256
+      - name: bosco-ssh-private-key-volume
+        secret: 
+          secretName: {{ .Values.Cluster.PrivateKeySecret }}
+          items:
+          - key: bosco.key
+            path: bosco.key
+            mode: 256
       {{ if .Values.BoscoOverrides.Enabled }}
       {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
@@ -103,9 +103,9 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
           mountPath: /tmp/99-local.ini
           subPath: 99-local.ini
-        #- name: bosco-ssh-private-key-volume
-        #  mountPath: /etc/osg/bosco.key
-        #  subPath: bosco.key
+        - name: bosco-ssh-private-key-volume
+          mountPath: /etc/osg/bosco.key
+          subPath: bosco.key
         {{ if .Values.HTTPLogger.Enabled }}
         - name: log-volume
           mountPath: /var/log/condor-ce

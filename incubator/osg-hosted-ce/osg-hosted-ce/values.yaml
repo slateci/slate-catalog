@@ -49,7 +49,7 @@ BoscoOverrides:
   Enabled: true
   GitEndpoint: git@gitlab.mwt2.org:osg/hosted-ce-config.git
   Subdirectory: OSG_US_NEWJERSEY_ELSA
-  RepoNeedsPrivKey: false
+  RepoNeedsPrivKey: true
   GitKeySecret: mwtGitLabSecret
 
 # Enable a logging sidecar
