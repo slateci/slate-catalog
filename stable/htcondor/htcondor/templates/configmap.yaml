@@ -16,10 +16,10 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
+  name: htcondor-{{ .Values.Instance }}-logger-startup
   labels:
-    app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
+    app: htcondor
+    chart: {{ template "htcondor.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
