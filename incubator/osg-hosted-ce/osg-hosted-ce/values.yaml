@@ -65,7 +65,10 @@ BoscoOverrides:
 
 # Enable a logging sidecar
 HTTPLogger:
-  Enabled: false
+  Enabled: true
+  # If you want to insert a password instead of using a randomly generated one,
+  # point Secret to a K8S/SLATE secret below.
+  # Secret: my-secret
 
 # Default VO-user mappings for OSG Hosted CEs
 # Change these contents for legacy OSG Hosted CEs or non-OSG Hosted CEs

@@ -24,6 +24,13 @@ spec:
         instance: {{ .Values.Instance }}
     spec:
       volumes:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {}
+      - name: logger-startup
+        configMap:
+          name: htcondor-{{ .Values.Instance }}-logger-startup
+      {{ end }}
       - name: executedir
         {{ if .Values.CondorConfig.ExecuteDir }}
         hostPath:
@@ -69,9 +76,36 @@ spec:
       priorityClassName: {{ .Values.CondorConfig.PriorityClass }}
       {{ end }}
       containers:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: logging-sidecar
+        image: "nginx:1.15.9"
+        command: ["/usr/local/bin/start-nginx.sh"]
+        imagePullPolicy: IfNotPresent
+        {{ if .Values.HTTPLogger.Secret }}
+        env:
+          - name: HTPASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.HTTPLogger.Secret }}
+                key: HTPASSWD
+        {{ end }}
+        ports:
+        - name: logs
+          containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: log-volume
+          mountPath: /usr/share/nginx/html
+        - name: logger-startup
+          mountPath: /usr/local/bin/start-nginx.sh
+      {{ end }}
       - name: htcondor-worker
         image: slateci/container-condor:latest
         volumeMounts:
+        {{ if .Values.HTTPLogger.Enabled }}
+        - name: log-volume
+          mountPath: /var/log/condor
+        {{ end }}
         - name: executedir
           mountPath: /var/lib/condor/execute
         - name: condor-passwordfile-volume
