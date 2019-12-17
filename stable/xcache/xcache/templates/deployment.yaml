@@ -35,7 +35,9 @@ spec:
 
       volumes:
       - name: x509-data
-        emptyDir: {}
+        emptyDir:
+          medium: Memory
+          sizeLimit: "10Mi"
       - name: x509-certs-volume
         secret:
           secretName: xcache-cert-secret
@@ -79,7 +81,9 @@ spec:
             value: "{{ .Values.XCacheConfig.WQThreads }}"
           resources:
             requests:
-              ephemeral-storage: "1Gi"
+              ephemeral-storage: "5Gi"
+            limits:
+              ephemeral-storage: "10Gi"
           livenessProbe:
             tcpSocket:
               port: {{ .Values.Service.Port }}
@@ -94,7 +98,7 @@ spec:
           volumeMounts:
           - name: x509-data
             mountPath: "/etc/proxy/"
-            readOnly: false
+            readOnly: true
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
             readOnly: true
