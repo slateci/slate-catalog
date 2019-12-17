@@ -5,6 +5,10 @@ Instance: global
 
 HTTPLogger:
   Enabled: false
+  # You can refer to a password that has been hashed by `openssl passwd -apr1`
+  # and stored as a K8S/SLATE secret here. The resulting credentials will be 
+  # username: logger, and password set to your chosen password.
+  # Secret: my-secret
 
 CondorConfig:
   # The number of HTCondor worker pods to run

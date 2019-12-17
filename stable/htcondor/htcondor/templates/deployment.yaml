@@ -81,6 +81,14 @@ spec:
         image: "nginx:1.15.9"
         command: ["/usr/local/bin/start-nginx.sh"]
         imagePullPolicy: IfNotPresent
+        {{ if .Values.HTTPLogger.Secret }}
+        env:
+          - name: HTPASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.HTTPLogger.Secret }}
+                key: HTPASSWD
+        {{ end }}
         ports:
         - name: logs
           containerPort: 8080
