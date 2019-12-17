@@ -27,10 +27,13 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-configuration
-      {{ if .Values.CustomizationScript }}
-      - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
+      - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
+          name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+      {{ if .Values.VomsmapOverride }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
       {{ end }}
       {{ if .Values.GridmapOverride }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
@@ -99,6 +102,7 @@ spec:
       {{ end }}
       - name: osg-hosted-ce
         image: opensciencegrid/hosted-ce:fresh
+        imagePullPolicy: Always
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
           mountPath: /tmp/99-local.ini
@@ -106,6 +110,9 @@ spec:
         - name: bosco-ssh-private-key-volume
           mountPath: /etc/osg/bosco.key
           subPath: bosco.key
+        - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+          mountPath: /etc/condor-ce/config.d/99-instance.conf
+          subPath: 99-instance.conf
         {{ if .Values.HTTPLogger.Enabled }}
         - name: log-volume
           mountPath: /var/log/condor-ce
@@ -115,10 +122,10 @@ spec:
           mountPath: /etc/osg/git.key
           subPath: git.key
         {{ end }}
-        {{ if .Values.CustomizationScript }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
-          mountPath: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
-          subPath: {{ .Values.Cluster.Batch }}_local_submit_attributes.sh
+        {{ if .Values.VomsmapOverride }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+          mountPath: /etc/grid-security/voms-mapfile
+          subPath: voms-mapfile
         {{ end }}
         {{ if .Values.GridmapOverride }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
@@ -137,21 +144,23 @@ spec:
           value: {{ .Values.Networking.Hostname }}
         - name: CE_HOSTNAME
           value: {{ .Values.Networking.Hostname }}
-        - name: ENDPOINT
-          value: {{ .Values.Cluster.Endpoint }}
         - name: CE_CONTACT
           value: {{ .Values.Site.ContactEmail }}
-        - name: CE_USERS
-          value: {{ .Values.Cluster.Users }}
-        {{ if .Values.CustomizationScript }}
-        - name: LOCAL_ATTRIBUTES_FILE
-          value: /tmp/{{ .Values.Cluster.Batch }}_local_submit_attributes.sh
-        {{ end }}
+        - name: RESOURCE_NAME
+          value: {{ .Values.Site.Resource }}
+        - name: REMOTE_OS_VER
+          value: {{ .Values.Cluster.OperatingSystem }}
+        - name: DEVELOPER
+          {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
+          value: "true"
+          {{ else }}
+          value: "false"
+          {{ end }}
         {{ if .Values.BoscoOverrides.Enabled }}
         - name: BOSCO_GIT_ENDPOINT
           value: {{ .Values.BoscoOverrides.GitEndpoint }}
         - name: BOSCO_DIRECTORY
-          value: {{ .Values.BoscoOverrides.Subdirectory }}
+          value: {{ .Values.Site.Resource }}
         {{ end }}
         lifecycle:
           preStop:

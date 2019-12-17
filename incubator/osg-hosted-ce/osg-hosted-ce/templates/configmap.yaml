@@ -10,7 +10,11 @@ metadata:
 data:
   99-local.ini: |
     [Site Information]
-    group = {{ .Values.Site.Group }}
+    {{ if .Values.Developer.Enabled }}
+    group = OSG-ITB
+    {{ else }}
+    group = OSG
+    {{ end }}
     host_name = localhost
     resource = {{ .Values.Site.Resource }}
     resource_group = {{ .Values.Site.ResourceGroup }}
@@ -24,12 +28,7 @@ data:
     longitude = {{ .Values.Site.Longitude }}
 
     [BOSCO]
-    enabled = True
-    users = {{ .Values.Cluster.Users }}
-    endpoint =  {{ .Values.Cluster.Endpoint }}
-    batch =  {{ .Values.Cluster.Batch }}
-    ssh_key = /etc/osg/bosco.key
-    max_jobs = {{ .Values.Cluster.MaxJobs }}
+    enabled = False
 
     [Misc Services]
     edit_lcmaps_db = True
@@ -43,8 +42,8 @@ data:
     data_dir = None
     worker_node_temp = {{ .Values.Storage.WorkerNodeTemp }}
 
-    [Subcluster {{ .Values.Subcluster.Name }}]
-    name = {{ .Values.Subcluster.Name }}
+    [Subcluster {{ .Values.Site.Resource }}]
+    name = {{ .Values.Site.Resource }}
     ram_mb = {{ .Values.Subcluster.Memory }}
     cores_per_node = {{ .Values.Subcluster.CoresPerNode }}
     max_wall_time = {{ .Values.Subcluster.MaxWallTime }}
@@ -56,6 +55,34 @@ data:
     policy = DEFAULT
     cache_size = DEFAULT
     memory_size = DEFAULT
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+  labels:
+    app: osg-hosted-ce
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  99-instance.conf: |+
+{{ .Values.HTCondorCeConfig | default "" | indent 4 }}
+{{ if .Values.VomsmapOverride }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+  labels:
+    app: osg-hosted-ce
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  voms-mapfile: |+
+{{ .Values.VomsmapOverride | indent 4 }}
+{{ end }}
 {{ if .Values.GridmapOverride }}
 ---
 apiVersion: v1
@@ -70,21 +97,6 @@ metadata:
 data:
   grid-mapfile: |+
 {{ .Values.GridmapOverride | indent 4 }}
-{{ end }}
-{{ if .Values.CustomizationScript }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: osg-hosted-ce-{{ .Values.Instance }}-cluster-configuration
-  labels:
-    app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
-    instance: {{ .Values.Instance }}
-    release: {{ .Release.Name }}
-data:
-  {{ .Values.Cluster.Batch }}_local_submit_attributes.sh: |+
-{{ .Values.CustomizationScript | indent 4 }}
 {{ end }}
 {{ if .Values.HTTPLogger.Enabled }}
 ---

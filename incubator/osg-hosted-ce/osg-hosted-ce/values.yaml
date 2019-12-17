@@ -1,5 +1,6 @@
 Instance: ""
 
+# Site information that should match the CE Topology registration
 Site:
   Group: OSG
   Resource: UCHICAGO-SLATE
@@ -13,22 +14,19 @@ Site:
   Longitude: 87.6298
 
 Cluster:
-  Users: osg, cmsuser, usatlas2, glow
-  Endpoint: lincolnb@slate-micro-condor.slateci.io
+  # Major Enterprise Linux version of the remote cluster (6 or 7)
+  OperatingSystem: 7
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
-  Batch: condor
-  MaxJobs: 10
 
 Storage:
-  GridDir: /home/lincolnb/osg-wn-client
+  GridDir: $HOME/bosco-osg-wn-client
   WorkerNodeTemp: /tmp
 
 Subcluster:
-  Name: UCHICAGO-SLATE
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
-  AllowedVOs: osg, cms, atlas, glow
+  AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
   
 Squid:
   Enabled: True
@@ -44,11 +42,24 @@ Networking:
   # back the same IP address that was used previously. 
   RequestIP: null
 
+########### REQUIRED ###########
+# Specify additional HTCondor-CE configuration. JOB_ROUTER_ENTRIES is required!
+# HTCondorCeConfig: |+
+#   JOB_ROUTER_ENTRIES =@jre
+#   [
+#     GridResource = "batch <REMOTE USER>@<REMOTE HOST> <REMOTE BATCH>"
+#     Requirements = 'Owner == "<REMOTE USER>"'
+#   ]
+#   [
+#   ...
+#   @jre
+
 # Options to allow override of the bosco directory from arbitrary git repos
+# Bosco override dirs are expected in the following location in the git repo:
+#   <RESOURCE NAME>/bosco_override/
 BoscoOverrides:
   Enabled: true
   GitEndpoint: git@gitlab.mwt2.org:osg/hosted-ce-config.git
-  Subdirectory: OSG_US_NEWJERSEY_ELSA
   RepoNeedsPrivKey: true
   GitKeySecret: mwtGitLabSecret
 
@@ -57,7 +68,25 @@ HTTPLogger:
   Enabled: true
   # If you want to insert a password instead of using a randomly generated one,
   # point Secret to a K8S/SLATE secret below.
-  Secret: lincoln-test-secret
+  # Secret: my-secret
+
+# Default VO-user mappings for OSG Hosted CEs
+# Change these contents for legacy OSG Hosted CEs or non-OSG Hosted CEs
+VomsmapOverride: |+
+  "/osg/Role=NULL/Capability=NULL" osg01
+  "/GLOW/Role=htpc/Capability=NULL" osg02
+  "/hcc/Role=NULL/Capability=NULL" osg03
+  "/cms/*" osg04
+  "/fermilab/*" osg05
+  "/osg/ligo/Role=NULL/Capability=NULL" osg07
+  "/virgo/ligo/Role=NULL/Capability=NULL" osg07
+  "/sdcc/Role=NULL/Capability=NULL" osg08
+  "/sphenix/Role=NULL/Capability=NULL" osg08
+  "/atlas/*" osg09
+  "/Gluex/Role=NULL/Capability=NULL" osg10
+  "/dune/Role=pilot/Capability=NULL" osg11
+  "/icecube/Role=pilot/Capability=NULL" osg12
+  "/xenon.biggrid.nl/Role=NULL/Capability=NULL" osg13
 
 # If you wish to allow yourself to submit to this CE with your personal grid
 # proxy, you can put that in below. This will get directly mapped into
@@ -66,11 +95,9 @@ HTTPLogger:
 #GridmapOverride: |+
 #  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osg
 
-# The following script will run on the _remote_ cluster when jobs are
-# submitted. The script will get stored into:
-#    ~${username}/bosco/glite/bin/${batch}_local_submit_attributes.sh
-# on the remote cluster
-#
-#CustomizationScript: |+
-#  #!/bin/sh 
-#  ... 
+# FOR DEVELOPMENT PURPOSES ONLY!
+# Setting 'Enabled: true' below does the following:
+# - Configures the CE as an ITB host
+# - Generates a test CA and self-signed host cert/key pair
+Developer:
+  Enabled: false
