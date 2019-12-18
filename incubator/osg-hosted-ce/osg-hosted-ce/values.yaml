@@ -2,7 +2,6 @@ Instance: ""
 
 # Site information that should match the CE Topology registration
 Site:
-  Group: OSG
   Resource: UCHICAGO-SLATE
   ResourceGroup: UCHICAGO
   Sponsor: osg:100
