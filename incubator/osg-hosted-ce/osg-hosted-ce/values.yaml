@@ -45,10 +45,10 @@ Networking:
 ########### REQUIRED ###########
 # Specify additional HTCondor-CE configuration. JOB_ROUTER_ENTRIES is required!
 # HTCondorCeConfig: |+
-#   JOB_ROUTER_ENTRIES =@jre
+#   JOB_ROUTER_ENTRIES @=jre
 #   [
-#     GridResource = "batch <REMOTE USER>@<REMOTE HOST> <REMOTE BATCH>"
-#     Requirements = 'Owner == "<REMOTE USER>"'
+#     GridResource = "batch <REMOTE USER>@<REMOTE HOST> <REMOTE BATCH>";
+#     Requirements = (Owner == "<REMOTE USER>");
 #   ]
 #   [
 #   ...
