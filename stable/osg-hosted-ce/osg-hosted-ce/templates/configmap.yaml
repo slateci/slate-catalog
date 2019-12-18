@@ -74,6 +74,26 @@ data:
 {{ if .Values.Networking.RequestIP }}
     TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
 {{ end }}
+
+    JOB_ROUTER_CLASSAD_USER_MAP_NAMES = REMOTE_USER
+    CLASSAD_USER_MAPFILE_REMOTE_USER = /etc/condor-ce/remote_user_mapfile
+
+    JOB_ROUTER_DEFAULTS @=jrd
+    $(JOB_ROUTER_DEFAULTS)
+    [
+    GridResource = strcat("batch ", "{{ .Values.Cluster.RemoteBatch }}", userMap(REMOTE_USER, Owner, "", Owner), "@", "{{ .Values.Cluster.RemoteHost }}");
+    ]
+    @jrd
+
+    JOB_ROUTER_SOURCE_JOB_CONSTRAINT = $(JOB_ROUTER_SOURCE_JOB_CONSTRAINT) && userMap(REMOTE_USER, Owner, "")
+
+    JOB_ROUTER_ENTRIES @=jre
+    [
+    Name = "Hosted_CE_default_route";
+    Requirements = True;
+    ]
+
+    # Operator-provided HTCondor-CE configuration below this line
 {{ .Values.HTCondorCeConfig | default "" | indent 4 }}
 {{ if .Values.VomsmapOverride }}
 ---
