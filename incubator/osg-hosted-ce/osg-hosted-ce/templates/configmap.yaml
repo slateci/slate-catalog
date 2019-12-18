@@ -44,10 +44,10 @@ data:
 
     [Subcluster {{ .Values.Site.Resource }}]
     name = {{ .Values.Site.Resource }}
-    ram_mb = {{ .Values.Subcluster.Memory }}
-    cores_per_node = {{ .Values.Subcluster.CoresPerNode }}
-    max_wall_time = {{ .Values.Subcluster.MaxWallTime }}
-    allowed_vos = {{ .Values.Subcluster.AllowedVOs }}
+    ram_mb = {{ .Values.Cluster.Memory }}
+    cores_per_node = {{ .Values.Cluster.CoresPerNode }}
+    max_wall_time = {{ .Values.Cluster.MaxWallTime }}
+    allowed_vos = {{ .Values.Cluster.AllowedVOs }}
 
     [Squid]
     enabled = {{ .Values.Squid.Enabled }} 

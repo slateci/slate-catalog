@@ -13,20 +13,16 @@ Site:
   Longitude: 87.6298
 
 Cluster:
-  # Major Enterprise Linux version of the remote cluster (6 or 7)
-  OperatingSystem: 7
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
+  Memory: 1024
+  CoresPerNode: 4
+  MaxWallTime: 1440
+  AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
 
 Storage:
   GridDir: $HOME/bosco-osg-wn-client
   WorkerNodeTemp: /tmp
 
-Subcluster:
-  Memory: 1024
-  CoresPerNode: 4
-  MaxWallTime: 1440
-  AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
-  
 Squid:
   Enabled: True
   Location: squid.grid.uchicago.edu
