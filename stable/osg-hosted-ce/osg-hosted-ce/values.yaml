@@ -61,23 +61,10 @@ HTTPLogger:
   # point Secret to a K8S/SLATE secret below.
   # Secret: my-secret
 
-# Default VO-user mappings for OSG Hosted CEs
+# VOMS FQAN-user mappings for OSG Hosted CEs
+# https://opensciencegrid.org/docs/security/lcmaps-voms-authentication/#mapping-vos
 # Change these contents for legacy OSG Hosted CEs or non-OSG Hosted CEs
-VomsmapOverride: |+
-   "/osg/Role=NULL/Capability=NULL" osg01
-   "/GLOW/Role=htpc/Capability=NULL" osg02
-   "/hcc/Role=NULL/Capability=NULL" osg03
-   "/cms/*" osg04
-   "/fermilab/*" osg05
-   "/osg/ligo/Role=NULL/Capability=NULL" osg07
-   "/virgo/ligo/Role=NULL/Capability=NULL" osg07
-   "/sdcc/Role=NULL/Capability=NULL" osg08
-   "/sphenix/Role=NULL/Capability=NULL" osg08
-   "/atlas/*" osg09
-   "/Gluex/Role=NULL/Capability=NULL" osg10
-   "/dune/Role=pilot/Capability=NULL" osg11
-   "/icecube/Role=pilot/Capability=NULL" osg12
-   "/xenon.biggrid.nl/Role=NULL/Capability=NULL" osg13
+# VomsmapOverride: |+
 
 # If you wish to allow yourself to submit to this CE with your personal grid
 # proxy, you can put that in below. This will get directly mapped into

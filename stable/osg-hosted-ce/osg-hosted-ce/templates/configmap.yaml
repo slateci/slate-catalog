@@ -115,6 +115,32 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile-default
+  labels:
+    app: osg-hosted-ce
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  voms-mapfile-default: |+
+    "/osg/Role=NULL/Capability=NULL" osg
+    "/GLOW/Role=htpc/Capability=NULL" glow
+    "/hcc/Role=NULL/Capability=NULL" hcc
+    "/cms/*" cms
+    "/fermilab/*" fnal
+    "/osg/ligo/Role=NULL/Capability=NULL" ligo
+    "/virgo/ligo/Role=NULL/Capability=NULL" virgo
+    "/sdcc/Role=NULL/Capability=NULL" sdcc
+    "/sphenix/Role=NULL/Capability=NULL" sphenix
+    "/atlas/*" atlas
+    "/Gluex/Role=NULL/Capability=NULL" gluex
+    "/dune/Role=pilot/Capability=NULL" dune
+    "/icecube/Role=pilot/Capability=NULL" icecube
+    "/xenon.biggrid.nl/Role=NULL/Capability=NULL" xenon
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
   labels:
     app: osg-hosted-ce

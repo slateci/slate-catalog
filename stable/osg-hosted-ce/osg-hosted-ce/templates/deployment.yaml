@@ -30,6 +30,9 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile-default
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile-default
       {{ if .Values.VomsmapOverride }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
         configMap:
@@ -154,6 +157,9 @@ spec:
           mountPath: /etc/osg/git.key
           subPath: git.key
         {{ end }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile-default
+          mountPath: /usr/share/osg/voms-mapfile-default
+          subPath: voms-mapfile-default
         {{ if .Values.VomsmapOverride }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
           mountPath: /etc/grid-security/voms-mapfile
