@@ -47,7 +47,7 @@ data:
     ram_mb = {{ .Values.Cluster.Memory }}
     cores_per_node = {{ .Values.Cluster.CoresPerNode }}
     max_wall_time = {{ .Values.Cluster.MaxWallTime }}
-    allowed_vos = {{ .Values.Cluster.AllowedVOs }}
+    allowed_vos = {{- range $key, $val := .Values.Cluster.VoRemoteUserMapping }} {{ $key }}, {{- end }}
 
     [Squid]
     {{ if .Values.Squid.Location }}
@@ -75,27 +75,20 @@ data:
     TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
 {{ end }}
 
-    JOB_ROUTER_CLASSAD_USER_MAP_NAMES = REMOTE_USER
-    CLASSAD_USER_MAPFILE_REMOTE_USER = /etc/condor-ce/remote_user_mapfile
-
     JOB_ROUTER_DEFAULTS @=jrd
     $(JOB_ROUTER_DEFAULTS)
     [
-    GridResource = strcat("batch ", "{{ .Values.Cluster.RemoteBatch }}", userMap(REMOTE_USER, Owner, "", Owner), "@", "{{ .Values.Cluster.RemoteHost }}");
+    GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }}", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}");
     ]
     @jrd
-
-    JOB_ROUTER_SOURCE_JOB_CONSTRAINT = $(JOB_ROUTER_SOURCE_JOB_CONSTRAINT) && userMap(REMOTE_USER, Owner, "")
 
     JOB_ROUTER_ENTRIES @=jre
     [
     Name = "Hosted_CE_default_route";
-    Requirements = True;
     ]
 
     # Operator-provided HTCondor-CE configuration below this line
 {{ .Values.HTCondorCeConfig | default "" | indent 4 }}
-{{ if .Values.VomsmapOverride }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -108,35 +101,12 @@ metadata:
     release: {{ .Release.Name }}
 data:
   voms-mapfile: |+
-{{ .Values.VomsmapOverride | indent 4 }}
-{{ end }}
-{{ if .Values.GridmapOverride }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile-default
-  labels:
-    app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
-    instance: {{ .Values.Instance }}
-    release: {{ .Release.Name }}
-data:
-  voms-mapfile-default: |+
-    "/osg/Role=NULL/Capability=NULL" osg
-    "/GLOW/Role=htpc/Capability=NULL" glow
-    "/hcc/Role=NULL/Capability=NULL" hcc
-    "/cms/*" cms
-    "/fermilab/*" fnal
-    "/osg/ligo/Role=NULL/Capability=NULL" ligo
-    "/virgo/ligo/Role=NULL/Capability=NULL" virgo
-    "/sdcc/Role=NULL/Capability=NULL" sdcc
-    "/sphenix/Role=NULL/Capability=NULL" sphenix
-    "/atlas/*" atlas
-    "/Gluex/Role=NULL/Capability=NULL" gluex
-    "/dune/Role=pilot/Capability=NULL" dune
-    "/icecube/Role=pilot/Capability=NULL" icecube
-    "/xenon.biggrid.nl/Role=NULL/Capability=NULL" xenon
+    {{- range $index, $map := .Values.VoRemoteUserMapping }}
+    {{- range $voms, $user := $map }}
+    {{ $voms | quote }} {{ $user }}
+    {{- end }}
+    {{- end }}
+{{ if .Values.DnRemoteUserMapping }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -149,7 +119,11 @@ metadata:
     release: {{ .Release.Name }}
 data:
   grid-mapfile: |+
-{{ .Values.GridmapOverride | indent 4 }}
+    {{- range $index, $map := .Values.DnRemoteUserMapping }}
+    {{- range $dn, $user := $map }}
+    {{ $dn | quote }} {{ $user }}
+    {{- end}}
+    {{- end }}
 {{ end }}
 {{ if .Values.HTTPLogger.Enabled }}
 ---
