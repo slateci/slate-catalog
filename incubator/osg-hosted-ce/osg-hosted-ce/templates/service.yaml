@@ -9,6 +9,7 @@ metadata:
     instance: {{ .Values.Instance }}
 spec:
   type: LoadBalancer
+  externalTrafficPolicy: "Local"
   ports:
   - name: htcondor-ce
     port: 9619
