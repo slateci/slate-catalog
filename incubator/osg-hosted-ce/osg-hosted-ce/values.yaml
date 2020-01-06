@@ -42,7 +42,7 @@ Networking:
 # HTCondorCeConfig: |+
 #   JOB_ROUTER_ENTRIES @=jre
 #   [
-#     GridResource = "batch <REMOTE USER>@<REMOTE HOST> <REMOTE BATCH>";
+#     GridResource = "batch <REMOTE BATCH> <REMOTE USER>@<REMOTE HOST>";
 #     Requirements = (Owner == "<REMOTE USER>");
 #   ]
 #   [
