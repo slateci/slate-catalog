@@ -3,6 +3,7 @@ pipeline{
 	stages{
 		stage("Build"){
 			steps{
+				sh 'printenv'
 				sh 'mkdir -p build'
 				dir('build'){
 					sh 'cmake3 ..'
