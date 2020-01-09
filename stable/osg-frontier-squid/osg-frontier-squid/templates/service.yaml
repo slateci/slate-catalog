@@ -6,7 +6,7 @@ metadata:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   type: {{ .Values.Service.ExternalVisibility }}
   {{ if ne .Values.Service.ExternalVisibility "ClusterIP" }}
@@ -16,7 +16,7 @@ spec:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
   ports:
   - port: {{ .Values.Service.Port }}
     targetPort: squid
