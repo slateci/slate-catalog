@@ -6,7 +6,7 @@ metadata:
     app: {{ template "nginx.name" . }}
     chart: {{ template "nginx.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   type: NodePort
   ports:
@@ -16,7 +16,7 @@ spec:
     protocol: TCP
   selector:
     app: {{ template "nginx.name" . }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 ---
 {{ if .Values.Ingress.Enabled }}
 apiVersion: extensions/v1beta1
@@ -27,7 +27,7 @@ metadata:
     app: {{ template "nginx.name" . }}
     chart: {{ template "nginx.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.Ingress.Class }}
 spec:

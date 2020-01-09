@@ -6,7 +6,7 @@ metadata:
     app: {{ template "nginx.name" . }}
     chart: {{ template "nginx.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 data:
   index.html: |-
 {{ .Values.Data | indent 4 }}
