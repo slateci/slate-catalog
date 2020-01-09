@@ -6,7 +6,7 @@ metadata:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 data:
   condor_config.local: |-
 {{ .Values.CondorConfigFile | indent 4 }}
@@ -19,7 +19,7 @@ metadata:
   labels:
     app: htcondor
     chart: {{ template "htcondor.chart" . }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
     release: {{ .Release.Name }}
 data:
   start-nginx.sh: |+

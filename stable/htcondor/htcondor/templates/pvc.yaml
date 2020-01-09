@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-config-osg-{{ .Values.Instance }}
+  name: {{ printf "csi-cvmfs-pvc-config-osg-%s" .Values.Instance | trimSuffix "-" }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   accessModes:
   - ReadOnlyMany
@@ -18,12 +18,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-connect-{{ .Values.Instance }}
+  name: {{ printf "csi-cvmfs-pvc-connect-%s" .Values.Instance | trimSuffix "-" }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   accessModes:
   - ReadOnlyMany
@@ -35,12 +35,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-oasis-{{ .Values.Instance }}
+  name: {{ printf "csi-cvmfs-pvc-oasis-%s" .Values.Instance | trimSuffix "-" }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   accessModes:
   - ReadOnlyMany
@@ -52,12 +52,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-spt-{{ .Values.Instance }}
+  name: {{ printf "csi-cvmfs-pvc-spt-%s" .Values.Instance | trimSuffix "-" }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   accessModes:
   - ReadOnlyMany
@@ -69,12 +69,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-atlas-{{ .Values.Instance }}
+  name: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   accessModes:
   - ReadOnlyMany
@@ -86,12 +86,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-atlas-condb-{{ .Values.Instance }}
+  name: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   accessModes:
   - ReadOnlyMany
@@ -103,12 +103,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: csi-cvmfs-pvc-atlas-nightlies-{{ .Values.Instance }}
+  name: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
   labels:
     app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   accessModes:
   - ReadOnlyMany
