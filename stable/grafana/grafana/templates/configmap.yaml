@@ -6,7 +6,7 @@ metadata:
     app: {{ template "grafana.name" . }}
     chart: {{ template "grafana.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 data:
 {{- with .Values.plugins }}
   plugins: {{ . | quote }}
