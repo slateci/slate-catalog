@@ -8,6 +8,7 @@ metadata:
     app: {{ template "minio.name" . }}
     chart: {{ template "minio.chart" . }}
     release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
     heritage: {{ .Release.Service }}
 spec:
 {{- if and .Values.nasgateway.enabled .Values.nasgateway.pv }}

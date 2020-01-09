@@ -6,6 +6,7 @@ metadata:
     app: {{ template "minio.name" . }}
     chart: {{ template "minio.chart" . }}
     release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
     heritage: {{ .Release.Service }}
 {{- if .Values.service.annotations }}
   annotations:
@@ -41,3 +42,4 @@ spec:
   selector:
     app: {{ template "minio.name" . }}
     release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}

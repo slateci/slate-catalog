@@ -8,6 +8,7 @@ metadata:
     app: {{ template "minio.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
+    instance: {{ .Values.Instance | quote }}
     heritage: "{{ .Release.Service }}"
 spec:
   clusterIP: None
@@ -26,6 +27,7 @@ metadata:
     app: {{ template "minio.name" . }}
     chart: {{ template "minio.chart" . }}
     release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
     heritage: {{ .Release.Service }}
 spec:
   updateStrategy:
@@ -37,12 +39,14 @@ spec:
     matchLabels:
       app: {{ template "minio.name" . }}
       release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
   template:
     metadata:
       name: {{ template "minio.fullname" . }}
       labels:
         app: {{ template "minio.name" . }}
         release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
 {{- if .Values.podLabels }}
 {{ toYaml .Values.podLabels | indent 8 }}
 {{- end }}
