@@ -6,7 +6,7 @@ metadata:
     app: {{ template "htcondor.fullname" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: {{ .Values.CondorConfig.Instances }}
   selector:
@@ -14,14 +14,14 @@ spec:
       app: {{ template "htcondor.fullname" . }}
       chart: {{ template "htcondor.chart" . }}
       release: {{ .Release.Name }}
-      instance: {{ .Values.Instance }}
+      instance: {{ .Values.Instance | quote }}
   template:
     metadata:
       labels: 
         app: {{ template "htcondor.fullname" . }}
         chart: {{ template "htcondor.chart" . }}
         release: {{ .Release.Name }}
-        instance: {{ .Values.Instance }}
+        instance: {{ .Values.Instance | quote }}
     spec:
       volumes:
       {{ if .Values.HTTPLogger.Enabled }}

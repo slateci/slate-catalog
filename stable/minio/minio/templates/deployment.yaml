@@ -7,6 +7,7 @@ metadata:
     app: {{ template "minio.name" . }}
     chart: {{ template "minio.chart" . }}
     release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
     heritage: {{ .Release.Service }}
 spec:
   strategy:
@@ -42,7 +43,9 @@ spec:
       name: {{ template "minio.fullname" . }}
       labels:
         app: {{ template "minio.name" . }}
+        chart: {{ template "minio.chart" . }}
         release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
 {{- if .Values.podLabels }}
 {{ toYaml .Values.podLabels | indent 8 }}
 {{- end }}

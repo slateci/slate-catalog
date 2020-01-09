@@ -9,6 +9,7 @@ metadata:
     app: {{ template "grafana.name" $ }}
     chart: {{ template "grafana.chart" $ }}
     release: {{ $.Release.Name }}
+    instance: {{ .Values.Instance | quote }}
     heritage: {{ $.Release.Service }}
     dashboard-provider: {{ $provider }}
 data:

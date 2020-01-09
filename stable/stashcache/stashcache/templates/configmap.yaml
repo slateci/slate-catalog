@@ -52,5 +52,5 @@ metadata:
     app: {{ template "stashcache.name" . }}
     chart: {{ template "stashcache.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 
