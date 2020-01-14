@@ -79,7 +79,8 @@ spec:
       {{ if .Values.HTTPLogger.Enabled }}
       - name: logging-sidecar
         image: "nginx:1.15.9"
-        command: ["/usr/local/bin/start-nginx.sh"]
+        command: ["/bin/bash"]
+        args: ["/usr/local/bin/start-nginx.sh"]
         imagePullPolicy: IfNotPresent
         {{ if .Values.HTTPLogger.Secret }}
         env:
@@ -98,6 +99,7 @@ spec:
           mountPath: /usr/share/nginx/html
         - name: logger-startup
           mountPath: /usr/local/bin/start-nginx.sh
+          subPath: start-nginx.sh
       {{ end }}
       - name: htcondor-worker
         image: slateci/container-condor:latest
