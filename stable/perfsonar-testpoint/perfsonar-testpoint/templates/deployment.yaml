@@ -29,7 +29,6 @@ spec:
       hostNetwork: true
       securityContext: 
         privileged: true
-      privileged: true
       containers:
       - name: perfsonar-testpoint
         image: perfsonar/testpoint:staging
