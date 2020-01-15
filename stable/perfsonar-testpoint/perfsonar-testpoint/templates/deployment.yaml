@@ -28,11 +28,11 @@ spec:
     spec:
       hostNetwork: true
       containers:
-        securityContext: 
-          privileged: true
       - name: perfsonar-testpoint
         image: perfsonar/testpoint:staging
-        imagePullPolicy: IfNotPresent  
+        imagePullPolicy: IfNotPresent
+        securityContext: 
+          privileged: true
       restartPolicy: Always
       {{ if .Values.nodeSelection }}
       nodeSelector:
