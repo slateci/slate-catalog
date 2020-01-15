@@ -27,6 +27,8 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       hostNetwork: true
+      securityContext: 
+        privileged: true
       privileged: true
       containers:
       - name: perfsonar-testpoint
