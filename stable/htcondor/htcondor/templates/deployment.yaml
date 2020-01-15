@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "htcondor.fullname" . }}
   labels:
-    app: {{ template "htcondor.fullname" . }}
+    app: {{ template "htcondor.name" . }}
     chart: {{ template "htcondor.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
@@ -11,14 +11,14 @@ spec:
   replicas: {{ .Values.CondorConfig.Instances }}
   selector:
     matchLabels:
-      app: {{ template "htcondor.fullname" . }}
+      app: {{ template "htcondor.name" . }}
       chart: {{ template "htcondor.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance | quote }}
   template:
     metadata:
       labels: 
-        app: {{ template "htcondor.fullname" . }}
+        app: {{ template "htcondor.name" . }}
         chart: {{ template "htcondor.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
