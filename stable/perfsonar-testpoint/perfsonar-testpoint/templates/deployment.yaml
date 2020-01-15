@@ -27,9 +27,9 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       hostNetwork: true
-      securityContext: 
-        privileged: true
       containers:
+        securityContext: 
+          privileged: true
       - name: perfsonar-testpoint
         image: perfsonar/testpoint:staging
         imagePullPolicy: IfNotPresent  
