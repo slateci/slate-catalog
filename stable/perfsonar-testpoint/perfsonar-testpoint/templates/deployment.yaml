@@ -27,13 +27,12 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       hostNetwork: true
-      securityContext: 
-        privileged: true
-      privileged: true
       containers:
       - name: perfsonar-testpoint
         image: perfsonar/testpoint:staging
-        imagePullPolicy: IfNotPresent  
+        imagePullPolicy: IfNotPresent
+        securityContext: 
+          privileged: true
       restartPolicy: Always
       {{ if .Values.nodeSelection }}
       nodeSelector:
