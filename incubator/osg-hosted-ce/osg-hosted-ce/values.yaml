@@ -19,8 +19,10 @@ Cluster:
   MaxWallTime: 1440
   AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
 
+# Do NOT use environment variables for any of the Storage variables
 Storage:
-  GridDir: $HOME/bosco-osg-wn-client
+  # Absolute path to the local WN client installation
+  GridDir: /home/osg/bosco-osg-wn-client
   WorkerNodeTemp: /tmp
 
 Squid:
