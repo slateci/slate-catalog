@@ -26,8 +26,8 @@ Storage:
   WorkerNodeTemp: /tmp
 
 Squid:
-  Enabled: True
-  Location: squid.grid.uchicago.edu
+  # <FQDN>:<PORT> for the site's local squid server
+  Location: null
   
 Networking:
   # The hostname that the CE should use. 
@@ -96,8 +96,7 @@ VomsmapOverride: |+
 # 'hostcert.pem' and 'hostkey.pem' keys for the host certificate and
 # key, respectively
 Certificate:
-  Enabled: false
-#  Secret: my-secret
+  Secret: null
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
