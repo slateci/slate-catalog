@@ -50,7 +50,11 @@ data:
     allowed_vos = {{ .Values.Cluster.AllowedVOs }}
 
     [Squid]
-    enabled = {{ .Values.Squid.Enabled }} 
+    {{ if .Values.Squid.Location }}
+    enabled = True
+    {{ else }}
+    enabled = False
+    {{ end }}
     location =  {{ .Values.Squid.Location }}
     policy = DEFAULT
     cache_size = DEFAULT

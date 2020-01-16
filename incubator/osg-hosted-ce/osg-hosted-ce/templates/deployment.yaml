@@ -47,7 +47,7 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
-      {{ if .Values.Certificate.Enabled }}
+      {{ if .Values.Certificate.Secret }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-hostcertkeypair
         secret:
           secretName: {{ .Values.Certificate.Secret }}
@@ -125,7 +125,7 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
-        {{ if .Values.Certificate.Enabled }}
+        {{ if .Values.Certificate.Secret }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-hostcert
           mountPath: /etc/grid-security/hostcert.pem
           subPath: hostcert.pem
