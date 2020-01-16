@@ -47,6 +47,18 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
+      {{ if .Values.Certificate.Enabled }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-hostcertkeypair
+        secret:
+          secretName: {{ .Values.Certificate.Secret }}
+          items:
+            - key: hostcert.pem
+              path: hostcert.pem
+              mode: 256
+            - key: hostkey.pem
+              path: hostkey.pem
+              mode: 256
+      {{end}}
       {{ if .Values.BoscoOverrides.Enabled }}
       {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
@@ -113,6 +125,14 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
+        {{ if .Values.Certificate.Enabled }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-hostcert
+          mountPath: /etc/grid-security/hostcert.pem
+          subPath: hostcert.pem
+        - name: osg-hosted-ce-{{ .Values.Instance }}-hostkey
+          mountPath: /etc/grid-security/hostkey.pem
+          subPath: hostkey.pem
+        {{ end }}
         {{ if .Values.HTTPLogger.Enabled }}
         - name: log-volume
           mountPath: /var/log/condor-ce
