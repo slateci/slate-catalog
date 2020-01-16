@@ -93,8 +93,8 @@ VomsmapOverride: |+
 # Use a pre-existing certificate/key pair stored in a secret with
 # 'hostcert.pem' and 'hostkey.pem' keys for the host certificate and
 # key, respectively
- Certificate:
-   Enabled: false
+Certificate:
+  Enabled: false
 #  Secret: my-secret
 
 # FOR DEVELOPMENT PURPOSES ONLY!
