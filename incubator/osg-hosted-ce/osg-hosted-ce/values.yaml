@@ -90,6 +90,12 @@ VomsmapOverride: |+
 #GridmapOverride: |+
 #  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osg
 
+# Use a pre-existing certificate/key pair stored in a secret with
+# 'hostcert.pem' and 'hostkey.pem' keys for the host certificate and
+# key, respectively
+# Certificate:
+#  Secret: my-secret
+
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
 # - Configures the CE as an ITB host
