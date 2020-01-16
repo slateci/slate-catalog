@@ -13,6 +13,8 @@ Site:
   Longitude: 87.6298
 
 Cluster:
+  RemoteHost: remote-ssh.login.org
+  RemoteBatch: slurm
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
   Memory: 1024
   CoresPerNode: 4
