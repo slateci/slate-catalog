@@ -81,6 +81,10 @@ VoRemoteUserMapping:
   # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/XENON.yaml
   - "/xenon.biggrid.nl/Role=NULL/Capability=NULL": osg13
 
+##########################
+# OPTIONAL CONFIGURATION #
+##########################
+
 # DN to remote user mapping
 # For example, you may add your personal certificate's subject DN so
 # that you can submit jobs to this CE
