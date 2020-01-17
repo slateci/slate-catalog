@@ -1,11 +1,11 @@
 Instance: ""
 
 # Site information that should match the CE Topology registration
-Site:
+Topology:
   Resource: RESOURCE_NAME
-  ResourceGroup: Resource Group
+  ResourceGroup: RESOURCE_GROUP
   Sponsor: osg:100
-  Contact: Resource Contact
+  Contact: RESOURCE_CONTACT
   ContactEmail: support@example.edu
   City: City
   Country: US

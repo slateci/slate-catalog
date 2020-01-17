@@ -16,16 +16,16 @@ data:
     group = OSG
     {{ end }}
     host_name = localhost
-    resource = {{ .Values.Site.Resource }}
-    resource_group = {{ .Values.Site.ResourceGroup }}
-    sponsor = {{ .Values.Site.Sponsor }}
+    resource = {{ .Values.Topology.Resource }}
+    resource_group = {{ .Values.Topology.ResourceGroup }}
+    sponsor = {{ .Values.Topology.Sponsor }}
     site_policy = UNAVAILABLE
-    contact = {{ .Values.Site.Contact }}
-    email = {{ .Values.Site.ContactEmail }}
-    city = {{ .Values.Site.City }}
-    country = {{ .Values.Site.Country }}
-    latitude = {{ .Values.Site.Latitude }}
-    longitude = {{ .Values.Site.Longitude }}
+    contact = {{ .Values.Topology.Contact }}
+    email = {{ .Values.Topology.ContactEmail }}
+    city = {{ .Values.Topology.City }}
+    country = {{ .Values.Topology.Country }}
+    latitude = {{ .Values.Topology.Latitude }}
+    longitude = {{ .Values.Topology.Longitude }}
 
     [BOSCO]
     enabled = False
@@ -42,8 +42,8 @@ data:
     data_dir = None
     worker_node_temp = {{ .Values.RemoteCluster.WorkerNodeTemp }}
 
-    [Subcluster {{ .Values.Site.Resource }}]
-    name = {{ .Values.Site.Resource }}
+    [Subcluster {{ .Values.Topology.Resource }}]
+    name = {{ .Values.Topology.Resource }}
     ram_mb = {{ .Values.RemoteCluster.Memory }}
     cores_per_node = {{ .Values.RemoteCluster.CoresPerNode }}
     max_wall_time = {{ .Values.RemoteCluster.MaxWallTime }}

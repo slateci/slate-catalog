@@ -184,9 +184,9 @@ spec:
           value: {{ .Values.Networking.Hostname }}
         {{ end }}
         - name: CE_CONTACT
-          value: {{ .Values.Site.ContactEmail }}
+          value: {{ .Values.Topology.ContactEmail }}
         - name: RESOURCE_NAME
-          value: {{ .Values.Site.Resource }}
+          value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
           value: {{ .Values.RemoteCluster.LoginHost }}
         - name: REMOTE_BATCH
@@ -201,7 +201,7 @@ spec:
         - name: BOSCO_GIT_ENDPOINT
           value: {{ .Values.BoscoOverrides.GitEndpoint }}
         - name: BOSCO_DIRECTORY
-          value: {{ .Values.Site.Resource }}
+          value: {{ .Values.Topology.Resource }}
         {{ end }}
         lifecycle:
           preStop:
