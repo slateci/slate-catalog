@@ -95,7 +95,6 @@ VoRemoteUserMapping:
 BoscoOverrides:
   Enabled: false
   GitEndpoint: https://github.com/slateci/bosco-override-template
-  RepoNeedsPrivKey: false
   GitKeySecret: null
 
 # Enable a logging sidecar

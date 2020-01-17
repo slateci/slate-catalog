@@ -64,7 +64,7 @@ spec:
               mode: 256
       {{end}}
       {{ if .Values.BoscoOverrides.Enabled }}
-      {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
+      {{ if .Values.BoscoOverrides.GitKeySecret }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
         secret:
           secretName: {{ .Values.BoscoOverrides.GitKeySecret }}
