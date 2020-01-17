@@ -15,7 +15,8 @@ Topology:
 RemoteCluster:
   # SSH host
   LoginHost: remote-ssh.login.org
-  PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
+  # SLATE secret with 'bosco.key' containing the SSH key to access LoginHost:
+  PrivateKeySecret: lincolnb-bosco
   # condor, slurm, pbs, sge, or lsf
   Batch: slurm
   Memory: 1024
@@ -88,6 +89,7 @@ VoRemoteUserMapping:
 
 # Specify additional HTCondor-CE configuration
 # HTCondorCeConfig: |+
+#   ALL_DEBUG = D_ALWAYS:2 D_CAT
 
 # Options to allow override of the bosco directory from arbitrary git repos
 # Bosco override dirs are expected in the following location in the git repo:
@@ -95,6 +97,9 @@ VoRemoteUserMapping:
 BoscoOverrides:
   Enabled: false
   GitEndpoint: https://github.com/slateci/bosco-override-template
+  # If GitEndpoint requires authentication, create a SLATE secret with
+  # 'git.key' containing the private SSH key that can access
+  # it. Specify the name of the secret in GitKeySecret:
   GitKeySecret: null
 
 # Enable a logging sidecar
