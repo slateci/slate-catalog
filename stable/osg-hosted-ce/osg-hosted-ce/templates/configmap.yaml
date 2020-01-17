@@ -19,7 +19,6 @@ data:
     resource = {{ .Values.Topology.Resource }}
     resource_group = {{ .Values.Topology.ResourceGroup }}
     sponsor = {{ .Values.Topology.Sponsor }}
-    site_policy = UNAVAILABLE
     contact = {{ .Values.Topology.Contact }}
     email = {{ .Values.Topology.ContactEmail }}
     city = {{ .Values.Topology.City }}
@@ -30,16 +29,8 @@ data:
     [BOSCO]
     enabled = False
 
-    [Misc Services]
-    edit_lcmaps_db = True
-    authorization_method = vomsmap
-
     [Storage]
-    se_available = False
-    default_se = None
     grid_dir = {{ .Values.RemoteCluster.GridDir }}
-    app_dir = UNSET
-    data_dir = None
     worker_node_temp = {{ .Values.RemoteCluster.WorkerNodeTemp }}
 
     [Subcluster {{ .Values.Topology.Resource }}]
@@ -47,7 +38,6 @@ data:
     ram_mb = {{ .Values.RemoteCluster.Memory }}
     cores_per_node = {{ .Values.RemoteCluster.CoresPerNode }}
     max_wall_time = {{ .Values.RemoteCluster.MaxWallTime }}
-    allowed_vos = {{- range $key, $val := .Values.Cluster.VoRemoteUserMapping }} {{ $key }}, {{- end }}
 
     [Squid]
     {{ if .Values.RemoteCluster.Squid }}
@@ -56,9 +46,6 @@ data:
     enabled = False
     {{ end }}
     location =  {{ .Values.RemoteCluster.Squid }}
-    policy = DEFAULT
-    cache_size = DEFAULT
-    memory_size = DEFAULT
 ---
 apiVersion: v1
 kind: ConfigMap
