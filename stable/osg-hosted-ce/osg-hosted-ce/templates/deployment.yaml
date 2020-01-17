@@ -40,7 +40,7 @@ spec:
       {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
-          secretName: {{ .Values.Cluster.PrivateKeySecret }}
+          secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
           items:
           - key: bosco.key
             path: bosco.key
@@ -188,9 +188,11 @@ spec:
         - name: RESOURCE_NAME
           value: {{ .Values.Site.Resource }}
         - name: REMOTE_HOST
-          value: {{ .Values.Cluster.RemoteHost }}
+          value: {{ .Values.RemoteCluster.LoginHost }}
         - name: REMOTE_BATCH
-          value: {{ .Values.Cluster.RemoteBatch }}
+          value: {{ .Values.RemoteCluster.Batch }}
+        - name: REMOTE_OS_VER
+          value: {{ .Values.RemoteCluster.OperatingSystem }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"

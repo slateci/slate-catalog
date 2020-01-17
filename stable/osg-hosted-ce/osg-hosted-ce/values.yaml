@@ -12,24 +12,24 @@ Site:
   Latitude: 0.00
   Longitude: 0.00
 
-Cluster:
-  RemoteHost: remote-ssh.login.org
-  RemoteBatch: slurm
+RemoteCluster:
+  # SSH host
+  LoginHost: remote-ssh.login.org
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
+  # condor, slurm, pbs, sge, or lsf
+  Batch: slurm
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
-
-# Do NOT use environment variables for any of the Storage variables
-Storage:
   # Absolute path to the local WN client installation
+  # Do not use environment variables!
   GridDir: /home/osguser/bosco-osg-wn-client
+  # Worker node scratch space for payload jobs
+  # Do not use environment variables!
   WorkerNodeTemp: /tmp
+  # <IP OR FQDN>:<PORT> for the site's local squid server
+  Squid: null
 
-Squid:
-  # <IP OR HOSTNAME>:<PORT> for the site's local squid server
-  Location: null
-  
 Networking:
   ServiceType: "LoadBalancer"
   # The hostname that the CE should use. 
