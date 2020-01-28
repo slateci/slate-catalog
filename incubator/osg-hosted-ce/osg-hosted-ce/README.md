@@ -360,7 +360,7 @@ Testing HTCondor-CE authorization...
 Verified READ access for collector daemon at <0.0.0.0:9619?addrs=155.101.6.240-9619&noUDP&sock=collector>
 ********************************************************************************
 2020-01-24 08:58:41 ERROR: WRITE access failed for scheduler daemon at
-<0.0.0.0:9619?addrs=155.101.6.240-9619&noUDP&sock=1326_1aab_3>. Re-run
+<0.0.0.0:9619?addrs=0.0.0.0-9619&noUDP&sock=1326_1aab_3>. Re-run
 with '--debug' for more information.
 ********************************************************************************
 ```
