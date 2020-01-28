@@ -1,0 +1,192 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "osg-hosted-ce.fullname" . }}
+  labels:
+    app: {{ template "osg-hosted-ce.name" . }}
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "osg-hosted-ce.name" . }}
+      chart: {{ template "osg-hosted-ce.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
+  template:
+    metadata:
+      labels: 
+        app: {{ template "osg-hosted-ce.name" . }}
+        chart: {{ template "osg-hosted-ce.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      volumes:
+      - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-configuration
+      - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+      {{ if .Values.VomsmapOverride }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+      {{ end }}
+      {{ if .Values.GridmapOverride }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
+      {{ end }}
+      - name: bosco-ssh-private-key-volume
+        secret: 
+          secretName: {{ .Values.Cluster.PrivateKeySecret }}
+          items:
+          - key: bosco.key
+            path: bosco.key
+            mode: 256
+      {{ if .Values.Certificate.Secret }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-hostcertkeypair
+        secret:
+          secretName: {{ .Values.Certificate.Secret }}
+          items:
+            - key: hostcert.pem
+              path: hostcert.pem
+              mode: 256
+            - key: hostkey.pem
+              path: hostkey.pem
+              mode: 256
+      {{end}}
+      {{ if .Values.BoscoOverrides.Enabled }}
+      {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
+        secret:
+          secretName: {{ .Values.BoscoOverrides.GitKeySecret }}
+          items:
+          - key: git.key
+            path: git.key
+            mode: 256 
+      {{ end }}
+      {{ end }}
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {} 
+      - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
+      {{ end }}
+      {{ if .Values.HTTPLogger.Enabled }}
+      initContainers:
+      - name: logging-sidecar-init
+        image: opensciencegrid/hosted-ce:fresh
+        command: ['/bin/chown','condor:condor','/var/log/condor-ce']
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/condor-ce
+      {{ end }}
+      containers:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: logging-sidecar
+        volumeMounts:
+        - name: log-volume
+          mountPath: /usr/share/nginx/html
+        - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
+          mountPath: /usr/local/bin/start-nginx.sh
+          subPath: start-nginx.sh
+        ports: 
+        - name: logs
+          containerPort: 8080
+          protocol: TCP
+        image: "nginx:1.15.9"
+        command: ["/bin/bash"]
+        args: ["/usr/local/bin/start-nginx.sh"]
+        imagePullPolicy: IfNotPresent
+        {{ if .Values.HTTPLogger.Secret }}
+        env:
+          - name: HTPASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.HTTPLogger.Secret }}
+                key: HTPASSWD
+        {{ end }}
+      {{ end }}
+      - name: osg-hosted-ce
+        image: opensciencegrid/hosted-ce:fresh
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
+          mountPath: /tmp/99-local.ini
+          subPath: 99-local.ini
+        - name: bosco-ssh-private-key-volume
+          mountPath: /etc/osg/bosco.key
+          subPath: bosco.key
+        - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+          mountPath: /etc/condor-ce/config.d/99-instance.conf
+          subPath: 99-instance.conf
+        {{ if .Values.Certificate.Secret }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-hostcert
+          mountPath: /etc/grid-security/hostcert.pem
+          subPath: hostcert.pem
+        - name: osg-hosted-ce-{{ .Values.Instance }}-hostkey
+          mountPath: /etc/grid-security/hostkey.pem
+          subPath: hostkey.pem
+        {{ end }}
+        {{ if .Values.HTTPLogger.Enabled }}
+        - name: log-volume
+          mountPath: /var/log/condor-ce
+        {{ end }}
+        {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
+          mountPath: /etc/osg/git.key
+          subPath: git.key
+        {{ end }}
+        {{ if .Values.VomsmapOverride }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+          mountPath: /etc/grid-security/voms-mapfile
+          subPath: voms-mapfile
+        {{ end }}
+        {{ if .Values.GridmapOverride }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
+          mountPath: /etc/grid-security/grid-mapfile
+          subPath: grid-mapfile
+        {{ end }}
+        ports:
+        - name: htcondor-ce
+          containerPort: 9619
+          protocol: TCP
+        - name: http # needed to get a cert issued from Let's Encrypt
+          containerPort: 80
+          protocol: TCP
+        env:
+        - name: _CONDOR_NETWORK_HOSTNAME
+          value: {{ .Values.Networking.Hostname }}
+        - name: CE_HOSTNAME
+          value: {{ .Values.Networking.Hostname }}
+        - name: CE_CONTACT
+          value: {{ .Values.Site.ContactEmail }}
+        - name: RESOURCE_NAME
+          value: {{ .Values.Site.Resource }}
+        - name: REMOTE_HOST
+          value: {{ .Values.Cluster.RemoteHost }}
+        - name: REMOTE_BATCH
+          value: {{ .Values.Cluster.RemoteBatch }}
+        - name: REMOTE_OS_VER
+          value: {{ .Values.Cluster.OperatingSystem }}
+        - name: DEVELOPER
+          {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
+          value: "true"
+          {{ else }}
+          value: "false"
+          {{ end }}
+        {{ if .Values.BoscoOverrides.Enabled }}
+        - name: BOSCO_GIT_ENDPOINT
+          value: {{ .Values.BoscoOverrides.GitEndpoint }}
+        - name: BOSCO_DIRECTORY
+          value: {{ .Values.Site.Resource }}
+        {{ end }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/local/bin/drain-ce.sh"]
