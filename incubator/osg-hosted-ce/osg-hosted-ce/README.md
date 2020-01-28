@@ -5,13 +5,14 @@ An OSG Compute Element (CE) is an application that allows a site to contribute H
 The simplest way to start contributing resources to the OSG, for many sites, is via the "Hosted" CE. In the hosted case, installation and setup of the Compute Element is done by the OSG team, usually on a machine outside of your cluster, and uses standard OpenSSH as a transport for submitting jobs to your resources. With SLATE, we have simplified Hosted CE installation and made a shared operations model possible. Now the Compute Element can be hosted on your Kubernetes infrastructure on-prem and cooperatively managed by OSG and your local team.
 
 ---
-# Configuration
-All of the following sections will need to be configured appropriately in your
-HostedCE application. To download the configuration for this application:
+## Prerequisites
+- You must have a functional Kubernetes cluster with SLATE ([Instructions]( https://slateci.io/docs/cluster/))
 
-```
-slate app get-conf osg-hosted-ce > osg-hosted-ce.yaml
-```
+- You will need an external cluster with a functional batch system to connect with
+
+- You must be able to add a user account and corresponding SSH key to the external cluster
+
+- It is best to have a Squid Proxy for your CE to cache with. [You can deploy one through SLATE](https://portal.slateci.io/applications/osg-frontier-squid)
 
 ## Site
 The Site section needs to have information that will correspond with what will
