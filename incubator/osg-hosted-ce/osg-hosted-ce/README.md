@@ -14,6 +14,33 @@ The simplest way to start contributing resources to the OSG, for many sites, is 
 
 - It is best to have a Squid Proxy for your CE to cache with [You can deploy one through SLATE](https://portal.slateci.io/applications/osg-frontier-squid)
 
+## Site Setup 
+
+This should be done according to whatever process you normally use to create accounts for users.
+
+Once the account has been created, you'll want to create a new SSH key pair.
+The private part of the key will be stored within SLATE, and the public part of
+the key will be installed into `authorized_keys` file of the OSG user on your
+cluster. To generate the key, you'll need to run the following on some machine
+with OpenSSH installed:
+
+	ssh-keygen -f osg-keypair
+
+Note that you will need to make this key passphraseless, as the HostedCE
+software will consume this key. Once you've created the key, you'll want to
+store the public part of it (osg-keypair.pub) into the `authorized_keys` file
+on the OSG account for your cluster. For example, if your OSG service account
+is called `osg`, you'll want to append the contents of `osg-keypair.pub` to
+`/home/osg/.ssh/authorized_keys`. 
+
+The private part of the keypair will need to be stored on a SLATE cluster for use by the
+CE. In this particular example, I'll be operating under the `slate-dev` group and using the `uutah-prod` cluster to host a CE pointed at a SLURM cluster at University of Utah. To do that:
+
+	slate secret create hosted-ce-secret --from-file=bosco.key=osg-keypair --group <YOUR GROUP> --cluster <YOUR SLATE CLUSTER>
+
+Where `hosted-ce-secret` will be the name of the secret, and `osg-keypair` is the
+path to your private key (assumed to be the current working directory).
+
 ## Configuration
 
 Use the following command to obtain a copy of the application configuration file locally
