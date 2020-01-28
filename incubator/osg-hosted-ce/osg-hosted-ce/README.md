@@ -12,7 +12,7 @@ The simplest way to start contributing resources to the OSG, for many sites, is 
 
 - You must be able to add a user account and corresponding SSH key to the external cluster
 
-- It is best to have a Squid Proxy for your CE to cache with. [You can deploy one through SLATE](https://portal.slateci.io/applications/osg-frontier-squid)
+- It is best to have a Squid Proxy for your CE to cache with [You can deploy one through SLATE](https://portal.slateci.io/applications/osg-frontier-squid)
 
 ## Configuration
 
