@@ -449,5 +449,3 @@ Send an e-mail to [osg-gfactory-support@physics.ucsd.edu](mailto:osg-gfactory-su
 For more information please see here: https://opensciencegrid.org/docs/#verify-osg-software
 
 ---
-
-## Table of Configuration Parameters
