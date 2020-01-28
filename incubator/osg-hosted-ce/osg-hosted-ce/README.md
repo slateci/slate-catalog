@@ -14,42 +14,48 @@ The simplest way to start contributing resources to the OSG, for many sites, is 
 
 - It is best to have a Squid Proxy for your CE to cache with. [You can deploy one through SLATE](https://portal.slateci.io/applications/osg-frontier-squid)
 
-## Site
+## Configuration
+
+### Site
 The Site section needs to have information that will correspond with what will
 be registered in the OSG Topology site. For more information on topology please
 visit here:
 https://opensciencegrid.org/docs/common/registration/#registering-resources
 
-## Cluster
+### Cluster
 The cluster section contains configuration parameters for BOSCO, specifically
 the SSH configuration, whose private key must be stored as a SLATE secret and
 selection of the remote batch system.
 
-## Storage
+### Storage
 This section contains a `GridDir` parameter, which describes the location on
 the *remote* site where BLAHP/Glite binaries can be placed.  This section
 additionally requires that the application administrator configure the
 `WorkerNodeTemp` directory, which will be seen by jobs under the environment
 variable `$OSG_WN_TEMP` for scratch space.
 
-## Subcluster
+### Subcluster
 This section defines the attributes of the remote cluster, including the
 number of nodes, amount of memory per node, CPUs per node, etc. This also
 configures VOs allowed to submit to the remote resource.
 
-## Squid
+### Squid
 This section informs the HostedCE of the Squid proxy cache closest to the
 *remote* side, for job access.
 
 ---
-# Usage
+## Installation
 Once you have configured the HostedCE, you can install it in the following way:
 
 ```
 slate app install osg-hosted-ce --conf osg-hosted-ce.yaml --cluster <your cluster> --group <your group> 
 ```
 
-After registration, you'll need to send a mail to
+## Testing
+
+## Registration with OSG
+
+You'll need to send a mail to
 `osg-gfactory-support@physics.ucsd.edu` with the following details regarding
 your Hosted CE:
   - CE hostname
@@ -63,4 +69,4 @@ For more information please see here: https://opensciencegrid.org/docs/#verify-o
 
 ---
 
-# Table of Configuration Parameters
+## Table of Configuration Parameters
