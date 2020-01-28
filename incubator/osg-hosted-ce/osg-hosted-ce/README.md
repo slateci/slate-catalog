@@ -57,7 +57,7 @@ The resource name typically corresponds to the name of the remote resource. A go
 
 The resource group usually matches the group at the institution providing the resource, for example CHTC. There might already be an entry for that under OSG Topology. If possible, use the existing one. 
 
-Sponser should be left alone. Leave this as `osg:100`
+Sponsor should be left alone. Leave this as `osg:100`
 
 The Contact and corresponding ContactEmail sections should match the contact info for a support person or group responsible for the resource.
 
@@ -198,8 +198,8 @@ You can obtain one with your institutional credential at [cilogon.org](https://c
 	GridmapOverride: |+
 	  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osguser
 
-### Certficate 
-Each time the CE is deployed it requests a new certificate from Lets Encrypt, which has rate limits to prevent DOS attacks. This means that if you are redeploying a CE frequently for troubleshooting purposes, you may experience the rate limit.
+### Certificate 
+Each time the CE is deployed, it requests a new certificate from Let's Encrypt, which has rate limits to prevent denial-of-service attacks. This means that if you are redeploying a CE frequently for troubleshooting purposes, you may experience the rate limit.
 
 It is possible to save the certificate (hostkey.pem and hostcert.pem) and store these as a SLATE secret for re-use. This circumvents the rate limit. 
 
@@ -305,7 +305,7 @@ slate app install osg-hosted-ce --conf osg-hosted-ce.yaml --cluster <your cluste
 
 ### Obtain a Certificate
 
-In order to test end-to-end job submission through the CE you will need a valid grid proxy and the condor tools. First you must obtain a certificate.
+In order to test end-to-end job submission through the CE you will need a valid grid proxy and the HTCondor CE tools. First you must obtain a certificate.
 
 An easy way to do that is through [CILogon](https://cilogon.org/).
 
