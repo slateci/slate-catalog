@@ -1,11 +1,8 @@
 # OSG Hosted Compute Element
 
-This chart will install a Open Science Grid Hosted Compute Element (or HostedCE
-for short) on a target cluster.  The HostedCE is a job gateway that allows the
-OSG meta-scheduler to send pilot jobs to a target cluster via SSH. This
-software enables a campus computing center to provide compute cycles (such as
-extra cycles that would otherwise go wasted) to the Open Science Grid without
-installing additional software at their site.
+An OSG Compute Element (CE) is an application that allows a site to contribute HPC or HTC compute resources to the Open Science Grid. The CE is responsible for receiving jobs from the grid and routing them to your local cluster(s). Jobs from the Open Science Grid are preemptible, and can be configured to run only when resources would have otherwise been idle. Resource providers can use OSG to backfill their cluster(s) to efficiently utilize resources and contribute to the shared national cyberinfrastructure.
+
+The simplest way to start contributing resources to the OSG, for many sites, is via the "Hosted" CE. In the hosted case, installation and setup of the Compute Element is done by the OSG team, usually on a machine outside of your cluster, and uses standard OpenSSH as a transport for submitting jobs to your resources. With SLATE, we have simplified Hosted CE installation and made a shared operations model possible. Now the Compute Element can be hosted on your Kubernetes infrastructure on-prem and cooperatively managed by OSG and your local team.
 
 ---
 # Configuration
