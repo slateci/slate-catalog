@@ -13,7 +13,9 @@ Site:
   Longitude: 0.00
 
 Cluster:
-  PrivateKeySecret: hosted-ce-secret # maps to SLATE secret
+  RemoteHost: remote-ssh.login.org
+  RemoteBatch: slurm
+  PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
