@@ -168,6 +168,10 @@ spec:
           value: {{ .Values.Site.ContactEmail }}
         - name: RESOURCE_NAME
           value: {{ .Values.Site.Resource }}
+        - name: REMOTE_HOST
+          value: {{ .Values.Cluster.RemoteHost }}
+        - name: REMOTE_BATCH
+          value: {{ .Values.Cluster.RemoteBatch }}
         - name: REMOTE_OS_VER
           value: {{ .Values.Cluster.OperatingSystem }}
         - name: DEVELOPER
