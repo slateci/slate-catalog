@@ -276,13 +276,144 @@ slate app install osg-hosted-ce --conf osg-hosted-ce.yaml --cluster <your cluste
 
 ## Testing
 
+### Obtain a Certificate
+
+In order to test end-to-end job submission through the CE you will need a valid grid proxy and the condor tools. First you must obtain a certificate.
+
+An easy way to do that is through [CILogon](https://cilogon.org/).
+
+Create a cert and download it. You'll need to remember the password you set.
+
+### Convert the Certificate to PKCS12
+
+Next you will need to convert it to PKCS12 format for voms. These commands will prompt for your password.
+
+`openssl pkcs12 -in usercred.p12 -nocerts  -out hostkey.pem`
+
+`openssl pkcs12 -in usercred.p12 -nocerts -nodes -out hostkey.pem`
+
+Be sure that both files have the correct file permissions
+
+`chmod 600 hostkey.pem && chmod 600 hostcert.pem`
+
+### Install HTCondorCE Client 
+
+You will need to install `htcondor-ce-client` on the machine you would like to submit from.
+
+On EL7 enable the OSG yum repos
+
+`yum install https://repo.opensciencegrid.org/osg/3.5/osg-3.5-el7-release-latest.rpm && yum update`
+
+Then install the tools
+
+`yum clean all; yum install htcondor-ce-client`
+
+### Initialize Your Grid Proxy
+
+You should be able to use your cert to initialize your grid proxy
+
+`voms-proxy-init -cert hostcert.pem -key hostkey.pem --debug`
+
+Here I use the `--debug` flag because `voms-proxy-init` won't give us very helpful output, if it fails.
+
+If that was successful you should be able to run a job trace against your CE, which will trace the end-to-end submission of a small test job.
+
+### Run the Trace
+
+`condor_ce_trace hosted-ce.example.com`
+
+This command will output a great deal of helpful information about the job submission, it's status and the eventual result. If the jobs sits idle on the remote cluster for too long, the command may time out.
+
+### Understanding the ouput
+
+If authentication is successful you should see your job sbumit.
+
+```
+Testing HTCondor-CE authorization...
+Verified READ access for collector daemon at <0.0.0.0:9619?addrs=0.0.0.0-9619&noUDP&sock=collector>
+Verified WRITE access for scheduler daemon at <0.0.0.0:9619?addrs=0.0.0.0-9619&noUDP&sock=1326_1aab_3>
+Submitting job to schedd <0.0.0.0:9619?addrs=0.0.0.0-9619&noUDP&sock=1326_1aab_3>
+- Successful submission; cluster ID 3
+```
+
+This will be followed by the job's ClassAd which is a large description of the job and its state. ClassAds are also used to describe other types of objects in the CE software.
+
+After the ClassAd there should be some output describing the status of the job. The job will typically go form Held to Idle. It may stay idle for a long time waiting on available resource. Eventually the trace should report that the job was successful. 
+
+```
+Spooling cluster 3 files to schedd <0.0.0.0:9619?addrs=0.0.0.0-9619&noUDP&sock=1326_1aab_3>
+- Successful spooling
+Job status: Held
+Job transitioned from Held to Idle
+Job transitioned from Idle to Completed
+- Job was successful
+```
+
+If the jobs stays idle for too long, the trace may time out. You can simply run it again.
+
+### Authorization Failure
+
+You might see some output like this:
+
+```
+Testing HTCondor-CE authorization...
+Verified READ access for collector daemon at <0.0.0.0:9619?addrs=155.101.6.240-9619&noUDP&sock=collector>
+********************************************************************************
+2020-01-24 08:58:41 ERROR: WRITE access failed for scheduler daemon at
+<0.0.0.0:9619?addrs=155.101.6.240-9619&noUDP&sock=1326_1aab_3>. Re-run
+with '--debug' for more information.
+********************************************************************************
+```
+
+This error indicates that the CE is running and we can communicate with it, but it did not accept our credentials. This could be due to a number of reasons these are the most common:
+
+1) Your grid proxy isn't setup correctly
+
+2) Your grid proxy is expired
+
+3) You have not correctly added your identity to the CE GridmapOverride
+
+You can use `voms-proxy-info` to check the status of your grid proxy.
+
+If the command hangs, this could indicate a connection problem or an issue with the CE.
+
+You can run the command with the `--debug` flag to see verbose output.
+
+`condor_ce_trace --debug hosted-ce.example.com`
+
 ## Registration with OSG
 
-You'll need to send a mail to
-`osg-gfactory-support@physics.ucsd.edu` with the following details regarding
-your Hosted CE:
+You must properly register the CE with the OSG in order to recieve work from the grid.
+
+### Registering yourself as an OSG Contact
+
+Head over to [https://opensciencegrid.org/docs/common/registration/#registering-contacts](https://opensciencegrid.org/docs/common/registration/#registering-contacts) for instructions on registering yourself as a contact with OSG. 
+
+This will be important for creating the resource record under OSG Topology, which is required for the accounting data.
+
+It is possible to register an institutional contact such as a support list.
+
+### Registering the Resource in OSG Topology
+
+Once you are registered as a contact with the OSG, you can head over to the contact database to grab your contact ID.
+
+[https://topology.opensciencegrid.org/contacts](https://topology.opensciencegrid.org/contacts)
+
+You will need this when you register the Resource(s) in OSG topology. Following the instructions available at:
+
+[https://opensciencegrid.org/docs/common/registration/#new-site](https://opensciencegrid.org/docs/common/registration/#new-site)
+
+Go to the OSG Topology GitHub repository and fork it. You will need to find your site within the repository, or create a new directory for it. Following the template fill in the details about your CE (primarily from the `Site` section of the SLATE config).
+
+Submit your updated fork as a Pull Request to the main OSG Topology repository.
+
+### Registering the CE with the OSG Factory
+
+In order to recieve work from the OSG you must inform the factory operations team about your resource.
+
+Send an e-mail to [osg-gfactory-support@physics.ucsd.edu](mailto:osg-gfactory-support@physics.ucsd.edu) with all of the details of your CE:
+
   - CE hostname
-  - CE OS and Version
   - Details regarding: support for multicore, max wall time, max memory usage
   - GLIDEIN_Site (maps to ResourceGroup)
   - GLIDEIN_ResourceName (maps to Resource)
