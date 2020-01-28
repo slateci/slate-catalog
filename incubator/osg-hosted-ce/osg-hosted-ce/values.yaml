@@ -2,18 +2,18 @@ Instance: ""
 
 # Site information that should match the CE Topology registration
 Site:
-  Resource: UCHICAGO-SLATE
-  ResourceGroup: UCHICAGO
+  Resource: RESOURCE_NAME
+  ResourceGroup: Resource Group
   Sponsor: osg:100
-  Contact: Lincoln Bryant
-  ContactEmail: lincolnb@uchicago.edu
-  City: Chicago
+  Contact: Resource Contact
+  ContactEmail: support@example.edu
+  City: City
   Country: US
-  Latitude: 41.8781
-  Longitude: 87.6298
+  Latitude: 0.00
+  Longitude: 0.00
 
 Cluster:
-  PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
+  PrivateKeySecret: hosted-ce-secret # maps to SLATE secret
   Memory: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
@@ -22,7 +22,7 @@ Cluster:
 # Do NOT use environment variables for any of the Storage variables
 Storage:
   # Absolute path to the local WN client installation
-  GridDir: /home/osg/bosco-osg-wn-client
+  GridDir: /home/osguser/bosco-osg-wn-client
   WorkerNodeTemp: /tmp
 
 Squid:
@@ -56,9 +56,9 @@ Networking:
 #   <RESOURCE NAME>/bosco_override/
 BoscoOverrides:
   Enabled: true
-  GitEndpoint: git@gitlab.mwt2.org:osg/hosted-ce-config.git
-  RepoNeedsPrivKey: true
-  GitKeySecret: mwtGitLabSecret
+  GitEndpoint: https://github.com/slateci/bosco-override-template
+  RepoNeedsPrivKey: false
+  GitKeySecret: null
 
 # Enable a logging sidecar
 HTTPLogger:
