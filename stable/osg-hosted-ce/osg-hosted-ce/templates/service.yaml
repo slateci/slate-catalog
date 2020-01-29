@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "osg-hosted-ce.fullname" . }}
+  labels:
+    app: {{ template "osg-hosted-ce.name" . }}
+    chart: {{ template "osg-hosted-ce.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: "Local"
+  ports:
+  - name: htcondor-ce
+    port: 9619
+    targetPort: htcondor-ce
+    protocol: TCP
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  {{ if .Values.HTTPLogger.Enabled }}
+  - port: 8080
+    targetPort: logs
+    protocol: TCP
+    name: logs
+  {{ end }}
+  {{ if .Values.Networking.RequestIP }}
+  loadBalancerIP: {{ .Values.Networking.RequestIP }}
+  {{ end }}
+  selector:
+    app: {{ template "osg-hosted-ce.name" . }}
+    instance: {{ .Values.Instance }}
