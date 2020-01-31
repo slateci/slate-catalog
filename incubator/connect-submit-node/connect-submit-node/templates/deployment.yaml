@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "connect-submit-node.fullname" . }}
+  labels:
+    app: {{ template "connect-submit-node.fullname" . }}
+    chart: {{ template "connect-submit-node.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "connect-submit-node.fullname" . }}
+      chart: {{ template "connect-submit-node.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance }}
+  template:
+    metadata:
+      labels: 
+        app: {{ template "connect-submit-node.fullname" . }}
+        chart: {{ template "connect-submit-node.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance }}
+    spec:
+      volumes:
+      - name: condor-token-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
+          items: 
+          - key: {{ .Values.CondorConfig.CollectorHost }}
+            path: {{ .Values.CondorConfig.CollectorHost }}
+            mode: 256
+      - name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
+        configMap:
+          name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
+      - name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
+      containers:
+      - name: connect-submit-host
+        image: slateci/connect-submit-host:latest
+        volumeMounts:
+        - name: condor-token-volume
+          mountPath: /etc/condor/tokens.d/{{ .Values.CondorConfig.CollectorHost }}
+          subPath: {{ .Values.CondorConfig.CollectorHost }}
+        - name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
+          mountPath: /etc/condor/condor_config.local
+          subPath: condor_config.local
+        - name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
+          mountPath: /usr/local/etc/ciconnect/config
+          subPath: config
+        env:
+        - name: AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.UserConfig.ConnectToken }}
+              key: AUTH_TOKEN
+        resources:
+          requests:
+            # we'll make it a modest request for now
+            memory: {{ .Values.SystemConfig.Memory }}
+            cpu:    {{ .Values.SystemConfig.Cpu }}
