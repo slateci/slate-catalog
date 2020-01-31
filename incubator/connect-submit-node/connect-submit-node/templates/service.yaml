@@ -15,4 +15,3 @@ spec:
   selector:
     app: {{ template "connect-submit-node.fullname" . }}
     instance: {{ .Values.Instance }}
-release: {{ .Release.Name }}
