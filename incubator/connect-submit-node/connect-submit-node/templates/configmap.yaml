@@ -1,3 +1,4 @@
+{{ if .Values.CondorConfig.ConfigFile }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,8 +8,9 @@ metadata:
     instance: {{ .Values.Instance }}
 data:
   condor_config.local: |+
-{{ .Values.CondorConfig.ConfigFile | indent 4 }}
+{{ .Values.CondorConfig.ConfigFile  | indent 4 }}
 ---
+{{ end }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -26,6 +28,7 @@ data:
     # Apparently '[ -z "$PATH" ]' doesn't work because of some subtlety where Bash 
     # kind-of-sort-of says $PATH is set, even though it doesn't appear in `env`
     export PATH="$PATH:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin"
-    
+
     export INNER_GROUP="{{ .Values.UserConfig.ConnectInnerGroup }}"
     export OUTER_GROUP="{{ .Values.UserConfig.ConnectOuterGroup }}"
+
