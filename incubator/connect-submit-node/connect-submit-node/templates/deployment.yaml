@@ -31,10 +31,14 @@ spec:
           - key: {{ .Values.CondorConfig.CollectorHost }}
             path: {{ .Values.CondorConfig.CollectorHost }}
             mode: 256
+      {{ if .Values.CondorConfig.ConfigFile }}
       - name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
         configMap:
           name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
+      {{ end }}
       - name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
+        configMap:
+          name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
       containers:
       - name: connect-submit-host
         image: slateci/connect-submit-host:latest
@@ -42,9 +46,11 @@ spec:
         - name: condor-token-volume
           mountPath: /etc/condor/tokens.d/{{ .Values.CondorConfig.CollectorHost }}
           subPath: {{ .Values.CondorConfig.CollectorHost }}
+        {{ if .Values.CondorConfig.ConfigFile }}
         - name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
+        {{ end }}
         - name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
           mountPath: /usr/local/etc/ciconnect/config
           subPath: config
