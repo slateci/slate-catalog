@@ -61,9 +61,9 @@ spec:
               name: {{ .Values.UserConfig.ConnectToken }}
               key: API_TOKEN
         - name: OUTER_GROUP
-          value: {{ .Values.UserConfig.OuterGroup }}
+          value: {{ .Values.UserConfig.ConnectOuterGroup }}
         - name: INNER_GROUP
-          value: {{ .Values.UserConfig.InnerGroup }}
+          value: {{ .Values.UserConfig.ConnectInnerGroup }}
         resources:
           requests:
             # we'll make it a modest request for now
