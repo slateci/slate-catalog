@@ -40,8 +40,8 @@ spec:
         configMap:
           name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
       containers:
-      - name: connect-submit-host
-        image: slateci/connect-submit-host:latest
+      - name: connect-submit-node
+        image: slateci/connect-submit-node:latest
         volumeMounts:
         - name: condor-token-volume
           mountPath: /etc/condor/tokens.d/{{ .Values.CondorConfig.CollectorHost }}
