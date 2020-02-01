@@ -44,7 +44,7 @@ spec:
         image: slateci/connect-submit-node:latest
         volumeMounts:
         - name: condor-token-volume
-          mountPath: /etc/condor/tokens.d/{{ .Values.CondorConfig.CollectorHost }}
+          mountPath: /root/tokens/{{ .Values.CondorConfig.CollectorHost }}
           subPath: {{ .Values.CondorConfig.CollectorHost }}
         {{ if .Values.CondorConfig.ConfigFile }}
         - name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
