@@ -26,7 +26,7 @@ spec:
       volumes:
       - name: condor-token-volume
         secret:
-          secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
+          secretName: {{ .Values.CondorConfig.AuthToken }}
           items: 
           - key: {{ .Values.CondorConfig.CollectorHost }}
             path: {{ .Values.CondorConfig.CollectorHost }}
