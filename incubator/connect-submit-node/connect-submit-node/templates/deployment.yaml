@@ -55,11 +55,11 @@ spec:
           mountPath: /usr/local/etc/ciconnect/config
           subPath: config
         env:
-        - name: AUTH_TOKEN
+        - name: API_TOKEN
           valueFrom:
             secretKeyRef:
               name: {{ .Values.UserConfig.ConnectToken }}
-              key: AUTH_TOKEN
+              key: API_TOKEN
         resources:
           requests:
             # we'll make it a modest request for now
