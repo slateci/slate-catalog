@@ -42,4 +42,10 @@ RUN yum clean all && rm -rf /tmp/yum*
 
 ADD container-files /
 
+# Make sure we have some needed dirs
+RUN mkdir -p /etc/condor/passwords.d && \
+    mkdir -p /etc/condor/tokens.d && \
+    chown condor: /etc/condor/passwords.d && \
+    chown condor: /etc/condor/tokens.d
+
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
