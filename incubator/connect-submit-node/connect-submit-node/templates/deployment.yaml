@@ -60,6 +60,10 @@ spec:
             secretKeyRef:
               name: {{ .Values.UserConfig.ConnectToken }}
               key: API_TOKEN
+        - name: OUTER_GROUP
+          value: {{ .Values.UserConfig.OuterGroup }}
+        - name: INNER_GROUP
+          value: {{ .Values.UserConfig.InnerGroup }}
         resources:
           requests:
             # we'll make it a modest request for now
