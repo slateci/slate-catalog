@@ -42,3 +42,9 @@ SquidConf:
   # The default set of ranges are those defined in RFC 1918 and typically used 
   # within kubernetes clusters. 
   IPRange: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+  
+  # Hostname (FQDN) for the cluster node you want this instance to schedule on.
+  # This will also be the hostname used to access the squid if ExternalVisibility is set to NodePort
+  # Set this to null to be randomly assigned an available node
+NodeSelection:  
+  Hostname: null
