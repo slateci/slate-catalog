@@ -22,5 +22,14 @@ $ slate app install osg-frontier-squid --group <group-name> --cluster <cluster-n
 | CacheMem | The amount of memory that Squid may use for caching hot objects | `128 MB` |
 | CacheSize | The amount of disk space that Squid may use for caching cold objects | `10000 MB` |
 | IPRange | A space separated list of source address CIDRs that can access the cache. **NOTE** Incorrectly specifying this may lead to open proxies on your network! | `10.0.0.0/8 172.16.0.0/12 192.168.0.0/16` |  
+| Hostname |FQDN for the cluster node you want this instance to schedule on | `null` |
+
+&ast;```Hostname``` is nested under ```NodeSelection```:
+
+```
+NodeSelection:
+  Hostname: null
+```
+
 ### Usage
 For more instructions on how to use OSG Frontier Squid please read this [documentation](https://opensciencegrid.org/docs/data/frontier-squid/)
