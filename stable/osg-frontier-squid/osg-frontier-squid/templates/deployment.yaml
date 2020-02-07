@@ -31,8 +31,8 @@ spec:
         storage: "local"
         {{ end }}
         # For Node Selection
-        {{ if .Values.DesiredNode }}
-        kubernetes.io/hostname: "{{ .Values.DesiredNode }}"
+        {{ if .Values.NodeSelection.Hostname }}
+        kubernetes.io/hostname: {{ .Values.NodeSelection.Hostname }}
         {{ end }}
       containers:
       # Container for the primary application, OSG Frontier Squid
