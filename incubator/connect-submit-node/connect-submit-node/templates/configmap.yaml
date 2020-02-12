@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
+  name: {{ template "connect-submit-node.name" . }}-condor-configuration
   labels:
     app: connect-submit-node
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote}}
 data:
   condor_config.local: |+
 {{ .Values.CondorConfig.ConfigFile  | indent 4 }}
@@ -14,10 +14,10 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
+  name: {{ template "connect-submit-node.name" . }}-provisioner-configuration
   labels:
     app: connect-submit-node
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 data:
   config: |+
     #!/bin/sh

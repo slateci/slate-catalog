@@ -6,7 +6,7 @@ metadata:
     app: {{ template "connect-submit-node.fullname" . }}
     chart: {{ template "connect-submit-node.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: 1
   selector:
@@ -14,14 +14,14 @@ spec:
       app: {{ template "connect-submit-node.fullname" . }}
       chart: {{ template "connect-submit-node.chart" . }}
       release: {{ .Release.Name }}
-      instance: {{ .Values.Instance }}
+      instance: {{ .Values.Instance | quote }}
   template:
     metadata:
       labels: 
         app: {{ template "connect-submit-node.fullname" . }}
         chart: {{ template "connect-submit-node.chart" . }}
         release: {{ .Release.Name }}
-        instance: {{ .Values.Instance }}
+        instance: {{ .Values.Instance | quote }}
     spec:
       hostNetwork: true 
       volumes:
@@ -33,13 +33,13 @@ spec:
             path: {{ .Values.CondorConfig.CollectorHost }}
             mode: 256
       {{ if .Values.CondorConfig.ConfigFile }}
-      - name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
+      - name: {{ template "connect-submit-node.name" . }}-condor-configuration
         configMap:
-          name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
+          name: {{ template "connect-submit-node.name" . }}-condor-configuration
       {{ end }}
-      - name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
+      - name: {{ template "connect-submit-node.name" . }}-provisioner-configuration
         configMap:
-          name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
+          name: {{ template "connect-submit-node.name" . }}-provisioner-configuration
       containers:
       - name: connect-submit-node
         image: slateci/connect-submit-node:latest
@@ -48,11 +48,11 @@ spec:
           mountPath: /root/tokens/{{ .Values.CondorConfig.CollectorHost }}
           subPath: {{ .Values.CondorConfig.CollectorHost }}
         {{ if .Values.CondorConfig.ConfigFile }}
-        - name: connect-submit-node-{{ .Values.Instance }}-condor-configuration
+        - name: {{ template "connect-submit-node.name" . }}-condor-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
         {{ end }}
-        - name: connect-submit-node-{{ .Values.Instance }}-provisioner-configuration
+        - name: {{ template "connect-submit-node.name" . }}-provisioner-configuration
           mountPath: /usr/local/etc/ciconnect/config
           subPath: config
         env:

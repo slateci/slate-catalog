@@ -1,5 +1,5 @@
 # Generates app name as "connect-submit-[Instance]"
-Instance: global
+Instance: ""
 
 UserConfig: 
   Mode: connectapi
