@@ -1,7 +1,5 @@
-# Instance to label use case of Frontier Squid deployment
-# Generates app name as "condor-[Instance]"
-# Enables unique instances of Frontier Squid in one namespace
-Instance: global
+# Generates app name as "htcondor-[Instance]"
+Instance: ""
 
 HTTPLogger:
   Enabled: false
@@ -48,13 +46,19 @@ CondorConfigFile: |-
   PREEMPT                             = FALSE
   KILL                                = FALSE
   DAEMON_LIST                         = MASTER, STARTD
+  TRUST_UID_DOMAIN                    = False
+  FILESYSTEM_DOMAIN                   = $(UTSNAME_NODENAME)
   ALLOW_WRITE                         = condor_pool@*, submit-side@matchsession
   SEC_DEFAULT_AUTHENTICATION          = PREFERRED
-  SEC_DEFAULT_ENCRYPTION              = OPTIONAL
+  SEC_DEFAULT_ENCRYPTION              = REQUIRED
   SEC_DEFAULT_INTEGRITY               = REQUIRED
-  SEC_DEFAULT_AUTHENTICATION_METHODS  = PASSWORD
-  SEC_PASSWORD_FILE                   = /etc/condor/condor_password
-  ALLOW_ADMINISTRATOR                 = condor_pool@*/*
+  SEC_DEFAULT_AUTHENTICATION_METHODS  = TOKEN,FS
+  SEC_CLIENT_AUTHENTICATION_METHODS   = TOKEN,FS
+  SEC_DAEMON_AUTHENTICATION_METHODS   = TOKEN,FS
+  SEC_NEGOTIATOR_AUTHENTICATION_METHODS = TOKEN,FS
+  COLLECTOR_MAX_FILE_DESCRIPTORS      = 1024
+  SHARED_PORT_MAX_FILE_DESCRIPTORS    = 1024
+  ALLOW_ADMINISTRATOR                 = condor_pool@*/*, condor@$(HOSTNAME)
   USE_SHARED_PORT                     = TRUE
   SHARED_PORT_PORT                    = 0
   COLLECTOR_PORT                      = 9618
@@ -64,6 +68,8 @@ CondorConfigFile: |-
   NUM_SLOTS_TYPE_1                    = 1
   SLOT_TYPE_1                         = cpus=100%
   SLOT_TYPE_1_PARTITIONABLE           = TRUE
-  POD_NAME                            = $RANDOM_INTEGER(10000,99999,1)
-  MASTER_NAME                         = $(POD_NAME)
-  STARTD_NAME                         = $(POD_NAME)
+  POD_NAME                            = $(UTSNAME_NODENAME)
+  MASTER_NAME                         = $(UTSNAME_NODENAME)
+  STARTD_NAME                         = $(UTSNAME_NODENAME)
+  CREDD_OAUTH_MODE = True
+  TOKENS = True

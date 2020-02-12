@@ -62,6 +62,7 @@ spec:
         persistentVolumeClaim:
           claimName: csi-cvmfs-pvc-atlas-nightlies-{{ .Values.Instance }}
       {{ end }}
+      {{ if .Values.CondorConfig.PasswordFileSecret }}
       - name: condor-passwordfile-volume
         secret:
           secretName: {{ .Values.CondorConfig.PasswordFileSecret }}
@@ -69,12 +70,23 @@ spec:
           - key: condor_password
             path: condor_password
             mode: 256
+      {{ end }}
+      {{ if .Values.CondorConfig.AuthToken }}
+      - name: condor-token-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.AuthToken }}
+          items:
+          - key: {{ .Values.CondorConfig.CollectorHost }}
+            path: {{ .Values.CondorConfig.CollectorHost }}
+            mode: 256
+      {{ end }}
       - name: htcondor-{{ .Values.Instance }}-configuration
         configMap:
           name: htcondor-{{ .Values.Instance}}-configuration
       {{ if .Values.CondorConfig.PriorityClass }}
       priorityClassName: {{ .Values.CondorConfig.PriorityClass }}
       {{ end }}
+      terminationGracePeriodSeconds: 30
       containers:
       {{ if .Values.HTTPLogger.Enabled }}
       - name: logging-sidecar
@@ -110,9 +122,16 @@ spec:
         {{ end }}
         - name: executedir
           mountPath: /var/lib/condor/execute
+        {{ if .Values.CondorConfig.PasswordFileSecret }}
         - name: condor-passwordfile-volume
           mountPath: /etc/condor/condor_password
           subPath: condor_password
+        {{ end }}
+        {{ if .Values.CondorConfig.AuthToken }}
+        - name: condor-token-volume
+          mountPath: /root/tokens/{{ .Values.CondorConfig.CollectorHost }}
+          subPath: {{ .Values.CondorConfig.CollectorHost }}
+        {{ end }}
         - name: htcondor-{{ .Values.Instance}}-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
@@ -162,4 +181,4 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["/usr/sbin/condor_off","-peaceful"]
+              command: ["/bin/sh","-c","condor_off ; sleep 10"]
