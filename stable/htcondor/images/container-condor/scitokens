@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# get the glidein configuration file name
+# must use glidein_config, it is used as global variable
+glidein_config=$1
+
+# import add_config_line function
+add_config_line_source=`grep '^ADD_CONFIG_LINE_SOURCE ' $glidein_config | awk '{print $2}'`
+condor_vars_file=`grep -i "^CONDOR_VARS_FILE " $glidein_config | awk '{print $2}'`
+source $add_config_line_source
+
+####################
+# SciTokens configuration
+
+# SEC_CREDENTIAL_DIRECTORY=<dir>
+# TOKENS=TRUE
+# SEC_DAEMON_ENCRYPTION=REQUIRED
+
+# First, get the current directory, and create a credentials directory
+credentials_dir=`pwd`/creds
+mkdir -p $credentials_dir
+
+# Set all the configs
+
+# SEC_CREDENTIAL_DIRECTORY = ${credentials_dir} (defined above)
+add_config_line_safe SEC_CREDENTIAL_DIRECTORY "${credentials_dir}"
+add_condor_vars_line SEC_CREDENTIAL_DIRECTORY "C" "-" "+" "N" "N" "-"
+
+# 3/13/19 - zmiller suggested for 8.8.1
+add_config_line_safe CREDD_OAUTH_MODE "TRUE"
+add_condor_vars_line CREDD_OAUTH_MODE "C" "-" "+" "N" "N" "-"
+
+# SEC_CREDENTIAL_DIRECTORY = ${credentials_dir} (defined above)
+add_config_line_safe TOKENS "TRUE"
+add_condor_vars_line TOKENS "C" "-" "+" "N" "N" "-"
+
+# SEC_CREDENTIAL_DIRECTORY = ${credentials_dir} (defined above)
+add_config_line_safe SEC_DAEMON_ENCRYPTION "REQUIRED"
+add_condor_vars_line SEC_DAEMON_ENCRYPTION "C" "-" "+" "N" "N" "-"
+
