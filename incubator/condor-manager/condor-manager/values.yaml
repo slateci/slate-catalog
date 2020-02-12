@@ -1,0 +1,8 @@
+# Generates app name as "connect-submit-[Instance]"
+Instance: ""
+
+CondorConfig:
+  # Extra configuration can be added via the ConfigFile parameter
+  # ConfigFile: |+
+  #   COLLECTOR_NAME = "MyPool"
+  #   NEGOTIATOR_INTERVAL = 60

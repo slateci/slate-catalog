@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "condor-manager.fullname" . }}
+  labels:
+    app: {{ template "condor-manager.fullname" . }}
+    chart: {{ template "condor-manager.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "condor-manager.fullname" . }}
+      chart: {{ template "condor-manager.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  template:
+    metadata:
+      labels: 
+        app: {{ template "condor-manager.fullname" . }}
+        chart: {{ template "condor-manager.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      containers:
+      - name: condor-manager
+        image: slateci/condor-manager:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: condor-shared
+          containerPort: 9618
