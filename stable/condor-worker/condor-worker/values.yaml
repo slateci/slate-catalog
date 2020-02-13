@@ -15,7 +15,10 @@ CondorConfig:
   CollectorHost: localhost
   # The name of the secret that was created for your HTCondor password file
   # This must be created *BEFORE* you instantiate the chart.
-  PasswordFileSecret: condor-password 
+  PasswordFileSecret: null
+  # The name of the secret that was created for your HTCondor token file
+  # This must be created *BEFORE* you instantiate the chart.
+  AuthTokenSecret: null
   # The amount of memory (in MB) that Condor may use on the machine.
   MemoryLimit: 512
   # The number of CPUs that this condor instance may take advantage of.

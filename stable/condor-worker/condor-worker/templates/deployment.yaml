@@ -1,25 +1,28 @@
+{{ if not (or .Values.CondorConfig.PasswordFileSecret .Values.CondorConfig.AuthTokenSecret) }}
+  {{ required "Either PasswordFileSecret or AuthTokenSecret should be set" .Values.Error_DoNotSet }}
+{{ end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "htcondor.fullname" . }}
+  name: {{ template "condor-worker.fullname" . }}
   labels:
-    app: {{ template "htcondor.name" . }}
-    chart: {{ template "htcondor.chart" . }}
+    app: {{ template "condor-worker.name" . }}
+    chart: {{ template "condor-worker.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 spec:
   replicas: {{ .Values.CondorConfig.Instances }}
   selector:
     matchLabels:
-      app: {{ template "htcondor.name" . }}
-      chart: {{ template "htcondor.chart" . }}
+      app: {{ template "condor-worker.name" . }}
+      chart: {{ template "condor-worker.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance | quote }}
   template:
     metadata:
       labels: 
-        app: {{ template "htcondor.name" . }}
-        chart: {{ template "htcondor.chart" . }}
+        app: {{ template "condor-worker.name" . }}
+        chart: {{ template "condor-worker.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
@@ -29,7 +32,7 @@ spec:
         emptyDir: {}
       - name: logger-startup
         configMap:
-          name: htcondor-{{ .Values.Instance }}-logger-startup
+          name: condor-worker-{{ .Values.Instance }}-logger-startup
       {{ end }}
       - name: executedir
         {{ if .Values.CondorConfig.ExecuteDir }}
@@ -71,18 +74,18 @@ spec:
             path: condor_password
             mode: 256
       {{ end }}
-      {{ if .Values.CondorConfig.AuthToken }}
+      {{ if .Values.CondorConfig.AuthTokenSecret }}
       - name: condor-token-volume
         secret:
-          secretName: {{ .Values.CondorConfig.AuthToken }}
+          secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
           items:
-          - key: {{ .Values.CondorConfig.CollectorHost }}
-            path: {{ .Values.CondorConfig.CollectorHost }}
+          - key: condor_token
+            path: condor_token
             mode: 256
       {{ end }}
-      - name: htcondor-{{ .Values.Instance }}-configuration
+      - name: condor-worker-{{ .Values.Instance }}-configuration
         configMap:
-          name: htcondor-{{ .Values.Instance}}-configuration
+          name: condor-worker-{{ .Values.Instance}}-configuration
       {{ if .Values.CondorConfig.PriorityClass }}
       priorityClassName: {{ .Values.CondorConfig.PriorityClass }}
       {{ end }}
@@ -113,8 +116,8 @@ spec:
           mountPath: /usr/local/bin/start-nginx.sh
           subPath: start-nginx.sh
       {{ end }}
-      - name: htcondor-worker
-        image: slateci/container-condor:latest
+      - name: condor-worker-worker
+        image: slateci/condor-worker:latest
         volumeMounts:
         {{ if .Values.HTTPLogger.Enabled }}
         - name: log-volume
@@ -127,12 +130,12 @@ spec:
           mountPath: /etc/condor/condor_password
           subPath: condor_password
         {{ end }}
-        {{ if .Values.CondorConfig.AuthToken }}
+        {{ if .Values.CondorConfig.AuthTokenSecret }}
         - name: condor-token-volume
-          mountPath: /root/tokens/{{ .Values.CondorConfig.CollectorHost }}
-          subPath: {{ .Values.CondorConfig.CollectorHost }}
+          mountPath: /root/tokens/condor_token
+          subPath: condor_token
         {{ end }}
-        - name: htcondor-{{ .Values.Instance}}-configuration
+        - name: condor-worker-{{ .Values.Instance}}-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
         {{ if .Values.CondorConfig.Cvmfs }}

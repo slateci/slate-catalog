@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: htcondor-{{ .Values.Instance }}-configuration
+  name: condor-worker-{{ .Values.Instance }}-configuration
   labels:
-    app: {{ template "htcondor.name" . }}
-    chart: {{ template "htcondor.chart" . }}
+    app: {{ template "condor-worker.name" . }}
+    chart: {{ template "condor-worker.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
@@ -15,10 +15,10 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: htcondor-{{ .Values.Instance }}-logger-startup
+  name: condor-worker-{{ .Values.Instance }}-logger-startup
   labels:
-    app: htcondor
-    chart: {{ template "htcondor.chart" . }}
+    app: condor-worker
+    chart: {{ template "condor-worker.chart" . }}
     instance: {{ .Values.Instance | quote }}
     release: {{ .Release.Name }}
 data:
