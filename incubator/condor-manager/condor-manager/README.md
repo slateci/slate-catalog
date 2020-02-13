@@ -89,7 +89,7 @@ Then, install the submit node application:
 	$ slate app install --dev condor-submit --group <some group> --cluster <a cluster> --conf submit.conf
 	Successfully installed application condor-submit as instance some-group-condor-submit with ID instance_7Bhtyh4nHfs
 
-You can then determine 
+You can then determine where your submit node is running:
 
 	$ ./slate instance info instance_7Bhtyh4nHfs
 	Name           Started          Group     Cluster       ID
@@ -107,7 +107,7 @@ You can then determine
 	    Host IP: 192.170.227.253
 	    . . . 
 
-THe important item needed at this time is the Host IP (192.170.227.253 in this case). You should be able to connect to the application interactively with SSH using your CI-Connect keypair and username on port 2222:
+The important item needed at this time is the Host IP (192.170.227.253 in this case). You should be able to connect to the application interactively with SSH using your CI-Connect keypair and username on port 2222:
 
 	$ ssh -i ~/.ssh/<private key> -p 2222 <user name>@192.170.227.253
 	Enter passphrase for key '~/.ssh/<private key>': 
