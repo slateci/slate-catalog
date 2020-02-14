@@ -128,12 +128,14 @@ spec:
           mountPath: /cvmfs/spt.opensciencegrid.org
         - name: connect
           mountPath: /cvmfs/connect.opensciencegrid.org
-        - name: atlas
-          mountPath: /cvmfs/atlas.cern.ch
-        - name: atlas-nightlies
-          mountPath: /cvmfs/atlas-nightlies.cern.ch
-        - name: atlas-condb
-          mountPath: /cvmfs/atlas-condb.cern.ch
+        - name: singularity
+          mountPath: /cvmfs/singularity.opensciencegrid.org
+#        - name: atlas
+#          mountPath: /cvmfs/atlas.cern.ch
+#        - name: atlas-nightlies
+#          mountPath: /cvmfs/atlas-nightlies.cern.ch
+#        - name: atlas-condb
+#          mountPath: /cvmfs/atlas-condb.cern.ch
         {{ end }}
         env:
         - name: _CONDOR_COLLECTOR_HOST
