@@ -25,11 +25,15 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
-      # Required affinity for using local storage
-      {{ if .Values.SLATE.LocalStorage }}
       nodeSelector:
+        # Required affinity for using local storage
+        {{ if .Values.SLATE.LocalStorage }}
         storage: "local"
-      {{ end }}
+        {{ end }}
+        # For Node Selection
+        {{ if .Values.NodeSelection.Hostname }}
+        kubernetes.io/hostname: {{ .Values.NodeSelection.Hostname }}
+        {{ end }}
       containers:
       # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid
