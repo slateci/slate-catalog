@@ -55,15 +55,15 @@ spec:
       - name: connect
         persistentVolumeClaim:
           claimName: csi-cvmfs-pvc-connect-{{ .Values.Instance }}
-      - name: atlas
-        persistentVolumeClaim:
-          claimName: csi-cvmfs-pvc-atlas-{{ .Values.Instance }}
-      - name: atlas-condb
-        persistentVolumeClaim:
-          claimName: csi-cvmfs-pvc-atlas-condb-{{ .Values.Instance }}
-      - name: atlas-nightlies
-        persistentVolumeClaim:
-          claimName: csi-cvmfs-pvc-atlas-nightlies-{{ .Values.Instance }}
+#      - name: atlas
+#        persistentVolumeClaim:
+#          claimName: csi-cvmfs-pvc-atlas-{{ .Values.Instance }}
+#      - name: atlas-condb
+#        persistentVolumeClaim:
+#          claimName: csi-cvmfs-pvc-atlas-condb-{{ .Values.Instance }}
+#      - name: atlas-nightlies
+#        persistentVolumeClaim:
+#          claimName: csi-cvmfs-pvc-atlas-nightlies-{{ .Values.Instance }}
       {{ end }}
       - name: condor-passwordfile-volume
         secret:
