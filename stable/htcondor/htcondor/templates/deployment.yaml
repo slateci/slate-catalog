@@ -46,6 +46,9 @@ spec:
       - name: oasis
         persistentVolumeClaim:
           claimName: csi-cvmfs-pvc-oasis-{{ .Values.Instance }}
+      - name: singularity
+        persistentVolumeClaim:
+          claimName: csi-cvmfs-pvc-singularity-{{ .Values.Instance }}
       - name: spt
         persistentVolumeClaim:
           claimName: csi-cvmfs-pvc-spt-{{ .Values.Instance }}
