@@ -23,7 +23,6 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
-      hostNetwork: true 
       volumes:
       - name: condor-token-volume
         secret:
