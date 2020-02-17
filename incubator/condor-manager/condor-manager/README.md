@@ -21,10 +21,10 @@ Next, inspect your instance's information to learn its address:
 	
 	Services:
 	Name           Cluster IP  External IP    Ports          URL
-	condor-manager 10.97.32.64 192.170.227.37 9618:32541/TCP   192.170.227.37:32541
+	condor-manager 10.97.32.64 192.170.227.37 9618:32541/TCP 192.170.227.37:32541
 	# . . . 
 
-Note the cluster-internal IP address of the service, in this case `10.97.32.64`. Then, check the applications logs to get the tokens it has issued for the other cluster components:
+Note the external IP address of the service, in this case `192.170.227.37` and external port (`32541` in this example). Then, check the applications logs to get the tokens it has issued for the other cluster components:
 
 	$ ./slate instance logs instance_1sHjOie7t34
 	Fetching instance logs...
@@ -52,14 +52,15 @@ Copy all of the data on the line following the `**** Condor Submit Token ****` (
 	$ slate secret create worker-auth-token --group <some group> --cluster <a cluster> --from-file condor_token=worker-token
 	Successfully created secret worker-auth-token with ID secret_Hhjy43uyNsP
 
-You are now ready to deploy one or more workers to execute jobs for the pool. Download the base configuration for the worker application, and then edit it to use the IP address obtained above as the `CollectorHost` and the name of your worker token secret as the `AuthTokenSecret`:
+You are now ready to deploy one or more workers to execute jobs for the pool. Download the base configuration for the worker application, and then edit it to use the manager external IP address obtained above as the `CollectorHost`, the manager external port as the `CollectorPort`, and the name of your worker token secret as the `AuthTokenSecret`:
 
 	$ slate app get-conf condor-worker > worker.conf
 	# Edit worker.conf
 	# The resulting file contain a entries something like:
 	CondorConfig:
 	  Instances: 1
-	  CollectorHost: 10.97.32.64
+	  CollectorHost: 192.170.227.37
+	  CollectorPort: 32541
 	  AuthTokenSecret: worker-auth-token
 	  . . . 
 
@@ -76,13 +77,12 @@ Next, download the configuration for the interactive submit node:
 
 TODO: Discuss how to get the CI-Connect data for the `UserConfig` section. 
 
-As with the worker, edit the `CondorConfig` section to set `CollectorHost` to be your central manager's address, set `CONDOR_HOST` in the `ConfigFile` to be the same, and set `AuthTokenSecret` to be "submit-auth-token":
+As with the worker, edit the `CondorConfig` section to set `CollectorHost` to be your central manager's address, set `CollectorPort` to be the central manager's port number, and set `AuthTokenSecret` to be "submit-auth-token":
 
 	CondorConfig:
-	  CollectorHost: 10.97.32.64
+	  CollectorHost: 192.170.227.37
+	  CollectorPort: 32541
 	  AuthTokenSecret: submit-auth-token
-	  ConfigFile: |+
-	    CONDOR_HOST = 10.97.32.64
 
 Then, install the submit node application:
 
@@ -97,19 +97,15 @@ You can then determine where your submit node is running:
 	               00:47:14.777454                          k0OEw6_Qbek
 	               UTC                                      
 	
-	Services: (none)
+	Services: 
+	Name          Cluster IP  External IP    Ports          URL
+	condor-submit 10.92.86.20 192.170.227.37 2222:32083/TCP 192.170.227.37:32083
 	
-	Pods:
-	  condor-submit-7cb9744554-drnv7
-	    Status: Running
-	    Created: 2020-02-01T00:47:19Z
-	    Host: uct2-g004.mwt2.org
-	    Host IP: 192.170.227.253
-	    . . . 
+	. . . 
 
-The important item needed at this time is the Host IP (192.170.227.253 in this case). You should be able to connect to the application interactively with SSH using your CI-Connect keypair and username on port 2222:
+You should be able to connect to the application interactively with SSH using your CI-Connect keypair and username at the external IP on the external port:
 
-	$ ssh -i ~/.ssh/<private key> -p 2222 <user name>@192.170.227.253
+	$ ssh -i ~/.ssh/<private key> -p 32083 <user name>@192.170.227.37
 	Enter passphrase for key '~/.ssh/<private key>': 
 	Last login: Sat Feb  1 01:00:18 2020 from 10.150.5.94
 	  ______   ___ __________
