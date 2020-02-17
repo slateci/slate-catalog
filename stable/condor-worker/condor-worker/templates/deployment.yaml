@@ -157,6 +157,8 @@ spec:
         env:
         - name: _CONDOR_COLLECTOR_HOST
           value: {{ .Values.CondorConfig.CollectorHost | quote }}
+        - name: _CONDOR_COLLECTOR_PORT
+          value: {{ .Values.CondorConfig.CollectorPort | quote }}
         {{ if .Values.CondorConfig.MemoryLimit }}
         - name: _CONDOR_MEMORY
           value: {{ .Values.CondorConfig.MemoryLimit | quote }}

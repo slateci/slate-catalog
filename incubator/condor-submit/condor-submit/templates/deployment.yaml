@@ -55,6 +55,10 @@ spec:
           mountPath: /usr/local/etc/ciconnect/config
           subPath: config
         env:
+        - name: _CONDOR_COLLECTOR_HOST
+          value: {{ .Values.CondorConfig.CollectorHost | quote }}
+        - name: _CONDOR_COLLECTOR_PORT
+          value: {{ .Values.CondorConfig.CollectorPort | quote }}
         - name: API_TOKEN
           valueFrom:
             secretKeyRef:
