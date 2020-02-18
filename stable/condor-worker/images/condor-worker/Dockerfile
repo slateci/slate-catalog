@@ -45,18 +45,6 @@ RUN chmod 777 /var/log/condor
 #RUN curl -OL http://us.download.nvidia.com/XFree86/Linux-x86_64/396.51/NVIDIA-Linux-x86_64-396.51.run
 #RUN chmod +x NVIDIA-Linux-x86_64-396.51.run; ./NVIDIA-Linux-x86_64-396.51.run -s
 
-# ssh stuff, sort this out later too!
-#RUN yum install supervisor -y
-#COPY supervisord.conf /etc/
-#COPY sshd_config /etc/ssh/
-#RUN adduser osg
-#RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
-#RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
-#RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
-#RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
-#RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
-#RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
-
 # We may mount /var/lib/docker from the host, so we chown that
 ENTRYPOINT /etc/osg/image-config.d/fix-perms.sh && \
            chown -R condor: /var/lib/condor && \
