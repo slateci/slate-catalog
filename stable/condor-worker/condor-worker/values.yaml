@@ -1,0 +1,78 @@
+# Generates app name as "htcondor-[Instance]"
+Instance: ""
+
+HTTPLogger:
+  Enabled: false
+  # You can refer to a password that has been hashed by `openssl passwd -apr1`
+  # and stored as a K8S/SLATE secret here. The resulting credentials will be 
+  # username: logger, and password set to your chosen password.
+  # Secret: my-secret
+
+CondorConfig:
+  # The number of HTCondor worker pods to run
+  Instances: 1
+  # The address of your HTCondor Central Manager
+  CollectorHost: localhost
+  # The name of the secret that was created for your HTCondor password file
+  # This must be created *BEFORE* you instantiate the chart.
+  PasswordFileSecret: null
+  # The name of the secret that was created for your HTCondor token file
+  # This must be created *BEFORE* you instantiate the chart.
+  AuthTokenSecret: null
+  # The amount of memory (in MB) that Condor may use on the machine.
+  MemoryLimit: 512
+  # The number of CPUs that this condor instance may take advantage of.
+  NumberCPUs: 1
+  # If CVMFS is available for bind mounting, you can specify that here
+  Cvmfs: true
+  # If there is a GPU available on the cluster, you can specify use of that
+  # resource
+  UseGPU: false
+  # Only used if UseGPU is set to true
+  NumberGPUs: 2
+  # Path to scratch storage on the local node used by the HTCondor worker
+  # If left commented, will use storage within the container
+  # ExecuteDir: "/scratch/condor"
+  #
+  # If your Kubernetes cluster has priority classes defined, you can modify
+  # that here
+  # PriorityClass: "backfill"
+
+# The following is some extra configuration that we expose to users, but
+# generally is not necessary to get an HTCondor worker node running. You might
+# want to change things here if, for example, your security policies or ports
+# differ from our assumptions.
+CondorConfigFile: |-
+  CCB_ADDRESS                         = $(COLLECTOR_HOST)
+  START                               = TRUE
+  SUSPEND                             = FALSE
+  PREEMPT                             = FALSE
+  KILL                                = FALSE
+  DAEMON_LIST                         = MASTER, STARTD
+  TRUST_UID_DOMAIN                    = False
+  FILESYSTEM_DOMAIN                   = $(UTSNAME_NODENAME)
+  ALLOW_WRITE                         = condor_pool@*, submit-side@matchsession
+  SEC_DEFAULT_AUTHENTICATION          = PREFERRED
+  SEC_DEFAULT_ENCRYPTION              = REQUIRED
+  SEC_DEFAULT_INTEGRITY               = REQUIRED
+  SEC_DEFAULT_AUTHENTICATION_METHODS  = TOKEN,FS
+  SEC_CLIENT_AUTHENTICATION_METHODS   = TOKEN,FS
+  SEC_DAEMON_AUTHENTICATION_METHODS   = TOKEN,FS
+  SEC_NEGOTIATOR_AUTHENTICATION_METHODS = TOKEN,FS
+  COLLECTOR_MAX_FILE_DESCRIPTORS      = 1024
+  SHARED_PORT_MAX_FILE_DESCRIPTORS    = 1024
+  ALLOW_ADMINISTRATOR                 = condor_pool@*/*, condor@$(HOSTNAME)
+  USE_SHARED_PORT                     = TRUE
+  SHARED_PORT_PORT                    = 0
+  COLLECTOR_PORT                      = 9618
+  PUBLISH_OBITUARIES                  = FALSE
+  RUNBENCHMARKS                       = FALSE
+  NUM_SLOTS                           = 1
+  NUM_SLOTS_TYPE_1                    = 1
+  SLOT_TYPE_1                         = cpus=100%
+  SLOT_TYPE_1_PARTITIONABLE           = TRUE
+  POD_NAME                            = $(UTSNAME_NODENAME)
+  MASTER_NAME                         = $(UTSNAME_NODENAME)
+  STARTD_NAME                         = $(UTSNAME_NODENAME)
+  CREDD_OAUTH_MODE = True
+  TOKENS = True
