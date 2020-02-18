@@ -88,8 +88,8 @@ kind: PersistentVolumeClaim
 metadata:
  name: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
  labels:
-   app: {{ template "htcondor.name" . }}
-   chart: {{ template "htcondor.chart" . }}
+   app: {{ template "condor-worker.name" . }}
+   chart: {{ template "condor-worker.chart" . }}
    release: {{ .Release.Name }}
    instance: {{ .Values.Instance | quote }}
 spec:
@@ -105,8 +105,8 @@ kind: PersistentVolumeClaim
 metadata:
  name: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
  labels:
-   app: {{ template "htcondor.name" . }}
-   chart: {{ template "htcondor.chart" . }}
+   app: {{ template "condor-worker.name" . }}
+   chart: {{ template "condor-worker.chart" . }}
    release: {{ .Release.Name }}
    instance: {{ .Values.Instance | quote }}
 spec:
@@ -122,8 +122,8 @@ kind: PersistentVolumeClaim
 metadata:
  name: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
  labels:
-   app: {{ template "htcondor.name" . }}
-   chart: {{ template "htcondor.chart" . }}
+   app: {{ template "condor-worker.name" . }}
+   chart: {{ template "condor-worker.chart" . }}
    release: {{ .Release.Name }}
    instance: {{ .Values.Instance | quote }}
 spec:
