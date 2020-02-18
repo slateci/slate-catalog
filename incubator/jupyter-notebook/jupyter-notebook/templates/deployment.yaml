@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "jupyter.fullname" . }}
+  labels:
+    app: {{ template "jupyter.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "jupyter.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "jupyter.name" . }}
+    spec:
+      containers:
+      - name: scipy-notebook
+        image: jupyter/scipy-notebook:31b807ec9e83
+        ports:
+        - containerPort: 8888
+        command: ["start-notebook.sh"]
+        args: ["--NotebookApp.token=''"]

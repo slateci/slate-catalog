@@ -1,0 +1,26 @@
+# The label to apply to this deployment, 
+# used to manage multiple instances of the same application
+Instance: demo1
+
+
+# Ingress control settings  
+Ingress:
+  # If true, use ingress control.
+  # Otherwise, generic NodePort networking will be used, 
+  # and the other settings in this section will be ignored. 
+  Enabled: true
+  # The subdomain to associate with this service.
+  # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
+  Subdomain: jupyterdemofinal
+  # The class of the ingress controller to use. 
+  # For SLATE this should be 'slate'. 
+  Class: slate
+  Secret: basic-auth
+  Message: "Authentication Required!"
+### SLATE-START ###
+SLATE:
+  Cluster:
+    DNSName: "utah-dev.slateci.net"
+### SLATE-END ###
+Service:
+  NodePort: 30055
