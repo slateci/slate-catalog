@@ -23,4 +23,4 @@ Make the nessesary changes to the file and include the &lt;secret-name&gt; you c
 
 	slate app install jupyter-notebook --group <group> --cluster <cluster> --conf jnb.yaml
 	
-Once SLATE creates the requested resources needed for your Jupyter Notebook instance, you should be able to access it via a Web browser at a URL in this format: <sub-domain>.<DNS-Name-of-the-Cluster>, as per the values used in the configuration file. 
+Once SLATE creates the requested resources needed for your Jupyter Notebook instance, you should be able to access it via a Web browser at a URL in this format: &lt;sub-domain&gt;.&lt;DNS-Name-of-the-Cluster&gt;, as per the values used in the configuration file. 
