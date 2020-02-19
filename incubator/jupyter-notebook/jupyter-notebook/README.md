@@ -19,7 +19,7 @@ To deploy the chart after creating a secret for the app, you can run the below c
 
 	slate app get-conf --dev jupyter-notebook > jnb.yaml
 	
-Make the nessesary changes to the file and include the <secret-name> you created above. The last step is creating an instance of the app using the SLATE command as shown below: 
+Make the nessesary changes to the file and include the &lt;secret-name&gt; you created above. The last step is creating an instance of the app using the SLATE command as shown below: 
 
 	slate app install jupyter-notebook --group <group> --cluster <cluster> --conf jnb.yaml
 	
