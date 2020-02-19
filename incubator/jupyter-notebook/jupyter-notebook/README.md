@@ -9,8 +9,8 @@ To deploy this chart, you would need to create a secret to store a username and 
 
 	htpasswd -c auth <username>
 	
-And once you choose a password, a file containing the <username> and password hash will be generated and named "auth".
-Now you can create a secret using this command: 
+And once you choose a password, a file containing the &lt;username&gt; and password hash will be generated and named "auth".
+Now you can create a secret using a command in this format: 
 	
 	slate secret create --group <group> --cluster <cluster> --from-file=auth <secret-name>
 
