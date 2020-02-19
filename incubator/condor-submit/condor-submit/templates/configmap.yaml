@@ -8,6 +8,8 @@ metadata:
     instance: {{ .Values.Instance | quote}}
 data:
   condor_config.local: |+
+    COLLECTOR_HOST = {{ .Values.CondorConfig.CollectorHost }}
+    COLLECTOR_PORT = {{ .Values.CondorConfig.CollectorPort }}
 {{ .Values.CondorConfig.ConfigFile  | indent 4 }}
 ---
 {{ end }}
