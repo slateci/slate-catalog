@@ -1,21 +1,19 @@
 # The label to apply to this deployment, 
 # used to manage multiple instances of the same application
-Instance: demo1
+Instance: demo
 
 
 # Ingress control settings  
 Ingress:
-  # If true, use ingress control.
-  # Otherwise, generic NodePort networking will be used, 
-  # and the other settings in this section will be ignored. 
-  Enabled: true
   # The subdomain to associate with this service.
   # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
-  Subdomain: jupyterdemofinal
+  Subdomain: jupyterdemo
   # The class of the ingress controller to use. 
   # For SLATE this should be 'slate'. 
   Class: slate
-  Secret: basic-auth
+  #Secret must be created manually before deploying a Jupyter Notebook instance
+  #The below secret name must match the name chosen before. 
+  Secret: jupyternb-secret
   Message: "Authentication Required!"
 ### SLATE-START ###
 SLATE:
