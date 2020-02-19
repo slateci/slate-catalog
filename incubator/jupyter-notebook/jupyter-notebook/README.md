@@ -4,21 +4,23 @@ This initial release of this chart only configures a simple Jupyter notebook tha
 
 # Installation
 
-### Dependancy note:
-To deploy this chart, you would need to create a secret to store the username and password you'd choose to access the notebook. The secret can be created by following the below steps:
+### 
+To deploy this chart, you would need to create a secret to store a username and password you'd choose to access the notebook. The secret can be created by following the below steps:
 
-	htpasswd -c <filename> <username>
+	htpasswd -c auth <username>
 	
-And once you choose a password, a file containing the <username> and password hash will be generated and named <filename>.
+And once you choose a password, a file containing the <username> and password hash will be generated and named "auth".
 Now you can create a secret using this command: 
 	
-	slate secret create <secret-name> --group <group> --cluster <cluster> --from-env-file creds
+	slate secret create --group <group> --cluster <cluster> --from-file=auth <secret-name>
 
 # Deploying
-To deploy the chart after creating a secret for the app, you can just run the below command: 
+To deploy the chart after creating a secret for the app, you can run the below command to get a configuration file:  
 
 	slate app get-conf --dev jupyter-notebook > jnb.yaml
 	
-Make the nessesary changes to the config file and include the name of the secret you created above. The last step is to creating an instance of the app using the SLATE command as shown below: 
+Make the nessesary changes to the file and include the <secret-name> you created above. The last step is creating an instance of the app using the SLATE command as shown below: 
 
 	slate app install jupyter-notebook --group <group> --cluster <cluster> --conf jnb.yaml
+	
+Once SLATE creates the requested resources needed for your Jupyter Notebook instance, you should be able to access it via a Web browser at a URL in this format: <sub-domain>.<DNS-Name-of-the-Cluster>, as per the values used in the configuration file. 
