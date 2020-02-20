@@ -26,16 +26,20 @@ spec:
       - name: basic-auth
         image: "basic-auth:latest"
         imagePullPolicy: Always
-        volumeMounts: 
-        - name: basic-auth-{{ .Values.Instance }}-configuration
-          mountPath: /etc/sssd/sssd.conf
+      volumes:
+      - name: basic-auth-{{ .Values.Instance }}-configuration
+        configMap:
+          name: {{ template "basic-auth.fullname" . }}
+          items:
+          - key: sssd.conf
+            path: sssd.conf
+            mode: 0600
         ports:
         - name: http
           containerPort: 80
           protocol: TCP
       restartPolicy: Always
-      volumes:
-      - name: basic-auth-{{ .Values.Instance }}-configuration
-        configMap:
-          name: {{ template "basic-auth.fullname" . }}
-          mode: 0600
+      volumeMounts: 
+        - name: basic-auth-{{ .Values.Instance }}-configuration
+          mountPath: /etc/sssd/sssd.conf
+          subPath: sssd.conf
