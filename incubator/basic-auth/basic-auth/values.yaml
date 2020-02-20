@@ -1,68 +1,53 @@
-# Default values for basic-auth.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# SLATE instance tag
+Instance: ''
 
-replicaCount: 1
+# SSSD Configuration
+# This is an entire file which maps directly to /etc/sssd/sssd.conf
+# TODO (More Info)
+sssd: |+
+  [sssd]
+  config_file_version = 2
+  reconnection_retries = 3
+  sbus_timeout = 30
+  services = nss, pam
+  domains = ad.utah.edu
 
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+  [nss]
+  filter_groups = root
+  filter_users = root
+  reconnection_retries = 3
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+  [pam]
+  reconnection_retries = 3
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name:
+  [domain/ad.utah.edu]
+  debug_level = 3
+  enumerate = false
+  cache_credentials = true
+  use_fully_qualified_names = false
 
-podSecurityContext: {}
-  # fsGroup: 2000
+  auth_provider = krb5
+  chpass_provider = krb5
+  krb5_realm = AD.UTAH.EDU
+  krb5_server = kdc1.chpc.utah.edu:88,kdc2.chpc.utah.edu:88,kdc3.chpc.utah.edu:88,kdc4.chpc.utah.edu:88,kdc5.chpc.utah.edu:88
+  krb5_auth_timeout = 15
+  krb5_store_password_if_offline = true
+  krb5_ccname_template = FILE:%d/krb5cc_%U_XXXXXX
+  krb5_ccachedir = /tmp
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  id_provider = ldap
+  access_provider = ldap
+  ldap_uri = ldap://ldap.chpc.utah.edu,ldap://ldap2.chpc.utah.edu
+  ldap_search_base = dc=chpc,dc=utah,dc=edu
+  ldap_tls_cacert = /etc/pki/tls/certs/ca-bundle.crt
+  ldap_tls_reqcert = never
+  ldap_krb5_init_creds = true
+  ldap_krb5_ticket_lifetime = 86400
+  ldap_schema = rfc2307bis
+  ldap_group_member = uniqueMember
 
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths: []
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+  override_homedir = /home/%u
+  default_shell = /bin/bash
+  
+  # Restrict to user's who's primary group is CHPC.
+  ldap_access_filter = (gidNumber=1722)
