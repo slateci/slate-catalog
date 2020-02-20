@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "nginx.fullname" . }}
+  name: {{ template "basic-auth.fullname" . }}
   labels:
-    app: {{ template "nginx.name" . }}
-    chart: {{ template "nginx.chart" . }}
+    app: {{ template "basic-auth.name" . }}
+    chart: {{ template "basic-auth.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
