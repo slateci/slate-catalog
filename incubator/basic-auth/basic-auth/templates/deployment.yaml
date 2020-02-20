@@ -41,4 +41,4 @@ spec:
           items:
           - key: sssd.conf
             path: sssd.conf
-            mode: 0600
+            mode: 256
