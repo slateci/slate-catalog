@@ -42,4 +42,3 @@ spec:
         volumeMounts: 
           - name: basic-auth-{{ .Values.Instance }}-configuration
             mountPath: /etc/sssd/sssd.conf
-            subPath: sssd.conf
