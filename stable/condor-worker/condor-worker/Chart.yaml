@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "8.6.13"
 description: HTCondor distributed high-throughput computing system
 name: condor-worker
-version: 0.9.10
+version: 0.9.11
