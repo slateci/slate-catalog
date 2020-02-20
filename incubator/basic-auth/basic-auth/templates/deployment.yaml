@@ -34,12 +34,12 @@ spec:
           - key: sssd.conf
             path: sssd.conf
             mode: 0600
-      ports:
-      - name: http
-        containerPort: 80
-        protocol: TCP
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
       restartPolicy: Always
-      volumeMounts: 
-        - name: basic-auth-{{ .Values.Instance }}-configuration
-          mountPath: /etc/sssd/sssd.conf
-          subPath: sssd.conf
+        volumeMounts: 
+          - name: basic-auth-{{ .Values.Instance }}-configuration
+            mountPath: /etc/sssd/sssd.conf
+            subPath: sssd.conf
