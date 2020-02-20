@@ -23,10 +23,13 @@ spec:
         release: {{ .Release.Name }}
     spec:
       restartPolicy: Always
-      containers:
+      containers:        
       - name: basic-auth
         image: "basic-auth:latest"
         imagePullPolicy: Always
+        volumeMounts: 
+          - name: basic-auth-{{ .Values.Instance }}-configuration
+            mountPath: /etc/sssd/sssd.conf
         ports:
         - name: http
           containerPort: 80
@@ -39,6 +42,3 @@ spec:
           - key: sssd.conf
             path: sssd.conf
             mode: 0600
-        volumeMounts: 
-          - name: basic-auth-{{ .Values.Instance }}-configuration
-            mountPath: /etc/sssd/sssd.conf
