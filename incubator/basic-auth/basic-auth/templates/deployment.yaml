@@ -38,3 +38,4 @@ spec:
       - name: basic-auth-{{ .Values.Instance }}-configuration
         configMap:
           name: {{ template "basic-auth.fullname" . }}
+          mode: 0600
