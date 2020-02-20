@@ -31,8 +31,8 @@ spec:
           - name: basic-auth-{{ .Values.Instance }}-configuration
             mountPath: /etc/sssd/sssd.conf
         ports:
-        - name: http
-          containerPort: 80
+        - name: ssh
+          containerPort: 22
           protocol: TCP
       volumes:
       - name: basic-auth-{{ .Values.Instance }}-configuration
