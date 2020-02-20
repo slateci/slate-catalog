@@ -25,7 +25,7 @@ spec:
       containers:
       - name: basic-auth
         image: "basic-auth:latest"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         volumeMounts: 
         - name: basic-auth-{{ .Values.Instance }}-configuration
           mountPath: /etc/sssd/sssd.conf
