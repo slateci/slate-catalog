@@ -2,5 +2,5 @@ apiVersion: v2
 name: basic-auth
 description: generalized container meant to support basic Authentication through SSSD integration to AD/Kerberos/LDAP
 type: application
-version: 0.1.4
+version: 0.1.5
 appVersion: 1.0.0
