@@ -1,55 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "basic-auth.fullname" . }}
+  name: {{ template "basic-auth.fullname" . }}
   labels:
-    {{- include "basic-auth.labels" . | nindent 4 }}
+    app: {{ template "basic-auth.name" . }}
+    chart: {{ template "basic-auth.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
-      {{- include "basic-auth.selectorLabels" . | nindent 6 }}
+      app: {{ template "basic-auth.name" . }}
+      instance: {{ .Values.Instance | quote }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        {{- include "basic-auth.selectorLabels" . | nindent 8 }}
+        app: {{ template "basic-auth.name" . }}
+        chart: {{ template "basic-auth.chart" . }}
+        instance: {{ .Values.Instance | quote }}
+        release: {{ .Release.Name }}
     spec:
-    {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-      serviceAccountName: {{ include "basic-auth.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      - name: basic-auth
+        image: "basic-auth:latest"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+      restartPolicy: Always
