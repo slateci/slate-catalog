@@ -4,24 +4,15 @@ metadata:
   name: {{ template "jupyter.fullname" . }}
   labels:
     app: {{ template "jupyter.name" . }}
-    chart: {{ template "jupyter.chart" . }}
-    release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ template "jupyter.name" . }}
-      chart: {{ template "jupyter.chart" . }}
-      release: {{ .Release.Name }}
-      instance: {{ .Values.Instance }}
   template:
     metadata:
       labels:
         app: {{ template "jupyter.name" . }}
-        chart: {{ template "jupyter.chart" . }}
-        release: {{ .Release.Name }}
-        instance: {{ .Values.Instance }}
     spec:
       containers:
       - name: scipy-notebook
