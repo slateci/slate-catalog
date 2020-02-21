@@ -28,7 +28,7 @@ sssd: |+
 
   auth_provider = krb5
   chpass_provider = krb5
-  krb5_realm = AD.UTAH.EDU
+  krb5_realm = AD.EXAMPLE.EDU
   krb5_server = kdc1.example.edu:88,kdc2.example.edu:88
   krb5_auth_timeout = 15
   krb5_store_password_if_offline = true
