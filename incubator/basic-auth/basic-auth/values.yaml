@@ -20,7 +20,7 @@ sssd: |+
   [pam]
   reconnection_retries = 3
 
-  [domain/ad.utah.edu]
+  [domain/ad.example.edu]
   debug_level = 3
   enumerate = false
   cache_credentials = true
