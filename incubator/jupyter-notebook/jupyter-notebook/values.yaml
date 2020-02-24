@@ -1,0 +1,24 @@
+# The label to apply to this deployment, 
+# used to manage multiple instances of the same application
+Instance: demo
+
+
+# Ingress control settings  
+Ingress:
+  # The subdomain to associate with this service.
+  # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
+  Subdomain: jupyterdemo
+  # The class of the ingress controller to use. 
+  # For SLATE this should be 'slate'. 
+  Class: slate
+  #Secret must be created manually before deploying a Jupyter Notebook instance
+  #The below secret name must match the name chosen before. 
+  Secret: jupyternb-secret
+  Message: "Authentication Required!"
+### SLATE-START ###
+SLATE:
+  Cluster:
+    DNSName: "utah-dev.slateci.net"
+### SLATE-END ###
+Service:
+  NodePort: 30055

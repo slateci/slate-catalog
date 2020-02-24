@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "jupyter.fullname" . }}
+  labels:
+    app: {{ template "jupyter.name" . }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.Ingress.Class }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret containing the creds
+    nginx.ingress.kubernetes.io/auth-secret: {{ .Values.Ingress.Secret }}
+    nginx.ingress.kubernetes.io/auth-realm: {{ .Values.Ingress.Message }}
+spec:
+  rules:
+  - host: {{ .Values.Ingress.Subdomain }}.{{ .Values.SLATE.Cluster.DNSName }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "jupyter.fullname" . }}
+          servicePort: 8888
