@@ -20,3 +20,8 @@ spec:
   ports:
   - port: {{ .Values.Service.Port }}
     targetPort: squid
+    {{ if eq .Values.Service.ExternalVisibility "NodePort" }}
+    {{ if .Values.Service.NodePort }}
+    nodePort: {{ .Values.Service.NodePort }}
+    {{ end }}
+    {{ end }}
