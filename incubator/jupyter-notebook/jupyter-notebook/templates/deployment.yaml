@@ -12,6 +12,9 @@ spec:
   selector:
     matchLabels:
       app: {{ template "jupyter.name" . }}
+      chart: {{ template "jupyter.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
   template:
     metadata:
       labels:
