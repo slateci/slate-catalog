@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: {{ template "jupyter.fullname" . }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: {{ template "jupyter.name" . }}
     chart: {{ template "jupyter.chart" . }}
