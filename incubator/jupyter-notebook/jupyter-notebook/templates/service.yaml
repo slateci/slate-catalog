@@ -6,10 +6,11 @@ spec:
   type: NodePort
   selector:
     app: {{ template "jupyter.name" . }}
-    #instance: {{ .Values.Instance | quote }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
   ports:
   - protocol: TCP
     nodePort: {{ .Values.Service.NodePort }}
     port: 8888
     targetPort: 8888
-
