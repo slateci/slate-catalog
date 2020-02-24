@@ -19,6 +19,9 @@ spec:
     metadata:
       labels:
         app: {{ template "jupyter.name" . }}
+        chart: {{ template "jupyter.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
     spec:
       containers:
       - name: scipy-notebook
