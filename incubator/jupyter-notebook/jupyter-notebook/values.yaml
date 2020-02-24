@@ -20,5 +20,3 @@ SLATE:
   Cluster:
     DNSName: "utah-dev.slateci.net"
 ### SLATE-END ###
-Service:
-  NodePort: 30055
