@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "basic-auth.fullname" . }}
+  labels:
+    app: {{ template "basic-auth.name" . }}
+    chart: {{ template "basic-auth.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  sssd.conf: |+
+{{ .Values.sssd | indent 4 }}

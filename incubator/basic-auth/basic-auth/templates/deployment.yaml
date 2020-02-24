@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "basic-auth.fullname" . }}
+  labels:
+    app: {{ template "basic-auth.name" . }}
+    chart: {{ template "basic-auth.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "basic-auth.name" . }}
+      instance: {{ .Values.Instance | quote }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "basic-auth.name" . }}
+        chart: {{ template "basic-auth.chart" . }}
+        instance: {{ .Values.Instance | quote }}
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: Always
+      containers:        
+      - name: basic-auth
+        image: "basic-auth:latest"
+        imagePullPolicy: Always
+        volumeMounts: 
+          - name: basic-auth-{{ .Values.Instance }}-configuration
+            mountPath: /etc/sssd/sssd.conf
+            subPath: sssd.conf
+        ports:
+        - name: ssh
+          containerPort: 22
+          protocol: TCP
+      volumes:
+      - name: basic-auth-{{ .Values.Instance }}-configuration
+        configMap:
+          name: {{ template "basic-auth.fullname" . }}
+          items:
+          - key: sssd.conf
+            path: sssd.conf
+            mode: 256
