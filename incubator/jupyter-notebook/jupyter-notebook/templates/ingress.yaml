@@ -4,6 +4,8 @@ metadata:
   name: {{ template "jupyter.fullname" . }}
   labels:
     app: {{ template "jupyter.name" . }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.Ingress.Class }}
@@ -20,4 +22,3 @@ spec:
         backend:
           serviceName: {{ template "jupyter.fullname" . }}
           servicePort: 8888
-
