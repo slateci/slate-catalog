@@ -26,6 +26,12 @@ Service:
   #               kubernetes network. Use this if you only want to connect to 
   #               your service from other services running on the same cluster. 
   ExternalVisibility: NodePort
+  # External port on which the service will be accessible when using NodePort
+  # visibility. The default behavior, if this value is not set, is for 
+  # Kubernetes to select a port randomly from within its NodePort range. Note
+  # that attempting to select a port manually outside the NodePort range will
+  # fail. 
+  #NodePort: 31200
 
 SquidConf:
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
