@@ -1,0 +1,28 @@
+# Generates app name as "connect-submit-[Instance]"
+Instance: ""
+
+UserConfig: 
+  Mode: connectapi
+  ConnectToken: connect-token-secret
+  ConnectInnerGroup: "root.connect-dev"
+  ConnectOuterGroup: "root.connect-dev"
+
+CondorConfig:
+  # The address of your HTCondor Central Manager
+  CollectorHost: flock.opensciencegrid.org
+  # If unspecified, defaults to 9618
+  CollectorPort: 9618
+  # Token. Must be a SLATE secret where filename is the name of your collector.
+  AuthToken: auth-token-secret
+  # Extra configuration can be added via the ConfigFile parameter
+  # ConfigFile: |+
+  #   ProjectName = "osg.foo"
+  #   SUBMIT_EXPRS = $(SUBMIT_EXPRS) ProjectName 
+
+SystemConfig:
+  # Enable CVMFS
+  Cvmfs: enabled
+  # these are passed through unchanged to Kubernetes, so they need to be in the
+  # correct format
+  Cpu: 4000m
+  Memory: 8Gi

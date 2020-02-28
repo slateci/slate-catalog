@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+ name: {{ template "condor-submit.fullname" . }}
+ labels:
+   app: {{ template "condor-submit.fullname" . }}
+   chart: {{ template "condor-submit.chart" . }}
+   release: {{ .Release.Name }}
+   instance: {{ .Values.Instance | quote }}
+spec:
+ type: NodePort
+ ports:
+ - port: 2222
+   protocol: TCP
+ selector:
+   app: {{ template "condor-submit.fullname" . }}
+   instance: {{ .Values.Instance | quote }}

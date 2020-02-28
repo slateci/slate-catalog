@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "condor-submit.fullname" . }}
+  labels:
+    app: {{ template "condor-submit.fullname" . }}
+    chart: {{ template "condor-submit.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "condor-submit.fullname" . }}
+      chart: {{ template "condor-submit.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  template:
+    metadata:
+      labels: 
+        app: {{ template "condor-submit.fullname" . }}
+        chart: {{ template "condor-submit.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      volumes:
+      - name: condor-token-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
+          items: 
+          - key: condor_token
+            path: condor_token
+            mode: 256
+      {{ if .Values.CondorConfig.ConfigFile }}
+      - name: {{ template "condor-submit.name" . }}-condor-configuration
+        configMap:
+          name: {{ template "condor-submit.name" . }}-condor-configuration
+      {{ end }}
+      - name: {{ template "condor-submit.name" . }}-provisioner-configuration
+        configMap:
+          name: {{ template "condor-submit.name" . }}-provisioner-configuration
+      containers:
+      - name: condor-submit
+        image: slateci/condor-submit:latest
+        volumeMounts:
+        - name: condor-token-volume
+          mountPath: /root/tokens/condor_token
+          subPath: condor_token
+        {{ if .Values.CondorConfig.ConfigFile }}
+        - name: {{ template "condor-submit.name" . }}-condor-configuration
+          mountPath: /etc/condor/condor_config.local
+          subPath: condor_config.local
+        {{ end }}
+        - name: {{ template "condor-submit.name" . }}-provisioner-configuration
+          mountPath: /usr/local/etc/ciconnect/config
+          subPath: config
+        env:
+        - name: _CONDOR_COLLECTOR_HOST
+          value: {{ .Values.CondorConfig.CollectorHost | quote }}
+        - name: _CONDOR_COLLECTOR_PORT
+          value: {{ .Values.CondorConfig.CollectorPort | quote }}
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.UserConfig.ConnectToken }}
+              key: API_TOKEN
+        - name: OUTER_GROUP
+          value: {{ .Values.UserConfig.ConnectOuterGroup }}
+        - name: INNER_GROUP
+          value: {{ .Values.UserConfig.ConnectInnerGroup }}
+        resources:
+          requests:
+            # we'll make it a modest request for now
+            memory: {{ .Values.SystemConfig.Memory }}
+            cpu:    {{ .Values.SystemConfig.Cpu }}
