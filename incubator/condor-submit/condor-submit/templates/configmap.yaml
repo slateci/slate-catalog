@@ -32,6 +32,7 @@ data:
     export INNER_GROUP="{{ .Values.UserConfig.ConnectInnerGroup }}"
     export OUTER_GROUP="{{ .Values.UserConfig.ConnectOuterGroup }}"
 ---
+{{ if eq .Values.UserConfig.Mode sssd }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
