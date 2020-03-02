@@ -31,7 +31,7 @@ data:
     export PATH="$PATH:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin"
     export INNER_GROUP="{{ .Values.UserConfig.ConnectInnerGroup }}"
     export OUTER_GROUP="{{ .Values.UserConfig.ConnectOuterGroup }}"
-
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
