@@ -13,6 +13,7 @@ data:
 {{ .Values.CondorConfig.ConfigFile  | indent 4 }}
 ---
 {{ end }}
+{{ if eq .Values.UserConfig.Mode connectapi }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -32,6 +33,7 @@ data:
     export INNER_GROUP="{{ .Values.UserConfig.ConnectInnerGroup }}"
     export OUTER_GROUP="{{ .Values.UserConfig.ConnectOuterGroup }}"
 ---
+{{ end }}
 {{ if eq .Values.UserConfig.Mode sssd }}
 apiVersion: v1
 kind: ConfigMap

@@ -65,14 +65,17 @@ spec:
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
         {{ end }}
+        {{ if eq .Values.UserConfig.Mode connectapi }}
         - name: {{ template "condor-submit.name" . }}-provisioner-configuration
           mountPath: /usr/local/etc/ciconnect/config
           subPath: config
+        {{ end }}
         env:
         - name: _CONDOR_COLLECTOR_HOST
           value: {{ .Values.CondorConfig.CollectorHost | quote }}
         - name: _CONDOR_COLLECTOR_PORT
           value: {{ .Values.CondorConfig.CollectorPort | quote }}
+        {{ if eq .Values.UserConfig.Mode connectapi }}
         - name: API_TOKEN
           valueFrom:
             secretKeyRef:
@@ -82,6 +85,7 @@ spec:
           value: {{ .Values.UserConfig.ConnectOuterGroup }}
         - name: INNER_GROUP
           value: {{ .Values.UserConfig.ConnectInnerGroup }}
+        {{ end }}
         resources:
           requests:
             # we'll make it a modest request for now
