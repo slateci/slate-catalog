@@ -43,3 +43,4 @@ metadata:
 data:
   sssd.conf: |+
 {{ .Values.sssd | indent 4 }}
+{{ end }}
