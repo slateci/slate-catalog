@@ -27,10 +27,10 @@ spec:
       - name: {{ template "condor-submit.name" . }}-condor-auth-configuration
         configmap:
           name: {{ template "condor-submit.name" . }}-condor-auth-configuration
-            items:
-            - key: sssd.conf
-              path: sssd.conf
-              mode: 256
+          items:
+          - key: sssd.conf
+            path: sssd.conf
+            mode: 256
       - name: condor-token-volume
         secret:
           secretName: {{ .Values.CondorConfig.AuthTokenSecret }}

@@ -44,6 +44,8 @@ RUN yum clean all && rm -rf /tmp/yum*
 
 ADD container-files /
 
+RUN authconfig --update --enablesssd --enablesssdauth --enablemkhomedir
+
 # Make sure we have some needed dirs
 RUN mkdir -p /etc/condor/passwords.d && \
     mkdir -p /etc/condor/tokens.d && \
