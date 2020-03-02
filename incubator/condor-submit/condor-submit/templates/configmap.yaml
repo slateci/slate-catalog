@@ -21,6 +21,8 @@ metadata:
     app: condor-submit
     instance: {{ .Values.Instance | quote }}
 data:
+  sssd.conf: |+
+{{ .Values.sssd | indent 4 }}
   config: |+
     #!/bin/sh
     # This file will be sourced before the CI Connect provisioner starts up. You
