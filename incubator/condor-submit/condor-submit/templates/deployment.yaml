@@ -24,6 +24,13 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       volumes:
+      - name: {{ template "condor-submit.name" . }}-condor-auth-configuration
+        configmap:
+          name: {{ template "condor-submit.name" . }}-condor-auth-configuration
+            items:
+            - key: sssd.conf
+              path: sssd.conf
+              mode: 256
       - name: condor-token-volume
         secret:
           secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
@@ -43,6 +50,9 @@ spec:
       - name: condor-submit
         image: slateci/condor-submit:latest
         volumeMounts:
+        - name: {{ template "condor-submit.name" . }}-condor-auth-configuration
+          mountPath: /etc/sssd/sssd.conf
+          subPath: sssd.conf 
         - name: condor-token-volume
           mountPath: /root/tokens/condor_token
           subPath: condor_token
