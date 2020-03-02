@@ -24,6 +24,7 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       volumes:
+      {{ if eq .Values.UserConfig.Mode sssd }}
       - name: condor-auth-volume
         configMap:
           name: {{ template "condor-submit.name" . }}-auth-configuration
