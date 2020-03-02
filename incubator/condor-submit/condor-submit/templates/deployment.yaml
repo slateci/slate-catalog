@@ -53,7 +53,7 @@ spec:
         image: slateci/condor-submit:latest
         volumeMounts:
         {{ if eq .Values.UserConfig.Mode sssd }} 
-        - name: {{ template "condor-submit.name" . }}-condor-auth-configuration
+        - name: {{ template "condor-submit.name" . }}-auth-configuration
           mountPath: /etc/sssd/sssd.conf
           subPath: sssd.conf 
         {{ end }}
