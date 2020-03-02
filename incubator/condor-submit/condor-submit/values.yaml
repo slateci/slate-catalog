@@ -2,6 +2,7 @@
 Instance: ""
 
 UserConfig: 
+  # Mode defines where user accounts will come from. Valid options are: sssd and connectapi
   Mode: connectapi
   ConnectToken: connect-token-secret
   ConnectInnerGroup: "root.connect-dev"
