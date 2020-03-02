@@ -7,6 +7,8 @@ RUN yum update -y && yum install -y epel-release
 RUN yum install -y --enablerepo=osg-upcoming \
   condor \
   openssh-server \
+  authconfig \
+  sssd \
   pwgen \
   supervisor \
   openssl \
