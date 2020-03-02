@@ -24,9 +24,9 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       volumes:
-      - name: {{ template "condor-submit.name" . }}-condor-auth-configuration
-        configmap:
-          name: {{ template "condor-submit.name" . }}-condor-auth-configuration
+      - name: condor-auth-volume
+        configMap:
+          name: {{ template "condor-submit.name" . }}-auth-configuration
           items:
           - key: sssd.conf
             path: sssd.conf
