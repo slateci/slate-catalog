@@ -32,6 +32,7 @@ spec:
           - key: sssd.conf
             path: sssd.conf
             mode: 256
+      {{ end }}
       - name: condor-token-volume
         secret:
           secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
