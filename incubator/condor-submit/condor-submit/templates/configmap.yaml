@@ -44,5 +44,5 @@ metadata:
     instance: {{ .Values.Instance | quote }}
 data:
   sssd.conf: |+
-  {{ .Values.sssd | indent 4 }}
+  {{ .Values.UserConfig.SSSD | indent 4 }}
 {{ end }}
