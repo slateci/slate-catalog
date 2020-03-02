@@ -56,6 +56,7 @@ spec:
         - name: {{ template "condor-submit.name" . }}-condor-auth-configuration
           mountPath: /etc/sssd/sssd.conf
           subPath: sssd.conf 
+        {{ end }}
         - name: condor-token-volume
           mountPath: /root/tokens/condor_token
           subPath: condor_token
