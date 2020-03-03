@@ -1,15 +1,41 @@
 # Generates app name as "connect-submit-[Instance]"
 Instance: ""
 
+CondorConfig:
+  # The address of your HTCondor Central Manager
+  CollectorHost: flock.opensciencegrid.org
+  # If unspecified, defaults to 9618
+  CollectorPort: 9618
+  # Token. Must be a SLATE secret where filename is the name of your collector.
+  AuthTokenSecret: auth-token-secret
+  # Extra configuration can be added via the ConfigFile parameter
+  # ConfigFile: |+
+  #   ProjectName = "osg.foo"
+  #   SUBMIT_EXPRS = $(SUBMIT_EXPRS) ProjectName 
+
+SystemConfig:
+  # Enable CVMFS
+  Cvmfs: enabled
+  # these are passed through unchanged to Kubernetes, so they need to be in the
+  # correct format
+  Cpu: 4000m
+  Memory: 8Gi
+
 UserConfig: 
   # Mode defines where user accounts will come from. Valid options are: sssd and connectapi
   Mode: connectapi
   ConnectToken: connect-token-secret
   ConnectInnerGroup: "root.connect-dev"
   ConnectOuterGroup: "root.connect-dev"
-  # SSSD Configuration
-  # This is an entire file which maps directly to /etc/sssd/sssd.conf
-  # TODO (More Info)
+
+  # SSSD Configuration: This is only used if UserConfig.Mode is set to 'sssd'
+  # You can safely ignore this if you are using the connectapi for UserConfig
+  # This entire file which maps directly to /etc/sssd/sssd.conf
+  # Some reasonable defaults have been provided as an example
+  # The following values are needed to support unpriveleged credential caching
+  #     krb5_ccname_template = FILE:%d/krb5cc_%U_XXXXXX
+  #     krb5_ccachedir = /tmp
+  # If Kerberos is used as a SSO solution it is reccomended to handle the ccache differently
   SSSD: |+
     [sssd]
     config_file_version = 2
@@ -50,25 +76,3 @@ UserConfig:
     default_shell = /bin/bash
     # Some type of LDAP access filter is required, it is possible to restrict by group
     ldap_access_filter = (uidNumber=*)
-
-
-CondorConfig:
-  # The address of your HTCondor Central Manager
-  CollectorHost: flock.opensciencegrid.org
-  # If unspecified, defaults to 9618
-  CollectorPort: 9618
-  # Token. Must be a SLATE secret where filename is the name of your collector.
-  AuthTokenSecret: auth-token-secret
-  # Extra configuration can be added via the ConfigFile parameter
-  # ConfigFile: |+
-  #   ProjectName = "osg.foo"
-  #   SUBMIT_EXPRS = $(SUBMIT_EXPRS) ProjectName 
-
-SystemConfig:
-  # Enable CVMFS
-  Cvmfs: enabled
-  # these are passed through unchanged to Kubernetes, so they need to be in the
-  # correct format
-  Cpu: 4000m
-  Memory: 8Gi
-  
