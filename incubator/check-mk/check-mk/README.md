@@ -1,30 +1,24 @@
 # Monitoring Kubernetes in Check-mk
-This project provides monitoring services for a kubernetes cluster with [SLATE](http://slateci.io/). It will also be beneficial to read over the [Checkmk-Official Guide](https://checkmk.com/cms.html) for reference to using the online dashboard.
-
-## Minimum Requirements - - - - - I may need to update this based on slate application
-- Linux (2 cores, 4GB memory, 15GB storage) or MacOS
-- A publicly accessible IP address (port 6443 open)
-- Python (3 or 2.7, 'python' must be in your PATH)
-- [DockerCE](https://docs.docker.com/install/#supported-platforms)
-- [Docker-Compose](https://github.com/docker/compose/releases) (installed with Docker for Mac)
--Possibly need to install helm and tiller(Refer back to this note) and SLATE application
-
-On Linux, the user running SLATElite must be a member of the Docker group (or root).
-Users can be added to the Docker group with: `sudo usermod -a -G docker <username>`
+This project provides monitoring services for a kubernetes cluster within [SLATE](http://slateci.io/). It will also be beneficial to read over the [Checkmk-Official Guide](https://checkmk.com/cms.html) as a reference to using the online dashboard.
 
 ## Getting Started
-After installing the dependency requirements and pulling the SLATElite repository:
+Install the [SLATE CLI Client](https://slateci.io/docs/tools/#installing-the-slate-client)
+
+##Deploying Check-mk through the SLATE CLI (Recommended)
+If you wish to install an instance of check-mk manually through Helm skip down to the following header.
+
+Otherwise, Make sure your [cluster is registered as part of SLATE.](https://slateci.io/docs/cluster/index.html) before proceeding. You can confirm that your cluster is registered in SLATE by running 'slate cluster list' through the SLATE client. Identify your cluster in the list. You also need to make sure you are part of a group in order to install check-mk.
+
+To install check-mk in your cluster run the following command 'slate app install check-mk --dev --cluster <cluster_name> --group <group_name>'
 
 
-//////////////////////////////////////////////////////////////////
-////////Everything that is requires to get slate up and going///
-//////////////////////////////////////////////////////////////////.
+You will need the instance number by running 'slate instance list --cluster <cluster_name> --group <group_name>'
 
-## Deploying Check-mk in your kubernetes cluster
+## Or Deploying Check-mk in your kubernetes cluster with helm and kubectl
 
-Clone the [slateci/slate-catalog](https://github.com/slateci/slate-catalog) repository on the machine you are running your Kubernestes cluster on.
+This will allow you to install check-mk onto any Kubernetes cluster, even if it is not part of the SLATE federation. Clone the [slateci/slate-catalog](https://github.com/slateci/slate-catalog) repository on the machine you are running your Kubernestes cluster on.
 
-cd into your slate-catalog/incubator/check-mk/check-mk directory. At this point you will need to deploy the check-mk application within Kubernetes. To do this run `helm install check-mk`. Helm manages the deployement of check-mk.
+cd into your slate-catalog/incubator/check-mk/check-mk directory. At this point you will need to deploy the check-mk application within Kubernetes. To do this run `helm install check-mk`. Helm manages the deployement of check-mk on kubernetes.
 
 Run `kubectl get pods` to ensure that the check-mk application is now running on your cluster. You should see a pod that has been deployed and is running check-mk.
 
@@ -42,11 +36,11 @@ To access the login information you will need to run the following commands:
 
 `kubectl get pods`
 
-Copy the name of the check-mk pod which will be in the form 'check-mk-global-ID'. An example is check-mk-global-4d2f86d99c-swdnt. With this information run the folloing command, pasting in the name you just received:
+Copy the name of the check-mk pod which will be in the form 'check-mk-global-ID'. An example is check-mk-global-4d2f86d99c-swdnt. With this information run the following command, pasting in the name you just received:
 
 `kubectl logs <checkmk_pod_name>`
 
-The logs provides the given username and password. Enter those into your dashboard in your web browser you opened up earlier and you will have access to start monitoring from the dashboard. Note that you have the abolity to change the password by following the instructions provided in the logs.
+The logs provides the given username and password. Enter those into your dashboard in your web browser you opened up earlier and you will have access to start monitoring from the dashboard. Note that you have the ability to change the password by following the instructions provided in the logs.
 
 ## Setting up Monitoring on your Kubernetes Cluster
 
