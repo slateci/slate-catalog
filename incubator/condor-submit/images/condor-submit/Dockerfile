@@ -7,6 +7,8 @@ RUN yum update -y && yum install -y epel-release
 RUN yum install -y --enablerepo=osg-upcoming \
   condor \
   openssh-server \
+  authconfig \
+  sssd \
   pwgen \
   supervisor \
   openssl \
@@ -41,6 +43,8 @@ RUN yum install -y --enablerepo=osg-upcoming \
 RUN yum clean all && rm -rf /tmp/yum*
 
 ADD container-files /
+
+RUN authconfig --update --enablesssd --enablesssdauth --enablemkhomedir
 
 # Make sure we have some needed dirs
 RUN mkdir -p /etc/condor/passwords.d && \

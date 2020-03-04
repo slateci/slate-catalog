@@ -24,6 +24,15 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       volumes:
+      {{ if eq .Values.UserConfig.Mode "sssd" }}
+      - name: {{ template "condor-submit.name" . }}-auth-configuration
+        configMap:
+          name: {{ template "condor-submit.name" . }}-auth-configuration
+          items:
+          - key: sssd.conf
+            path: sssd.conf
+            mode: 256
+      {{ end }}
       - name: condor-token-volume
         secret:
           secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
@@ -43,6 +52,11 @@ spec:
       - name: condor-submit
         image: slateci/condor-submit:latest
         volumeMounts:
+        {{ if eq .Values.UserConfig.Mode "sssd" }} 
+        - name: {{ template "condor-submit.name" . }}-auth-configuration
+          mountPath: /etc/sssd/sssd.conf
+          subPath: sssd.conf 
+        {{ end }}
         - name: condor-token-volume
           mountPath: /root/tokens/condor_token
           subPath: condor_token
@@ -51,14 +65,17 @@ spec:
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
         {{ end }}
+        {{ if eq .Values.UserConfig.Mode "connectapi" }}
         - name: {{ template "condor-submit.name" . }}-provisioner-configuration
           mountPath: /usr/local/etc/ciconnect/config
           subPath: config
+        {{ end }}
         env:
         - name: _CONDOR_COLLECTOR_HOST
           value: {{ .Values.CondorConfig.CollectorHost | quote }}
         - name: _CONDOR_COLLECTOR_PORT
           value: {{ .Values.CondorConfig.CollectorPort | quote }}
+        {{ if eq .Values.UserConfig.Mode "connectapi" }}
         - name: API_TOKEN
           valueFrom:
             secretKeyRef:
@@ -68,6 +85,7 @@ spec:
           value: {{ .Values.UserConfig.ConnectOuterGroup }}
         - name: INNER_GROUP
           value: {{ .Values.UserConfig.ConnectInnerGroup }}
+        {{ end }}
         resources:
           requests:
             # we'll make it a modest request for now

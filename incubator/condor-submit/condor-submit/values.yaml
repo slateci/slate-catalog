@@ -1,19 +1,13 @@
 # Generates app name as "connect-submit-[Instance]"
 Instance: ""
 
-UserConfig: 
-  Mode: connectapi
-  ConnectToken: connect-token-secret
-  ConnectInnerGroup: "root.connect-dev"
-  ConnectOuterGroup: "root.connect-dev"
-
 CondorConfig:
   # The address of your HTCondor Central Manager
   CollectorHost: flock.opensciencegrid.org
   # If unspecified, defaults to 9618
   CollectorPort: 9618
   # Token. Must be a SLATE secret where filename is the name of your collector.
-  AuthToken: auth-token-secret
+  AuthTokenSecret: auth-token-secret
   # Extra configuration can be added via the ConfigFile parameter
   # ConfigFile: |+
   #   ProjectName = "osg.foo"
@@ -26,3 +20,60 @@ SystemConfig:
   # correct format
   Cpu: 4000m
   Memory: 8Gi
+
+UserConfig: 
+  # Mode defines where user accounts will come from. Valid options are: sssd and connectapi
+  Mode: connectapi
+  ConnectToken: connect-token-secret
+  ConnectInnerGroup: "root.connect-dev"
+  ConnectOuterGroup: "root.connect-dev"
+
+  # SSSD Configuration: This is only used if UserConfig.Mode is set to 'sssd'
+  # You can safely ignore this if you are using the connectapi for UserConfig
+
+  # This entire file which maps directly to /etc/sssd/sssd.conf
+  # Some reasonable defaults have been provided as an example
+  # The following values are needed to support unpriveleged credential caching
+  #     krb5_ccname_template = FILE:%d/krb5cc_%U_XXXXXX
+  #     krb5_ccachedir = /tmp
+  # If Kerberos is used as a SSO solution it is reccomended to handle the ccache differently
+  SSSD: |+
+    [sssd]
+    config_file_version = 2
+    reconnection_retries = 3
+    sbus_timeout = 30
+    services = nss, pam
+    domains = ad.example.edu
+    [nss]
+    filter_groups = root
+    filter_users = root
+    reconnection_retries = 3
+    [pam]
+    reconnection_retries = 3
+    [domain/ad.example.edu]
+    debug_level = 3
+    enumerate = false
+    cache_credentials = true
+    use_fully_qualified_names = false
+    auth_provider = krb5
+    chpass_provider = krb5
+    krb5_realm = AD.EXAMPLE.EDU
+    krb5_server = kdc1.example.edu:88,kdc2.example.edu:88
+    krb5_auth_timeout = 15
+    krb5_store_password_if_offline = true
+    krb5_ccname_template = FILE:%d/krb5cc_%U_XXXXXX
+    krb5_ccachedir = /tmp
+    id_provider = ldap
+    access_provider = ldap
+    ldap_uri = ldap://ldap.example.edu,ldap://ldap2.example.edu
+    ldap_search_base = dc=chpc,dc=example,dc=edu
+    ldap_tls_cacert = /etc/pki/tls/certs/ca-bundle.crt
+    ldap_tls_reqcert = never
+    ldap_krb5_init_creds = true
+    ldap_krb5_ticket_lifetime = 86400
+    ldap_schema = rfc2307bis
+    ldap_group_member = uniqueMember
+    override_homedir = /home/%u
+    default_shell = /bin/bash
+    # Some type of LDAP access filter is required, it is possible to restrict by group
+    ldap_access_filter = (uidNumber=*)
