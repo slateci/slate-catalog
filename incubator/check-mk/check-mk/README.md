@@ -4,7 +4,7 @@ This project provides monitoring services for a kubernetes cluster within [SLATE
 ## Getting Started
 Install the [SLATE CLI Client](https://slateci.io/docs/tools/#installing-the-slate-client)
 
-##Deploying Check-mk through the SLATE CLI (Recommended)
+## Deploying Check-mk through the SLATE CLI (Recommended)
 If you wish to install an instance of check-mk manually through Helm skip down to the following header.
 
 Otherwise, Make sure your [cluster is registered as part of SLATE.](https://slateci.io/docs/cluster/index.html) before proceeding. You can confirm that your cluster is registered in SLATE by running 'slate cluster list' through the SLATE client. Identify your cluster in the list. You also need to make sure you are part of a group in order to install check-mk.
@@ -12,9 +12,13 @@ Otherwise, Make sure your [cluster is registered as part of SLATE.](https://slat
 To install check-mk in your cluster run the following command 'slate app install check-mk --dev --cluster <cluster_name> --group <group_name>'
 
 
-You will need the instance number by running 'slate instance list --cluster <cluster_name> --group <group_name>'
+You will need the instance number of the check-mk installation by running 'slate instance list --cluster <cluster_name> --group <group_name>'
 
-## Or Deploying Check-mk in your kubernetes cluster with helm and kubectl
+In order to get the URL of the dashboard for check-mk run 'slate instance info <instance_number>' and find the given URL.
+
+The dashboard is running on "URL/cmk/check_mk"
+
+## Deploying Check-mk in your kubernetes cluster with helm and kubectl
 
 This will allow you to install check-mk onto any Kubernetes cluster, even if it is not part of the SLATE federation. Clone the [slateci/slate-catalog](https://github.com/slateci/slate-catalog) repository on the machine you are running your Kubernestes cluster on.
 
