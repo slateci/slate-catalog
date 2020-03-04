@@ -86,6 +86,9 @@ spec:
         - name: log-volume
           mountPath: /var/log/condor-ce
       {{ end }}
+      {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
+      hostNetwork: true
+      {{ end }}
       containers:
       {{ if .Values.HTTPLogger.Enabled }}
       - name: logging-sidecar
@@ -160,10 +163,21 @@ spec:
           containerPort: 80
           protocol: TCP
         env:
+        {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
+        - name: _CONDOR_NETWORK_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: CE_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        {{ else if eq .Values.Networking.ServiceType "LoadBalancer" }} 
         - name: _CONDOR_NETWORK_HOSTNAME
           value: {{ .Values.Networking.Hostname }}
         - name: CE_HOSTNAME
           value: {{ .Values.Networking.Hostname }}
+        {{ end }}
         - name: CE_CONTACT
           value: {{ .Values.Site.ContactEmail }}
         - name: RESOURCE_NAME

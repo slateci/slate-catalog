@@ -32,6 +32,7 @@ Squid:
   Location: null
   
 Networking:
+  ServiceType: "LoadBalancer"
   # The hostname that the CE should use. 
   # Appropriate A and PTR DNS records must exist.
   Hostname: ""
