@@ -45,9 +45,11 @@ spec:
         configMap:
           name: {{ template "condor-submit.name" . }}-condor-configuration
       {{ end }}
+      {{ if eq .Values.UserConfig.Mode "connectapi" }}
       - name: {{ template "condor-submit.name" . }}-provisioner-configuration
         configMap:
           name: {{ template "condor-submit.name" . }}-provisioner-configuration
+      {{ end }}
       containers:
       - name: condor-submit
         image: slateci/condor-submit:latest
