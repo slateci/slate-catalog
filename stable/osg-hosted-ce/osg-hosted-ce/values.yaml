@@ -58,7 +58,7 @@ Networking:
 # Bosco override dirs are expected in the following location in the git repo:
 #   <RESOURCE NAME>/bosco_override/
 BoscoOverrides:
-  Enabled: true
+  Enabled: false
   GitEndpoint: https://github.com/slateci/bosco-override-template
   RepoNeedsPrivKey: false
   GitKeySecret: null
