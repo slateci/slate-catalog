@@ -81,6 +81,7 @@ spec:
       initContainers:
       - name: logging-sidecar-init
         image: opensciencegrid/hosted-ce:fresh
+        imagePullPolicy: Always
         command: ['/bin/chown','condor:condor','/var/log/condor-ce']
         volumeMounts:
         - name: log-volume
