@@ -207,6 +207,10 @@ Set `Seccret: null` to disable this feature (default).
 
 	Certificate:
 	  Secret: null
+	  
+The SLATE secret must consist of two key value pairs where the keys are called `hostkey.pem` and `hostcert.pem`, for example:
+
+`slate secret create hostedce-certificate --cluster <YOUR CLUSTER> --group <YOUR GROUP> --from-file=hostkey.pem --from-file=hostcert.pem`
 
 ### Developer 
 Simply disable this. It is in place for the purpose of OSG Internal Testbed hosts, and is not intended for use with production CEs.
