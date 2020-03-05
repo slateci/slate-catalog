@@ -20,7 +20,9 @@ You will need the instance number of the check-mk installation by running
 In order to get the URL of the dashboard for check-mk run the following commands
 
 `export NODE_IP=$(slate instance info <instance_ID> | grep 'Host IP: ' | awk -F '[ -]*' '$0=$NF')`
+
 `export NODE_PORT=$(slate instance info instance_vx5hTuoPIMg | grep -m 1 $NODE_IP | awk -F '[ -]*' '$0=$NF')`
+
 `echo http://$NODE_PORT/cmk/check_mk`
 
 
