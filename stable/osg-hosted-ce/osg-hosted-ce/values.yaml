@@ -15,8 +15,6 @@ Site:
 Cluster:
   RemoteHost: remote-ssh.login.org
   RemoteBatch: slurm
-  # Enterprise Linux major version (6 or 7)
-  OperatingSystem: 7
   PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
   Memory: 1024
   CoresPerNode: 4
