@@ -7,14 +7,22 @@ Install the [SLATE CLI Client](https://slateci.io/docs/tools/#installing-the-sla
 ## Deploying Check-mk through the SLATE CLI (Recommended)
 If you wish to install an instance of check-mk manually through Helm skip down to the following header.
 
-Otherwise, Make sure your [cluster is registered as part of SLATE.](https://slateci.io/docs/cluster/index.html) before proceeding. You can confirm that your cluster is registered in SLATE by running 'slate cluster list' through the SLATE client. Identify your cluster in the list. You also need to make sure you are part of a group in order to install check-mk.
+Otherwise, Make sure your [cluster is registered as part of SLATE.](https://slateci.io/docs/cluster/index.html) before proceeding. You can confirm that your cluster is registered in SLATE by running `slate cluster list` through the SLATE client. Identify your cluster in the list. You also need to make sure you are part of a group in order to install check-mk.
 
-To install check-mk in your cluster run the following command 'slate app install check-mk --dev --cluster <cluster_name> --group <group_name>'
+To install check-mk in your cluster run the following command 
 
+`slate app install check-mk --dev --cluster <cluster_name> --group <group_name>`
 
-You will need the instance number of the check-mk installation by running 'slate instance list --cluster <cluster_name> --group <group_name>'
+You will need the instance number of the check-mk installation by running 
 
-In order to get the URL of the dashboard for check-mk run 'slate instance info <instance_number>' and find the given URL.
+`slate instance list --cluster <cluster_name> --group <group_name>`
+
+In order to get the URL of the dashboard for check-mk run the following commands
+
+`export NODE_IP=$(slate instance info <instance_ID> | grep 'Host IP: ' | awk -F '[ -]*' '$0=$NF')`
+`export NODE_PORT=$(slate instance info instance_vx5hTuoPIMg | grep -m 1 $NODE_IP | awk -F '[ -]*' '$0=$NF')`
+`echo http://$NODE_PORT/cmk/check_mk`
+
 
 The dashboard is running on "URL/cmk/check_mk"
 
