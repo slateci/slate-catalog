@@ -28,7 +28,7 @@ Storage:
   WorkerNodeTemp: /tmp
 
 Squid:
-  # <FQDN>:<PORT> for the site's local squid server
+  # <IP OR HOSTNAME>:<PORT> for the site's local squid server
   Location: null
   
 Networking:
