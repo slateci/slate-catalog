@@ -21,12 +21,17 @@ In order to get the URL of the dashboard for check-mk run the following commands
 
 `export NODE_IP=$(slate instance info <instance_ID> | grep 'Host IP: ' | awk -F '[ -]*' '$0=$NF')`
 
-`export NODE_PORT=$(slate instance info instance_vx5hTuoPIMg | grep -m 1 $NODE_IP | awk -F '[ -]*' '$0=$NF')`
+`export NODE_PORT=$(slate instance info <instance_ID> | grep -m 1 $NODE_IP | awk -F '[ -]*' '$0=$NF')`
 
 `echo http://$NODE_PORT/cmk/check_mk`
 
+Once opening the url in your browser you can find the username and password by running the command 
 
-The dashboard is running on "URL/cmk/check_mk"
+`slate instance logs <instance_ID>`
+
+Continue header at 'Setting up Monitoring on your Kubernetes Cluster'
+
+
 
 ## Deploying Check-mk in your kubernetes cluster with helm and kubectl
 
