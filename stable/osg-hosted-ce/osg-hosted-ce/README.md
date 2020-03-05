@@ -81,7 +81,7 @@ selection of the remote batch system.
 
 PrivateKeySecret is the name of a secret created in SLATE which contains the private key for the osg user on the remote cluster. 
 
-Memory, CoresPerNode, and MaxWallTime should be set to the max resource limits available on the remote cluster. 
+Memory, CoresPerNode, and MaxWallTime should be set to the max resource limits available on the remote cluster. Memory is per node.
 
 *Note: For clusters composed of disparate nodes, you want to target the lowest common denominator with these settings*
 
