@@ -80,7 +80,7 @@ spec:
       {{ if .Values.HTTPLogger.Enabled }}
       initContainers:
       - name: logging-sidecar-init
-        image: opensciencegrid/hosted-ce:20200305-1958
+        image: opensciencegrid/hosted-ce:fresh
         imagePullPolicy: Always
         command: ['/bin/chown','condor:condor','/var/log/condor-ce']
         volumeMounts:
@@ -117,7 +117,7 @@ spec:
         {{ end }}
       {{ end }}
       - name: osg-hosted-ce
-        image: opensciencegrid/hosted-ce:20200305-1958
+        image: opensciencegrid/hosted-ce:fresh
         imagePullPolicy: Always
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
@@ -187,8 +187,6 @@ spec:
           value: {{ .Values.Cluster.RemoteHost }}
         - name: REMOTE_BATCH
           value: {{ .Values.Cluster.RemoteBatch }}
-        - name: REMOTE_OS_VER
-          value: {{ .Values.Cluster.OperatingSystem }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"
