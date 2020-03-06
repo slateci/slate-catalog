@@ -2,6 +2,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: globus-{{ .Values.Instance}}-configuration
+  labels:
+    app: {{ template "globus-connect.fullname" . }}
+    chart: {{ template "globus-connect.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
 data:
   globus-connect-server.conf: |-
 {{ .Values.GlobusConfigFile | indent 4 }}

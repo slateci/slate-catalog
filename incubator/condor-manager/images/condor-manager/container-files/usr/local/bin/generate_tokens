@@ -1,0 +1,24 @@
+#!/bin/sh
+echo "generate_tokens: Waiting for condor collector to become available"
+until condor_status -collector -format "Collector: %s\n" Name  2>/dev/null; do
+	sleep 1
+done
+
+condor_token_create -identity submit@pool > submit_token
+if [ "$?" -ne 0 ]; then
+	exit 1
+fi
+condor_token_create -identity worker@pool > worker_token
+if [ "$?" -ne 0 ]; then
+	exit 1
+fi
+echo "**** Condor Submit Token ****"
+cat submit_token
+if [ "$?" -ne 0 ]; then
+	exit 1
+fi
+echo "**** Condor Worker Token ****"
+cat worker_token
+if [ "$?" -ne 0 ]; then
+	exit 1
+fi

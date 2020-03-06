@@ -6,7 +6,7 @@ metadata:
     app: {{ template "perfsonar-testpoint.name" . }}
     chart: {{ template "perfsonar-testpoint.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
       app: {{ template "perfsonar-testpoint.name" . }}
       chart: {{ template "perfsonar-testpoint.chart" . }}
       release: {{ .Release.Name }}
-      instance: {{ .Values.Instance }}
+      instance: {{ .Values.Instance | quote }}
   strategy:
     type: Recreate
   template:
@@ -24,14 +24,15 @@ spec:
         app: {{ template "perfsonar-testpoint.name" . }}
         chart: {{ template "perfsonar-testpoint.chart" . }}
         release: {{ .Release.Name }}
-        instance: {{ .Values.Instance }}
+        instance: {{ .Values.Instance | quote }}
     spec:
       hostNetwork: true
-      privileged: true
       containers:
       - name: perfsonar-testpoint
         image: perfsonar/testpoint:staging
-        imagePullPolicy: IfNotPresent  
+        imagePullPolicy: IfNotPresent
+        securityContext: 
+          privileged: true
       restartPolicy: Always
       {{ if .Values.nodeSelection }}
       nodeSelector:

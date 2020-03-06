@@ -6,7 +6,7 @@ metadata:
     app: {{ template "osg-frontier-squid.name" . }}
     chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 
 spec:
   replicas: 1
@@ -15,7 +15,7 @@ spec:
       app: {{ template "osg-frontier-squid.name" . }}
       chart: {{ template "osg-frontier-squid.chart" . }}
       release: {{ .Release.Name }}
-      instance: {{ .Values.Instance }}
+      instance: {{ .Values.Instance | quote }}
 
   template:
     metadata:
@@ -23,13 +23,17 @@ spec:
         app: {{ template "osg-frontier-squid.name" . }}
         chart: {{ template "osg-frontier-squid.chart" . }}
         release: {{ .Release.Name }}
-        instance: {{ .Values.Instance }}
+        instance: {{ .Values.Instance | quote }}
     spec:
-      # Required affinity for using local storage
-      {{ if .Values.SLATE.LocalStorage }}
       nodeSelector:
+        # Required affinity for using local storage
+        {{ if .Values.SLATE.LocalStorage }}
         storage: "local"
-      {{ end }}
+        {{ end }}
+        # For Node Selection
+        {{ if .Values.NodeSelection.Hostname }}
+        kubernetes.io/hostname: {{ .Values.NodeSelection.Hostname }}
+        {{ end }}
       containers:
       # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid

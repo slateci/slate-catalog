@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "condor-manager.fullname" . }}
+  labels:
+    app: {{ template "condor-manager.fullname" . }}
+    chart: {{ template "condor-manager.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  type: NodePort
+  ports:
+  - name: condor-shared
+    protocol: TCP 
+    port: 9618
+    targetPort: condor-shared
+  selector:
+    app: {{ template "condor-manager.fullname" . }}
+    instance: {{ .Values.Instance | quote }}

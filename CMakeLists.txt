@@ -4,8 +4,6 @@ project("slate-catalog" NONE)
 set(catalog_url "https://jenkins.slateci.io/catalog" CACHE STRING "The base URL at which the catalog is published")
 set(catalog_path "/usr/share/nginx/html/catalog" CACHE PATH "The base path from which the catalog is published")
 
-set(helm_dir "${CMAKE_BINARY_DIR}/helm")
-
 find_program(SHASUM_PROGRAM NAMES "sha512sum" "shasum")
 if(SHASUM_PROGRAM STREQUAL "SHASUM_PROGRAM-NOTFOUND")
 	message(FATAL_ERROR "Unable to find a SHA-512 program")
@@ -26,9 +24,6 @@ if(CLAIR_SCANNER STREQUAL "CLAIR_SCANNER-NOTFOUND")
 else()
 	message(STATUS "Found clair-scanner: ${CLAIR_SCANNER}")
 endif()
-
-add_custom_command(OUTPUT "${helm_dir}"
-                   COMMAND helm init -c --home "${helm_dir}" --skip-refresh)
 
 # This assumes the existence of a program/script called update_slate_catalog
 # which notifies the SLATE API server(s) that they should pull the newest 
@@ -125,7 +120,7 @@ function(add_repository name)
 		                   DEPENDS ${chart_files} "${name}_existing_fingerprints")
 		list(APPEND repo_hashes "${compiled_chart}.hash")
 		set(chart_dependencies "")
-		list(APPEND chart_dependencies ${chart_files} ${helm_dir} "${compiled_chart}.hash")
+		list(APPEND chart_dependencies ${chart_files} "${compiled_chart}.hash")
 
 		if(CLAIR_SCANNER AND template_files)
 			add_custom_command(OUTPUT "${compiled_chart}.images"
@@ -173,7 +168,7 @@ function(add_repository name)
 		                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/helm_lint_filter "${chart}/${chart_name}"
 		                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/check_hash "${existing_fingerprints}" "${compiled_chart}.hash"
 		                   COMMAND rm -f "${CMAKE_BINARY_DIR}/${name}/${chart_name}*.tgz"
-		                   COMMAND helm package "${chart}/${chart_name}" -d "${CMAKE_BINARY_DIR}/${name}" --home "${helm_dir}"
+		                   COMMAND helm package "${chart}/${chart_name}" -d "${CMAKE_BINARY_DIR}/${name}"
 		                   DEPENDS ${chart_dependencies})
 		list(APPEND repo_charts "${compiled_chart}")
 	endforeach()
@@ -181,7 +176,7 @@ function(add_repository name)
 	# Also generate the repository index file
 	set(index_file "${CMAKE_BINARY_DIR}/${name}/index.yaml")
 	add_custom_command(OUTPUT "${index_file}"
-	                   COMMAND helm repo index "${CMAKE_BINARY_DIR}/${name}/" --home "${helm_dir}"
+	                   COMMAND helm repo index "${CMAKE_BINARY_DIR}/${name}/"
 	                   DEPENDS ${repo_charts})
 	set(fingerprint_file "${CMAKE_BINARY_DIR}/${name}/fingerprints")
 	add_custom_command(OUTPUT "${fingerprint_file}"

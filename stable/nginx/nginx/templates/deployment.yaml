@@ -6,20 +6,20 @@ metadata:
     app: {{ template "nginx.name" . }}
     chart: {{ template "nginx.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ template "nginx.name" . }}
-      instance: {{ .Values.Instance }}
+      instance: {{ .Values.Instance | quote }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
         app: {{ template "nginx.name" . }}
         chart: {{ template "nginx.chart" . }}
-        instance: {{ .Values.Instance }}
+        instance: {{ .Values.Instance | quote }}
         release: {{ .Release.Name }}
     spec:
       containers:
