@@ -81,7 +81,7 @@ selection of the remote batch system.
 
 PrivateKeySecret is the name of a secret created in SLATE which contains the private key for the osg user on the remote cluster. 
 
-Memory, CoresPerNode, and MaxWallTime should be set to the max resource limits available on the remote cluster. 
+Memory, CoresPerNode, and MaxWallTime should be set to the max resource limits available on the remote cluster. Memory is per node.
 
 *Note: For clusters composed of disparate nodes, you want to target the lowest common denominator with these settings*
 
@@ -207,6 +207,10 @@ Set `Seccret: null` to disable this feature (default).
 
 	Certificate:
 	  Secret: null
+	  
+The SLATE secret must consist of two key value pairs where the keys are called `hostkey.pem` and `hostcert.pem`, for example:
+
+`slate secret create hostedce-certificate --cluster <YOUR CLUSTER> --group <YOUR GROUP> --from-file=hostkey.pem --from-file=hostcert.pem`
 
 ### Developer 
 Simply disable this. It is in place for the purpose of OSG Internal Testbed hosts, and is not intended for use with production CEs.

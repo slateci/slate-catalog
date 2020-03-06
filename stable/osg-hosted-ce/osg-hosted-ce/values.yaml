@@ -28,7 +28,7 @@ Storage:
   WorkerNodeTemp: /tmp
 
 Squid:
-  # <FQDN>:<PORT> for the site's local squid server
+  # <IP OR HOSTNAME>:<PORT> for the site's local squid server
   Location: null
   
 Networking:
@@ -58,7 +58,7 @@ Networking:
 # Bosco override dirs are expected in the following location in the git repo:
 #   <RESOURCE NAME>/bosco_override/
 BoscoOverrides:
-  Enabled: true
+  Enabled: false
   GitEndpoint: https://github.com/slateci/bosco-override-template
   RepoNeedsPrivKey: false
   GitKeySecret: null
