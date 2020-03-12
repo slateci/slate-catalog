@@ -68,7 +68,7 @@ spec:
             items:
             - key: extra-config.sh
               path: extra-config.sh
-              mode: 256
+              mode: 448
         {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
         {{ if .Values.SLATE.LocalStorage }}
