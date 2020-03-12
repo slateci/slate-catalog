@@ -13,7 +13,6 @@ data:
     awk --file `dirname $0`/customhelps.awk --source '{
      setoption("workers", {{ .Values.ExtraConf.Workers }})
      #setoption("max_filedescriptors", "8192")
-     #setoptionparameter("cache_dir", 2, "/squid/cache/squid${process_number}")
      setoptionparameter("cache_dir", 2, "/var/cache/squid/squid${process_number}")
      setoption("cpu_affinity_map", {{ .Values.ExtraConf.Cpu_Affinity_Map }})
      setoptionparameter("logformat awstats", 3, "kid${process_number}")
