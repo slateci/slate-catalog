@@ -11,7 +11,6 @@ metadata:
 data:
   extra-config.sh: |+
     awk --file `dirname $0`/customhelps.awk --source '{
-     setoption("acl NET_LOCAL src", {{ .Values.ExtraConf.acl_NET_LOCAL_src }})
      setoption("workers", {{ .Values.ExtraConf.Workers }})
      #setoption("max_filedescriptors", "8192")
      #setoptionparameter("cache_dir", 2, "/squid/cache/squid${process_number}")
