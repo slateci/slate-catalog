@@ -20,7 +20,7 @@ awk --file `dirname $0`/customhelps.awk --source '{
  setoptionparameter("cache_dir", 2, "/var/cache/squid/squid${process_number}")
  setoption("cpu_affinity_map", {{ .Values.ExtraConf.Cpu_Affinity_Map }})
  setoptionparameter("logformat awstats", 3, "kid${process_number}")
- setoption("visible_hostname", {{ .Values.ExtraConf.Visible_Hostname }})
+ setoption("visible_hostname", "'`uname -n`'/${process_number}")
  setoption("logfile_rotate", {{ .Values.ExtraConf.Logfile_Rotate }})
  insertline("disable_potential_heap_overflow", "acl URN proto URN")
  insertline("http_access_deny", "http_access deny URN")
