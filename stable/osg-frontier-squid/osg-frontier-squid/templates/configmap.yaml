@@ -14,7 +14,6 @@ data:
      setoption("acl NET_LOCAL src", {{ .Values.ExtraConf.acl_NET_LOCAL_src }})
      setoption("workers", {{ .Values.ExtraConf.Workers }})
      #setoption("max_filedescriptors", "8192")
-     setoptionparameter("cache_dir", 3, "100000")
      #setoptionparameter("cache_dir", 2, "/squid/cache/squid${process_number}")
      setoptionparameter("cache_dir", 2, "/var/cache/squid/squid${process_number}")
      setoption("cpu_affinity_map", {{ .Values.ExtraConf.Cpu_Affinity_Map }})
