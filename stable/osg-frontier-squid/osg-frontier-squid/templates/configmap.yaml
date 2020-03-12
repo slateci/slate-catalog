@@ -9,21 +9,21 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
-  extra-config.s: |+
-awk --file `dirname $0`/customhelps.awk --source '{
- setoption("acl NET_LOCAL src", {{ .Values.ExtraConf.acl_NET_LOCAL_src }})
- setoption("workers", {{ .Values.ExtraConf.Workers }})
- setoption("cache_mem", {{ .Values.ExtraConf.Cache_Mem }})
- #setoption("max_filedescriptors", "8192")
- setoptionparameter("cache_dir", 3, "100000")
- #setoptionparameter("cache_dir", 2, "/squid/cache/squid${process_number}")
- setoptionparameter("cache_dir", 2, "/var/cache/squid/squid${process_number}")
- setoption("cpu_affinity_map", {{ .Values.ExtraConf.Cpu_Affinity_Map }})
- setoptionparameter("logformat awstats", 3, "kid${process_number}")
- setoption("visible_hostname", "'`uname -n`'/${process_number}")
- setoption("logfile_rotate", {{ .Values.ExtraConf.Logfile_Rotate }})
- insertline("disable_potential_heap_overflow", "acl URN proto URN")
- insertline("http_access_deny", "http_access deny URN")
- print
-}'
+  extra-config.sh: |+
+    awk --file `dirname $0`/customhelps.awk --source '{
+     setoption("acl NET_LOCAL src", {{ .Values.ExtraConf.acl_NET_LOCAL_src }})
+     setoption("workers", {{ .Values.ExtraConf.Workers }})
+     setoption("cache_mem", {{ .Values.ExtraConf.Cache_Mem }})
+     #setoption("max_filedescriptors", "8192")
+     setoptionparameter("cache_dir", 3, "100000")
+     #setoptionparameter("cache_dir", 2, "/squid/cache/squid${process_number}")
+     setoptionparameter("cache_dir", 2, "/var/cache/squid/squid${process_number}")
+     setoption("cpu_affinity_map", {{ .Values.ExtraConf.Cpu_Affinity_Map }})
+     setoptionparameter("logformat awstats", 3, "kid${process_number}")
+     setoption("visible_hostname", "'`uname -n`'/${process_number}")
+     setoption("logfile_rotate", {{ .Values.ExtraConf.Logfile_Rotate }})
+     insertline("disable_potential_heap_overflow", "acl URN proto URN")
+     insertline("http_access_deny", "http_access deny URN")
+     print
+    }'
 {{ end }}
