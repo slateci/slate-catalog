@@ -1,4 +1,4 @@
-{{ if .Values.ExtraConfig }}
+{{ if .Values.ExtraConf }}
 apiVersion: apps/v1
 kind: ConfigMap
 metadata:
