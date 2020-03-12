@@ -57,7 +57,6 @@ NodeSelection:
 
   #If extra configuration options are wanted, the values for said options should be inserted here
   #By default these extra configuration options are turned off, set ExtraConfig to True to turn them on
-ExtraConfig: True
 
 ExtraConf:
   acl_NET_LOCAL_src: "10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
