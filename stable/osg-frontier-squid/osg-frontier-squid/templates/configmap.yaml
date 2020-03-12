@@ -7,3 +7,23 @@ metadata:
     chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+data:
+{{- if .Values.ExtraConfig}}
+  extra-config.s: |+
+awk --file `dirname $0`/customhelps.awk --source '{
+ setoption("acl NET_LOCAL src", "10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 129.74.0.0/16")
+ setoption("workers", 4)
+ setoption("cache_mem", "128 MB")
+ #setoption("max_filedescriptors", "8192")
+ setoptionparameter("cache_dir", 3, "100000")
+ #setoptionparameter("cache_dir", 2, "/squid/cache/squid${process_number}")
+ setoptionparameter("cache_dir", 2, "/var/cache/squid/squid${process_number}")
+ setoption("cpu_affinity_map", "process_numbers=1,2,3,4 cores=2,3,4,5")
+ setoptionparameter("logformat awstats", 3, "kid${process_number}")
+ setoption("visible_hostname", "'`uname -n`'/${process_number}")
+ setoption("logfile_rotate", "10")
+ insertline("disable_potential_heap_overflow", "acl URN proto URN")
+ insertline("http_access_deny", "http_access deny URN")
+ print
+}'
+{{ end }}
