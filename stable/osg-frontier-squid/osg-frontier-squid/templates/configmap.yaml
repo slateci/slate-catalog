@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
-  extra-config.sh: |+
+  99-extra-squid-params.sh: |+
     awk --file `dirname $0`/customhelps.awk --source '{
      setoption("workers", {{ .Values.ExtraConf.Workers }})
      #setoption("max_filedescriptors", "8192")
