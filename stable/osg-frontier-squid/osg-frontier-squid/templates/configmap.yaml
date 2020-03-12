@@ -9,7 +9,6 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
-{{- if .Values.ExtraConfig}}
   extra-config.s: |+
 awk --file `dirname $0`/customhelps.awk --source '{
  setoption("acl NET_LOCAL src", {{ .Values.ExtraConf.acl_NET_LOCAL_src }})
