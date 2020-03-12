@@ -10,7 +10,7 @@ metadata:
     instance: {{ .Values.Instance | quote }}
 data:
   99-extra-squid-params.sh: |+
-    awk --file `dirname $0`/customhelps.awk --source '{
+    awk --file /etc/squid/customhelps.awk --source '{
      setoption("workers", {{ .Values.ExtraConf.Workers }})
      #setoption("max_filedescriptors", "8192")
      setoptionparameter("cache_dir", 2, "/var/cache/squid/squid${process_number}")
