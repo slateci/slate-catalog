@@ -66,8 +66,8 @@ spec:
           configMap:
             name: {{ template "osg-frontier-squid.fullname" . }}
             items:
-            - key: 99-squid-extra-params.sh
-              path: 99-squid-extra-params.sh
+            - key: 99-extra-squid-params.sh
+              path: 99-extra-squid-params.sh
               mode: 448
         {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
