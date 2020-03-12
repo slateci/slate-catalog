@@ -64,5 +64,4 @@ ExtraConf:
   Workers: 4
   Cache_Mem: "128 MB"
   Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
-  Visible_Hostname: "'`uname -n`'/${process_number}"
   Logfile_Rotate: "10"
