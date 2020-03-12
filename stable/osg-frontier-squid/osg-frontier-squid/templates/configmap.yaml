@@ -14,7 +14,7 @@ data:
      setoption("workers", {{ .Values.ExtraConf.Workers }})
      #setoption("max_filedescriptors", "8192")
      setoptionparameter("cache_dir", 2, "/var/cache/squid/squid${process_number}")
-     setoption("cpu_affinity_map", {{ .Values.ExtraConf.Cpu_Affinity_Map }})
+     setoption("cpu_affinity_map", {{ .Values.ExtraConf.Cpu_Affinity_Map | quote }})
      setoptionparameter("logformat awstats", 3, "kid${process_number}")
      setoption("visible_hostname", "'`uname -n`'/${process_number}")
      setoption("logfile_rotate", {{ .Values.ExtraConf.Logfile_Rotate }})
