@@ -52,7 +52,7 @@ spec:
         volumeMounts:
         {{ if .Values.ExtraConf.Enabled }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-extra-conf
-          mountPath: /etc/osg/image-config.d/
+          mountPath: /etc/osg/image-config.d/99-extra-squid-params.sh
           subPath: extra-conf.sh 
         {{ end }}
         # Storage location of the cache data
