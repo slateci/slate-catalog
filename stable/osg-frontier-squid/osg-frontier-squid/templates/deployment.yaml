@@ -64,7 +64,7 @@ spec:
         {{ if .Values.ExtraConf.Enabled }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-extra-conf
           configMap:
-            name: {{ template "osg-frontier-squid.fullname" }}
+            name: {{ template "osg-frontier-squid.fullname" . }}
             items:
             - key: extra-config.sh
               path: extra-config.sh
