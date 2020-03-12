@@ -62,6 +62,5 @@ ExtraConf:
   Enabled: false
   acl_NET_LOCAL_src: "10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
   Workers: 4
-  Cache_Mem: "128 MB"
   Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
   Logfile_Rotate: "10"
