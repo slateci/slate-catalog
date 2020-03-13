@@ -48,14 +48,28 @@ spec:
         - name: SQUID_CACHE_DISK
           value: "{{ .Values.SquidConf.CacheSize }}"
         - name: SQUID_CACHE_MEM
-          value: "{{ .Values.SquidConf.CacheMem }}"
+          value: "{{ .Values.SquidConf.CacheMem }} MB"
         volumeMounts:
+        {{ if .Values.ExtraConf.Enabled }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-extra-conf
+          mountPath: /etc/osg/image-config.d/60-image-post-init.sh
+          subPath: 60-image-post-init.sh 
+        {{ end }}
         # Storage location of the cache data
         - mountPath: /var/cache/squid/osg-frontier-squid-{{ .Values.Instance }}-cache
           subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
           name: osg-frontier-squid-{{ .Values.Instance }}-data
           # Shared directory for logs with the Fluent-bit sidecar, can be enabled or disabled from values.yaml
       volumes:
+        {{ if .Values.ExtraConf.Enabled }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-extra-conf
+          configMap:
+            name: {{ template "osg-frontier-squid.fullname" . }}
+            items:
+            - key: 60-image-post-init.sh
+              path: 60-image-post-init.sh
+              mode: 448
+        {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
         {{ if .Values.SLATE.LocalStorage }}
           persistentVolumeClaim:

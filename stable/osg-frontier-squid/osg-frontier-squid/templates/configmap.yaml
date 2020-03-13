@@ -1,0 +1,40 @@
+{{ if .Values.ExtraConf.Enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "osg-frontier-squid.fullname" . }}
+  labels:
+    app: {{ template "osg-frontier-squid.name" . }}
+    chart: {{ template "osg-frontier-squid.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  60-image-post-init.sh: |+
+    echo "Generating squid.conf..."
+    grep -v cache_dir /etc/squid/squid.conf.frontierdefault > /etc/squid/squid.conf
+    echo '
+    acl NET_LOCAL src {{ .Values.SquidConf.IPRange }}
+    cache_mem {{ .Values.SquidConf.CacheMem }} MB
+    workers {{ .Values.ExtraConf.Workers }}
+    cache_dir ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256
+    cpu_affinity_map {{ .Values.ExtraConf.Cpu_Affinity_Map }}
+    logformat awstats %>a kid${process_number} %un [%{%d/%b/%Y:%H:%M:%S}tl.%03tu %{%z}tl] "%rm %ru HTTP/%rv" %>Hs %<st %Ss:%Sh %tr "%{X-Frontier-Id}>h %{cvmfs-info}>h" "%{Referer}>h" "%{User-Agent}>h"
+    visible_hostname '`uname -n`'/${process_number}
+    logfile_rotate {{ .Values.ExtraConf.Logfile_Rotate }}
+    acl URN proto URN
+    http_access deny URN
+    ' >> /etc/squid/squid.conf
+    
+    chown -R squid:squid /var/cache/squid
+    if [[ ! -d /var/cache/squid/squid0/00 ]]; then
+      for kid in $(seq 0 {{ .Values.ExtraConf.Workers }}); do
+        echo "Initializing cache for worker $kid..."
+        grep -v cache_dir /etc/squid/squid.conf.frontierdefault > squid_init.conf
+        echo "cache_dir ufs /var/cache/squid/squid${kid} {{ .Values.SquidConf.CacheSize }} 16 256" >> squid_init.conf
+        /usr/sbin/squid -N -f squid_init.conf -z
+        rm squid_init.conf
+      done
+    fi
+    rm -f /dev/shm/squid-*.shm
+    echo "End of 60-image-post-init.sh"
+{{ end }}

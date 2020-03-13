@@ -54,3 +54,12 @@ SquidConf:
   # Set this to null to be randomly assigned an available node
 NodeSelection:  
   Hostname: null
+
+  #If extra configuration options are wanted, the values for said options should be inserted here
+  #By default these extra configuration options are turned off, set ExtraConfig to True to turn them on
+
+ExtraConf:
+  Enabled: false
+  Workers: 4
+  Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
+  Logfile_Rotate: "10"
