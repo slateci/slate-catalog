@@ -66,9 +66,9 @@ The logs provides the given username and password. Enter those into your dashboa
 Check-mk provides the necessary steps for setting up monitoring on your kubernetes cluster. There are some additional steps needed that aren't provided in check-mk's documentation so make sure to read the provided guidelines before starting because they work in tandem with check-mk's steps.
 
 
-While logged into your cluster download the source code provided at [Check-mk Downloads](https://checkmk.com/download-source.php?). Make sure to download the most recent stable version. Also, make sure it is the complate source code of Check-mk with OMD. This will coincide with the version that is provided in Helm's earlier deployment and will help prevent further issues. Once the dowload is complete, extract all the files through the command:
+While logged into your cluster download the source code provided at [Check-mk Downloads](https://checkmk.com/download-source.php?). Make sure to download the most recent version. Also, make sure it is the complate source code of Check-mk with OMD. This will coincide with the version that is provided in Helm's earlier deployment and will help prevent further issues. Once the dowload is complete, extract all the files through the command:
 
-`tar -zxvf <your_checkmk-rawedition-1.5.tar.gz>`
+`tar -zxvf <your_checkmk-rawedition-1.6.tar.gz>`
 
 Now that you have downloaded the source code you are ready to start check-mk's walk through for [Monitoring Kubernetes](https://checkmk.com/cms_monitoring_kubernetes.html). Again, make sure to refer to the guidelines below to simplify the process.
 
@@ -79,6 +79,8 @@ Now that you have downloaded the source code you are ready to start check-mk's w
 The rbac.yaml file with be found in the check-mk-raw-1.5.0p19.cre/doc/treasures/kubernetes directory. Not the one it lists on the walk-through.
 
 In section 2.4. Adding a Kubernetes-Cluster to the Monitoring you will be putting in a password token. The documentation doesn't specify to to click the Port button, but it is necessary to do so, otherwise the cluster can not be accessed. Make sure to define the port as 6443.
+
+In section 2.5 is mentions the new version of 1.6. The configuration looks different than they show in the walk-through. Simply put in the token received from the secrets into the token value. Click on the port button and make sure to spcify port 6443. Leave all the other boxes clear. Again, do not click the Custom URL prefix, the Custom path prefix, or Disable certificate verification. Those will only come in play if you are monitoring multiple clusters from this same dashboard. The documentation on how to do that will be updated shortly.
 
 After defining the port and saving the password token you need to add a host. You are going to be adding the kubernetes cluster to your monitoring topology. To accomplish this go to "WATO" in the left side bar and click "Hosts". Once there click "Create new host". The host name is the IP adress that the cluster is running on. you can get this information by running the command: `kubectl cluster-info`. Make sure to leave the port number off since it was already definied in the rule. In the "Data Sources" portion check the "Check_MK Agent". Now click "Save & go the Services" at the bottom of the page. At this point you will now recognize the services offered by check-mk on your cluster. 
 
