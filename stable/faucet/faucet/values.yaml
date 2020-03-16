@@ -10,77 +10,41 @@ StorageClass: nfs-client
 
 # Configuration data for faucet this is faucet.yaml
 Configuration: |-
-  include:
-      - acls.yaml
   vlans:
       office:
           vid: 100
           description: "office network"
-          acls_in: [office-vlan-protect]
-          faucet_mac: "0e:00:00:00:10:01"
-          faucet_vips: ['10.0.100.254/24', '2001:100::1/64', 'fe80::c00:00ff:fe00:1001/64']
-          routes:
-              - route:
-                  ip_dst: '192.168.0.0/24'
-                  ip_gw: '10.0.100.2'
-      guest:
-          vid: 200
-          description: "guest network"
-          faucet_mac: "0e:00:00:00:20:01"
-          faucet_vips: ['10.0.200.254/24', '2001:200::1/64', 'fe80::c00:00ff:fe00:2001/64']
-  routers:
-      router-office-guest:
-          vlans: [office, guest]
+
   dps:
       sw1:
           dp_id: 0x1
           hardware: "Open vSwitch"
           interfaces:
               1:
-                  name: "h1"
-                  description: "host1 container"
+                  name: "host1"
+                  description: "host2 network namespace"
                   native_vlan: office
-                  acls_in: [access-port-protect]
               2:
-                  name: "h2"
-                  description: "host2 container"
+                  name: "host2"
+                  description: "host2 network namespace"
                   native_vlan: office
-                  acls_in: [access-port-protect]
               3:
-                  name: "g1"
-                  description: "guest1 container"
-                  native_vlan: guest
-                  acls_in: [access-port-protect]
-              4:
-                  name: "s1"
-                  description: "services container"
+                  name: "host3"
                   native_vlan: office
-                  acls_in: [service-port-protect]
-              5:
-                  name: "trunk"
-                  description: "VLAN trunk to sw2"
-                  tagged_vlans: [office]
-                  acls_in: [access-port-protect]
-      sw2:
-          dp_id: 0x2
-          hardware: "Allied-Telesis"
-          interfaces:
-              1:
-                  name: "pi"
-                  description: "raspberry pi"
-                  native_vlan: office
-                  acls_in: [access-port-protect]
-              2:
-                  name: "laptop"
-                  description: "guest laptop"
-                  native_vlan: guest
-                  acls_in: [access-port-protect]
-              4:
-                  name: "s1"
-                  description: "services Laptop"
-                  native_vlan: guest
-                  acls_in: [access-port-protect]
-              24:
-                  name: "trunk"
-                  description: "VLAN trunk to sw1"
-                  tagged_vlans: [office, guest]
+                  acls_in: [block-ping, allow-all]
+  acls:
+      block-ping:
+          - rule:
+              dl_type: 0x800      # IPv4
+              ip_proto: 1         # ICMP
+              actions:
+                  allow: False
+          - rule:
+              dl_type: 0x86dd     # IPv6
+              ip_proto: 58        # ICMPv6
+              actions:
+                  allow: False
+      allow-all:
+          - rule:
+              actions:
+                  allow: True
