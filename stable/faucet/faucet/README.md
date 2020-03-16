@@ -65,7 +65,7 @@ You want to grab the instance ID which looks like `instance_nnqnaMF8e_Q`. Once y
 
 `slate instance info <YOUR INSTANCE ID>`
 
-You should be able to simply point your switch at `NodeIP:NodePort`
+You should be able to simply point your switch at `NodeIP:NodePort`. The exact way this is done varies from switch to switch, but as an example in Open Virtual Switch you would feed it the command `ovs-vsctl set-controller <bridge name> tcp:NodeIP:NodePort` and your Faucet controller would begin giving instructions to the given OVS Switch.
 
 ### Configuration and Use
 
