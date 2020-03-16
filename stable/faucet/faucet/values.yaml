@@ -9,7 +9,7 @@ Instance: global
 StorageClass: nfs-client
 
 # Configuration data for faucet this is faucet.yaml
-Configuration: |-
+Configuration: |+
   include:
       - acls.yaml
   vlans:
