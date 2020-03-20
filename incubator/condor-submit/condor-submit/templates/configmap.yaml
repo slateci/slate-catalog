@@ -1,4 +1,3 @@
-{{ if .Values.CondorConfig.ConfigFile }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,9 +9,10 @@ data:
   condor_config.local: |+
     COLLECTOR_HOST = {{ .Values.CondorConfig.CollectorHost }}
     COLLECTOR_PORT = {{ .Values.CondorConfig.CollectorPort }}
+{{ if .Values.CondorConfig.ConfigFile }}
 {{ .Values.CondorConfig.ConfigFile  | indent 4 }}
----
 {{ end }}
+---
 {{ if eq .Values.UserConfig.Mode "connectapi" }}
 apiVersion: v1
 kind: ConfigMap

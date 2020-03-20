@@ -40,11 +40,9 @@ spec:
           - key: condor_token
             path: condor_token
             mode: 256
-      {{ if .Values.CondorConfig.ConfigFile }}
       - name: {{ template "condor-submit.name" . }}-condor-configuration
         configMap:
           name: {{ template "condor-submit.name" . }}-condor-configuration
-      {{ end }}
       {{ if eq .Values.UserConfig.Mode "connectapi" }}
       - name: {{ template "condor-submit.name" . }}-provisioner-configuration
         configMap:
@@ -62,11 +60,9 @@ spec:
         - name: condor-token-volume
           mountPath: /root/tokens/condor_token
           subPath: condor_token
-        {{ if .Values.CondorConfig.ConfigFile }}
         - name: {{ template "condor-submit.name" . }}-condor-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
-        {{ end }}
         {{ if eq .Values.UserConfig.Mode "connectapi" }}
         - name: {{ template "condor-submit.name" . }}-provisioner-configuration
           mountPath: /usr/local/etc/ciconnect/config
