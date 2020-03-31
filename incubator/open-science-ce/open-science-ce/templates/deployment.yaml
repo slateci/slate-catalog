@@ -196,7 +196,7 @@ spec:
             exec:
               command: ["/usr/local/bin/drain-ce.sh"]
       - name: osg-submit
-        image: opensciencegrid/submit-host:latest
+        image: opensciencegrid/submit-host:fresh
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
