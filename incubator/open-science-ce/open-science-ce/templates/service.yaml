@@ -1,0 +1,29 @@
+{{ if eq .Values.Networking.ServiceType "LoadBalancer" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "open-science-ce.fullname" . }}
+  labels:
+    app: {{ template "open-science-ce.name" . }}
+    chart: {{ template "open-science-ce.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: "Local"
+  ports:
+  - name: htcondor-ce
+    port: 9619
+    targetPort: htcondor-ce
+    protocol: TCP
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  {{ if .Values.Networking.RequestIP }}
+  loadBalancerIP: {{ .Values.Networking.RequestIP }}
+  {{ end }}
+  selector:
+    app: {{ template "open-science-ce.name" . }}
+    instance: {{ .Values.Instance }}
+{{ end }}

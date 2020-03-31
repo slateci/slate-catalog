@@ -1,0 +1,172 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open-science-ce-{{ .Values.Instance }}-osg-configuration
+  labels:
+    app: open-science-ce
+    chart: {{ template "open-science-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+99-local.ini: |
+    [Site Information]
+    {{ if .Values.Developer.Enabled }}
+    group = OSG-ITB
+    {{ else }}
+    group = OSG
+    {{ end }}
+    host_name = localhost
+    resource = {{ .Values.Site.Resource }}
+    resource_group = {{ .Values.Site.ResourceGroup }}
+    sponsor = {{ .Values.Site.Sponsor }}
+    site_policy = UNAVAILABLE
+    contact = {{ .Values.Site.Contact }}
+    email = {{ .Values.Site.ContactEmail }}
+    city = {{ .Values.Site.City }}
+    country = {{ .Values.Site.Country }}
+    latitude = {{ .Values.Site.Latitude }}
+    longitude = {{ .Values.Site.Longitude }}
+
+    [BOSCO]
+    enabled = False
+
+    [Misc Services]
+    edit_lcmaps_db = True
+    authorization_method = vomsmap
+
+    [Storage]
+    se_available = False
+    default_se = None
+    grid_dir = {{ .Values.Storage.GridDir }}
+    app_dir = UNSET
+    data_dir = None
+    worker_node_temp = {{ .Values.Storage.WorkerNodeTemp }}
+
+    [Subcluster {{ .Values.Site.Resource }}]
+    name = {{ .Values.Site.Resource }}
+    ram_mb = {{ .Values.Cluster.Memory }}
+    cores_per_node = {{ .Values.Cluster.CoresPerNode }}
+    max_wall_time = {{ .Values.Cluster.MaxWallTime }}
+    allowed_vos = {{ .Values.Cluster.AllowedVOs }}
+
+    [Squid]
+    {{ if .Values.Squid.Location }}
+    enabled = True
+    {{ else }}
+    enabled = False
+    {{ end }}
+    location =  {{ .Values.Squid.Location }}
+    policy = DEFAULT
+    cache_size = DEFAULT
+    memory_size = DEFAULT
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+  labels:
+    app: open-science-ce
+    chart: {{ template "open-science-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  99-instance.conf: |+
+{{ if .Values.Networking.RequestIP }}
+    TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
+{{ end }}
+{{ .Values.HTCondorCeConfig | default "" | indent 4 }}
+{{ if .Values.VomsmapOverride }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open-science-ce-{{ .Values.Instance }}-voms-mapfile
+  labels:
+    app: open-science-ce
+    chart: {{ template "open-science-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  voms-mapfile: |+
+{{ .Values.VomsmapOverride | indent 4 }}
+{{ end }}
+{{ if .Values.GridmapOverride }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open-science-ce-{{ .Values.Instance }}-grid-mapfile
+  labels:
+    app: open-science-ce
+    chart: {{ template "open-science-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  grid-mapfile: |+
+{{ .Values.GridmapOverride | indent 4 }}
+{{ end }}
+{{ if .Values.HTTPLogger.Enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open-science-ce-{{ .Values.Instance }}-logger-startup
+  labels:
+    app: open-science-ce
+    chart: {{ template "open-science-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  start-nginx.sh: |+
+    #!/bin/bash -e
+    
+    apt-get update
+    apt-get install openssl -y
+  
+    if [ -z $HTPASSWD ]; then
+      PASS=$(tr -dc 'a-f0-9' < /dev/urandom | head -c16)
+      echo "Your randomly generated logger credentials are"
+      echo "**********************************************"
+      echo "logger:$PASS"
+      echo "**********************************************"
+      HTPASSWD="$(openssl passwd -apr1 $(echo -n $PASS))"
+    fi
+  
+    # maybe validate this
+    mkdir -p /etc/nginx/auth
+    echo "logger:$HTPASSWD" > /etc/nginx/auth/htpasswd
+
+    echo 'server {
+      listen       8080;
+      server_name  localhost;
+      location / {
+        default_type text/plain;
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/auth/htpasswd;  
+        root   /usr/share/nginx/html;
+        autoindex  on;
+      }
+      error_page   500 502 503 504  /50x.html;
+      location = /50x.html {
+        root   /usr/share/nginx/html;
+      }
+    }' > /etc/nginx/conf.d/default.conf
+    exec nginx -g 'daemon off;'
+
+{{ end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open-science-ce-{{ .Values.Instance }}-configuration
+  labels:
+    app: open-science-ce
+    chart: {{ template "open-science-ce.chart" . }}
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  condor_config.local: |+
+    COLLECTOR_HOST = {{ .Values.Submit.CollectorHost }}
+    COLLECTOR_PORT = {{ .Values.Submit.CollectorPort }}
+{{ if .Values.Submit.ConfigFile }}
+{{ .Values.Submit.ConfigFile  | indent 4 }}
+{{ end }}
