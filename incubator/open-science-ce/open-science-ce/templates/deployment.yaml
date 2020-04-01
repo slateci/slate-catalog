@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "open-science-ce.fullname" . }}
   labels:
-    app: {{ template "open-science-ce.fullname" . }}
+    app: {{ template "open-science-ce.name" . }}
     chart: {{ template "open-science-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
@@ -11,14 +11,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "open-science-ce.fullname" . }}
+      app: {{ template "open-science-ce.name" . }}
       chart: {{ template "open-science-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance | quote }}
   template:
     metadata:
       labels: 
-        app: {{ template "open-science-ce.fullname" . }}
+        app: {{ template "open-science-ce.name" . }}
         chart: {{ template "open-science-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
