@@ -203,7 +203,7 @@ spec:
         - name: condor-token-volume
           mountPath: /root/secrets/token
           subPath: condor_token
-        - name: {{ template "open-science-ce.name" . }}-configuration
+        - name: open-science-ce-{{ .Values.Instance }}-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
         resources:
