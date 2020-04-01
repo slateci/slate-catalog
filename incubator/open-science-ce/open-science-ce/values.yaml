@@ -107,10 +107,6 @@ Developer:
   Enabled: false
 
 Submit:
-  # The address of your HTCondor Central Manager
-  CollectorHost: flock.opensciencegrid.org
-  # If unspecified, defaults to 9618
-  CollectorPort: 9618
   # Token. Must be a SLATE secret where filename is the name of your collector.
   AuthTokenSecret: auth-token-secret
   # Extra configuration can be added via the ConfigFile parameter

@@ -166,8 +166,86 @@ metadata:
     release: {{ .Release.Name }}
 data:
   condor_config.local: |+
-    COLLECTOR_HOST = {{ .Values.Submit.CollectorHost }}
-    COLLECTOR_PORT = {{ .Values.Submit.CollectorPort }}
 {{ if .Values.Submit.ConfigFile }}
 {{ .Values.Submit.ConfigFile  | indent 4 }}
 {{ end }}
+
+  ProbeConfig: |+
+    <ProbeConfiguration
+
+        Title1="Collector Information"
+
+        CollectorHost="gratia-osg-prod.opensciencegrid.org:80"
+        SSLHost="gratia-osg-prod.opensciencegrid.org:443"
+        SSLRegistrationHost="gratia-osg-prod.opensciencegrid.org:80"
+
+        CollectorService="/gratia-servlets/rmi"
+        SSLCollectorService="/gratia-servlets/rmi"
+        RegistrationService="/gratia-registration/register"
+
+        Title2="Probe information and functional configuration"
+
+        ProbeName="condor:{{ .Values.Networking.Hostname }}"
+        SiteName="{{ .Values.Site.Resource }}"
+        Grid="OSG"
+        SuppressUnknownVORecords="0"
+        SuppressNoDNRecords="0"
+        SuppressGridLocalRecords="1"
+        QuarantineUnknownVORecords="1"
+        EnableProbe="1"
+
+        MapUnknownToGroup="1"
+        MapGroupToRole="1"
+        VOOverride="osg"
+
+        Title3="Tuning parameter"
+
+        BundleSize="100"
+        MaxPendingFiles="100000"
+        MaxStagedArchives="400"
+        UseSyslog="0"
+        ConnectionTimeout="900"
+
+        LogLevel="2"
+           Comments32="Controls debug messages printed to log file."
+        DebugLevel="0"
+           Comments33="Controls debug messages printed to screen."
+        LogRotate="31"
+        LogFileName=""
+           Comments34="If LogFileName is set, then there is no log file rotation. Otherwise Log file rotation will create one new file each day and delete the older ones"
+        DataLengthMax="0"
+           Comments35="The maximum number of records (or hours, depending on the probe) processed in a single invocation, 0 = all records, no max"
+        DataFileExpiration="31"
+           Comments36="The number of days quarantined and unusable data files are kept"
+        QuarantineSize="200"
+           Comments37="The maximum size in Mb allowed to be kept in each quarantined directory"
+        GratiaExtension="gratia.xml"
+
+        Title4="Authentication Configuration"
+
+        UseSSL="0"
+        CertificateFile="/etc/grid-security/hostcert.pem"
+        KeyFile="/etc/grid-security/hostkey.pem"
+        UseGratiaCertificates="0"
+           Comments40="If no directory is specified the gratia certificate file will be created in 'WorkingFolder'/certs."
+        GratiaCertificateFile="/var/lib/gratia/data/certs/gratia.probecert.pem"
+        GratiaKeyFile="/var/lib/gratia/data/certs/gratia.probekey.pem"
+
+        Title5="File and directory location"
+
+        UserVOMapFile="/var/lib/osg/user-vo-map"
+            Comments51="Location and wildcard pattern of log files that contains certificate information about the jobs in the format followed by the 'blah demons'."
+        CertInfoLogPattern="/var/log/accounting/blahp.log-*"
+        CondorCEHistoryFolder="/var/lib/gratia/condorce_data"
+
+        DataFolder="/var/lib/gratia/data/"
+        WorkingFolder="/var/lib/gratia/tmp"
+        LogFolder="/var/log/gratia"
+
+
+        CondorScheddName=""
+          Comments91="Use this to set the name of the scheduler, if there are mutliple."
+        NoCertinfoBatchRecordsAreLocal="0"
+
+    />
+  # end ProbeConfig
