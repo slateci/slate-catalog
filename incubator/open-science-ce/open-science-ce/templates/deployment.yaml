@@ -1,0 +1,218 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "open-science-ce.fullname" . }}
+  labels:
+    app: {{ template "open-science-ce.name" . }}
+    chart: {{ template "open-science-ce.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "open-science-ce.name" . }}
+      chart: {{ template "open-science-ce.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  template:
+    metadata:
+      labels: 
+        app: {{ template "open-science-ce.name" . }}
+        chart: {{ template "open-science-ce.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      volumes:
+      - name: open-science-ce-{{ .Values.Instance }}-spool
+        configMap:
+          name: open-science-ce-{{ .Values.Instance }}-spool
+      - name: open-science-ce-{{ .Values.Instance }}-osg-configuration
+        configMap:
+          name: open-science-ce-{{ .Values.Instance }}-osg-configuration
+      - name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+        configMap:
+          name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+      {{ if .Values.VomsmapOverride }}
+      - name: open-science-ce-{{ .Values.Instance }}-voms-mapfile
+        configMap:
+          name: open-science-ce-{{ .Values.Instance }}-voms-mapfile
+      {{ end }}
+      {{ if .Values.GridmapOverride }}
+      - name: open-science-ce-{{ .Values.Instance }}-grid-mapfile
+        configMap:
+          name: open-science-ce-{{ .Values.Instance }}-grid-mapfile
+      {{ end }}
+      {{ if .Values.Certificate.Secret }}
+      - name: open-science-ce-hostcertkeypair-volume
+        secret:
+          secretName: {{ .Values.Certificate.Secret }}
+          items:
+            - key: hostcert.pem
+              path: hostcert.pem
+              mode: 256
+            - key: hostkey.pem
+              path: hostkey.pem
+              mode: 256
+      {{end}}
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: spool-volume
+        emptyDir: {}
+      - name: log-volume
+        emptyDir: {} 
+      - name: open-science-ce-{{ .Values.Instance }}-logger-startup
+        configMap:
+          name: open-science-ce-{{ .Values.Instance }}-logger-startup
+      {{ end }}        
+      - name: condor-token-volume
+        secret:
+          secretName: {{ .Values.Submit.AuthTokenSecret }}
+          items: 
+          - key: condor_token
+            path: condor_token
+            mode: 256
+      - name: {{ template "open-science-ce.name" . }}-condor-configuration
+        configMap:
+          name: {{ template "open-science-ce.name" . }}-condor-configuration
+      initContainers:
+      - name: condor-spool-volume
+        image: opensciencegrid/submit-host:fresh
+        imagePullPolicy: Always
+        command: ['/bin/chown','condor:condor','/var/lib/condor/spool']
+        volumeMounts:
+        - name: spool-volume
+          mountPath: /var/lib/condor/spool
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: logging-sidecar-init
+        image: opensciencegrid/hosted-ce:fresh
+        imagePullPolicy: Always
+        command: ['/bin/chown','condor:condor','/var/log/condor-ce']
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/condor-ce
+      {{ end }}
+      {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
+      hostNetwork: true
+      {{ end }}
+      containers:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: logging-sidecar
+        volumeMounts:
+        - name: log-volume
+          mountPath: /usr/share/nginx/html
+        - name: open-science-ce-{{ .Values.Instance }}-logger-startup
+          mountPath: /usr/local/bin/start-nginx.sh
+          subPath: start-nginx.sh
+        ports: 
+        - name: logs
+          containerPort: 8080
+          protocol: TCP
+        image: "nginx:1.15.9"
+        command: ["/bin/bash"]
+        args: ["/usr/local/bin/start-nginx.sh"]
+        imagePullPolicy: IfNotPresent
+        {{ if .Values.HTTPLogger.Secret }}
+        env:
+          - name: HTPASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.HTTPLogger.Secret }}
+                key: HTPASSWD
+        {{ end }}
+      {{ end }}
+      - name: open-science-ce
+        image: opensciencegrid/htcondor-ce:fresh
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: spool-volume
+          mountPath: /var/log/condor/spool/
+        - name: open-science-ce-{{ .Values.Instance }}-osg-configuration
+          mountPath: /tmp/99-local.ini
+          subPath: 99-local.ini
+        - name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+          mountPath: /etc/condor-ce/config.d/99-instance.conf
+          subPath: 99-instance.conf
+        {{ if .Values.Certificate.Secret }}
+        - name: open-science-ce-hostcertkeypair-volume
+          mountPath: /etc/grid-security/hostcert.pem
+          subPath: hostcert.pem
+        - name: open-science-ce-hostcertkeypair-volume
+          mountPath: /etc/grid-security/hostkey.pem
+          subPath: hostkey.pem
+        {{ end }}
+        {{ if .Values.HTTPLogger.Enabled }}
+        - name: log-volume
+          mountPath: /var/log/condor-ce
+        {{ end }}
+        {{ if .Values.VomsmapOverride }}
+        - name: open-science-ce-{{ .Values.Instance }}-voms-mapfile
+          mountPath: /etc/grid-security/voms-mapfile
+          subPath: voms-mapfile
+        {{ end }}
+        {{ if .Values.GridmapOverride }}
+        - name: open-science-ce-{{ .Values.Instance }}-grid-mapfile
+          mountPath: /etc/grid-security/grid-mapfile
+          subPath: grid-mapfile
+        {{ end }}
+        ports:
+        - name: htcondor-ce
+          containerPort: 9619
+          protocol: TCP
+        - name: http # needed to get a cert issued from Let's Encrypt
+          containerPort: 80
+          protocol: TCP
+        env:
+        {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
+        - name: _CONDOR_NETWORK_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: CE_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        {{ else if eq .Values.Networking.ServiceType "LoadBalancer" }} 
+        - name: _CONDOR_NETWORK_HOSTNAME
+          value: {{ .Values.Networking.Hostname }}
+        - name: CE_HOSTNAME
+          value: {{ .Values.Networking.Hostname }}
+        {{ end }}
+        - name: CE_CONTACT
+          value: {{ .Values.Site.ContactEmail }}
+        - name: RESOURCE_NAME
+          value: {{ .Values.Site.Resource }}
+        - name: REMOTE_HOST
+          value: {{ .Values.Cluster.RemoteHost }}
+        - name: REMOTE_BATCH
+          value: {{ .Values.Cluster.RemoteBatch }}
+        - name: DEVELOPER
+          {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
+          value: "true"
+          {{ else }}
+          value: "false"
+          {{ end }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/local/bin/drain-ce.sh"]
+      - name: osg-submit
+        image: opensciencegrid/submit-host:fresh
+        volumeMounts:
+        - name: spool-volume
+          mountPath: /var/lib/condor/spool/
+        - name: condor-token-volume
+          mountPath: /root/tokens/condor_token
+          subPath: condor_token
+        - name: {{ template "open-science-ce.name" . }}-condor-configuration
+          mountPath: /etc/condor/condor_config.local
+          subPath: condor_config.local
+        env:
+        - name: _CONDOR_COLLECTOR_HOST
+          value: {{ .Values.Submit.CollectorHost | quote }}
+        - name: _CONDOR_COLLECTOR_PORT
+          value: {{ .Values.Submit.CollectorPort | quote }}
+        resources:
+          requests:
+            # we'll make it a modest request for now
+            memory: {{ .Values.SystemConfig.Memory }}
+            cpu:    {{ .Values.SystemConfig.Cpu }}

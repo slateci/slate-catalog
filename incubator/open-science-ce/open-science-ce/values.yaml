@@ -1,0 +1,125 @@
+# Generates app name as "open-science-ce-[Instance]"
+Instance: ""
+
+# Site information that should match the CE Topology registration
+Site:
+  Resource: RESOURCE_NAME
+  ResourceGroup: Resource Group
+  Sponsor: osg:100
+  Contact: Resource Contact
+  ContactEmail: support@example.edu
+  City: City
+  Country: US
+  Latitude: 0.00
+  Longitude: 0.00
+
+Cluster:
+  Memory: 1024
+  CoresPerNode: 4
+  MaxWallTime: 1440
+  AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
+
+# Do NOT use environment variables for any of the Storage variables
+Storage:
+  # Absolute path to the local WN client installation
+  GridDir: /home/osguser/bosco-osg-wn-client
+  WorkerNodeTemp: /tmp
+
+Squid:
+  # <IP OR HOSTNAME>:<PORT> for the site's local squid server
+  Location: null
+  
+Networking:
+  ServiceType: "LoadBalancer"
+  # The hostname that the CE should use. 
+  # Appropriate A and PTR DNS records must exist.
+  Hostname: ""
+  # The preferred IP address which should be requested from the LoadBalancer. 
+  # This may be left as null to express no preference. 
+  # Setting this may be useful when redeploying a CE in order to try to get
+  # back the same IP address that was used previously. 
+  RequestIP: null
+
+########### REQUIRED ###########
+# Specify additional HTCondor-CE configuration. JOB_ROUTER_ENTRIES is required!
+# HTCondorCeConfig: |+
+#   JOB_ROUTER_ENTRIES @=jre
+#   [
+#     GridResource = "batch <REMOTE BATCH> <REMOTE USER>@<REMOTE HOST>";
+#     Requirements = (Owner == "<REMOTE USER>");
+#   ]
+#   [
+#   ...
+#   @jre
+
+# Options to allow override of the bosco directory from arbitrary git repos
+# Bosco override dirs are expected in the following location in the git repo:
+#   <RESOURCE NAME>/bosco_override/
+BoscoOverrides:
+  Enabled: false
+  GitEndpoint: https://github.com/slateci/bosco-override-template
+  RepoNeedsPrivKey: false
+  GitKeySecret: null
+
+# Enable a logging sidecar
+HTTPLogger:
+  Enabled: true
+  # If you want to insert a password instead of using a randomly generated one,
+  # point Secret to a K8S/SLATE secret below.
+  # Secret: my-secret
+
+# Default VO-user mappings for OSG Hosted CEs
+# Change these contents for legacy OSG Hosted CEs or non-OSG Hosted CEs
+VomsmapOverride: |+
+  "/osg/Role=NULL/Capability=NULL" osg01
+  "/GLOW/Role=htpc/Capability=NULL" osg02
+  "/hcc/Role=NULL/Capability=NULL" osg03
+  "/cms/*" osg04
+  "/fermilab/*" osg05
+  "/osg/ligo/Role=NULL/Capability=NULL" osg07
+  "/virgo/ligo/Role=NULL/Capability=NULL" osg07
+  "/sdcc/Role=NULL/Capability=NULL" osg08
+  "/sphenix/Role=NULL/Capability=NULL" osg08
+  "/atlas/*" osg09
+  "/Gluex/Role=NULL/Capability=NULL" osg10
+  "/dune/Role=pilot/Capability=NULL" osg11
+  "/icecube/Role=pilot/Capability=NULL" osg12
+  "/xenon.biggrid.nl/Role=NULL/Capability=NULL" osg13
+
+# If you wish to allow yourself to submit to this CE with your personal grid
+# proxy, you can put that in below. This will get directly mapped into
+# /etc/grid-security/grid-mapfile
+#
+#GridmapOverride: |+
+#  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osg
+
+# Use a pre-existing certificate/key pair stored in a secret with
+# 'hostcert.pem' and 'hostkey.pem' keys for the host certificate and
+# key, respectively
+Certificate:
+  Secret: null
+
+# FOR DEVELOPMENT PURPOSES ONLY!
+# Setting 'Enabled: true' below does the following:
+# - Configures the CE as an ITB host
+# - Generates a test CA and self-signed host cert/key pair
+Developer:
+  Enabled: false
+
+Submit:
+  # The address of your HTCondor Central Manager
+  CollectorHost: flock.opensciencegrid.org
+  # If unspecified, defaults to 9618
+  CollectorPort: 9618
+  # Token. Must be a SLATE secret where filename is the name of your collector.
+  AuthTokenSecret: auth-token-secret
+  # Extra configuration can be added via the ConfigFile parameter
+  # ConfigFile: |+
+  #   ProjectName = "osg.foo"
+  #   SUBMIT_EXPRS = $(SUBMIT_EXPRS) ProjectName 
+
+SystemConfig:
+  # these are passed through unchanged to Kubernetes, so they need to be in the
+  # correct format
+  Cpu: 4000m
+  Memory: 8Gi
