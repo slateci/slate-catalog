@@ -7,7 +7,8 @@ metadata:
     chart: {{ template "open-science-ce.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
-99-local.ini: |
+data:
+  99-local.ini: |
     [Site Information]
     {{ if .Values.Developer.Enabled }}
     group = OSG-ITB
