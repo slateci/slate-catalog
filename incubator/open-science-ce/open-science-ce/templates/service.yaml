@@ -16,6 +16,10 @@ spec:
     port: 9619
     targetPort: htcondor-ce
     protocol: TCP
+  - name: htcondor
+    port: 9618
+    targetPort: htcondor
+    protocol: TCP
   - name: http
     port: 80
     targetPort: http

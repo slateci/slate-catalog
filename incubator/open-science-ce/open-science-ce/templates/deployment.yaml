@@ -201,16 +201,11 @@ spec:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
         - name: condor-token-volume
-          mountPath: /root/tokens/condor_token
+          mountPath: /root/secrets/token
           subPath: condor_token
-        - name: {{ template "open-science-ce.name" . }}-condor-configuration
+        - name: {{ template "open-science-ce.name" . }}-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
-        env:
-        - name: _CONDOR_COLLECTOR_HOST
-          value: {{ .Values.Submit.CollectorHost | quote }}
-        - name: _CONDOR_COLLECTOR_PORT
-          value: {{ .Values.Submit.CollectorPort | quote }}
         resources:
           requests:
             # we'll make it a modest request for now
