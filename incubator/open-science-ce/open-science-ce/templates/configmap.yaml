@@ -158,7 +158,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: open-science-ce-{{ .Values.Instance }}-configuration
+  name: open-science-ce-{{ .Values.Instance }}-condor-configuration
   labels:
     app: open-science-ce
     chart: {{ template "open-science-ce.chart" . }}

@@ -71,9 +71,9 @@ spec:
           - key: condor_token
             path: condor_token
             mode: 256
-      - name: {{ template "open-science-ce.name" . }}-condor-configuration
+      - name: open-science-ce-{{ .Values.Instance }}}-condor-configuration
         configMap:
-          name: {{ template "open-science-ce.name" . }}-condor-configuration
+          name: open-science-ce-{{ .Values.Instance }}-condor-configuration
       initContainers:
       - name: condor-spool-init
         image: opensciencegrid/submit-host:fresh
