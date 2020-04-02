@@ -122,7 +122,7 @@ spec:
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: spool-volume
-          mountPath: /var/log/condor/spool/
+          mountPath: /var/lib/condor/spool/
         - name: open-science-ce-{{ .Values.Instance }}-osg-configuration
           mountPath: /tmp/99-local.ini
           subPath: 99-local.ini
