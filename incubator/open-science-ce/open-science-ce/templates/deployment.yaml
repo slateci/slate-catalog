@@ -198,6 +198,10 @@ spec:
               command: ["/usr/local/bin/drain-ce.sh"]
       - name: osg-submit
         image: opensciencegrid/submit-host:fresh
+        ports:
+        - name: htcondor
+          containerPort: 9618
+          protocol: TCP
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
