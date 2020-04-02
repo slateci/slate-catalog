@@ -119,7 +119,7 @@ spec:
       {{ end }}
       - name: open-science-ce
         image: opensciencegrid/htcondor-ce:fresh
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: spool-volume
           mountPath: /var/log/condor/spool/
