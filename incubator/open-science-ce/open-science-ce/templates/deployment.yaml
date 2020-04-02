@@ -30,9 +30,6 @@ spec:
       - name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      - name: open-science-ce-{{ .Values.Instance }}-configuration
-        configMap:
-          name: open-science-ce-{{ .Values.Instance }}-configuration
       {{ if .Values.VomsmapOverride }}
       - name: open-science-ce-{{ .Values.Instance }}-voms-mapfile
         configMap:
@@ -71,7 +68,7 @@ spec:
           - key: condor_token
             path: condor_token
             mode: 256
-      - name: open-science-ce-{{ .Values.Instance }}}-condor-configuration
+      - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
         configMap:
           name: open-science-ce-{{ .Values.Instance }}-condor-configuration
       initContainers:
@@ -122,7 +119,7 @@ spec:
       {{ end }}
       - name: open-science-ce
         image: opensciencegrid/htcondor-ce:fresh
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: spool-volume
           mountPath: /var/log/condor/spool/
@@ -203,7 +200,7 @@ spec:
         - name: condor-token-volume
           mountPath: /root/secrets/token
           subPath: condor_token
-        - name: open-science-ce-{{ .Values.Instance }}-configuration
+        - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
         resources:
