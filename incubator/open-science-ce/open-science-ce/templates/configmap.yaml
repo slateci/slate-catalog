@@ -166,6 +166,7 @@ metadata:
     release: {{ .Release.Name }}
 data:
   condor_config.local: |+
+    QUEUE_SUPER_USER_MAY_IMPERSONATE = .*
 {{ if .Values.Submit.ConfigFile }}
 {{ .Values.Submit.ConfigFile  | indent 4 }}
 {{ end }}
