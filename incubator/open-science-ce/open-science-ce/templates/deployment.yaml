@@ -30,9 +30,9 @@ spec:
       - name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      - name: open-science-ce-{{ .Values.Instance }}-configuration
+      - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
         configMap:
-          name: open-science-ce-{{ .Values.Instance }}-configuration
+          name: open-science-ce-{{ .Values.Instance }}-condor-configuration
       {{ if .Values.VomsmapOverride }}
       - name: open-science-ce-{{ .Values.Instance }}-voms-mapfile
         configMap:
@@ -203,7 +203,7 @@ spec:
         - name: condor-token-volume
           mountPath: /root/secrets/token
           subPath: condor_token
-        - name: open-science-ce-{{ .Values.Instance }}-configuration
+        - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
         resources:
