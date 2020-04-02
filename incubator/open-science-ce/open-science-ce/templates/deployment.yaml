@@ -81,7 +81,7 @@ spec:
           mountPath: /var/lib/condor/spool
       {{ if .Values.HTTPLogger.Enabled }}
       - name: logging-sidecar-init
-        image: opensciencegrid/hosted-ce:fresh
+        image: opensciencegrid/htcondor-ce:fresh
         imagePullPolicy: Always
         command: ['/bin/chown','condor:condor','/var/log/condor-ce']
         volumeMounts:
