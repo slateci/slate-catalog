@@ -24,9 +24,6 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       volumes:
-      - name: open-science-ce-{{ .Values.Instance }}-spool
-        configMap:
-          name: open-science-ce-{{ .Values.Instance }}-spool
       - name: open-science-ce-{{ .Values.Instance }}-osg-configuration
         configMap:
           name: open-science-ce-{{ .Values.Instance }}-osg-configuration
@@ -78,7 +75,7 @@ spec:
         configMap:
           name: {{ template "open-science-ce.name" . }}-condor-configuration
       initContainers:
-      - name: condor-spool-volume
+      - name: condor-spool-init
         image: opensciencegrid/submit-host:fresh
         imagePullPolicy: Always
         command: ['/bin/chown','condor:condor','/var/lib/condor/spool']
