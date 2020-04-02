@@ -203,6 +203,10 @@ spec:
         - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
+        ports:
+        - name: htcondor
+          containerPort: 9618
+          protocol: TCP
         resources:
           requests:
             # we'll make it a modest request for now
