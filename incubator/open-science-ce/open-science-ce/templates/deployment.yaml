@@ -30,9 +30,6 @@ spec:
       - name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: open-science-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
-        configMap:
-          name: open-science-ce-{{ .Values.Instance }}-condor-configuration
       {{ if .Values.VomsmapOverride }}
       - name: open-science-ce-{{ .Values.Instance }}-voms-mapfile
         configMap:
