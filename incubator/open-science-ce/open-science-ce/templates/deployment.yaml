@@ -209,6 +209,9 @@ spec:
         - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
           mountPath: /etc/condor/config.d/99-instance.conf
           subPath: condor_config.local
+        - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
+          mountPath: /etc/gratia/condor/ProbeConfig
+          subPath: ProbeConfig
         ports:
         - name: htcondor
           containerPort: 9618
