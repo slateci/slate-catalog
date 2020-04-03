@@ -77,7 +77,7 @@ data:
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
-{{ if .Values.Networking.RequestIP }}
+{{ if .Values.Networking.Hostname }}
     # For a given CE, use the same token trust domain between instances
     TRUST_DOMAIN = {{ .Values.Networking.Hostname }}
 {{ end }}
