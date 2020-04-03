@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "4.2.1"
 description: An OSG Submit Host that accepts remote job submission through HTCondor-CE
 name: open-science-ce
-version: 0.1.9
+version: 0.1.10
