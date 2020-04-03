@@ -53,14 +53,14 @@ spec:
               mode: 256
       {{end}}
       {{ if .Values.HTTPLogger.Enabled }}
-      - name: spool-volume
-        emptyDir: {}
       - name: log-volume
         emptyDir: {} 
       - name: open-science-ce-{{ .Values.Instance }}-logger-startup
         configMap:
           name: open-science-ce-{{ .Values.Instance }}-logger-startup
-      {{ end }}        
+      {{ end }}
+      - name: spool-volume
+        emptyDir: {}
       - name: condor-token-volume
         secret:
           secretName: {{ .Values.Submit.AuthTokenSecret }}
