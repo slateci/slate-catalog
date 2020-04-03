@@ -7,6 +7,7 @@ metadata:
     chart: {{ template "open-science-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+
 spec:
   replicas: 1
   selector:
@@ -15,6 +16,7 @@ spec:
       chart: {{ template "open-science-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance | quote }}
+
   template:
     metadata:
       labels: 
@@ -22,6 +24,8 @@ spec:
         chart: {{ template "open-science-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
+
+
     spec:
       volumes:
       - name: open-science-ce-{{ .Values.Instance }}-osg-configuration
@@ -73,6 +77,9 @@ spec:
       - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
         configMap:
           name: open-science-ce-{{ .Values.Instance }}-condor-configuration
+      # end volumes
+
+
       initContainers:
       - name: condor-spool-init
         image: opensciencegrid/submit-host:fresh
@@ -90,10 +97,14 @@ spec:
         - name: log-volume
           mountPath: /var/log/condor-ce
       {{ end }}
+
       {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
       hostNetwork: true
       {{ end }}
+
+
       containers:
+
       {{ if .Values.HTTPLogger.Enabled }}
       - name: logging-sidecar
         volumeMounts:
@@ -119,9 +130,11 @@ spec:
                 key: HTPASSWD
         {{ end }}
       {{ end }}
+
       - name: open-science-ce
         image: opensciencegrid/htcondor-ce:fresh
         imagePullPolicy: IfNotPresent
+
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
@@ -155,6 +168,8 @@ spec:
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
         {{ end }}
+        # end volumeMounts
+
         ports:
         - name: htcondor-ce
           containerPort: 9619
@@ -162,6 +177,7 @@ spec:
         - name: http # needed to get a cert issued from Let's Encrypt
           containerPort: 80
           protocol: TCP
+
         env:
         {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
         - name: _CONDOR_NETWORK_HOSTNAME
@@ -192,12 +208,18 @@ spec:
           {{ else }}
           value: "false"
           {{ end }}
+        # end env
+
         lifecycle:
           preStop:
             exec:
               command: ["/usr/local/bin/drain-ce.sh"]
+      # end open-science-ce
+
+
       - name: osg-submit
         image: opensciencegrid/submit-host:fresh
+
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
@@ -212,12 +234,14 @@ spec:
         - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
           mountPath: /etc/gratia/condor/ProbeConfig
           subPath: ProbeConfig
+        # end volumeMounts
+
         ports:
         - name: htcondor
           containerPort: 9618
           protocol: TCP
         resources:
           requests:
-            # we'll make it a modest request for now
             memory: {{ .Values.SystemConfig.Memory }}
             cpu:    {{ .Values.SystemConfig.Cpu }}
+      # end osg-submit
