@@ -61,6 +61,8 @@ spec:
       {{ end }}
       - name: spool-volume
         emptyDir: {}
+      - name: tmp-volume
+        emptyDir: {}
       - name: condor-token-volume
         secret:
           secretName: {{ .Values.Submit.AuthTokenSecret }}
@@ -123,6 +125,8 @@ spec:
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
+        - name: tmp-volume
+          mountPath: /tmp/
         - name: open-science-ce-{{ .Values.Instance }}-osg-configuration
           mountPath: /tmp/99-local.ini
           subPath: 99-local.ini
@@ -197,6 +201,8 @@ spec:
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
+        - name: tmp-volume
+          mountPath: /tmp/
         - name: condor-token-volume
           mountPath: /root/secrets/token
           subPath: condor_token
