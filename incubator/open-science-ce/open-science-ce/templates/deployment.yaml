@@ -65,6 +65,8 @@ spec:
       {{ end }}
       - name: spool-volume
         emptyDir: {}
+      - name: cespool-volume
+        emptyDir: {}
       - name: tmp-volume
         emptyDir: {}
       - name: condor-token-volume
@@ -91,10 +93,12 @@ spec:
       - name: condor-spool-init
         image: opensciencegrid/submit-host:fresh
         imagePullPolicy: Always
-        command: ['/bin/chown','condor:condor','/var/lib/condor/spool']
+        command: ['/bin/chown','condor:condor','/var/lib/condor/spool', '/var/lib/condor-ce/spool']
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool
+        - name: cespool-volume
+          mountPath: /var/lib/condor-ce/spool
       {{ if .Values.HTTPLogger.Enabled }}
       - name: logging-sidecar-init
         image: opensciencegrid/htcondor-ce:fresh
@@ -145,6 +149,8 @@ spec:
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
+        - name: cespool-volume
+          mountPath: /var/lib/condor-ce/spool/
         - name: tmp-volume
           mountPath: /tmp/
         - name: open-science-ce-{{ .Values.Instance }}-osg-configuration
@@ -230,6 +236,8 @@ spec:
         volumeMounts:
         - name: spool-volume
           mountPath: /var/lib/condor/spool/
+        - name: cespool-volume
+          mountPath: /var/lib/condor-ce/spool/
         - name: tmp-volume
           mountPath: /tmp/
         - name: condor-token-volume
