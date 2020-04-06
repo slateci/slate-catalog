@@ -74,12 +74,12 @@ spec:
           - key: condor_token
             path: condor_token
             mode: 256
-      - name: condor-password-volume
+      - name: condor-flock-issuer-volume
         secret:
-          secretName: {{ .Values.Submit.AuthPasswordSecret }}
+          secretName: {{ .Values.Submit.AuthFlockIssuerSecret }}
           items:
-          - key: pool_password
-            path: pool_password
+          - key: flock_issuer
+            path: flock_issuer
             mode: 256
       - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
         configMap:
@@ -235,9 +235,9 @@ spec:
         - name: condor-token-volume
           mountPath: /root/secrets/token
           subPath: condor_token
-        - name: condor-password-volume
-          mountPath: /root/secrets/pool_password
-          subPath: pool_password
+        - name: condor-flock-issuer-volume
+          mountPath: /root/secrets/passwords/flock_issuer
+          subPath: flock_issuer
         - name: open-science-ce-{{ .Values.Instance }}-condor-configuration
           mountPath: /etc/condor/config.d/99-instance.conf
           subPath: condor_config.local

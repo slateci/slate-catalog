@@ -109,6 +109,8 @@ Developer:
 Submit:
   # Token. Must be a SLATE secret where filename is the name of your collector.
   AuthTokenSecret: auth-token-secret
+  # Password for generating flocking tokens. Must be a SLATE secret where filename is 'flock_issuer'.
+  AuthFlockIssuerSecret: auth-flock-issuer-secret
   # Extra configuration can be added via the ConfigFile parameter
   # ConfigFile: |+
   #   ProjectName = "osg.foo"
