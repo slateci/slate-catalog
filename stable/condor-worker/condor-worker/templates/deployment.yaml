@@ -58,15 +58,15 @@ spec:
       - name: connect
         persistentVolumeClaim:
           claimName: {{ printf "csi-cvmfs-pvc-connect-%s" .Values.Instance | trimSuffix "-" }}
-      - name: atlas
-        persistentVolumeClaim:
-          claimName: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
-      - name: atlas-condb
-        persistentVolumeClaim:
-          claimName: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
-      - name: atlas-nightlies
-        persistentVolumeClaim:
-          claimName: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-condb
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-nightlies
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
       {{ end }}
       {{ if .Values.CondorConfig.PasswordFileSecret }}
       - name: condor-passwordfile-volume
@@ -152,12 +152,12 @@ spec:
           mountPath: /cvmfs/connect.opensciencegrid.org
         - name: singularity
           mountPath: /cvmfs/singularity.opensciencegrid.org
-        - name: atlas
-          mountPath: /cvmfs/atlas.cern.ch
-        - name: atlas-nightlies
-          mountPath: /cvmfs/atlas-nightlies.cern.ch
-        - name: atlas-condb
-          mountPath: /cvmfs/atlas-condb.cern.ch
+#        - name: atlas
+#          mountPath: /cvmfs/atlas.cern.ch
+#        - name: atlas-nightlies
+#          mountPath: /cvmfs/atlas-nightlies.cern.ch
+#        - name: atlas-condb
+#          mountPath: /cvmfs/atlas-condb.cern.ch
         {{ end }}
         env:
         - name: _CONDOR_COLLECTOR_HOST
