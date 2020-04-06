@@ -71,9 +71,8 @@ metadata:
     release: {{ .Release.Name }}
 data:
   99-instance.conf: |+
-    # Allow the CE to find the local schedd ad using the container hostname
+    # Allow the CE to communicate with the local collector via pod IP
     JOB_ROUTER_SCHEDD2_POOL = $(UTSNAME_NODENAME):9618
-    JOB_ROUTER_SCHEDD2_NAME = $(UTSNAME_NODENAME)@$(UTSNAME_NODENAME)
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
@@ -180,8 +179,6 @@ data:
   condor_config.local: |+
     # Allow the CE to route jobs as the mapped user
     QUEUE_SUPER_USER_MAY_IMPERSONATE = .*
-    # Allow the CE to find the local schedd ad using the container hostname
-    SCHEDD_NAME = $(UTSNAME_NODENAME)@$(UTSNAME_NODENAME)
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
