@@ -71,13 +71,14 @@ metadata:
     release: {{ .Release.Name }}
 data:
   99-instance.conf: |+
-    # Allow the CE to find the local schedd ad using the container hostname
+    # Allow the CE to communicate with the local collector via pod IP
     JOB_ROUTER_SCHEDD2_POOL = $(UTSNAME_NODENAME):9618
-    JOB_ROUTER_SCHEDD2_NAME = $(UTSNAME_NODENAME)@$(UTSNAME_NODENAME)
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
 {{ if .Values.Networking.Hostname }}
+    # Force HTCondor to use the requested hostname
+    NETWORK_HOSTNAME = {{ .Values.Networking.Hostname }}
     # For a given CE, use the same token trust domain between instances
     TRUST_DOMAIN = {{ .Values.Networking.Hostname }}
 {{ end }}
@@ -178,11 +179,17 @@ data:
   condor_config.local: |+
     # Allow the CE to route jobs as the mapped user
     QUEUE_SUPER_USER_MAY_IMPERSONATE = .*
-    # Allow the CE to find the local schedd ad using the container hostname
-    SCHEDD_NAME = $(UTSNAME_NODENAME)@$(UTSNAME_NODENAME)
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
+    # Tell local daemons to contact the collector via container hostname
+    COLLECTOR_HOST = $(UTSNAME_NODENAME)
+{{ if .Values.Networking.Hostname }}
+    # Force HTCondor to use the requested hostname
+    NETWORK_HOSTNAME = {{ .Values.Networking.Hostname }}
+    # For a given CE, use the same token trust domain between instances
+    TRUST_DOMAIN = {{ .Values.Networking.Hostname }}
+{{ end }}
 {{ if .Values.Networking.RequestIP }}
     TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
 {{ end }}
