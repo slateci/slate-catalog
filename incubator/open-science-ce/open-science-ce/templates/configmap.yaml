@@ -182,6 +182,8 @@ data:
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
+    # Tell local daemons to contact the collector via container hostname
+    COLLECTOR_HOST = $(UTSNAME_NODENAME)
 {{ if .Values.Networking.Hostname }}
     # Force HTCondor to use the requested hostname
     NETWORK_HOSTNAME = {{ .Values.Networking.Hostname }}
