@@ -1,0 +1,29 @@
+{{ if .Values.CondorConfig.SSH_Public_Key }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jupyter-{{ .Values.Instance }}-ssh-config
+  labels:
+    app: {{ template "jupyter.name" . }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  authorized_keys: |+
+    {{ .Values.CondorConfig.SSH_Public_Key }}
+{{ end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jupyter-{{ .Values.Instance }}-startup
+  labels:
+    app: {{ template "jupyter.name" . }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  startup_script.sh: |+
+    #!/bin/bash
+    mkdir -p /home/{{ .Values.Jupyter.NB_USER }}/.ssh
+    echo {{ .Values.CondorConfig.SSH_Public_Key }} > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
+    chmod 0600 /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
+    chown -R 1000:100 /home/$NB_USER
+    /usr/bin/supervisord
+

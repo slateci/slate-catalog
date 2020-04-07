@@ -23,10 +23,59 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
+      volumes:
+      - name: condor-token-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
+          items:
+          - key: condor_token
+            path: condor_token
+            mode: 0644
+      - name: jupyter-{{ .Values.Instance }}-ssh-config
+        configMap:
+          name: jupyter-{{ .Values.Instance }}-ssh-config
+          items:
+          - key: authorized_keys
+            path: authorized_keys
+            mode: 0600
+      - name: jupyter-{{ .Values.Instance }}-startup
+        configMap:
+          name: jupyter-{{ .Values.Instance }}-startup
+          items:
+          - key: startup_script.sh
+            path: startup_script.sh
+            mode: 0755
       containers:
       - name: scipy-notebook
-        image: jupyter/scipy-notebook:31b807ec9e83
+        image: slateci/jupyter-condor:latest
+        imagePullPolicy: "IfNotPresent"
+#        securityContext:
+#          runAsUser: 0
+        workingDir: /home/{{ .Values.Jupyter.NB_USER }}
+        env:
+        - name: JUPYTER_ENABLE_LAB
+          value: 'yes'
+        - name: NB_USER
+          value: {{ .Values.Jupyter.NB_USER | quote }}
+        - name: _CONDOR_COLLECTOR_HOST
+          value: {{ .Values.CondorConfig.CollectorHost | quote }}
+        - name: _CONDOR_COLLECTOR_PORT
+          value: {{ .Values.CondorConfig.CollectorPort | quote }}
+        - name: JupyterPassword
+          value: {{ .Values.Jupyter.Password | quote }} 
+        - name: JupyterToken
+          value: {{ .Values.Jupyter.Token | quote }}
         ports:
         - containerPort: 8888
-        command: ["start-notebook.sh"]
-        args: ["--NotebookApp.token=''"]
+        command: ["/usr/bin/startup_script.sh"] 
+        volumeMounts:
+        - name: condor-token-volume
+          mountPath: /etc/condor/tokens.d/condor_token
+          subPath: condor_token
+        - name: jupyter-{{ .Values.Instance }}-ssh-config
+          mountPath: "/root/authorized_keys"
+          subPath: authorized_keys
+        - name: jupyter-{{ .Values.Instance }}-startup
+          mountPath: "/usr/bin/startup_script.sh"
+          subPath: startup_script.sh
+
