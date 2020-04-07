@@ -76,6 +76,12 @@ data:
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
+    JOB_ROUTER_DEFAULTS @=jrd
+    $(JOB_ROUTER_DEFAULTS)
+    [
+      set_JOBGLIDEIN_ResourceName = "$$([IfThenElse(IsUndefined(TARGET.GLIDEIN_ResourceName), IfThenElse(IsUndefined(TARGET.GLIDEIN_Site), \"Local Job\", TARGET.GLIDEIN_Site), TARGET.GLIDEIN_ResourceName)])";
+    ]
+    @jrd
 {{ if .Values.Networking.Hostname }}
     # Force HTCondor to use the requested hostname
     NETWORK_HOSTNAME = {{ .Values.Networking.Hostname }}
