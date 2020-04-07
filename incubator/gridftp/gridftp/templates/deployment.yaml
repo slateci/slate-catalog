@@ -50,7 +50,7 @@ spec:
         {{ end }}
       containers:
         - name: gridftp
-          image: slateci/gridftp 
+          image: slateci/gridftp:0.3.0
           env:
             - name: GRIDFTP_PORT
               value: {{ .Values.GridFTPConfig.ControlPort }}
