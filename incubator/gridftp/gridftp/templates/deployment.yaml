@@ -1,0 +1,75 @@
+{{ if and .Values.GridFTPConfig.InternalPath .Values.GridFTPConfig.PVCName }}
+  {{ required "InternalPath and PVCName should not both be set" .Values.Error_DoNotSet }}
+{{ end }}
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: {{ template "gridftp.fullname" . }} 
+  labels:
+    app: {{ template "gridftp.fullname" . }}
+    chart: {{ template "gridftp.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "gridftp.fullname" . }}
+      chart: {{ template "gridftp.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "gridftp.fullname" . }}
+        chart: {{ template "gridftp.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      hostNetwork: true
+      volumes:
+        - name: gridftp-users
+          secret:
+            secretName: {{ .Values.GridFTPConfig.UserSecretName }} 
+            defaultMode: 256
+        - name: gridftp-host-pems
+          secret:
+            secretName: {{ .Values.GridFTPConfig.HostSecretName}} 
+            defaultMode: 256
+        {{ if .Values.GridFTPConfig.InternalPath }}
+        - name: dfs-volume
+          hostPath:
+          # directory location on host
+            path: {{ .Values.GridFTPConfig.InternalPath }}
+        {{ end }}
+        {{ if .Values.GridFTPConfig.PVCName }}
+        - name: pvc-volume
+          persistentVolumeClaim:
+          # use the requested PVC:
+            claimName: {{ .Values.GridFTPConfig.PVCName }}
+        {{ end }}
+      containers:
+        - name: gridftp
+          image: slateci/gridftp 
+          env:
+            - name: GRIDFTP_PORT
+              value: {{ .Values.GridFTPConfig.ControlPort }}
+            - name: GRIDFTP_PORT_RANGE
+              value: {{ .Values.GridFTPConfig.TransferPortRange }}
+          volumeMounts:
+            - name: gridftp-users
+              mountPath: /opt/gridftp/users/
+            - name: gridftp-host-pems
+              mountPath: /tmp/gridftp-host-pems/
+            {{ if and .Values.GridFTPConfig.ExternalPath .Values.GridFTPConfig.InternalPath }}
+            - name: dfs-volume
+              mountPath: {{ .Values.GridFTPConfig.ExternalPath }}
+            {{ end }}
+            {{ if and .Values.GridFTPConfig.ExternalPath .Values.GridFTPConfig.PVCName }}
+            - name: pvc-volume
+              mountPath: {{ .Values.GridFTPConfig.ExternalPath }}
+            {{ end }}
+      {{ if .Values.GridFTPConfig.UseNodeSelector }}
+      nodeSelector:
+        gridftp: "true"
+      {{ end }}
