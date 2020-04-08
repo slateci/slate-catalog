@@ -20,30 +20,26 @@ GlobusCredentialSecret: globus-creds # maps to <secret-name> as in the above
 #     --from-file <filename>
 GlobusPasswdSecret: globus-passwd # maps to <secret-name> as in the above
 
-# Below is a default GCS configuration file with comments removed.
+# The below configuration approximately maps to the GCS configuration file
 # You can customize this to your liking.
-GlobusConfigFile: |-
-  [Globus]
-  User = %(GLOBUS_USER)s
-  Password = %(GLOBUS_PASSWORD)s
-
-  [Endpoint]
-  Name = %(SHORT_HOSTNAME)s
-  Public = True
-  DefaultDirectory = /~/
-
-  [Security]
-  FetchCredentialFromRelay = True
-  IdentityMethod = MyProxy
-
-  [GridFTP]
-  Server = %(HOSTNAME)s
-  RestrictPaths = 
-
-  [MyProxy]
-  Server = %(HOSTNAME)s
-
-  [OAuth]
+GlobusConfig:
+  GridFTP:
+    Server: "%(HOSTNAME)s"
+    Port: 2811
+    IncomingPortRange: 50000,51000
+    RestrictPaths: ""
+  MyProxy:
+    Server: "%(HOSTNAME)s"
+    Port: 1752
+  Endpoint:
+    Public: True
+    Name: "%(SHORT_HOSTNAME)s"
+    DefaultDirectory: /~/
+ # do we want to implement these? 
+ # Security:
+ #   FetchCredentialFromRelay: True
+ #   IdentityMethod: "MyProxy"
+ # 
 
 # The path at which the storage should be mounted. 
 ExternalPath: /export

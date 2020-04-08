@@ -8,5 +8,24 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
-  globus-connect-server.conf: |-
-{{ .Values.GlobusConfigFile | indent 4 }}
+  globus-connect-server.conf: |+
+    [Globus]
+    User = %(GLOBUS_USER)s
+    Password = %(GLOBUS_PASSWORD)s
+
+    [Endpoint]
+    Name = {{ .Values.GlobusConfig.Endpoint.Name }}
+    Public = {{ .Values.GlobusConfig.Endpoint.Public }}
+    DefaultDirectory = {{ .Values.GlobusConfig.DefaultDirectory }}
+  
+    [Security]
+    FetchCredentialFromRelay = True
+    IdentityMethod = MyProxy
+
+    [GridFTP]
+    Server = {{ .Values.GlobusConfig.GridFTP.Server }}:{{ .Values.GlobusConfig.GridFTP.Port }}
+    IncomingPortRange = {{ .Values.GlobusConfig.GridFTP.Server }}
+    RestrictPaths = {{ .Values.GlobusConfig.GridFTP.Server }}
+
+    [MyProxy]
+    Server = {{ .Values.GlobusConfig.MyProxy.Server}}:{{ .Values.GlobusConfig.MyProxy.Port }}
