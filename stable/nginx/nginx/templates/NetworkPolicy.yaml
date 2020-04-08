@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: nginx-{{ .Values.Instance }}-network-policy
+  name: {{ template "nginx-fullname" . }}
   labels:
     app: {{ template "nginx.name" . }}
     chart: {{ template "nginx.chart" . }}
