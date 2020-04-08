@@ -32,8 +32,10 @@ data:
     RestrictPaths = {{ .Values.GlobusConfig.GridFTP.RestrictPaths }}
 
     [MyProxy]
+    {{ if .Values.GlobusConfig.MyProxy }}
     {{ if .Values.GlobusConfig.MyProxy.Server }}
     Server = {{ .Values.GlobusConfig.MyProxy.Server}}
     {{ else }}
     Server = %(HOSTNAME)s
-    {{ end}}
+    {{ end }}
+    {{ end }}
