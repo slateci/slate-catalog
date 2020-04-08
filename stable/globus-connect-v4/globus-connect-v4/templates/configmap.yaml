@@ -40,4 +40,5 @@ data:
     {{ else }}
     Server = %(HOSTNAME)s
     {{ end }}
+    Server = %(HOSTNAME)s
     {{ end }}
