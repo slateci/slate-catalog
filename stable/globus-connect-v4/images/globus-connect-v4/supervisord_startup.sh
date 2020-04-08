@@ -39,8 +39,8 @@ if [ -z ${GLOBUS_SERVER+x} ]; then
 else
   GLOBUS_PORT=$(echo $GLOBUS_SERVER | cut -d':' -f2 -s)
   # if we actually get a port out of that, then comment out the gridftp defualt
-  if [ -z ${GLOBUS_PORT+x} ]; then
-    echo "Globus port is undefined, assume defaults"
+  if [ -z ${GLOBUS_PORT} ]; then
+    echo "Globus port is an empty string, assume defaults"
   else
     sed -i 's/port/#port/' /etc/gridftp.conf
   fi
