@@ -1,8 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: policy-demo 
-  namespace: default
+  name: nginx-{{ .Values.Instance }}-network-policy
+  labels:
+    app: {{ template "nginx.name" . }}
+    chart: {{ template "nginx.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   podSelector: {}
   policyTypes:
