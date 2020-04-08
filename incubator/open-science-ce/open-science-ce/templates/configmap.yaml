@@ -76,6 +76,10 @@ data:
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
+
+    # Enable job retries since we're routing jobs directly to the OSG VO pool
+    ENABLE_JOB_RETRIES = True
+
     JOB_ROUTER_DEFAULTS @=jrd
     $(JOB_ROUTER_DEFAULTS)
     [
