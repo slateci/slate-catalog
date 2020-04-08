@@ -20,4 +20,4 @@ spec:
   ingress:
   - from:
     - ipBlock:
-        cidr: 155.101.8.34/32 
+        cidr: {{ .Values.NetworkPolicy.AllowedCIDR }}
