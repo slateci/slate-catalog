@@ -8,7 +8,12 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      app: {{ template "nginx.name" . }}
+      chart: {{ template "nginx.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
   policyTypes:
   - Ingress
   - Egress
