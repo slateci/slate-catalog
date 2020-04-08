@@ -16,7 +16,7 @@ data:
     [Endpoint]
     Name = {{ .Values.GlobusConfig.Endpoint.Name }}
     Public = {{ .Values.GlobusConfig.Endpoint.Public }}
-    DefaultDirectory = {{ .Values.GlobusConfig.DefaultDirectory }}
+    DefaultDirectory = {{ .Values.GlobusConfig.Endpoint.DefaultDirectory }}
   
     [Security]
     FetchCredentialFromRelay = True
