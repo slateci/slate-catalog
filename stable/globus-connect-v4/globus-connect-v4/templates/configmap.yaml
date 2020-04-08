@@ -23,9 +23,17 @@ data:
     IdentityMethod = MyProxy
 
     [GridFTP]
+    {{ if .Values.GlobusConfig.GridFTP.Port }}
     Server = {{ .Values.GlobusConfig.GridFTP.Server }}:{{ .Values.GlobusConfig.GridFTP.Port }}
-    IncomingPortRange = {{ .Values.GlobusConfig.GridFTP.Server }}
-    RestrictPaths = {{ .Values.GlobusConfig.GridFTP.Server }}
+    {{ else }}
+    Server = {{ .Values.GlobusConfig.GridFTP.Server }}
+    {{ end }}
+    IncomingPortRange = {{ .Values.GlobusConfig.GridFTP.IncomingPortRange }}
+    RestrictPaths = {{ .Values.GlobusConfig.GridFTP.RestrictPaths }}
 
     [MyProxy]
+    {{ if .Values.GloubsConfig.MyProxy.Port }}
     Server = {{ .Values.GlobusConfig.MyProxy.Server}}:{{ .Values.GlobusConfig.MyProxy.Port }}
+    {{ else }}
+    Server = {{ .Values.GlobusConfig.MyProxy.Server}}
+    {{ end}}
