@@ -33,8 +33,7 @@ GlobusConfig:
     Name: "%(SHORT_HOSTNAME)s"
     DefaultDirectory: /~/
   #Uncomment this field if you need to set the MyProxy server and/or port
-  #MyProxy:
-  # Server: 
+  #MyProxyServer:
   #These are unimplemented for now. If it is relevant please let us know.
   #Security:
   #  FetchCredentialFromRelay: True
