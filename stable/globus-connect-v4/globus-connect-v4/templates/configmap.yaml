@@ -25,6 +25,7 @@ data:
     [GridFTP]
     {{ if .Values.GlobusConfig.GridFTP.Server }}
     Server = {{ .Values.GlobusConfig.GridFTP.Server }}
+    ServerBehindNAT = True
     {{ else }}
     Server = %(HOSTNAME)s
     {{ end }}
@@ -35,6 +36,7 @@ data:
     {{ if .Values.GlobusConfig.MyProxy }}
     {{ if .Values.GlobusConfig.MyProxy.Server }}
     Server = {{ .Values.GlobusConfig.MyProxy.Server}}
+    ServerBehindNAT = True
     {{ else }}
     Server = %(HOSTNAME)s
     {{ end }}
