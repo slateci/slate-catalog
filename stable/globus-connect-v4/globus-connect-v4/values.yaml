@@ -35,7 +35,7 @@ GlobusConfig:
     Public: True
     Name: "%(SHORT_HOSTNAME)s"
     DefaultDirectory: /~/
- # do we want to implement these? 
+ # These are unimplemented for now. If it is relevant please let us know.
  # Security:
  #   FetchCredentialFromRelay: True
  #   IdentityMethod: "MyProxy"
