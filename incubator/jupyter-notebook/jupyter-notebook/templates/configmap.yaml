@@ -1,16 +1,3 @@
-{{ if .Values.CondorConfig.SSH_Public_Key }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: jupyter-{{ .Values.Instance }}-ssh-config
-  labels:
-    app: {{ template "jupyter.name" . }}
-    instance: {{ .Values.Instance | quote }}
-data:
-  authorized_keys: |+
-    {{ .Values.CondorConfig.SSH_Public_Key }}
-{{ end }}
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -21,9 +8,18 @@ metadata:
 data:
   startup_script.sh: |+
     #!/bin/bash
+    #
+    #sleep 10
     mkdir -p /home/{{ .Values.Jupyter.NB_USER }}/.ssh
-    echo {{ .Values.CondorConfig.SSH_Public_Key }} > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
+    {{ if eq .Values.SSH.Enabled true }}
+    echo {{ .Values.SSH.SSH_Public_Key }} > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
     chmod 0600 /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
+    {{ end }}
     chown -R 1000:100 /home/$NB_USER
+    {{ if eq .Values.SSH.Enabled true}}
+    cat /etc/supervisor/supervisord.d/sshd.conf >> /etc/supervisor/conf.d/supervisord.conf
+    {{ end }}
+    {{ if eq .Values.CondorConfig.Enabled true}}
+    cat /etc/supervisor/supervisord.d/htcondor.conf  >> /etc/supervisor/conf.d/supervisord.conf
+    {{ end }}
     /usr/bin/supervisord
-

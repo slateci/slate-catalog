@@ -11,19 +11,21 @@ Ingress:
   # The class of the ingress controller to use. 
   # For SLATE this should be 'slate'. 
   Class: slate
-  #Secret must be created manually before deploying a Jupyter Notebook instance
-  #The below secret name must match the name chosen before. 
-#  Secret: jupyternb-secret
-#  Message: "Authentication Required!"
+### SLATE-START ###
 SLATE:
   Cluster:
     DNSName: "utah-dev.slateci.net"
+### SLATE-END ###
 Jupyter:
-  NB_USER: "ben"
+  NB_USER: "jovyan"
   Password: 'sha1:94491e2a6996:90246f039b03803a4f0b5375cf4276925cb6b151'
   Token: '90246f039b03803a4f0b5375cf4276925cb6b151'
+#condor-submit config
 CondorConfig:
+  Enabled: false
   CollectorHost: 127.0.0.1
   CollectorPort: 30287
   AuthTokenSecret: submit-auth-token
+SSH:  
+  Enabled: false
   SSH_Public_Key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCa2AciBQTfWa8DkQT2Oceg7taS+Uvgx8Bis2i0pRTQgD5h1l+UvL/osx6EW6zhilekO8X5sLIEufee1cMzmyDFAr1TVkDJS7AlFnwdXkre/32q548ffBeFFefo7ZLQ6avH6Edp6+J81Itt+x8Cy/JrjMhzSjAs5Gt1RiKdMSmhclGz3s+h/KL8f12tjA3Uk0PSPqgRTN2L435/X1Hche7CiT6ZJqpCoxa8J4mbLzYaLeGWnNremJ90Q/udO+IUYvviDsgDeB1msIDWfIylDxMteMZ50WTkPVur+Yl2TG6mxNNdNshzHSxtOM3IB2+Q9ChYRFB59J38Wx1+9/1Mnf53 slate"
