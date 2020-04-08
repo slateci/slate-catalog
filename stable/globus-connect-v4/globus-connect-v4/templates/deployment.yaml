@@ -63,6 +63,10 @@ spec:
             secretKeyRef:
               name: {{ .Values.GlobusCredentialSecret }}
               key: GLOBUS_PASSWORD
+        {{ if .Values.GlobusConfig.GridFTP.Server }}
+        - name: GLOBUS_SERVER
+          value: {{ .Values.GlobusConfig.GridFTP.Server }}
+        {{ end }}
         - name: TERM
           value: 'xterm'
         volumeMounts:
