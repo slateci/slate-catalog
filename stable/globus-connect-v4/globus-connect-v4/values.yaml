@@ -24,22 +24,22 @@ GlobusPasswdSecret: globus-passwd # maps to <secret-name> as in the above
 # You can customize this to your liking.
 GlobusConfig:
   GridFTP:
-    Server: "%(HOSTNAME)s"
-    Port: 2811
+    # Specify the server name, alternatively specify the server name and port
+    #Server: 
     IncomingPortRange: 50000,51000
     RestrictPaths: ""
-  MyProxy:
-    Server: "%(HOSTNAME)s"
-    Port: 7512
   Endpoint:
     Public: True
     Name: "%(SHORT_HOSTNAME)s"
     DefaultDirectory: /~/
- # These are unimplemented for now. If it is relevant please let us know.
- # Security:
- #   FetchCredentialFromRelay: True
- #   IdentityMethod: "MyProxy"
- # 
+  #Uncomment this field if you need to set the MyProxy server and/or port
+  #MyProxy:
+  # Server: 
+  #These are unimplemented for now. If it is relevant please let us know.
+  #Security:
+  #  FetchCredentialFromRelay: True
+  #  IdentityMethod: "MyProxy"
+  #
 
 # The path at which the storage should be mounted. 
 ExternalPath: /export

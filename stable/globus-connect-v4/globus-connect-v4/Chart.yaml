@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "4.0.59"
 description: Globus Connect data transfer service
 name: globus-connect-v4
-version: 0.6.0
+version: 0.6.1

@@ -30,12 +30,17 @@ if [[ $? -eq 0 ]]; then
 	done < /root/passwd1
 fi
 
-# comment out the port in gridftp.conf, this should be replaced by whatever
-# specified in the globus config. hopefully including the default..
-sed -i 's/2811/#2811/' /etc/gridftp.conf
 
-# replace the port in the myproxy config
-
+# check for a globus_server defined as an environment variable. if we get one,
+# check to see if it has a port attached. if there is, comment out the default
+# port so globus can do whatever with its gridftp.d file
+if [ -z $GLOBUS_SERVER ]; then
+  GLOBUS_PORT=$(echo $GLOBUS_SERVER | cut -d':' -f2 -s)
+  # if we actually get a port out of that, then comment out the gridftp defualt
+  if [ -z $GLOBUS_PORT ]; then
+    sed -i 's/port/#port/' /etc/gridftp.conf
+  fi
+fi
 
 # Run configuration
 globus-connect-server-setup -v
