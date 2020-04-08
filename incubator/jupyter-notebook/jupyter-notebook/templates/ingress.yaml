@@ -9,11 +9,12 @@ metadata:
     instance: {{ .Values.Instance | quote }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.Ingress.Class }}
-    nginx.ingress.kubernetes.io/auth-type: basic
-    # name of the secret containing the creds
-    nginx.ingress.kubernetes.io/auth-secret: {{ .Values.Ingress.Secret }}
-    nginx.ingress.kubernetes.io/auth-realm: {{ .Values.Ingress.Message }}
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
+  tls:
+  - hosts:
+    - {{ .Values.Ingress.Subdomain }}.{{ .Values.SLATE.Cluster.DNSName }}
+    secretName: {{ .Values.Instance}}-jupyter-notebook-tls
   rules:
   - host: {{ .Values.Ingress.Subdomain }}.{{ .Values.SLATE.Cluster.DNSName }}
     http:
