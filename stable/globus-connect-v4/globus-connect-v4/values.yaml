@@ -24,13 +24,13 @@ GlobusPasswdSecret: globus-passwd # maps to <secret-name> as in the above
 # You can customize this to your liking.
 GlobusConfig:
   GridFTP:
-    Server: "%(HOSTNAME)s"
-    Port: 2811
+    # Specify the server name, alternatively specify the server name and port
+    #Server: 
     IncomingPortRange: 50000,51000
     RestrictPaths: ""
   MyProxy:
-    Server: "%(HOSTNAME)s"
-    Port: 7512
+    # Specify the server name, alternatively specify the server name and port
+    #Server: 
   Endpoint:
     Public: True
     Name: "%(SHORT_HOSTNAME)s"
