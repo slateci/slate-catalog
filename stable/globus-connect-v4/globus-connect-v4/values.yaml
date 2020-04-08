@@ -30,7 +30,7 @@ GlobusConfig:
     RestrictPaths: ""
   MyProxy:
     Server: "%(HOSTNAME)s"
-    Port: 1752
+    Port: 7512
   Endpoint:
     Public: True
     Name: "%(SHORT_HOSTNAME)s"
