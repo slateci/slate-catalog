@@ -32,9 +32,7 @@ fi
 
 # comment out the port in gridftp.conf, this should be replaced by whatever
 # specified in the globus config. hopefully including the default..
-sed -i 's/2811/#2811/' /etc/gridftp.conf
-
-# replace the port in the myproxy config
+sed -i 's/port/#port/' /etc/gridftp.conf
 
 
 # Run configuration
