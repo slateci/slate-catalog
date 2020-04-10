@@ -53,6 +53,7 @@ spec:
       containers:
         - name: gridftp
           image: slateci/gridftp:0.4.x
+          imagePullPolicy: Always
           env:
             - name: GRIDFTP_PORT
               value: {{ .Values.GridFTPConfig.ControlPort | quote }}
