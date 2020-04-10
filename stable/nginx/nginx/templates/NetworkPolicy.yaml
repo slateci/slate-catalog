@@ -18,6 +18,10 @@ spec:
   policyTypes:
   - Ingress
   - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: {{ .Values.NetworkPolicy.AllowedCIDR }}
   ingress:
   - from:
     - ipBlock:
