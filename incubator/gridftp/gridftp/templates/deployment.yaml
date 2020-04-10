@@ -32,6 +32,9 @@ spec:
           secret:
             secretName: {{ .Values.GridFTPConfig.UserSecretName }} 
             defaultMode: 256
+            items:
+              key: passwd
+              path: passwd
         - name: gridftp-certificates
           secret:
             secretName: {{ .Values.GridFTPConfig.HostSecretName }} 
