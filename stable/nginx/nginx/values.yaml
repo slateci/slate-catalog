@@ -27,7 +27,7 @@ Ingress:
 #If disabled all IP addresses can access the app
 NetworkPolicy:
   Enabled: false
-  AllowedCIDR: 10.0.0.0/255
+  AllowedCIDR: 10.0.0.0/8
 ### SLATE-START ###
 SLATE:
   Cluster:
