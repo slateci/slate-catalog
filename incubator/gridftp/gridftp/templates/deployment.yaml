@@ -34,7 +34,7 @@ spec:
             defaultMode: 256
         - name: gridftp-certificates
           secret:
-            secretName: {{ .Values.GridFTPConfig.HostSecretName}} 
+            secretName: {{ .Values.GridFTPConfig.HostSecretName }} 
             defaultMode: 256
         {{ if .Values.GridFTPConfig.InternalPath }}
         - name: filestore
@@ -53,9 +53,9 @@ spec:
           image: slateci/gridftp:0.4.0
           env:
             - name: GRIDFTP_PORT
-              value: {{ .Values.GridFTPConfig.ControlPort }}
+              value: {{ .Values.GridFTPConfig.ControlPort | quote }}
             - name: GRIDFTP_PORTRANGE
-              value: {{ .Values.GridFTPConfig.TransferPortRange }}
+              value: {{ .Values.GridFTPConfig.TransferPortRange | quote }}
           volumeMounts:
             - name: gridftp-users
               mountPath: /root/passwd
