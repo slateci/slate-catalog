@@ -28,12 +28,11 @@ spec:
     spec:
       hostNetwork: true
       volumes:
-        - name: gridftp-users
+        - name: {{ template "gridftp.fullname" . }}-passwd
           secret:
             secretName: {{ .Values.GridFTPConfig.UserSecretName }} 
-            defaultMode: 256
             items:
-              key: passwd
+            - key: passwd
               path: passwd
         - name: gridftp-certificates
           secret:
@@ -60,8 +59,9 @@ spec:
             - name: GRIDFTP_PORTRANGE
               value: {{ .Values.GridFTPConfig.TransferPortRange | quote }}
           volumeMounts:
-            - name: gridftp-users
+            - name: {{ template "gridftp.fullname" . }}-passwd
               mountPath: /root/passwd
+              subPath: passwd
             - name: gridftp-certificates
               mountPath: /root/gridftp-certificates/
             {{ if and .Values.GridFTPConfig.ExternalPath .Values.GridFTPConfig.InternalPath }}
