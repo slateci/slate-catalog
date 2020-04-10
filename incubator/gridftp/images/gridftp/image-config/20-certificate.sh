@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # need to copy the certificate and key into the right place and chmod them
-if [ $(stat /root/gridftp-certificates) ]; then 
+stat /root/gridftp-certificates
+if [ $? -eq 0 ]; then 
   echo "Found certificate directory, trying to copy the files out"
   cp /root/gridftp-certificates/hostcert.pem \
     /root/gridftp-certificates/hostkey.pem  /etc/grid-security
