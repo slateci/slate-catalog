@@ -6,31 +6,50 @@ metadata:
     app: {{ template "check-mk.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "check-mk.name" . }}
+      instance: {{ .Values.Instance | quote }}
   template:
     metadata:
+      creationTimestamp: null
       labels:
         app: {{ template "check-mk.name" . }}
+        chart: {{ template "check-mk.chart" . }}
         release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
-          image: checkmk/check-mk-raw:1.6.0-latest
-          imagePullPolicy: Always
-          ports:
-            - containerPort: {{ .Values.service.internalPort }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.internalPort }}
-          readinessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.internalPort }}
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
+      - env:
+        - name: CHECKMK_CONFIG_STAT_RELOAD
+        - name: CHECKMK_EVENT_SOCK
+        image: checkmk/check-mk-raw:1.6.0-latest
+        imagePullPolicy: Always
+        name: check-mk
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        resources:
+          {{ toYaml .Values.resources }}
+        volumeMounts:
+        - mountPath: /opt/
+          name: {{ template "check-mk.name" . }}-claim
+        #- mountPath: /opt/omd/sites/cmk
+        #  name: check-mk-{{ .Values.Instance }}-configuration
+      restartPolicy: Always
+      volumes:
+      - name: {{ template "check-mk.name" . }}-claim
+        persistentVolumeClaim:
+          claimName: {{ template "check-mk.name" . }}
+      #- name: check-mk-{{ .Values.Instance }}-configuration
+      #  configMap:
+      #    name: check-mk-{{ .Values.Instance }}-configuration
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
+status: {}

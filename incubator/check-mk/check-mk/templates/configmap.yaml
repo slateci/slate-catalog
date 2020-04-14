@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: check-mk-{{ .Values.Instance }}-configuration
+  labels:
+    app: {{ template "check-mk.name" . }}
+    chart: {{ template "check-mk.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data: 
+  check-mk.yaml: |-
+    {{ .Values.Configuration}}
