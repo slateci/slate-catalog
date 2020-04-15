@@ -77,9 +77,7 @@ data:
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
 
-    # Enable job retries since we're routing jobs directly to the OSG VO pool
-    ENABLE_JOB_RETRIES = True
-
+    # Special magic so that jobs routed to the VO pool are accounted for as payload jobs
     JOB_ROUTER_DEFAULTS @=jrd
     $(JOB_ROUTER_DEFAULTS)
     [
