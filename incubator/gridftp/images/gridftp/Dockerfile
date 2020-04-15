@@ -10,9 +10,13 @@ COPY image-config/20-certificate.sh /etc/osg/image-config.d/
 ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl
 
+# We also copy in our own gridftp server launcher to overwrite the existing one
+COPY globus-gridftp-server-start /usr/libexec/globus-gridftp-server-start
+RUN chmod 755 /usr/libexec/globus-gridftp-server-start
+
 # take a bunch of gridftp options as environment variables and then become gridftp
-COPY gridftp-startup.sh /usr/local/sbin/gridftp-startup.sh
-RUN chmod +x /usr/local/sbin/gridftp-startup.sh
+#COPY gridftp-startup.sh /usr/local/sbin/gridftp-startup.sh
+#RUN chmod +x /usr/local/sbin/gridftp-startup.sh
 
 # Create the appropriate supervisor job to launch gridftp
 COPY supervisor/gridftp.conf /etc/supervisord.d/
