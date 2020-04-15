@@ -13,7 +13,7 @@ else
 fi
 
 # uncomment lcmaps
-sed -i 's/^#//' gsi-authz.conf
+echo 'globus_mapping liblcas_lcmaps_gt4_mapping.so lcmaps_callout' > /etc/grid-security/gsi-authz.conf
 
 exec /usr/sbin/globus-gridftp-server \
     -c $conf \
