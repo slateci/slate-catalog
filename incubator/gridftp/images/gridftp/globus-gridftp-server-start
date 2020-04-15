@@ -9,7 +9,7 @@
 if [ -z $GLOBUS_CONTROL_PORT ]; then
   echo "No GLOBUS_CONTROL_PORT defined, assuming default 2811"
 else
-  sed "s/port 2811/port\ $GLOBUS_CONTROL_PORT/" /etc/gridftp.conf
+  sed -i "s/port 2811/port\ $GLOBUS_CONTROL_PORT/" /etc/gridftp.conf
 fi
 
 exec /usr/sbin/globus-gridftp-server \
