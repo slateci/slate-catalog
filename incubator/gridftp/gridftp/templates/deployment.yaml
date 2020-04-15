@@ -55,9 +55,9 @@ spec:
           image: slateci/gridftp:0.4.x
           imagePullPolicy: Always
           env:
-            - name: GRIDFTP_PORT
+            - name: GLOBUS_CONTROL_PORT
               value: {{ .Values.GridFTPConfig.ControlPort | quote }}
-            - name: GRIDFTP_PORTRANGE
+            - name: GLOBUS_TCP_PORT_RANGE
               value: {{ .Values.GridFTPConfig.TransferPortRange | quote }}
           volumeMounts:
             - name: {{ template "gridftp.fullname" . }}-passwd
