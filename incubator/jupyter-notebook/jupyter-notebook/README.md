@@ -6,7 +6,7 @@ This release of this chart configures a JupyterLab that you can deploy on SLATE 
 
 To use the first feature, this chart assumes that the user already has access to an external HTCondor cluster and that they need to add a job submit environment to the JupyterLab instance so that they can communicate with the cluster. Similarly, the second feature can be enabled by users needing access to the JupyterLab instance over SSH. 
 
-######Note: Setting up a full HTCondor pool with all of its main components (e.g. collector, negotiator, and worker) is outside the scope of this chart. However, if you are interested in learning more about that, we encourage you to check the other condor charts we have in our SLATE application catalog since they cover that part in detail.
+###### Note: Setting up a full HTCondor pool with all of its main components (e.g. collector, negotiator, and worker) is outside the scope of this chart. However, if you are interested in learning more about that, we encourage you to check the other condor charts we have in our SLATE application catalog since they cover that part in detail.
 
 # Configuration
 We will start by downloading the application's configuration file so that you can configure the chart as you need. To get the file, run the following command:  
@@ -15,7 +15,7 @@ We will start by downloading the application's configuration file so that you ca
 
 
 Now, let's take a look at the chart's configuration which can be divided into three main categories: Jupyter, Condor and SSH. 
-####1- Jupyter
+#### 1- Jupyter
 
 This part covers the minimum configuration that you'd need in the above file to successfully deploy an instance of this chart. First, add an instance name for the chart. 
 
@@ -54,7 +54,7 @@ Once your done with this part, the configuration would look like:
      Token: '90246f039b03803a4f0bb6b151'
 
  
-####2- Condor (Optional)  
+#### 2- Condor (Optional)  
 If you don't need to enable the condor submit functionality in this chart, you can skip this part. As indicated before, this part only configures the condor submit feature and assumes that the other condor components already exist. In order to submit jobs to a condor pool, a submit-token is used for authentication.
  
 So to configure this feature, you will need to create a SLATE secret from the submit token. You can do that by pasting the token into a text file &lt;submit-token&gt; and adding one trailing newline character (\n). Then, use the slate command as follows:
@@ -72,7 +72,7 @@ Now you can add to the configuration file the following HTCondor information: *C
       CollectorPort: 30487
       AuthTokenSecret: submit-auth-token
   
-####3- SSH (Optional) 
+#### 3- SSH (Optional) 
 If you don't need to enable SSH access on your instance, then you can skip this section. Enabling this feature requires setting the Enabled flag to true and adding your SSH public key which would start with "ssh-rsa". A sample configuration for this part looks like this:
 
 	SSH:  
@@ -84,7 +84,7 @@ If you don't need to enable SSH access on your instance, then you can skip this 
 
 	slate app install jupyter-notebook --dev --group <group> --cluster <cluster> --conf jupyter.yaml
 	
-######Note: If deployment fails due to an instance name that's already been chosen by another user, please choose a different instance name and try running the above command again 
+###### Note: If deployment fails due to an instance name that's already been chosen by another user, please choose a different instance name and try running the above command again 
 Once SLATE creates the requested resources needed for your JupyterLab instance, you should be able to access it via a Web browser at a URL in this format: &lt;sub-domain&gt;.&lt;DNS-Name-of-the-Cluster&gt;, as per the values used in the configuration file. You can also view the URL of the deployed application by running the below command and passing to it the generated instance ID from the previous step.
 
 	slate instance info <instance-ID>
@@ -95,7 +95,7 @@ The URL for your deployed Jupyter instance can be found in the output of the pre
 	Name                               Cluster IP    External IP   Ports          URL                                     
 	slate-dev-jupyter-notebook-alidemo 10.96.150.245 <a-public-ip> 8888:30712/TCP http://slatenotebook.slate-dev.slateci.net/
 
-#####Condor Hello World Test Job
+##### Condor Hello World Test Job
 If you have deployed the application with the condor submit environment enabled, and would like to submit a test job to confirm things are working, you can put the following into a file 'job.sub':
 
 	Executable   = /bin/echo
@@ -114,7 +114,7 @@ Then, submit the job:
 
 A successful run will genearate a job.out file that has the "Hello World" inside.
 
-#####SSH Access Test
+##### SSH Access Test
 If you have deployed an instance of the application with SSH enabled, you should be able to ssh into it using the username you chose in the application configuration file. To get the IP address and port number for SSH, run the below command:
 	
 	slate instance info <instance-ID>
@@ -128,6 +128,5 @@ The output will list the SSH IP address and port under Services>URL and it would
 So you can ssh into your deployed instance as follows:
 
 	ssh -p <port-number> <your-username>@<ip-address>
-
 
 
