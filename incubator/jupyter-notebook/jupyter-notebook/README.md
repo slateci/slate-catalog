@@ -125,7 +125,7 @@ The output will list the SSH IP address and port under Services>URL and it would
 	Name                               Cluster IP    External IP   Ports          URL                                     
 	slate-dev-jupyter-notebook-alidemo 10.96.150.245 <a-public-ip> 22:30033/TCP   <ip-address>:<port-number>
 
-So you can ssh into your deployed instance as follows:
+Now, ssh into your deployed instance using the username you've chosen above:
 
 	ssh -p <port-number> <your-username>@<ip-address>
 
