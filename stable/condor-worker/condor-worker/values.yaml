@@ -26,7 +26,7 @@ CondorConfig:
   # The number of CPUs that this condor instance may take advantage of.
   NumberCPUs: 1
   # If the CVMFS CSI is available, you can specify here to use it
-  Cvmfs: true
+  Cvmfs: false
   # If there is a GPU available on the cluster, you can specify use of that
   # resource
   UseGPU: false
