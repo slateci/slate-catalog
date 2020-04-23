@@ -44,7 +44,7 @@ db:
 replication:
   ## Enable replication. This enables the creation of replicas of MariaDB. If false, only a
   ## master deployment would be created
-  enabled: true
+  enabled: false
   ##
   ## MariaDB replication user
   ## ref: https://github.com/bitnami/bitnami-docker-mariadb#setting-up-a-replication-cluster
@@ -82,7 +82,7 @@ master:
   persistence:
     ## If true, use a Persistent Volume Claim, If false, use emptyDir
     ##
-    enabled: true
+    enabled: false
     # Enable persistence using an existing PVC
     # existingClaim:
     # mountPath:
@@ -180,7 +180,7 @@ slave:
   persistence:
     ## If true, use a Persistent Volume Claim, If false, use emptyDir
     ##
-    enabled: true
+    enabled: false
     # storageClass: "-"
     annotations:
     accessModes:
