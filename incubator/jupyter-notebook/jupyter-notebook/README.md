@@ -11,7 +11,7 @@ To use the first feature, this chart assumes that the user already has access to
 # Configuration
 We will start by downloading the application's configuration file so that you can configure the chart as you need. To get the file, run the following command:  
 
-	slate app get-conf --dev jupyter-notebook > jupyter.conf
+	$ slate app get-conf --dev jupyter-notebook > jupyter.conf
 
 
 Now, let's take a look at the chart's configuration which can be divided into three main categories: Jupyter, Condor and SSH. 
@@ -82,18 +82,16 @@ If you don't need to enable SSH access on your instance, then you can skip this 
 # Deploying
  Now that the configuration file has all the changes you need, you can deploy an instance of this application by using the SLATE command as shown below: 
 
-	slate app install jupyter-notebook --dev --group <group> --cluster <cluster> --conf jupyter.yaml
+	$ slate app install jupyter-notebook --dev --group <group> --cluster <cluster> --conf jupyter.conf
 	
 ###### Note: If deployment fails due to an instance name that's already been chosen by another user, please choose a different instance name and try running the above command again 
-Once SLATE creates the requested resources needed for your JupyterLab instance, you should be able to access it via a Web browser at a URL in this format: &lt;sub-domain&gt;.&lt;DNS-Name-of-the-Cluster&gt;, as per the values used in the configuration file. You can also view the URL of the deployed application by running the below command and passing to it the generated instance ID from the previous step.
+Once SLATE creates the requested resources needed for your JupyterLab instance, you can access it via a Web browser. Run the below command to learn the URL of the deployed application: 
 
-	slate instance info <instance-ID>
-
-The URL for your deployed Jupyter instance can be found in the output of the previous command under Services. For example:
-
+	$ slate instance info <instance-ID>
 	Services:
 	Name                               Cluster IP    External IP   Ports          URL                                     
 	slate-dev-jupyter-notebook-alidemo 10.96.150.245 <a-public-ip> 8888:30712/TCP http://slatenotebook.slate-dev.slateci.net/
+The URL can be found under Services, which in our example is *http://slatenotebook.slate-dev.slateci.net*.
 
 ##### Condor Hello World Test Job
 If you have deployed the application with the condor submit environment enabled, and would like to submit a test job to confirm things are working, you can put the following into a file 'job.sub':
@@ -117,7 +115,7 @@ A successful run will genearate a job.out file that has the "Hello World" inside
 ##### SSH Access Test
 If you have deployed an instance of the application with SSH enabled, you should be able to ssh into it using the username you chose in the application configuration file. To get the IP address and port number for SSH, run the below command:
 	
-	slate instance info <instance-ID>
+	$ slate instance info <instance-ID>
 	
 The output will list the SSH IP address and port under Services>URL and it would look like this:
 
@@ -125,7 +123,7 @@ The output will list the SSH IP address and port under Services>URL and it would
 	Name                               Cluster IP    External IP   Ports          URL                                     
 	slate-dev-jupyter-notebook-alidemo 10.96.150.245 <a-public-ip> 22:30033/TCP   <ip-address>:<port-number>
 
-Now, ssh into your deployed instance using the username you've chosen above:
+Now, ssh into your deployed instance using the username you've chosen in your application configuration file:
 
 	ssh -p <port-number> <your-username>@<ip-address>
 
