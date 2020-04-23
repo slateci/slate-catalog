@@ -1,0 +1,114 @@
+Instance: global
+
+## User of the application
+## ref: https://github.com/bitnami/bitnami-docker-redmine/#environment-variables
+##
+redmineUsername: user
+
+## Admin email
+## ref: https://github.com/bitnami/bitnami-docker-redmine/#environment-variables
+##
+redmineEmail: user@example.com
+
+## Redmine default data language
+## ref: https://github.com/bitnami/bitnami-docker-redmine/#environment-variables
+##
+redmineLanguage: en
+
+## Database configuration. Please note that only one of the following databases should be selected.
+## ref: https://github.com/bitnami/bitnami-docker-redmine#run-the-application-using-postgresql-database
+##
+databaseType:
+  mariadb: true
+  postgresql: false
+
+##
+## MariaDB chart configuration
+##
+mariadb:
+  ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
+  enabled: true
+  ## Disable MariaDB replication
+  replication:
+    enabled: false
+
+  ## Create a database and a database user
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  db:
+    name: bitnami_redmine
+    user: bn_redmine
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  master:
+    persistence:
+      enabled: true
+      ## mariadb data Persistent Volume Storage Class
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      ##
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 8Gi
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+## Kubernetes configuration
+##   minikube: NodePort
+##   ingress: ClusterIP
+##   elsewhere: LoadBalancer
+##
+serviceType: LoadBalancer
+## Control hosts connecting to "LoadBalancer" only
+serviceLoadBalancerSourceRanges:
+  - 0.0.0.0/0
+
+ingress:
+  enabled: false
+  hostname: redmine.cluser.local
+  annotations:
+## For Kubernetes v1.4, v1.5 and v1.6, use 'extensions/v1beta1'
+## For Kubernetes v1.7, use 'networking.k8s.io/v1'
+networkPolicyApiVersion: extensions/v1beta1
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+
+  ## redmine data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 8Gi
+
+## Define a disruption budget
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+podDisruptionBudget:
+  enabled: false
+
+## Define the number of pods the deployment will create
+## Do not change unless your persistent volume allows more than one writer, ie NFS
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+replicas: 1
+
+## Redmine pods resource requests and limits
+## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#resource-requests-and-limits-of-pod-and-container
+resources: {}
