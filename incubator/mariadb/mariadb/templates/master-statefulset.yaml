@@ -67,8 +67,8 @@ spec:
       {{- end }}
       containers:
       - name: "mariadb"
-        image: "docker.io/bitnami/mariadb:10.1.36-debian-9"
-        imagePullPolicy: "IfNotPresent"
+        image: "docker.io/bitnami/mariadb:10.1.44"
+        imagePullPolicy: "Always"
         env:
         - name: MARIADB_ROOT_PASSWORD
           valueFrom:
