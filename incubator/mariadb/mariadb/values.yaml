@@ -1,4 +1,4 @@
-## Bitnami MariaDB image
+## Derived from Bitnami MariaDB image
 ## ref: https://hub.docker.com/r/bitnami/mariadb/tags/
 ##
 Instance: global
@@ -15,31 +15,20 @@ service:
   #   slave: 30002
 
 rootUser:
-  ## MariaDB admin password
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb#setting-the-root-password-on-first-run
-  ##
-  password:
-  ## Use existing secret (ignores root, db and replication passwords)
-  # existingSecret:
-  ##
-  ## Option to force users to specify a password. That is required for 'helm upgrade' to work properly.
-  ## If it is not force, a random password will be generated.
-  forcePassword: false
+  # this file needs to contain the following key/values:
+  #   mariadb-root-password=<password>
+  #   mariadb-password=<password>
+  #   mariadb-replication-password=<password>
+  # And created with: 
+  #   slate secret create --group <group> --cluster <cluster> \
+  #     --from-env-file=mariadb-secret mariadb-secret
+  credentialSecret: mariadb-secret
 
 db:
-  ## MariaDB username and password
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb#creating-a-database-user-on-first-run
-  ##
-  user:
-  password:
-  ## Password is ignored if existingSecret is specified.
   ## Database to create
   ## ref: https://github.com/bitnami/bitnami-docker-mariadb#creating-a-database-on-first-run
   ##
   name: my_database
-  ## Option to force users to specify a password. That is required for 'helm upgrade' to work properly.
-  ## If it is not force, a random password will be generated.
-  forcePassword: false
 
 replication:
   ## Enable replication. This enables the creation of replicas of MariaDB. If false, only a
@@ -50,15 +39,6 @@ replication:
   ## ref: https://github.com/bitnami/bitnami-docker-mariadb#setting-up-a-replication-cluster
   ##
   user: replicator
-  ## MariaDB replication user password
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb#setting-up-a-replication-cluster
-  ##
-  password:
-  ## Password is ignored if existingSecret is specified.
-  ##
-  ## Option to force users to specify a password. That is required for 'helm upgrade' to work properly.
-  ## If it is not force, a random password will be generated.
-  forcePassword: false
 
 master:
   ## Affinity for pod assignment
