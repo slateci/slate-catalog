@@ -19,7 +19,7 @@ Now, let's take a look at the chart's configuration which can be divided into th
 
 This part covers the minimum configuration that you'd need in the above file to successfully deploy an instance of this chart. First, add an instance name for the chart. 
 
-	Instance: jupyterdemo
+	Instance: 'jupyterdemo'
 	
 Next, choose a subdomain for the application ingress: 
 
