@@ -36,7 +36,7 @@ is called `osg`, you'll want to append the contents of `osg-keypair.pub` to
 The private part of the keypair will need to be stored on a SLATE cluster for use by the
 CE. In this particular example, I'll be operating under the `slate-dev` group and using the `uutah-prod` cluster to host a CE pointed at a SLURM cluster at University of Utah. To do that:
 
-	slate secret create hosted-ce-secret --from-file=bosco.key=osg-keypair --group <YOUR GROUP> --cluster <YOUR SLATE CLUSTER>
+	slate secret create hosted-ce-secret --from-file bosco.key=osg-keypair --group <YOUR GROUP> --cluster <YOUR SLATE CLUSTER>
 
 Where `hosted-ce-secret` will be the name of the secret, and `osg-keypair` is the
 path to your private key (assumed to be the current working directory).
