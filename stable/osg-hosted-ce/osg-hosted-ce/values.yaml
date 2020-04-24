@@ -95,11 +95,18 @@ VomsmapOverride: |+
 #GridmapOverride: |+
 #  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osg
 
-# Use a pre-existing certificate/key pair stored in a secret with
-# 'hostcert.pem' and 'hostkey.pem' keys for the host certificate and
-# key, respectively
-Certificate:
-  Secret: null
+HostCredentials:
+  # Use a pre-existing host key to request a new Let's Encrypt
+  # certificate If HostCertSecret is also specified, the Let's Encrypt
+  # request is skipped.  Secret must contain a "host.key" key
+  # containing the encoded host key.
+  HostKeySecret: null
+  # Use a pre-existing host certificate instead of requesting a new
+  # Let'S Encrypt certificate. If HostKeySecret is not specified, a
+  # new Let's Encrypt certificate and key are requested anyway.
+  # Secret must contain a "host.key containing the encoded host
+  # certificate.
+  HostCertSecret: null
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
