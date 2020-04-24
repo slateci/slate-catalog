@@ -1,12 +1,12 @@
 # The label to apply to this deployment, 
 # used to manage multiple instances of the same application
-Instance: 'demo'
+Instance: ''
 
 # Ingress control settings  
 Ingress:
   # The subdomain to associate with this service.
   # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
-  Subdomain: 'jupyterdemo'
+  Subdomain: 'jupyter'
   # The class of the ingress controller to use. 
   # For SLATE this should be 'slate'. 
   Class: slate
@@ -20,8 +20,11 @@ Jupyter:
 #condor-submit config
 CondorConfig:
   Enabled: false
+#Add the IP address for the condor collector
   CollectorHost: 127.0.0.1
+#Add the port number for the condor collector
   CollectorPort: 30287
+#Add the SLATE secret that your created with the condor submit token
   AuthTokenSecret: submit-auth-token
 SSH:  
   Enabled: false
