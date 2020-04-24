@@ -47,15 +47,21 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
-      {{ if .Values.Certificate.Secret }}
-      - name: osg-hosted-ce-hostcertkeypair-volume
+      {{ if .Values.HostCredentials.HostCertSecret }}
+      - name: osg-hosted-ce-hostcert-volume
         secret:
-          secretName: {{ .Values.Certificate.Secret }}
+          secretName: {{ .Values.HostCredentials.HostCertSecret }}
           items:
-            - key: hostcert.pem
+            - key: host.cert
               path: hostcert.pem
               mode: 256
-            - key: hostkey.pem
+      {{end}}
+      {{ if .Values.HostCredentials.HostKeySecret }}
+      - name: osg-hosted-ce-hostkey-volume
+        secret:
+          secretName: {{ .Values.HostCredentials.HostKeySecret }}
+          items:
+            - key: host.key
               path: hostkey.pem
               mode: 256
       {{end}}
@@ -129,11 +135,13 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
-        {{ if .Values.Certificate.Secret }}
-        - name: osg-hosted-ce-hostcertkeypair-volume
+        {{ if .Values.HostCredentials.HostCertSecret }}
+        - name: osg-hosted-ce-hostcert-volume
           mountPath: /etc/grid-security/hostcert.pem
           subPath: hostcert.pem
-        - name: osg-hosted-ce-hostcertkeypair-volume
+        {{ end }}
+        {{ if .Values.HostCredentials.HostKeySecret }}
+        - name: osg-hosted-ce-hostkey-volume
           mountPath: /etc/grid-security/hostkey.pem
           subPath: hostkey.pem
         {{ end }}
