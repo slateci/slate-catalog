@@ -1,0 +1,137 @@
+{{ if .Values.SystemConfig.Cvmfs }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "csi-cvmfs-pvc-config-osg-%s" .Values.Instance | trimSuffix "-" }}
+  labels:
+    app: {{ template "condor-submit.name" . }}
+    chart: {{ template "condor-submit.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-config-osg
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "csi-cvmfs-pvc-connect-%s" .Values.Instance | trimSuffix "-" }}
+  labels:
+    app: {{ template "condor-submit.name" . }}
+    chart: {{ template "condor-submit.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-connect
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "csi-cvmfs-pvc-oasis-%s" .Values.Instance | trimSuffix "-" }}
+  labels:
+    app: {{ template "condor-submit.name" . }}
+    chart: {{ template "condor-submit.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-oasis
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "csi-cvmfs-pvc-singularity-%s" .Values.Instance | trimSuffix "-" }}
+  labels:
+    app: {{ template "condor-submit.name" . }}
+    chart: {{ template "condor-submit.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-singularity
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "csi-cvmfs-pvc-spt-%s" .Values.Instance | trimSuffix "-" }}
+  labels:
+    app: {{ template "condor-submit.name" . }}
+    chart: {{ template "condor-submit.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: csi-cvmfs-spt
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
+ labels:
+   app: {{ template "condor-submit.name" . }}
+   chart: {{ template "condor-submit.chart" . }}
+   release: {{ .Release.Name }}
+   instance: {{ .Values.Instance | quote }}
+spec:
+ accessModes:
+ - ReadOnlyMany
+ resources:
+   requests:
+     storage: 1Gi
+ storageClassName: csi-cvmfs-atlas
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
+ labels:
+   app: {{ template "condor-submit.name" . }}
+   chart: {{ template "condor-submit.chart" . }}
+   release: {{ .Release.Name }}
+   instance: {{ .Values.Instance | quote }}
+spec:
+ accessModes:
+ - ReadOnlyMany
+ resources:
+   requests:
+     storage: 1Gi
+ storageClassName: csi-cvmfs-atlas-condb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
+ labels:
+   app: {{ template "condor-submit.name" . }}
+   chart: {{ template "condor-submit.chart" . }}
+   release: {{ .Release.Name }}
+   instance: {{ .Values.Instance | quote }}
+spec:
+ accessModes:
+ - ReadOnlyMany
+ resources:
+   requests:
+     storage: 1Gi
+ storageClassName: csi-cvmfs-atlas-nightlies
+{{ end }}
