@@ -201,16 +201,37 @@ You can obtain one with your institutional credential at [cilogon.org](https://c
 ### Certificate 
 Each time the CE is deployed, it requests a new certificate from Let's Encrypt, which has rate limits to prevent denial-of-service attacks. This means that if you are redeploying a CE frequently for troubleshooting purposes, you may experience the rate limit.
 
-It is possible to save the certificate (hostkey.pem and hostcert.pem) and store these as a SLATE secret for re-use. This circumvents the rate limit. 
+To avoid these rate limits, it's possible to bootstrap the certificate request process with your own private key and retrieve the Let's Encrypt certificate from the SLATE instance logs:
 
-Set `Seccret: null` to disable this feature (default).
+1.  Generate your host  key:
 
-	Certificate:
-	  Secret: null
-	  
-The SLATE secret must consist of two key value pairs where the keys are called `hostkey.pem` and `hostcert.pem`, for example:
+        openssl genrsa -out <PATH TO KEYFILE> 2048
 
-`slate secret create hostedce-certificate --cluster <YOUR CLUSTER> --group <YOUR GROUP> --from-file=hostkey.pem --from-file=hostcert.pem`
+1.  Store the generated host key in a SLATE secret:
+
+        slate secret create <YOUR HOST KEY SECRET NAME> --cluster <YOUR CLUSTER> --group <YOUR GROUP> --from-file host.key=<PATH TO KEYFILE>
+
+1.  Update your values file to use the host key secret that you've created:
+
+        HostCredentials:
+          HostKeySecret: <YOUR HOST KEY SECRET NAME>
+          HostCertSecret: null
+
+1.  Upon successful startup of the Hosted CE app, the Let's Encrypt host certificate can be found in the instance logs:
+
+        slate instance logs <YOUR INSTANCE NAME> --container osg-hosted-ce --max-lines 0
+
+1.  Save the encoded certificate to a file (i.e., everything between and including the `BEGIN CERTIFICATE` and `END CERTIFICATE` lines)
+
+1.  Store the host certificate in a SLATE secret:
+
+        slate secret create <YOUR HOST CERT SECRET NAME> --cluster <YOUR CLUSTER> --group <YOUR GROUP> --from-file host.cert=<PATH TO CERT FILE>
+
+1.  Update your values file to use the host key secret that you've created:
+
+        HostCredentials:
+          HostKeySecret: <YOUR HOST KEY SECRET NAME>
+          HostCertSecret: <YOUR HOST CERT SECRET NAME>
 
 ### Developer 
 Simply disable this. It is in place for the purpose of OSG Internal Testbed hosts, and is not intended for use with production CEs.
@@ -288,8 +309,9 @@ VomsmapOverride: |+
 GridmapOverride: |+
   "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osguser
 
-Certificate:
-  Secret: null
+HostCredentials:
+  HostKeySecret: null
+  HostCertSecret: null
   
 Developer:
   Enabled: false
