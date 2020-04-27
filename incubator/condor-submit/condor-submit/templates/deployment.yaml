@@ -1,3 +1,11 @@
+{{ if and .Values.SystemConfig.HostPath .Values.SystemConfig.PVCName }}
+  {{ required "SystemConfig.HostPath and SystemConfig.PVCName should not both be set" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if or .Values.SystemConfig.HostPath .Values.SystemConfig.PVCName }}
+  {{ if not .Values.SystemConfig.MountLocation }}
+    {{ required "SystemConfig.MountLocation must be set if SystemConfig.HostPath or SystemConfig.PVCName is set" .Values.Error_DoNotSet }}
+  {{ end }}
+{{ end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -48,9 +56,22 @@ spec:
         configMap:
           name: {{ template "condor-submit.name" . }}-provisioner-configuration
       {{ end }}
+      {{ if .Values.SystemConfig.HostPath }}
+      - name: dfs-volume
+        hostPath:
+        # directory location on host
+          path: {{ .Values.SystemConfig.HostPath }}
+      {{ end }}
+      {{ if .Values.SystemConfig.PVCName }}
+      - name: pvc-volume
+        persistentVolumeClaim:
+        # use the requested PVC:
+          claimName: {{ .Values.SystemConfig.PVCName }}
+      {{ end }}
       containers:
       - name: condor-submit
         image: slateci/condor-submit:latest
+        imagePullPolicy: IfNotPresent
         volumeMounts:
         {{ if eq .Values.UserConfig.Mode "sssd" }} 
         - name: {{ template "condor-submit.name" . }}-auth-configuration
@@ -65,8 +86,16 @@ spec:
           subPath: condor_config.local
         {{ if eq .Values.UserConfig.Mode "connectapi" }}
         - name: {{ template "condor-submit.name" . }}-provisioner-configuration
-          mountPath: /usr/local/etc/ciconnect/config
-          subPath: config
+          mountPath: /usr/local/etc/ciconnect/_config
+          subPath: _config
+        {{ end }}
+        {{ if and .Values.SystemConfig.MountLocation .Values.SystemConfig.HostPath }}
+        - name: dfs-volume
+          mountPath: {{ .Values.SystemConfig.MountLocation }}
+        {{ end }}
+        {{ if and .Values.SystemConfig.MountLocation .Values.SystemConfig.PVCName }}
+        - name: pvc-volume
+          mountPath: {{ .Values.SystemConfig.MountLocation }}
         {{ end }}
         env:
         - name: _CONDOR_COLLECTOR_HOST
@@ -79,13 +108,17 @@ spec:
             secretKeyRef:
               name: {{ .Values.UserConfig.ConnectToken }}
               key: API_TOKEN
-        - name: OUTER_GROUP
-          value: {{ .Values.UserConfig.ConnectOuterGroup }}
-        - name: INNER_GROUP
-          value: {{ .Values.UserConfig.ConnectInnerGroup }}
+        - name: GROUP_GROUP
+          value: {{ .Values.UserConfig.ConnectGroupSourceGroup }}
+        - name: USER_GROUP
+          value: {{ .Values.UserConfig.ConnectUserSourceGroup }}
         {{ end }}
         resources:
           requests:
             # we'll make it a modest request for now
             memory: {{ .Values.SystemConfig.Memory }}
             cpu:    {{ .Values.SystemConfig.Cpu }}
+      {{ if .Values.SystemConfig.NodeSelector }}
+      nodeSelector:
+        {{ .Values.SystemConfig.NodeSelector }}
+      {{ end }}
