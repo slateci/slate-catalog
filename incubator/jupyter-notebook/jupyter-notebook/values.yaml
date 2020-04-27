@@ -1,31 +1,38 @@
 # The label to apply to this deployment, 
 # used to manage multiple instances of the same application
-Instance: demo
-
+Instance: ''
 
 # Ingress control settings  
 Ingress:
   # The subdomain to associate with this service.
   # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
-  Subdomain: jupyterdemo
+  Subdomain: 'jupyter'
   # The class of the ingress controller to use. 
   # For SLATE this should be 'slate'. 
   Class: slate
-### SLATE-START ###
-SLATE:
-  Cluster:
-    DNSName: "utah-dev.slateci.net"
-### SLATE-END ###
 Jupyter:
-  NB_USER: "jovyan"
-  Password: 'sha1:94491e2a6996:90246f039b03803a4f0b5375cf4276925cb6b151'
-  Token: '90246f039b03803a4f0b5375cf4276925cb6b151'
+#Change this if you want to have a custom username and home dirctory
+  NB_USER: 'jovyan'
+#The below hashed password can only be generated using a Jupyter function called "notebook.auth.security.passwd()" So you don't have access to another Jupyter setup to use that function, you should probably leave the Sample default value. (It doesn't correspond to a real password)  
+  Password: 'sha1:94491e2a6996:9024SampleHashedPassword5cf4276925cb6b151'
+#Generate a random token for authentication and add it below
+  Token: '90246f039b038==RandomlyGenerated==cf4276925cb6b151'
 #condor-submit config
 CondorConfig:
   Enabled: false
+#Add the IP address for the condor collector
   CollectorHost: 127.0.0.1
+#Add the port number for the condor collector
   CollectorPort: 30287
+#Add the SLATE secret that your created with the condor submit token
   AuthTokenSecret: submit-auth-token
 SSH:  
   Enabled: false
-  SSH_Public_Key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCa2AciBQTfWa8DkQT2Oceg7taS+Uvgx8Bis2i0pRTQgD5h1l+UvL/osx6EW6zhilekO8X5sLIEufee1cMzmyDFAr1TVkDJS7AlFnwdXkre/32q548ffBeFFefo7ZLQ6avH6Edp6+J81Itt+x8Cy/JrjMhzSjAs5Gt1RiKdMSmhclGz3s+h/KL8f12tjA3Uk0PSPqgRTN2L435/X1Hche7CiT6ZJqpCoxa8J4mbLzYaLeGWnNremJ90Q/udO+IUYvviDsgDeB1msIDWfIylDxMteMZ50WTkPVur+Yl2TG6mxNNdNshzHSxtOM3IB2+Q9ChYRFB59J38Wx1+9/1Mnf53 slate"
+#Do NOT use your SSH private key here. Your public ssh key starts with 'ssh-rsa'
+  SSH_Public_Key: 'ssh-rsa AAAAB3N=====SamplePublicSSHKey======vH6Edp6+J81Itt+x8Cy/JrjMhzSjAs5Gt1RiKdMSmhclGz3s+h/KL8f12tjA3Uk0PSPqgRTN2L435/X1Hche7CiT6ZJqpCoxa8J4mbLzYaLeGWnNremJ90Q/udO+IUYvviDsgDeB1msIDWfIylDxMteMZ50WTkPVur+Yl2TG6mxNNdNshzHSxtOM3IB2+Q9ChYRFB59J38Wx1+9/1Mnf53 slate'
+
+### SLATE-START ###
+SLATE:
+  Cluster:
+    DNSName: 'some-cluster.slateci.net'
+### SLATE-END ###
