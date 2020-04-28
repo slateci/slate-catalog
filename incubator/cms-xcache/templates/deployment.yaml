@@ -58,7 +58,7 @@ spec:
       
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "opensciencegrid/cms-xcache"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: XC_SPACE_HIGH_WM
