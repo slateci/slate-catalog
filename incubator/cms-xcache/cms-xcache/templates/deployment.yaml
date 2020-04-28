@@ -47,15 +47,59 @@ spec:
             mode: 256 
           - key: usercert
             path: usercert.pem
-      {{- range $index, $dir := .Values.xcacheConfig.CacheDirectories }}
-      - name: xcache-data-{{ $index }}
+      - name: data2
         hostPath:
-          path: {{ $dir }}
-      {{- end }}
-      - name: xcache-meta
+          path: /data2
+          type: Directory
+      - name: data3
         hostPath:
-          path: {{ .Values.xcacheConfig.MetaDirectory }}
-      
+          path: /data3
+          type: Directory
+      - name: data4
+        hostPath:
+          path: /data4
+          type: Directory
+      - name: data5
+        hostPath:
+          path: /data5
+          type: Directory
+      - name: data6
+        hostPath:
+          path: /data6
+          type: Directory
+      - name: data7
+        hostPath:
+          path: /data7
+          type: Directory
+      - name: data8
+        hostPath:
+          path: /data8
+          type: Directory
+      - name: data9
+        hostPath:
+          path: /data9
+          type: Directory
+      - name: data10
+        hostPath:
+          path: /data10
+          type: Directory
+      - name: data11
+        hostPath:
+          path: /data11
+          type: Directory
+      - name: data12
+        hostPath:
+          path: /data12
+          type: Directory
+      - name: localroot
+        hostPath:
+          path: /xcache-root
+          type: Directory
+      - name: localmeta
+        hostPath:
+          path: /xcache-meta
+          type: Directory
+    
       containers:
         - name: cms-xcache
           image: "opensciencegrid/cms-xcache:fresh"
@@ -102,10 +146,30 @@ spec:
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
             readOnly: true
-          {{- range $nindex, $ndir := .Values.XCacheConfig.CacheDirectories }}
-          - name: xcache-data-{{ $nindex }}
-            mountPath: "/xcache-data_{{ $nindex }}"
-          {{- end }}
+          - mountPath: /data2
+            name: data2
+          - mountPath: /xcache-root
+            name: localroot
+          - mountPath: /xcache-meta
+            name: localmeta
+          - mountPath: /data3
+            name: data3
+          - mountPath: /data4
+            name: data4
+          - mountPath: /data5
+            name: data5
+          - mountPath: /data6
+            name: data6
+          - mountPath: /data7
+            name: data7
+          - mountPath: /data8
+            name: data8
+          - mountPath: /data9
+            name: data9
+          - mountPath: /data10
+            name: data10
+          - mountPath: /data11
+            name: data11
           - name: xcache-meta
             mountPath: "/xcache-meta"
 
