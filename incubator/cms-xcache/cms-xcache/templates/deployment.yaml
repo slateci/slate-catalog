@@ -105,7 +105,7 @@ spec:
     
       containers:
         - name: cms-xcache
-          image: "opensciencegrid/cms-xcache:fresh"
+          image: "opensciencegrid/cms-xcache:stable"
           imagePullPolicy: Always
           env:
           - name: XC_ROOTDIR
@@ -185,7 +185,7 @@ spec:
             mountPath: "/xcache-meta"
 
         - name: x509
-          image: "opensciencegrid/cms-xcache:fresh"
+          image: "opensciencegrid/cms-xcache:stable"
           command: ["/run_x509_updater.sh"]
           resources:
             requests:
@@ -199,7 +199,7 @@ spec:
             readOnly: true
 
         - name: reporter
-          image: "opensciencegrid/cms-xcache:fresh"
+          image: "opensciencegrid/cms-xcache:stable"
           command: ["/run_cache_reporter.sh"]
           env:
           - name: XC_SITE
