@@ -8,6 +8,6 @@ metadata:
     chart: {{ template "mariadb.chart" . }}
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 data:
 {{ (.Files.Glob "files/docker-entrypoint-initdb.d/*").AsConfig | indent 2 }}

@@ -8,14 +8,14 @@ metadata:
     component: "master"
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   selector:
     matchLabels:
       release: "{{ .Release.Name }}"
       component: "master"
       app: {{ template "mariadb.name" . }}
-      instance: {{ .Values.Instance }}
+      instance: {{ .Values.Instance | quote }}
   serviceName: {{ template "master.fullname" . }}
   replicas: 1
   updateStrategy:
@@ -27,7 +27,7 @@ spec:
         component: "master"
         release: "{{ .Release.Name }}"
         chart: {{ template "mariadb.chart" . }}
-        instance: {{ .Values.Instance }}
+        instance: {{ .Values.Instance | quote }}
     spec:
       securityContext:
         runAsUser: 1001
@@ -192,7 +192,7 @@ spec:
           component: "master"
           release: {{ .Release.Name | quote }}
           heritage: {{ .Release.Service | quote }}
-          instance: {{ .Values.Instance }}
+          instance: {{ .Values.Instance | quote }}
       spec:
         accessModes:
         {{- range .Values.master.persistence.accessModes }}

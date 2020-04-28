@@ -9,14 +9,14 @@ metadata:
     component: "slave"
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
-    instance: {{ .Values.Instance}} 
+    instance: {{ .Values.Instance | quote }} 
 spec:
   selector:
     matchLabels:
       release: "{{ .Release.Name }}"
       component: "slave"
       app: {{ template "mariadb.name" . }}
-      instance: {{ .Values.Instance}} 
+      instance: {{ .Values.Instance | quote }} 
   serviceName: {{ template "slave.fullname" . }}
   replicas: {{ .Values.slave.replicas }}
   updateStrategy:
@@ -28,7 +28,7 @@ spec:
         component: "slave"
         release: {{ .Release.Name }}
         chart: {{ template "mariadb.chart" . }}
-        instance: {{ .Values.Instance }}
+        instance: {{ .Values.Instance | quote }}
     spec:
       securityContext:
         runAsUser: 1001
@@ -45,7 +45,7 @@ spec:
                 matchLabels:
                   app: {{ template "mariadb.name" . }}
                   release: {{ .Release.Name }}
-                  instance: {{ .Values.Instance }}
+                  instance: {{ .Values.Instance | quote }}
       {{- else if eq .Values.slave.antiAffinity "soft" }}
       affinity:
       {{- with .Values.slave.affinity  }}
@@ -60,7 +60,7 @@ spec:
                 matchLabels:
                   app: {{ template "mariadb.name" . }}
                   release: {{ .Release.Name }}
-                  instance: {{ .Values.Instance }}
+                  instance: {{ .Values.Instance | quote }}
       {{- else}}
       {{- with .Values.slave.affinity }}
       affinity:
@@ -190,7 +190,7 @@ spec:
           component: "slave"
           release: {{ .Release.Name | quote }}
           heritage: {{ .Release.Service | quote }}
-          instance: {{ .Values.Instance }}
+          instance: {{ .Values.Instance | quote }}
       spec:
         accessModes:
         {{- range .Values.slave.persistence.accessModes }}
