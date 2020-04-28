@@ -34,6 +34,9 @@ spec:
         effect: PreferNoSchedule
 
       volumes:
+      - name: cache-disks
+        configMap:
+          name: {{ template "cms-xcache.fullname" . }}
       - name: x509-data
         emptyDir:
           medium: Memory
@@ -146,6 +149,8 @@ spec:
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
+          - name: cache-disks
+            mountPath: /etc/xrootd/cache-disks.config
           - name: x509-data
             mountPath: "/etc/proxy/"
             readOnly: true
