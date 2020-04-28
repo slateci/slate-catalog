@@ -41,3 +41,5 @@ XCacheConfig:
   # The name of the secret that was created for your XCache certificate
   # This must be created BEFORE deploying XCache
   CertSecret: xcache-cert-secret
+  # Disable OSG monitoring and reporting
+  DisableOSGMonitoring: false
