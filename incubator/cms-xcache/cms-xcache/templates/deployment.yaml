@@ -105,6 +105,10 @@ spec:
           image: "opensciencegrid/cms-xcache:fresh"
           imagePullPolicy: Always
           env:
+          - name: XC_ROOTDIR
+            value: "{{ .Values.XCacheConfig.RootDir }}"
+          - name: XC_RESOURCENAME
+            value: "{{ .Values.XCacheConfig.ResourceName }}"
           - name: XC_SPACE_HIGH_WM
             value: "{{ .Values.XCacheConfig.HighWaterMark }}"
           - name: XC_SPACE_LOW_WM
