@@ -97,7 +97,7 @@ spec:
       containers:
       - name: condor-submit
         image: slateci/condor-submit:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         volumeMounts:
         {{ if eq .Values.UserConfig.Mode "sssd" }} 
         - name: {{ template "condor-submit.name" . }}-auth-configuration
