@@ -174,7 +174,7 @@ spec:
             mountPath: "/xcache-meta"
 
         - name: x509
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "opensciencegrid/cms-xcache:fresh"
           command: ["/run_x509_updater.sh"]
           resources:
             requests:
@@ -188,7 +188,7 @@ spec:
             readOnly: true
 
         - name: reporter
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "opensciencegrid/cms-xcache:fresh"
           command: ["/run_cache_reporter.sh"]
           env:
           - name: XC_SITE
