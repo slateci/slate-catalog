@@ -127,6 +127,8 @@ spec:
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
           - name: WQ_THREADS
             value: "{{ .Values.XCacheConfig.WQThreads }}"
+          - name: DISABLE_OSG_MONITORING
+            value: "{{ .Values.XCacheConfig.DisableOSGMonitoring }}"
           resources:
             requests:
               ephemeral-storage: "5Gi"
