@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "cms-xcache.fullname" . }}
+  labels:
+    app: {{ template "cms-xcache.name" . }}
+    chart: {{ template "cms-xcache.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data: 
+  cache-disks.config: |+
+{{ .Values.CacheDisks | indent 4 }}
