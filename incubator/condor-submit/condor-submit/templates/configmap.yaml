@@ -22,7 +22,7 @@ metadata:
     app: condor-submit
     instance: {{ .Values.Instance | quote }}
 data:
-  config: |+
+  _config: |+
     #!/bin/sh
     # This file will be sourced before the CI Connect provisioner starts up. You
     # can add anything you like here.
@@ -30,8 +30,8 @@ data:
     # Apparently '[ -z "$PATH" ]' doesn't work because of some subtlety where Bash 
     # kind-of-sort-of says $PATH is set, even though it doesn't appear in `env`
     export PATH="$PATH:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin"
-    export INNER_GROUP="{{ .Values.UserConfig.ConnectInnerGroup }}"
-    export OUTER_GROUP="{{ .Values.UserConfig.ConnectOuterGroup }}"
+    export USER_GROUP="{{ .Values.UserConfig.ConnectUserSourceGroup }}"
+    export GROUP_GROUP="{{ .Values.UserConfig.ConnectGroupSourceGroup }}"
 ---
 {{ end }}
 {{ if eq .Values.UserConfig.Mode "sssd" }}

@@ -48,9 +48,48 @@ spec:
         configMap:
           name: {{ template "condor-submit.name" . }}-provisioner-configuration
       {{ end }}
+      {{ if .Values.SystemConfig.HostPath }}
+      - name: dfs-volume
+        hostPath:
+        # directory location on host
+          path: {{ .Values.SystemConfig.HostPath }}
+      {{ end }}
+      {{ if .Values.SystemConfig.PVCName }}
+      - name: pvc-volume
+        persistentVolumeClaim:
+        # use the requested PVC:
+          claimName: {{ .Values.SystemConfig.PVCName }}
+      {{ end }}
+      {{ if .Values.SystemConfig.Cvmfs }}
+      - name: config-osg
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-config-osg-%s" .Values.Instance | trimSuffix "-" }}
+      - name: oasis
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-oasis-%s" .Values.Instance | trimSuffix "-" }}
+      - name: singularity
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-singularity-%s" .Values.Instance | trimSuffix "-" }}
+      - name: spt
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-spt-%s" .Values.Instance | trimSuffix "-" }}
+      - name: connect
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-connect-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-condb
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-nightlies
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
+      {{ end }}
       containers:
       - name: condor-submit
         image: slateci/condor-submit:latest
+        imagePullPolicy: Always
         volumeMounts:
         {{ if eq .Values.UserConfig.Mode "sssd" }} 
         - name: {{ template "condor-submit.name" . }}-auth-configuration
@@ -65,8 +104,34 @@ spec:
           subPath: condor_config.local
         {{ if eq .Values.UserConfig.Mode "connectapi" }}
         - name: {{ template "condor-submit.name" . }}-provisioner-configuration
-          mountPath: /usr/local/etc/ciconnect/config
-          subPath: config
+          mountPath: /usr/local/etc/ciconnect/_config
+          subPath: _config
+        {{ end }}
+        {{ if and .Values.SystemConfig.MountLocation .Values.SystemConfig.HostPath }}
+        - name: dfs-volume
+          mountPath: {{ .Values.SystemConfig.MountLocation }}
+        {{ end }}
+        {{ if and .Values.SystemConfig.MountLocation .Values.SystemConfig.PVCName }}
+        - name: pvc-volume
+          mountPath: {{ .Values.SystemConfig.MountLocation }}
+        {{ end }}
+        {{ if .Values.SystemConfig.Cvmfs }}
+        - name: config-osg
+          mountPath: /cvmfs/config-osg.opensciencegrid.org
+        - name: oasis
+          mountPath: /cvmfs/oasis.opensciencegrid.org
+        - name: spt
+          mountPath: /cvmfs/spt.opensciencegrid.org
+        - name: connect
+          mountPath: /cvmfs/connect.opensciencegrid.org
+        - name: singularity
+          mountPath: /cvmfs/singularity.opensciencegrid.org
+#        - name: atlas
+#          mountPath: /cvmfs/atlas.cern.ch
+#        - name: atlas-nightlies
+#          mountPath: /cvmfs/atlas-nightlies.cern.ch
+#        - name: atlas-condb
+#          mountPath: /cvmfs/atlas-condb.cern.ch
         {{ end }}
         env:
         - name: _CONDOR_COLLECTOR_HOST
@@ -79,13 +144,17 @@ spec:
             secretKeyRef:
               name: {{ .Values.UserConfig.ConnectToken }}
               key: API_TOKEN
-        - name: OUTER_GROUP
-          value: {{ .Values.UserConfig.ConnectOuterGroup }}
-        - name: INNER_GROUP
-          value: {{ .Values.UserConfig.ConnectInnerGroup }}
+        - name: GROUP_GROUP
+          value: {{ .Values.UserConfig.ConnectGroupSourceGroup }}
+        - name: USER_GROUP
+          value: {{ .Values.UserConfig.ConnectUserSourceGroup }}
         {{ end }}
         resources:
           requests:
             # we'll make it a modest request for now
             memory: {{ .Values.SystemConfig.Memory }}
             cpu:    {{ .Values.SystemConfig.Cpu }}
+      {{ if .Values.SystemConfig.NodeSelector }}
+      nodeSelector:
+        {{ .Values.SystemConfig.NodeSelector }}
+      {{ end }}

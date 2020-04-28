@@ -1,1 +1,1 @@
-*/5 * * * * root ( cd /usr/local/etc/ciconnect && source /usr/local/etc/ciconnect/config && /usr/local/sbin/sync_users.sh -u $INNER_GROUP -g $OUTER_GROUP -e https://api.ci-connect.net:18080  ) > /var/log/provisioner.log 2>&1
+*/5 * * * * root ( cd /usr/local/etc/ciconnect && source /usr/local/etc/ciconnect/config && /usr/local/sbin/sync_users.sh -u $USER_GROUP -g $GROUP_GROUP -e https://api.ci-connect.net:18080  ) > /var/log/provisioner.log 2>&1

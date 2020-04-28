@@ -1,0 +1,28 @@
+{{ if not .Values.CondorConfig.CollectorHost }}
+  {{ required "CondorConfig.CollectorHost must be set" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not .Values.CondorConfig.CollectorPort }}
+  {{ required "CondorConfig.CollectorPort must be set" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not .Values.CondorConfig.AuthTokenSecret }}
+  {{ required "CondorConfig.AuthTokenSecret must be set" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if and .Values.SystemConfig.HostPath .Values.SystemConfig.PVCName }}
+  {{ required "SystemConfig.HostPath and SystemConfig.PVCName should not both be set" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if or .Values.SystemConfig.HostPath .Values.SystemConfig.PVCName }}
+  {{ if not .Values.SystemConfig.MountLocation }}
+    {{ required "SystemConfig.MountLocation must be set if SystemConfig.HostPath or SystemConfig.PVCName is set" .Values.Error_DoNotSet }}
+  {{ end }}
+{{ end }}
+{{ if eq .Values.UserConfig.Mode "connectapi" }}
+  {{ if not .Values.UserConfig.ConnectToken }}
+    {{ required "UserConfig.ConnectToken must be set when using UserConfig.Mode 'connectapi'" .Values.Error_DoNotSet }}
+  {{ end }}
+  {{ if not .Values.UserConfig.ConnectUserSourceGroup }}
+    {{ required "UserConfig.ConnectUserSourceGroup must be set when using UserConfig.Mode 'connectapi'" .Values.Error_DoNotSet }}
+  {{ end }}
+  {{ if not .Values.UserConfig.ConnectGroupSourceGroup }}
+    {{ required "UserConfig.ConnectGroupSourceGroup must be set when using UserConfig.Mode 'connectapi'" .Values.Error_DoNotSet }}
+  {{ end }}
+{{ end }}

@@ -3,10 +3,11 @@ Instance: ""
 
 CondorConfig:
   # The address of your HTCondor Central Manager
-  CollectorHost: flock.opensciencegrid.org
+  CollectorHost: 
   # If unspecified, defaults to 9618
   CollectorPort: 9618
-  # Token. Must be a SLATE secret where filename is the name of your collector.
+  # Token. Must be a SLATE secret which contains one key, whose value is your 
+  # HTCondor authentication token. 
   AuthTokenSecret: auth-token-secret
   # Extra configuration can be added via the ConfigFile parameter
   # ConfigFile: |+
@@ -15,23 +16,43 @@ CondorConfig:
 
 SystemConfig:
   # Enable CVMFS
-  Cvmfs: enabled
+  Cvmfs: false
   # these are passed through unchanged to Kubernetes, so they need to be in the
   # correct format
   Cpu: 4000m
   Memory: 8Gi
+  # If set, the name of a PersistentVolumeClaim which should be mounted as 
+  # backing storage. Mutually exclusive with HostPath. 
+  PVCName: 
+  # If set, a path on the host system which should be mounted as backing 
+  # storage. In multi-node clusters it may advisable to also use a node selector
+  # (see below) to ensure that this application attempts to run only on nodes 
+  # which have the corresponding filesystem present. Mutually exclusive with
+  # PVCName. 
+  HostPath: 
+  # The path at which the volume specified with either PVCName or HostPath
+  # should be mounted. 
+  MountLocation: /data
+  # A selector expression which should be used to select the nodes on which this 
+  # application can run. This may be used, for example, in conjunction with a 
+  # node label which indicates nodes which have a particular filesystem 
+  # available. 
+  # NodeSelector: "hasLustre: \"true\""
 
 UserConfig: 
   # Mode defines where user accounts will come from. Valid options are: sssd and connectapi
   Mode: connectapi
+  # If Mode is "connectapi", this is the name of the secret from which the 
+  # CI-Connect access token should be obtained. the secret should contain one 
+  # key, named API_TOKEN. 
   ConnectToken: connect-token-secret
-  ConnectInnerGroup: "root.connect-dev"
-  ConnectOuterGroup: "root.connect-dev"
+  ConnectUserSourceGroup: 
+  ConnectGroupSourceGroup: 
 
   # SSSD Configuration: This is only used if UserConfig.Mode is set to 'sssd'
   # You can safely ignore this if you are using the connectapi for UserConfig
 
-  # This entire file which maps directly to /etc/sssd/sssd.conf
+  # This represents the entire file which will be written to /etc/sssd/sssd.conf
   # Some reasonable defaults have been provided as an example
   # The following values are needed to support unpriveleged credential caching
   #     krb5_ccname_template = FILE:%d/krb5cc_%U_XXXXXX

@@ -6,10 +6,15 @@ else
   echo '$PASSWDFILE not defined! Not creating users'
 fi
 
-if [ -n "$API_TOKEN" ] && [ -n "$INNER_GROUP" ] && [ -n "$OUTER_GROUP" ]; then
+if [ -n "$API_TOKEN" ] && [ -n "$USER_GROUP" ] && [ -n "$GROUP_GROUP" ]; then
   echo "Using Connect API for syncing users"
-  bash /usr/local/sbin/sync_users.sh -u $INNER_GROUP -g $OUTER_GROUP -e https://api.ci-connect.net:18080
+  cd /usr/local/etc/ciconnect
+  bash /usr/local/sbin/sync_users.sh -u $USER_GROUP -g $GROUP_GROUP -e https://api.ci-connect.net:18080
   for i in $(awk '{ FS=":"; if ($3>10000) print $1}' /etc/passwd); do sed -i "s/$i:\!\!/$i:x/" /etc/shadow; done;
+  cp _config config
+  chmod 600 config
+  echo "export API_TOKEN=$API_TOKEN" >> config
+  cd -
 fi
 
 if [ -z "${KRBREALM+x}" ]; then
