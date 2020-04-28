@@ -1,11 +1,3 @@
-{{ if and .Values.SystemConfig.HostPath .Values.SystemConfig.PVCName }}
-  {{ required "SystemConfig.HostPath and SystemConfig.PVCName should not both be set" .Values.Error_DoNotSet }}
-{{ end }}
-{{ if or .Values.SystemConfig.HostPath .Values.SystemConfig.PVCName }}
-  {{ if not .Values.SystemConfig.MountLocation }}
-    {{ required "SystemConfig.MountLocation must be set if SystemConfig.HostPath or SystemConfig.PVCName is set" .Values.Error_DoNotSet }}
-  {{ end }}
-{{ end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
