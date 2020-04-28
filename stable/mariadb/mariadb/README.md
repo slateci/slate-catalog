@@ -18,11 +18,12 @@ You will need to modify the `rootUser.CredentialSecret` parameter according to t
 echo "mariadb-root-password=$(openssl rand -base64 32 | tr -d "=+/" | head -c 16; echo)" >> mariadb-secret
 echo "mariadb-password=$(openssl rand -base64 32 | tr -d "=+/" | head -c 16; echo)" >> mariadb-secret
 echo "mariadb-replication-password=$(openssl rand -base64 32 | tr -d "=+/" | head -c 16; echo)" >> mariadb-secret
+slate secret create --group <group> --cluster <cluster> --from-env-file=mariadb-secret mariadb-secret 
 ```
 
 Finally, you can install the application like so:
 ```bash
-$ slate install mariadb --conf mariadb.yaml
+slate install mariadb --conf mariadb.yaml --cluster <cluster> --group <group>
 ```
 
 The command deploys MariaDB on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
