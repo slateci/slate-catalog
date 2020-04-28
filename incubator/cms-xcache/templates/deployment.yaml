@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "xcache.fullname" . }}
+  name: {{ template "cms-xcache.fullname" . }}
   labels:
-    app: {{ template "xcache.name" . }}
-    chart: {{ template "xcache.chart" . }}
+    app: {{ template "cms-xcache.name" . }}
+    chart: {{ template "cms-xcache.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "xcache.name" . }}
-      chart: {{ template "xcache.chart" . }}
+      app: {{ template "cms-xcache.name" . }}
+      chart: {{ template "cms-xcache.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance | quote }}
     
   template:
     metadata:
       labels:
-        app: {{ template "xcache.name" . }}
-        chart: {{ template "xcache.chart" . }}
+        app: {{ template "cms-xcache.name" . }}
+        chart: {{ template "cms-xcache.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
@@ -47,14 +47,14 @@ spec:
             mode: 256 
           - key: usercert
             path: usercert.pem
-      {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
+      {{- range $index, $dir := .Values.xcacheConfig.CacheDirectories }}
       - name: xcache-data-{{ $index }}
         hostPath:
           path: {{ $dir }}
       {{- end }}
       - name: xcache-meta
         hostPath:
-          path: {{ .Values.XCacheConfig.MetaDirectory }}
+          path: {{ .Values.xcacheConfig.MetaDirectory }}
       
       containers:
         - name: {{ .Chart.Name }}
