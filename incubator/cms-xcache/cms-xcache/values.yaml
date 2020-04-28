@@ -43,3 +43,10 @@ XCacheConfig:
   CertSecret: xcache-cert-secret
   # Disable OSG monitoring and reporting
   DisableOSGMonitoring: false
+  
+CacheDisks: |+
+  oss.space data /data3/xcache
+  oss.space data /data4/xcache
+  oss.space data /data5/xcache
+  oss.space data /data6/xcache
+  
