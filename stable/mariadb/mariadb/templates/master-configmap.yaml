@@ -9,6 +9,7 @@ metadata:
     chart: {{ template "mariadb.chart" . }}
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
+    instance: {{ .Values.Instance }} 
 data:
   my.cnf: |-
 {{ .Values.master.config | indent 4 }}

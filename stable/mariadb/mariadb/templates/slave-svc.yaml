@@ -4,11 +4,12 @@ kind: Service
 metadata:
   name: {{ template "slave.fullname" . }}
   labels:
-    app: "{{ template "mariadb.name" . }}"
+    app: {{ template "mariadb.name" . }}
     chart: {{ template "mariadb.chart" . }}
     component: "slave"
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
+    instance: {{ .Values.Instance }}
 {{- if .Values.metrics.enabled }}
   annotations:
 {{ toYaml .Values.metrics.annotations | indent 4 }}
@@ -32,7 +33,8 @@ spec:
     targetPort: metrics
 {{- end }}
   selector:
-    app: "{{ template "mariadb.name" . }}"
+    app: {{ template "mariadb.name" . }}
     component: "slave"
-    release: "{{ .Release.Name }}"
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
 {{- end }}

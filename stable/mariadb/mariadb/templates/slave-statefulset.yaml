@@ -4,28 +4,31 @@ kind: StatefulSet
 metadata:
   name: {{ template "slave.fullname" . }}
   labels:
-    app: "{{ template "mariadb.name" . }}"
+    app: {{ template "mariadb.name" . }}
     chart: {{ template "mariadb.chart" . }}
     component: "slave"
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
+    instance: {{ .Values.Instance}} 
 spec:
   selector:
     matchLabels:
       release: "{{ .Release.Name }}"
       component: "slave"
       app: {{ template "mariadb.name" . }}
-  serviceName: "{{ template "slave.fullname" . }}"
+      instance: {{ .Values.Instance}} 
+  serviceName: {{ template "slave.fullname" . }}
   replicas: {{ .Values.slave.replicas }}
   updateStrategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: "{{ template "mariadb.name" . }}"
+        app: {{ template "mariadb.name" . }}
         component: "slave"
-        release: "{{ .Release.Name }}"
+        release: {{ .Release.Name }}
         chart: {{ template "mariadb.chart" . }}
+        instance: {{ .Values.Instance }}
     spec:
       securityContext:
         runAsUser: 1001
@@ -40,8 +43,9 @@ spec:
             - topologyKey: "kubernetes.io/hostname"
               labelSelector:
                 matchLabels:
-                  app: "{{ template "mariadb.name" . }}"
-                  release: "{{ .Release.Name }}"
+                  app: {{ template "mariadb.name" . }}
+                  release: {{ .Release.Name }}
+                  instance: {{ .Values.Instance }}
       {{- else if eq .Values.slave.antiAffinity "soft" }}
       affinity:
       {{- with .Values.slave.affinity  }}
@@ -54,8 +58,9 @@ spec:
               topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
-                  app: "{{ template "mariadb.name" . }}"
-                  release: "{{ .Release.Name }}"
+                  app: {{ template "mariadb.name" . }}
+                  release: {{ .Release.Name }}
+                  instance: {{ .Values.Instance }}
       {{- else}}
       {{- with .Values.slave.affinity }}
       affinity:
@@ -180,11 +185,12 @@ spec:
     - metadata:
         name: data
         labels:
-          app: "{{ template "mariadb.name" . }}"
+          app: {{ template "mariadb.name" . }}
           chart: {{ template "mariadb.chart" . }}
           component: "slave"
           release: {{ .Release.Name | quote }}
           heritage: {{ .Release.Service | quote }}
+          instance: {{ .Values.Instance }}
       spec:
         accessModes:
         {{- range .Values.slave.persistence.accessModes }}
