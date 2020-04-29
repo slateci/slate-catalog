@@ -6,7 +6,7 @@ metadata:
     app: {{ template "xcache.name" . }}
     chart: {{ template "xcache.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
       app: {{ template "xcache.name" . }}
       chart: {{ template "xcache.chart" . }}
       release: {{ .Release.Name }}
-      instance: {{ .Values.Instance }}
+      instance: {{ .Values.Instance | quote }}
     
   template:
     metadata:
@@ -22,7 +22,7 @@ spec:
         app: {{ template "xcache.name" . }}
         chart: {{ template "xcache.chart" . }}
         release: {{ .Release.Name }}
-        instance: {{ .Values.Instance }}
+        instance: {{ .Values.Instance | quote }}
     spec:
 
       nodeSelector:
@@ -35,7 +35,9 @@ spec:
 
       volumes:
       - name: x509-data
-        emptyDir: {}
+        emptyDir:
+          medium: Memory
+          sizeLimit: "10Mi"
       - name: x509-certs-volume
         secret:
           secretName: xcache-cert-secret
@@ -56,8 +58,8 @@ spec:
       
       containers:
         - name: {{ .Chart.Name }}
-          image: opensciencegrid/atlas-xcache:development
-          imagePullPolicy: "Always"
+          image: slateci/xcache:latest
+          imagePullPolicy: Always
           env:
           - name: XC_SPACE_HIGH_WM
             value: "{{ .Values.XCacheConfig.HighWaterMark }}"
@@ -73,40 +75,58 @@ spec:
             value: "{{ .Values.XCacheConfig.Prefetch }}"
           - name: AGIS_PROTOCOL_ID
             value: "{{ .Values.SiteConfig.AGISprotocolID }}"
+          - name: WQ_BLOCKS_PER_LOOP
+            value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
+          - name: WQ_THREADS
+            value: "{{ .Values.XCacheConfig.WQThreads }}"
+          resources:
+            requests:
+              ephemeral-storage: "5Gi"
+            limits:
+              ephemeral-storage: "10Gi"
           livenessProbe:
             tcpSocket:
               port: {{ .Values.Service.Port }}
             initialDelaySeconds: 180
             periodSeconds: 60
+          lifecycle:
+            preStop:
+              exec:
+                command: ["./updateAGISstatus.sh","{{ .Values.SiteConfig.AGISprotocolID }}","DISABLED"]
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
           - name: x509-data
-            mountPath: "/etc/grid-security/"
-            readOnly: false
+            mountPath: "/etc/proxy/"
+            readOnly: true
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
             readOnly: true
-          {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
-          - name: xcache-data-{{ $index }}
-            mountPath: "/xcache-data_{{ $index }}"
+          {{- range $nindex, $ndir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $nindex }}
+            mountPath: "/xcache-data_{{ $nindex }}"
           {{- end }}
           - name: xcache-meta
             mountPath: "/xcache-meta"
 
         - name: x509
-          image: "slateci/xcache"
+          image: slateci/xcache:latest
+          imagePullPolicy: Always
           command: ["/run_x509_updater.sh"]
+          resources:
+            requests:
+              ephemeral-storage: "1Gi"
           volumeMounts:
           - name: x509-data
-            mountPath: "/etc/grid-security/"
+            mountPath: "/etc/proxy/"
             readOnly: false
           - name: x509-certs-volume
             mountPath: "/etc/grid-certs/"
             readOnly: true
 
         - name: reporter
-          image: "slateci/xcache"
+          image: slateci/xcache:latest
+          imagePullPolicy: Always
           command: ["/run_cache_reporter.sh"]
           env:
           - name: XC_SITE
@@ -117,3 +137,30 @@ spec:
           - name: xcache-meta
             mountPath: "/xcache-meta"
             readOnly: true
+
+        - name: metrics
+          image: quay.io/prometheus/node-exporter
+          imagePullPolicy: Always
+          args: 
+            - --web.listen-address=":{{ .Values.Metrics.Port }}"
+            - --no-collector-arp
+            - --no-collector-bcache
+            - --no-collector-bonding
+            - --no-collector-edac
+            - --no-collector-entropy
+            - --no-collector-infiniband
+            - --no-collector-hwmon
+            - --no-collector-ipvs
+            - --no-collector-mdadm
+            - --no-collector-nfs
+            - --no-collector-nfsd
+            - --no-collector-pressure
+            - --no-collector-sockstat
+            - --no-collector-stat
+            - --no-collector-textfile
+            - --no-collector-time
+            - --no-collector-timex
+            - --no-collector-uname
+            - --no-collector-vmstat
+            - --no-collector-zfs
+            - --web.disable-exporter-metrics
