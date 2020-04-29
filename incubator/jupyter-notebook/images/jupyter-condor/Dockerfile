@@ -10,6 +10,7 @@ RUN echo "deb-src http://research.cs.wisc.edu/htcondor/ubuntu/8.9/bionic bionic 
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y condor
+RUN pip install htcondor
 
 RUN mkdir -p /var/log/supervisor
 ADD container-files /
