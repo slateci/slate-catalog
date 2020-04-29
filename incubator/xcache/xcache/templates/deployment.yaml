@@ -142,7 +142,7 @@ spec:
           image: quay.io/prometheus/node-exporter
           imagePullPolicy: Always
           args: 
-            - --web.listen-address=":{{ .Values.Metrics.Port }}"
+            - --web.listen-address=":{{ .Values.Service.MetricsPort }}"
             - --no-collector-arp
             - --no-collector-bcache
             - --no-collector-bonding
