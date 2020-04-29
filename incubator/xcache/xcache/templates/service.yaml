@@ -18,7 +18,7 @@ spec:
     - protocol: TCP
       name: metrics
       port: {{ .Values.Service.MetricsPort }}
-      targetPort: {{ .Values.Service.MetricsPort}}
+      targetPort: {{ .Values.Service.MetricsPort }}
       nodePort: 9101
   externalIPs:
   - {{ .Values.Service.ExternalIP }}
