@@ -58,7 +58,7 @@ spec:
       
       containers:
         - name: {{ .Chart.Name }}
-          image: slateci/xcache:latest
+          image: slateci/xcache:{{ .Values.image.tag }}
           imagePullPolicy: Always
           env:
           - name: XC_SPACE_HIGH_WM
@@ -110,7 +110,7 @@ spec:
             mountPath: "/xcache-meta"
 
         - name: x509
-          image: slateci/xcache:latest
+          image: slateci/xcache:{{ .Values.image.tag }}
           imagePullPolicy: Always
           command: ["/run_x509_updater.sh"]
           resources:
@@ -125,7 +125,7 @@ spec:
             readOnly: true
 
         - name: reporter
-          image: slateci/xcache:latest
+          image: slateci/xcache:{{ .Values.image.tag }}
           imagePullPolicy: Always
           command: ["/run_cache_reporter.sh"]
           env:
