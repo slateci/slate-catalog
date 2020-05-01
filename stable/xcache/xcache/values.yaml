@@ -23,12 +23,17 @@ Monitoring:
 XCacheConfig:
   # Local directory to be used as a cache
   CacheDirectories:
-    - /scratch_A
+    - /scratch_HOT
     - /scratch_B
   MetaDirectory: /scratch_meta
   # Space usage
   HighWaterMark: 0.95
   LowWaterMark: 0.90
+
+  # HotDirectory: /scratch_HOT
+  # HotHWM: 0.60
+  # HotLWM: 0.40
+  
   # The amount of memory XCache is allowed to use (in GB)
   RamSize: 16g
   # Minimal chunk size that will be prefetched/cached.
