@@ -50,7 +50,7 @@ spec:
       {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
       - name: xcache-data-{{ $index }}
         hostPath:
-          path: {{ $dir }}
+          path: {{ .path }}
       {{- end }}
       - name: xcache-meta
         hostPath:
@@ -136,20 +136,24 @@ spec:
             mountPath: "/xcache-meta"
             readOnly: true
 
-        {{ if .Values.XCacheConfig.HotDirectory }}
+        {{ if .Values.XCacheConfig.Hot }}
         - name: shuffler
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command: ["/run_shuffler.sh"]
           env:
-          - name: XC_HOT
-            value: "{{ .Values.XCacheConfig.HotDirectory }}"
-          - name: XC_HOT_HWM
-            value: "{{ .Values.XCacheConfig.HotHWM }}"
-          - name: XC_HOT_LWM
-            value: "{{ .Values.XCacheConfig.HotLWM }}"
+          {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories -}}
+          {{ if .hot }}
+          - name: XC_HOT_{{ $nindex }}
+            value: "/xcache-data_{{ $nindex }}"
+          - name: XC_HOT_HWM_{{ $nindex }}
+            value: "{{ .hotWHM }}"
+          - name: XC_HOT_LWM_{{ $nindex }}
+            value: "{{ .hotLWM }}"
+          {{ end }}
+          {{- end -}}
           volumeMounts:
-          {{- range $nindex, $ndir := .Values.XCacheConfig.CacheDirectories }}
-          - name: xcache-data-{{ $nindex }}
+          {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-{{ $nindex }}
             mountPath: "/xcache-data_{{ $nindex }}"
           {{- end }}
           - name: xcache-meta
