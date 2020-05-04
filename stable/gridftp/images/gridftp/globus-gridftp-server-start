@@ -1,0 +1,22 @@
+#!/bin/sh
+[ -r /usr/share/osg/sysconfig/globus-gridftp-server ] && \
+    . /usr/share/osg/sysconfig/globus-gridftp-server
+[ -r /etc/sysconfig/globus-gridftp-server ] && \
+    . /etc/sysconfig/globus-gridftp-server
+
+# The GridFTP implementors apparently never felt it was necessary to be able to
+# change the control port. 
+if [ -z $GLOBUS_CONTROL_PORT ]; then
+  echo "No GLOBUS_CONTROL_PORT defined, assuming default 2811"
+else
+  sed -i "s/port 2811/port\ $GLOBUS_CONTROL_PORT/" /etc/gridftp.conf
+fi
+
+# uncomment lcmaps
+echo 'globus_mapping liblcas_lcmaps_gt4_mapping.so lcmaps_callout' > /etc/grid-security/gsi-authz.conf
+
+exec /usr/sbin/globus-gridftp-server \
+    -c $conf \
+    -C /etc/gridftp.d \
+    -pidfile /var/run/globus-gridftp-server.pid
+
