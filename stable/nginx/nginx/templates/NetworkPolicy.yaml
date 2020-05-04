@@ -1,5 +1,4 @@
 {{ if .Values.NetworkPolicy.Enabled }}
-{{- range .Values.NetworkPolicy.AllowedCIDRs}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -21,14 +20,17 @@ spec:
   - Egress
   egress:
   - to:
+    {{- range .Values.NetworkPolicy.AllowedCIDRs}}
     - ipBlock:
-        cidr: {{ . }}
+        cidr: {{ . }} 
+    {{- end }}
   ingress:
   - from:
+    {{- range .Values.NetworkPolicy.AllowedCIDRs}}
     - ipBlock:
         cidr: {{ . }}
+    {{- end }}
 {{ end }}
-{{- end }}
 ---
 {{ if not .Values.NetworkPolicy.Enabled }}
 apiVersion: networking.k8s.io/v1
