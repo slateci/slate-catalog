@@ -1,0 +1,185 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "cms-xcache.fullname" . }}
+  labels:
+    app: {{ template "cms-xcache.name" . }}
+    chart: {{ template "cms-xcache.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "cms-xcache.name" . }}
+      chart: {{ template "cms-xcache.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+    
+  template:
+    metadata:
+      labels:
+        app: {{ template "cms-xcache.name" . }}
+        chart: {{ template "cms-xcache.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+
+      nodeSelector:
+        xcache-capable: "true"
+      
+      tolerations:
+      - key: "special"
+        operator: "Exists"
+        effect: PreferNoSchedule
+
+      volumes:
+      - name: cache-disks
+        configMap:
+          name: {{ template "cms-xcache.fullname" . }}
+      - name: x509-data
+        emptyDir:
+          medium: Memory
+          sizeLimit: "10Mi"
+      - name: x509-certs-volume
+        secret:
+          secretName: xcache-cert-secret
+          items:
+          - key: userkey
+            path: userkey.pem
+            mode: 256 
+          - key: usercert
+            path: usercert.pem
+      - name: data2
+        hostPath:
+          path: /data2
+          type: Directory
+      - name: data3
+        hostPath:
+          path: /data3
+          type: Directory
+      - name: data4
+        hostPath:
+          path: /data4
+          type: Directory
+      - name: data5
+        hostPath:
+          path: /data5
+          type: Directory
+      - name: data6
+        hostPath:
+          path: /data6
+          type: Directory
+      - name: data7
+        hostPath:
+          path: /data7
+          type: Directory
+      - name: data8
+        hostPath:
+          path: /data8
+          type: Directory
+      - name: data9
+        hostPath:
+          path: /data9
+          type: Directory
+      - name: data10
+        hostPath:
+          path: /data10
+          type: Directory
+      - name: data11
+        hostPath:
+          path: /data11
+          type: Directory
+      - name: data12
+        hostPath:
+          path: /data12
+          type: Directory
+      - name: localroot
+        hostPath:
+          path: /xcache-root
+          type: Directory
+      - name: localmeta
+        hostPath:
+          path: /xcache-meta
+          type: Directory
+    
+      containers:
+        - name: cms-xcache
+          image: "opensciencegrid/cms-xcache:fresh"
+          imagePullPolicy: Always
+          env:
+          - name: XC_ROOTDIR
+            value: "{{ .Values.XCacheConfig.RootDir }}"
+          - name: XC_RESOURCENAME
+            value: "{{ .Values.XCacheConfig.ResourceName }}"
+          - name: XC_SPACE_HIGH_WM
+            value: "{{ .Values.XCacheConfig.HighWaterMark }}"
+          - name: XC_SPACE_LOW_WM
+            value: "{{ .Values.XCacheConfig.LowWaterMark }}"
+          - name: XC_PORT
+            value: "{{ .Values.Service.Port }}"
+          - name: XC_RAMSIZE
+            value: "{{ .Values.XCacheConfig.RamSize }}"
+          - name: XC_BLOCKSIZE
+            value: "{{ .Values.XCacheConfig.BlockSize }}"
+          - name: XC_PREFETCH
+            value: "{{ .Values.XCacheConfig.Prefetch }}"
+          - name: AGIS_PROTOCOL_ID
+            value: "{{ .Values.SiteConfig.AGISprotocolID }}"
+          - name: WQ_BLOCKS_PER_LOOP
+            value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
+          - name: WQ_THREADS
+            value: "{{ .Values.XCacheConfig.WQThreads }}"
+          - name: DISABLE_OSG_MONITORING
+            value: "{{ .Values.XCacheConfig.DisableOSGMonitoring }}"
+          resources:
+            requests:
+              ephemeral-storage: "5Gi"
+            limits:
+              ephemeral-storage: "10Gi"
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.Service.Port }}
+            initialDelaySeconds: 180
+            periodSeconds: 60
+          lifecycle:
+            preStop:
+              exec:
+                command: ["./updateAGISstatus.sh","{{ .Values.SiteConfig.AGISprotocolID }}","DISABLED"]
+          ports:
+            - containerPort: {{ .Values.Service.Port }}         
+          volumeMounts:
+          - name: cache-disks
+            mountPath: /etc/xrootd/cache-disks.config
+          - name: x509-data
+            mountPath: "/etc/proxy/"
+            readOnly: true
+          - name: x509-certs-volume
+            mountPath: "/etc/grid-certs/"
+            readOnly: true
+          - mountPath: /data2
+            name: data2
+          - mountPath: /xcache-root
+            name: localroot
+          - mountPath: /xcache-meta
+            name: localmeta
+          - mountPath: /data3
+            name: data3
+          - mountPath: /data4
+            name: data4
+          - mountPath: /data5
+            name: data5
+          - mountPath: /data6
+            name: data6
+          - mountPath: /data7
+            name: data7
+          - mountPath: /data8
+            name: data8
+          - mountPath: /data9
+            name: data9
+          - mountPath: /data10
+            name: data10
+          - mountPath: /data11
+            name: data11
+          - name: xcache-meta
+            mountPath: "/xcache-meta"
