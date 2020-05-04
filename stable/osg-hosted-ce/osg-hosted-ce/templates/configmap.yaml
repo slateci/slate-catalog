@@ -69,10 +69,7 @@ data:
     ]
     @jrd
 
-    JOB_ROUTER_ENTRIES @=jre
-    [
-    Name = "Hosted_CE_default_route";
-    ]
+    JOB_ROUTER_ENTRIES = [Name = "Hosted_CE_default_route"]
 
     # Operator-provided HTCondor-CE configuration below this line
 {{ .Values.HTCondorCeConfig | default "" | indent 4 }}
