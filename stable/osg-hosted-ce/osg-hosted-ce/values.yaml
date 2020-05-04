@@ -122,7 +122,7 @@ HostCredentials:
   # Use a pre-existing host certificate instead of requesting a new
   # Let'S Encrypt certificate. If HostKeySecret is not specified, a
   # new Let's Encrypt certificate and key are requested anyway.
-  # Secret must contain a "host.key containing the encoded host
+  # Secret must contain a "host.cert" containing the encoded host
   # certificate.
   HostCertSecret: null
 
