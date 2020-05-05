@@ -190,7 +190,7 @@ spec:
         - name: REMOTE_HOST
           value: {{ .Values.RemoteCluster.LoginHost }}
         - name: REMOTE_BATCH
-          value: {{ .Values.RemoteCluster.Batch }}
+          value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"
