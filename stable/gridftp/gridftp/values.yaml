@@ -5,13 +5,15 @@ GridFTPConfig:
   # The name of the secret that was created for the front end SSL certificate and key.
   # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
   # This must be created *BEFORE* you instantiate the chart.
-  HostSecretName: gridftp-host-pems 
+  HostSecretName: gridftp-certificates
   # The name of the secret that was created for the files `grid-mapfile` and `/etc/passwd`.
   # These must be named 'grid-mapfile' and 'etc-passwd' respectively.
   # This must be created *BEFORE* you instantiate the chart.
   UserSecretName: gridftp-users
-  # The port GridFTP will use. 
-  GridFTPPort: 2811
+  # The control channel port for GridFTP
+  ControlPort: 2811
+  # TCP port range for transfers
+  TransferPortRange: 50000,51000
   # The path at which the storage should be mounted. 
   ExternalPath: /export
   # The path for a backing filesystem to be mounted from the host system. 
@@ -22,4 +24,4 @@ GridFTPConfig:
   # This is useful when only certain nodes on the cluster mount the appropriate 
   # backing filesystem. It may be desirable to turn this off when using a PVC as
   # backing storage, since this tends not to tie to a specific node. 
-  UseNodeSelector: true
+  UseNodeSelector: false
