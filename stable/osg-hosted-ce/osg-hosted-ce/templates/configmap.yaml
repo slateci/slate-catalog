@@ -34,7 +34,7 @@ data:
 
     [Subcluster {{ .Values.Topology.Resource }}]
     name = {{ .Values.Topology.Resource }}
-    ram_mb = {{ .Values.RemoteCluster.Memory }}
+    ram_mb = {{ .Values.RemoteCluster.MemoryPerNode }}
     cores_per_node = {{ .Values.RemoteCluster.CoresPerNode }}
     max_wall_time = {{ .Values.RemoteCluster.MaxWallTime }}
     allowed_vos = *

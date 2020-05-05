@@ -18,7 +18,7 @@ RemoteCluster:
   PrivateKeySecret: lincolnb-bosco
   # condor, slurm, pbs, sge, or lsf
   Batch: slurm
-  Memory: 1024
+  MemoryPerNode: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
   # Absolute path to the local WN client installation
