@@ -71,6 +71,7 @@ data:
 
     JOB_ROUTER_ENTRIES = [Name = "Hosted_CE_default_route"]
 
+    JOB_ROUTER_ROUTE_NAMES = Hosted_CE_default_route
     # Operator-provided HTCondor-CE configuration below this line
 {{ .Values.HTCondorCeConfig | default "" | indent 4 }}
 ---
