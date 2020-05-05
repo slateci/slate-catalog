@@ -27,7 +27,7 @@ RemoteCluster:
   # Worker node scratch space for payload jobs
   # Do not use environment variables!
   WorkerNodeTemp: /tmp
-  # <IP OR FQDN>:<PORT> for the site's local squid server
+  # <IP OR FQDN>:<PORT> for the site's local squid server, or 'null' if no site Squid
   Squid: null
 
 Networking:

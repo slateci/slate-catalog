@@ -63,9 +63,8 @@ The Contact and corresponding ContactEmail sections should match the contact inf
 
 The City, Country, Latitude, and Longitude sections should match the physical location of the resource.
 
-    Site:
+    Topology:
       Resource: <RESOURCE NAME> (Must match OSG Topology)
-      ResourceGroup: <RESOURCE GROUP> (Must match OSG Topology)
       Sponsor: osg:100 
       Contact: <NAME OF LOCAL CONTACT>
       ContactEmail: <EMAIL FOR LOCAL CONTACT>
@@ -74,46 +73,45 @@ The City, Country, Latitude, and Longitude sections should match the physical lo
       Latitude: <RESOURCE PHYSICAL LOCATION>
       Longitude: <RESOURCE PHYSICAL LOCATION>
 
-### Cluster
-The cluster section contains configuration parameters for BOSCO, specifically
-the SSH configuration, whose private key must be stored as a SLATE secret and
-selection of the remote batch system.
+### RemoteCluster
 
-PrivateKeySecret is the name of a secret created in SLATE which contains the private key for the osg user on the remote cluster. 
+The `RemoteCluster` section contains configuration parameters for the remote cluster that the Hosted CE sends jobs to
+via Bosco, specifically the SSH configuration, whose private key must be stored as a SLATE secret and selection of the
+remote batch system.
 
-Memory, CoresPerNode, and MaxWallTime should be set to the max resource limits available on the remote cluster. Memory is per node.
+`LoginHost` is the FQDN for the remote SSH host.
+
+`PrivateKeySecret` is the name of a secret created in SLATE which contains the private key for the osg user on the remote cluster. 
+
+`Batch` is the remote batch system, e.g. `condor`, `lsf`, `pbs`, `sge`, or `slurm`.
+
+`MemoryPerNode`, `CoresPerNode`, and `MaxWallTime` should be set to the max resource limits available on the remote cluster.
 
 *Note: For clusters composed of disparate nodes, you want to target the lowest common denominator with these settings*
 
-AllowedVOs determines which [OSG Virtual Organizations](https://opensciencegrid.org/about/organization/) will be aloud to run work on your cluster. I have provided some reasonable defaults. 
+This section contains a `GridDir` parameter, which describes the location where the OSG Worker Node client can be found
+on the remote side.
+This is usually under `/cvmfs` or the home directory.
 
-    Cluster:
-      PrivateKeySecret: <NAME OF SLATE SECRET>
-      Memory: <MAX MEMORY IN MB>
-      CoresPerNode: <MAX CORES PER NODE>
-      MaxWallTime: <MAX ALLOWED WALLTIME IN MINUTES>
-      AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
-
-### Storage
-This section contains a `GridDir` parameter, which describes the location on
-the *remote* site where BLAHP/Glite binaries can be placed. This is usually under the home directory.
-
-This section additionally requires that the application administrator configure the
-`WorkerNodeTemp` directory, which will be seen by jobs under the environment
-variable `$OSG_WN_TEMP` for scratch space.
+This section additionally requires that the application administrator configure the `WorkerNodeTemp` directory, which
+will be seen by jobs under the environment variable `$OSG_WN_TEMP` for scratch space.
 
 **Be sure to specify absolute paths**
 
-    Storage:
+This section informs the HostedCE of the Squid proxy cache closest to the *remote* side, for job access.
+Set `Location: null` to disable.
+
+    RemoteCluster:
+      LoginHost: <REMOTE SSH HOST>
+      PrivateKeySecret: <NAME OF SLATE SECRET>
+      Batch: <SITE BATCH SYSTEM>
+      MemoryPerNode: <MAX MEMORY IN MB>
+      CoresPerNode: <MAX CORES PER NODE>
+      MaxWallTime: <MAX ALLOWED WALLTIME IN MINUTES>
       GridDir: /path/to/bosco-wn-client
       WorkerNodeTemp: /tmp
-
-### Squid
-This section informs the HostedCE of the Squid proxy cache closest to the
-*remote* side, for job access. Set `Location: null` to disable.
-
-    Squid:
-      Location: <IP OR HOSTNAME>:<PORT>
+      # may be left as null
+      Squid: <IP OR HOSTNAME>:<PORT>
 
 ### Networking
 
@@ -125,19 +123,76 @@ If you do not know which addresses are available to your cluster, set `RequestIP
       Hostname: "<YOUR FQDN>"
       RequestIP: <IP ADDRESS>
 
+### VoRemoteUserMapping Section
+
+This list controls the VOs accepted by the CE and the users they are mapped to on the remote site.
+
+To disallow VOs, remove the relevant item from the list.
+To change the remote user for a given VO, change the value (e.g. osg01)
+To add custom VOMS FQAN mappings, add a new item to the list.
+VOMS FQANs may include "*" wildcards.
+
+	VoRemoteUserMapping:
+	  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+      - "/osg/Role=NULL/Capability=NULL": osg01
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+      - "/GLOW/Role=htpc/Capability=NULL": osg02
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/HCC.yaml
+      - "/hcc/Role=NULL/Capability=NULL": osg03
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
+      - "/cms/*": osg04
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Fermilab.yaml
+      - "/fermilab/*": osg05
+      # osg06 reserved for JLAB
+      # LIGO-Virgo collaboration
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/LIGO.yaml
+      - "/osg/ligo/Role=NULL/Capability=NULL": osg07
+      - "/virgo/ligo/Role=NULL/Capability=NULL": osg07
+      # Brookhaven National Lab VOs
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/sPHENIX.yaml
+      - "/sdcc/Role=NULL/Capability=NULL": osg08
+      - "/sphenix/Role=NULL/Capability=NULL": osg08
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
+      - "/atlas/*": osg09
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Gluex.yaml
+      - "/Gluex/Role=NULL/Capability=NULL": osg10
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/DUNE.yaml
+      - "/dune/Role=pilot/Capability=NULL": osg11
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/IceCube.yaml
+      - "/icecube/Role=pilot/Capability=NULL": osg12
+      # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/XENON.yaml
+      - "/xenon.biggrid.nl/Role=NULL/Capability=NULL": osg13
+
+### DnRemoteUserMapping
+
+The `DnRemoteUserMapping` will allow you to add your own personal grid proxy to the CE. This is for the purpose of testing basic job submission.
+
+You can obtain one with your institutional credential at [cilogon.org](https://cilogon.org/)
+
+	DnRemoteUserMapping:
+	  - "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName": osguser
+
 ### HTCondorCeConfig
 
-The HTCondorCeConfig file contains additional configuration for the CE itself. Most importantly it contains the required JOB_ROUTER_ENTRIES section. This is the configuration that allows the CE to route jobs to your remote cluster. It has the following format:
+The HTCondorCeConfig file contains any additional configuration for HTCondor-CE itself.
+By default, the Hosted CE app contains a single default route that submits jobs for each remote user (as specified in
+`VoRemoteUserMapping` and `DnRemoteUserMapping`) to the remote batch system specified by `Batch` and  `LoginHost`.
 
-You must specify the batch system of the remote cluster (pbs/slurm/condor/etc) and an SSH endpoint for the cluster.
+In other words, the `GridResource` line is automatically set appropriately for each route so if you need to add custom
+routes, you may exclude that line.
+For example:
 
     HTCondorCeConfig: |+
       JOB_ROUTER_ENTRIES @=jre
       [
-        GridResource = "batch <YOUR BATCH SYSTEM> <REMOTE USER>@<REMOTE ENDPOINT>";
-        Requirements = (Owner == "<REMOTE USER>");
+        Name = "COVID19_Jobs";
+        Requirements = (TARGET.IsCOVID19 =?= true);
       ]
+      $(JOB_ROUTER_ENTRIES)
       @jre
+      
+      # The job router should try to match jobs to the "COVID19_Jobs" route first
+      JOB_ROUTER_ROUTE_NAMES = COVID19_Jobs $(JOB_ROUTER_ROUTE_NAMES)
 
 ### BoscoOverrides
 
@@ -145,60 +200,39 @@ The BoscoOverrides section provides a mechanism to override default configuratio
 
 This will vary depending on your batch system. All the overrides are expected to be placed in a git repository with a subdirectory format that matches `<RESOURCE NAME>/bosco-override`
 
-It may take some trial and error to get the correct overrides in place. The general proccess for this is to deploy the CE, then check the logs on the application's HTTP Log exporter to see what must be changed. Finally re-dpeploy with the updated overrides.
+It may take some trial and error to get the correct overrides in place. The general proccess for this is to deploy the CE, then check the logs on the application's HTTP Log exporter to see what must be changed. Finally re-deploy with the updated overrides.
 
 There is a [template bosco override](https://github.com/slateci/bosco-override-template) repository that you can fork and tailor to your needs.
 
 Once you've customized your fork, you can simply provide that repository as the GitEndpoint for this section.
 
-You can use a private git repo and provide the key to the application as a SLATE secret.
+You can use a private git repo and provide the key to the application as a SLATE secret with `git.key` key set to the private key.
 
     BoscoOverrides:
       Enabled: true
       GitEndpoint: "<GIT ENDPOINT>"
-      RepoNeedsPrivKey: false
-      GitKeySecret: none
+      GitKeySecret: null
 
 
 ### HTTPLogger Section
+
 This allows you to turn toggle HTTP logging side car. When it is enabled, it will allow you to view the CE logs from your browser. 
+
+You may provide a SLATE secret with an `HTPASSWD` key containing password instead of having the container randomly
+generate a password.
+To disable this, comment out the `Secret` line (default).
 
 	HTTPLogger:
 	  Enabled: true
+      Secret: <PATH TO PASSWORD SECRET>
 
 You can get the endpoint for your logger by running `slate instance info <INSTANCE ID>`, and the randomly generated credentials will be written to the sidecar's logs.
 
 `slate instance logs <INSTANCE ID>`
 
-### VomsmapOverride Section
-Each VO that is enabled must be mapped to a user on the remote cluster. It is standard to create a user for each VO you intend to support. It is possible to map each VO to the same remote user:
-
-	VomsmapOverride: |+
-	  "/osg/Role=NULL/Capability=NULL" osguser
-	  "/GLOW/Role=htpc/Capability=NULL" osguser
-	  "/hcc/Role=NULL/Capability=NULL" osguser
-	  "/cms/*" osguser
-	  "/fermilab/*" osguser
-	  "/osg/ligo/Role=NULL/Capability=NULL" osguser
-	  "/virgo/ligo/Role=NULL/Capability=NULL" osguser
-	  "/sdcc/Role=NULL/Capability=NULL" osguser
-	  "/sphenix/Role=NULL/Capability=NULL" osguser
-	  "/atlas/*" osguser
-	  "/Gluex/Role=NULL/Capability=NULL" osguser
-	  "/dune/Role=pilot/Capability=NULL" osguser
-	  "/icecube/Role=pilot/Capability=NULL" osguser
-	  "/xenon.biggrid.nl/Role=NULL/Capability=NULL" osguser
-
-
-### GridmapOverride 
-The GridmapOverride will allow you to add your own personal grid proxy to the CE. This is for the purpose of testing basic job submission.
-
-You can obtain one with your institutional credential at [cilogon.org](https://cilogon.org/)
-
-	GridmapOverride: |+
-	  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osguser
 
 ### Certificate 
+
 Each time the CE is deployed, it requests a new certificate from Let's Encrypt, which has rate limits to prevent denial-of-service attacks. This means that if you are redeploying a CE frequently for troubleshooting purposes, you may experience the rate limit.
 
 To avoid these rate limits, it's possible to bootstrap the certificate request process with your own private key and retrieve the Let's Encrypt certificate from the SLATE instance logs:
@@ -244,9 +278,8 @@ Simply disable this. It is in place for the purpose of OSG Internal Testbed host
 ```
 Instance: "my-cluster"
 
-Site:
+Topology:
   Resource: SLATE_US_MYINSTITUTION_MYCLCUSTER
-  ResourceGroup: My Group
   Sponsor: osg:100
   Contact: My Group Support
   ContactEmail: my-support-list@institution.edu
@@ -255,59 +288,51 @@ Site:
   Latitude: 0.00
   Longitude: 0.00
 
-Cluster:
+RemoteCluster:
+  LoginHost: remote-ssh.login.org
   PrivateKeySecret: my-slate-secret-key # maps to SLATE secret
-  Memory: 24000
+  Batch: slurm
+  MemoryPerNode: 24000
   CoresPerNode: 4
   MaxWallTime: 4320
-  AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
-
-Storage:
   GridDir: /home/osguser/bosco-osg-wn-client
   WorkerNodeTemp: /scratch/local/.osgscratch
-
-Squid:
   Location: squid.example.com:31192
 
 Networking:
   Hostname: "hosted-ce.example.com"
   RequestIP: 0.0.0.0
 
+VoRemoteUserMapping:
+  - "/osg/Role=NULL/Capability=NULL": osguser
+  - "/GLOW/Role=htpc/Capability=NULL": osguser
+  - "/hcc/Role=NULL/Capability=NULL": osguser
+  - "/cms/*": osguser
+  - "/fermilab/*": osguser
+  - "/osg/ligo/Role=NULL/Capability=NULL": osguser
+  - "/virgo/ligo/Role=NULL/Capability=NULL": osguser
+  - "/sdcc/Role=NULL/Capability=NULL": osguser
+  - "/sphenix/Role=NULL/Capability=NULL": osguser
+  - "/atlas/*": osguser
+  - "/Gluex/Role=NULL/Capability=NULL": osguser
+  - "/dune/Role=pilot/Capability=NULL": osguser
+  - "/icecube/Role=pilot/Capability=NULL": osguser
+  - "/xenon.biggrid.nl/Role=NULL/Capability=NULL": osguser
+
+DnRemoteUserMapping:
+  - "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName": osguser
+
 HTCondorCeConfig: |+
-  JOB_ROUTER_ENTRIES @=jre
-  [
-    GridResource = "batch slurm osguser@remote.example.com";
-    Requirements = (Owner == "osguser");
-  ]
-  @jre
+  ALL_DEBUG = D_CAT D_ALWAYS:2
 
 BoscoOverrides:
   Enabled: true
   GitEndpoint: "https://github.com/slateci/bosco-override-template.git"
-  RepoNeedsPrivKey: false
-  GitKeySecret: none
+  GitKeySecret: null
 
 HTTPLogger:
   Enabled: true
-
-VomsmapOverride: |+
-  "/osg/Role=NULL/Capability=NULL" osguser
-  "/GLOW/Role=htpc/Capability=NULL" osguser
-  "/hcc/Role=NULL/Capability=NULL" osguser
-  "/cms/*" osguser
-  "/fermilab/*" osguser
-  "/osg/ligo/Role=NULL/Capability=NULL" osguser
-  "/virgo/ligo/Role=NULL/Capability=NULL" osguser
-  "/sdcc/Role=NULL/Capability=NULL" osguser
-  "/sphenix/Role=NULL/Capability=NULL" osguser
-  "/atlas/*" osguser
-  "/Gluex/Role=NULL/Capability=NULL" osguser
-  "/dune/Role=pilot/Capability=NULL" osguser
-  "/icecube/Role=pilot/Capability=NULL" osguser
-  "/xenon.biggrid.nl/Role=NULL/Capability=NULL" osguser
-
-GridmapOverride: |+
-  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osguser
+  Secret: null
 
 HostCredentials:
   HostKeySecret: null
