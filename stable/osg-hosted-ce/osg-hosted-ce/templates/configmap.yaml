@@ -37,6 +37,7 @@ data:
     ram_mb = {{ .Values.RemoteCluster.Memory }}
     cores_per_node = {{ .Values.RemoteCluster.CoresPerNode }}
     max_wall_time = {{ .Values.RemoteCluster.MaxWallTime }}
+    allowed_vos = *
 
     [Squid]
     {{ if .Values.RemoteCluster.Squid }}
