@@ -1,37 +1,37 @@
 Instance: ""
 
 # Site information that should match the CE Topology registration
-Site:
+Topology:
   Resource: RESOURCE_NAME
-  ResourceGroup: Resource Group
   Sponsor: osg:100
-  Contact: Resource Contact
+  Contact: RESOURCE_CONTACT
   ContactEmail: support@example.edu
   City: City
   Country: US
   Latitude: 0.00
   Longitude: 0.00
 
-Cluster:
-  RemoteHost: remote-ssh.login.org
-  RemoteBatch: slurm
-  PrivateKeySecret: lincolnb-bosco # maps to SLATE secret
-  Memory: 1024
+RemoteCluster:
+  # SSH host
+  LoginHost: remote-ssh.login.org
+  # SLATE secret with 'bosco.key' containing the SSH key to access LoginHost:
+  PrivateKeySecret: lincolnb-bosco
+  # condor, slurm, pbs, sge, or lsf
+  Batch: slurm
+  MemoryPerNode: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
-  AllowedVOs: osg, cms, atlas, glow, hcc, fermilab, ligo, virgo, sdcc, sphenix, gluex, icecube, xenon
-
-# Do NOT use environment variables for any of the Storage variables
-Storage:
   # Absolute path to the local WN client installation
+  # Do not use environment variables!
   GridDir: /home/osguser/bosco-osg-wn-client
+  # Worker node scratch space for payload jobs
+  # Do not use environment variables!
   WorkerNodeTemp: /tmp
+  # <IP OR FQDN>:<PORT> for the site's local squid server, or 'null' if no site Squid
+  Squid: null
 
-Squid:
-  # <FQDN>:<PORT> for the site's local squid server
-  Location: null
-  
 Networking:
+  ServiceType: "LoadBalancer"
   # The hostname that the CE should use. 
   # Appropriate A and PTR DNS records must exist.
   Hostname: ""
@@ -41,25 +41,68 @@ Networking:
   # back the same IP address that was used previously. 
   RequestIP: null
 
-########### REQUIRED ###########
-# Specify additional HTCondor-CE configuration. JOB_ROUTER_ENTRIES is required!
+# VOMS FQAN to remote user mapping
+# This list controls the VOs accepted by the CE and the users they are
+# mapped to on the remote site.
+#
+# To disallow VOs, remove the relevant item from the list.
+# To change the remote user for a given VO, change the value (e.g. osg01)
+# To add custom VOMS FQAN mappings, add a new item to the list.
+# VOMS FQANs can include "*" wildcards.
+VoRemoteUserMapping:
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+  - "/osg/Role=NULL/Capability=NULL": osg01
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+  - "/GLOW/Role=htpc/Capability=NULL": osg02
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/HCC.yaml
+  - "/hcc/Role=NULL/Capability=NULL": osg03
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
+  - "/cms/*": osg04
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Fermilab.yaml
+  - "/fermilab/*": osg05
+  # osg06 reserved for JLAB
+  # LIGO-Virgo collaboration
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/LIGO.yaml
+  - "/osg/ligo/Role=NULL/Capability=NULL": osg07
+  - "/virgo/ligo/Role=NULL/Capability=NULL": osg07
+  # Brookhaven National Lab VOs
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/sPHENIX.yaml
+  - "/sdcc/Role=NULL/Capability=NULL": osg08
+  - "/sphenix/Role=NULL/Capability=NULL": osg08
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
+  - "/atlas/*": osg09
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Gluex.yaml
+  - "/Gluex/Role=NULL/Capability=NULL": osg10
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/DUNE.yaml
+  - "/dune/Role=pilot/Capability=NULL": osg11
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/IceCube.yaml
+  - "/icecube/Role=pilot/Capability=NULL": osg12
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/XENON.yaml
+  - "/xenon.biggrid.nl/Role=NULL/Capability=NULL": osg13
+
+##########################
+# OPTIONAL CONFIGURATION #
+##########################
+
+# DN to remote user mapping
+# For example, you may add your personal certificate's subject DN so
+# that you can submit jobs to this CE
+#DnRemoteUserMapping:
+#  - "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName": osg01
+
+# Specify additional HTCondor-CE configuration
 # HTCondorCeConfig: |+
-#   JOB_ROUTER_ENTRIES @=jre
-#   [
-#     GridResource = "batch <REMOTE BATCH> <REMOTE USER>@<REMOTE HOST>";
-#     Requirements = (Owner == "<REMOTE USER>");
-#   ]
-#   [
-#   ...
-#   @jre
+#   ALL_DEBUG = D_ALWAYS:2 D_CAT
 
 # Options to allow override of the bosco directory from arbitrary git repos
 # Bosco override dirs are expected in the following location in the git repo:
 #   <RESOURCE NAME>/bosco_override/
 BoscoOverrides:
-  Enabled: true
+  Enabled: false
   GitEndpoint: https://github.com/slateci/bosco-override-template
-  RepoNeedsPrivKey: false
+  # If GitEndpoint requires authentication, create a SLATE secret with
+  # 'git.key' containing the private SSH key that can access
+  # it. Specify the name of the secret in GitKeySecret:
   GitKeySecret: null
 
 # Enable a logging sidecar
@@ -69,36 +112,18 @@ HTTPLogger:
   # point Secret to a K8S/SLATE secret below.
   # Secret: my-secret
 
-# Default VO-user mappings for OSG Hosted CEs
-# Change these contents for legacy OSG Hosted CEs or non-OSG Hosted CEs
-VomsmapOverride: |+
-  "/osg/Role=NULL/Capability=NULL" osg01
-  "/GLOW/Role=htpc/Capability=NULL" osg02
-  "/hcc/Role=NULL/Capability=NULL" osg03
-  "/cms/*" osg04
-  "/fermilab/*" osg05
-  "/osg/ligo/Role=NULL/Capability=NULL" osg07
-  "/virgo/ligo/Role=NULL/Capability=NULL" osg07
-  "/sdcc/Role=NULL/Capability=NULL" osg08
-  "/sphenix/Role=NULL/Capability=NULL" osg08
-  "/atlas/*" osg09
-  "/Gluex/Role=NULL/Capability=NULL" osg10
-  "/dune/Role=pilot/Capability=NULL" osg11
-  "/icecube/Role=pilot/Capability=NULL" osg12
-  "/xenon.biggrid.nl/Role=NULL/Capability=NULL" osg13
-
-# If you wish to allow yourself to submit to this CE with your personal grid
-# proxy, you can put that in below. This will get directly mapped into
-# /etc/grid-security/grid-mapfile
-#
-#GridmapOverride: |+
-#  "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName" osg
-
-# Use a pre-existing certificate/key pair stored in a secret with
-# 'hostcert.pem' and 'hostkey.pem' keys for the host certificate and
-# key, respectively
-Certificate:
-  Secret: null
+HostCredentials:
+  # Use a pre-existing host key to request a new Let's Encrypt
+  # certificate If HostCertSecret is also specified, the Let's Encrypt
+  # request is skipped.  Secret must contain a "host.key" key
+  # containing the encoded host key.
+  HostKeySecret: null
+  # Use a pre-existing host certificate instead of requesting a new
+  # Let'S Encrypt certificate. If HostKeySecret is not specified, a
+  # new Let's Encrypt certificate and key are requested anyway.
+  # Secret must contain a "host.cert" containing the encoded host
+  # certificate.
+  HostCertSecret: null
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
