@@ -43,7 +43,7 @@ spec:
       containers:
       - name: scipy-notebook
         image: slateci/jupyter-condor:latest
-        imagePullPolicy: "IfNotPresent"
+        imagePullPolicy: "Always"
         workingDir: /home/{{ .Values.Jupyter.NB_USER }}
         env:
         - name: JUPYTER_ENABLE_LAB
