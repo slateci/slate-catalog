@@ -1,10 +1,5 @@
 {{ if not (or .Values.CondorConfig.PasswordFileSecret .Values.CondorConfig.AuthTokenSecret) }}
-  {{ required "Either PasswordFileSecret or AuthTokenSecret should be set" .Values.Error_DoNotSet }}
 {{ end }}
-NetworkPolicy:
-  Enabled: false
-  AllowedCIDRs:
-    - 0.0.0.0/0
 apiVersion: apps/v1
 kind: Deployment
 metadata:

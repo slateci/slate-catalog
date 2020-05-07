@@ -1,4 +1,5 @@
 # Generates app name as "condor-worker-[Instance]"
+
 Instance: ""
 
 HTTPLogger:
@@ -55,3 +56,8 @@ CondorConfigFile: |-
   NUM_SLOTS_TYPE_1                      = 1
   SLOT_TYPE_1                           = cpus=100%
   SLOT_TYPE_1_PARTITIONABLE             = TRUE
+
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
