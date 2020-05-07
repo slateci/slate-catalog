@@ -67,8 +67,4 @@ NetworkPolicy:
   Enabled: false
   AllowedCIDRs: 
     - 0.0.0.0/0
-### SLATE-START ###
-SLATE:
-  Cluster:
-    DNSName: "some-cluster.slateci.net"
-### SLATE-END ###
+    
