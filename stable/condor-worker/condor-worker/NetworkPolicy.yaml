@@ -1,0 +1,198 @@
+{{ if not (or .Values.CondorConfig.PasswordFileSecret .Values.CondorConfig.AuthTokenSecret) }}
+  {{ required "Either PasswordFileSecret or AuthTokenSecret should be set" .Values.Error_DoNotSet }}
+{{ end }}
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "condor-worker.fullname" . }}
+  labels:
+    app: {{ template "condor-worker.name" . }}
+    chart: {{ template "condor-worker.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: {{ .Values.CondorConfig.Instances }}
+  selector:
+    matchLabels:
+      app: {{ template "condor-worker.name" . }}
+      chart: {{ template "condor-worker.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  template:
+    metadata:
+      labels: 
+        app: {{ template "condor-worker.name" . }}
+        chart: {{ template "condor-worker.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      volumes:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {}
+      - name: logger-startup
+        configMap:
+          name: condor-worker-{{ .Values.Instance }}-logger-startup
+      {{ end }}
+      - name: executedir
+        {{ if .Values.CondorConfig.ExecuteDir }}
+        hostPath:
+          path: {{ .Values.CondorConfig.ExecuteDir }} 
+          type: Directory
+        {{ else }}
+        emptyDir: {}
+        {{ end }}  
+      {{ if .Values.CondorConfig.Cvmfs }}
+      - name: config-osg
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-config-osg-%s" .Values.Instance | trimSuffix "-" }}
+      - name: oasis
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-oasis-%s" .Values.Instance | trimSuffix "-" }}
+      - name: singularity
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-singularity-%s" .Values.Instance | trimSuffix "-" }}
+      - name: spt
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-spt-%s" .Values.Instance | trimSuffix "-" }}
+      - name: connect
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-connect-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-condb
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-nightlies
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
+      {{ end }}
+      {{ if .Values.CondorConfig.PasswordFileSecret }}
+      - name: condor-passwordfile-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.PasswordFileSecret }}
+          items: 
+          - key: condor_password
+            path: condor_password
+            mode: 256
+      {{ end }}
+      {{ if .Values.CondorConfig.AuthTokenSecret }}
+      - name: condor-token-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
+          items:
+          - key: condor_token
+            path: condor_token
+            mode: 256
+      {{ end }}
+      - name: condor-worker-{{ .Values.Instance }}-configuration
+        configMap:
+          name: condor-worker-{{ .Values.Instance}}-configuration
+      {{ if .Values.CondorConfig.PriorityClass }}
+      priorityClassName: {{ .Values.CondorConfig.PriorityClass }}
+      {{ end }}
+      terminationGracePeriodSeconds: 30
+      containers:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: logging-sidecar
+        image: "nginx:1.15.9"
+        command: ["/bin/bash"]
+        args: ["/usr/local/bin/start-nginx.sh"]
+        imagePullPolicy: IfNotPresent
+        {{ if .Values.HTTPLogger.Secret }}
+        env:
+          - name: HTPASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.HTTPLogger.Secret }}
+                key: HTPASSWD
+        {{ end }}
+        ports:
+        - name: logs
+          containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: log-volume
+          mountPath: /usr/share/nginx/html
+        - name: logger-startup
+          mountPath: /usr/local/bin/start-nginx.sh
+          subPath: start-nginx.sh
+      {{ end }}
+      - name: condor-worker-worker
+        image: slateci/condor-worker:latest
+        volumeMounts:
+        {{ if .Values.HTTPLogger.Enabled }}
+        - name: log-volume
+          mountPath: /var/log/condor
+        {{ end }}
+        - name: executedir
+          mountPath: /var/lib/condor/execute
+        {{ if .Values.CondorConfig.PasswordFileSecret }}
+        - name: condor-passwordfile-volume
+          mountPath: /etc/condor/condor_password
+          subPath: condor_password
+        {{ end }}
+        {{ if .Values.CondorConfig.AuthTokenSecret }}
+        - name: condor-token-volume
+          mountPath: /root/tokens/condor_token
+          subPath: condor_token
+        {{ end }}
+        - name: condor-worker-{{ .Values.Instance}}-configuration
+          mountPath: /etc/condor/condor_config.local
+          subPath: condor_config.local
+        {{ if .Values.CondorConfig.Cvmfs }}
+        - name: config-osg
+          mountPath: /cvmfs/config-osg.opensciencegrid.org
+        - name: oasis
+          mountPath: /cvmfs/oasis.opensciencegrid.org
+        - name: spt
+          mountPath: /cvmfs/spt.opensciencegrid.org
+        - name: connect
+          mountPath: /cvmfs/connect.opensciencegrid.org
+        - name: singularity
+          mountPath: /cvmfs/singularity.opensciencegrid.org
+#        - name: atlas
+#          mountPath: /cvmfs/atlas.cern.ch
+#        - name: atlas-nightlies
+#          mountPath: /cvmfs/atlas-nightlies.cern.ch
+#        - name: atlas-condb
+#          mountPath: /cvmfs/atlas-condb.cern.ch
+        {{ end }}
+        env:
+        - name: _CONDOR_COLLECTOR_HOST
+          value: {{ .Values.CondorConfig.CollectorHost | quote }}
+        - name: _CONDOR_COLLECTOR_PORT
+          value: {{ .Values.CondorConfig.CollectorPort | quote }}
+        {{ if .Values.CondorConfig.MemoryLimit }}
+        - name: _CONDOR_MEMORY
+          value: {{ .Values.CondorConfig.MemoryLimit | quote }}
+        {{ end}}
+        {{ if .Values.CondorConfig.NumberCPUs }}
+        - name: _CONDOR_NUM_CPUS
+          value: {{ .Values.CondorConfig.NumberCPUs | quote }}
+        {{ end}}
+        - name: _CONDOR_NETWORK_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        resources:
+          requests:
+            {{ if .Values.CondorConfig.MemoryLimit }}
+            memory: "{{ .Values.CondorConfig.MemoryLimit }}Mi"
+            {{ end}}
+            {{ if .Values.CondorConfig.NumberCPUs }}
+            cpu:    "{{ .Values.CondorConfig.NumberCPUs }}000m"
+            {{ end}}
+          {{ if .Values.CondorConfig.UseGPU }}
+          limits:
+            nvidia.com/gpu: {{ .Values.CondorConfig.NumberGPUs }}
+          {{ end }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh","-c","condor_off ; sleep 10"]
