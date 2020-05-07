@@ -1,5 +1,9 @@
 Instance: ""
 
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
 # The following must be created *before* instantiating a GCSv4 container. 
 # Create a new file with the contents:
 #   GLOBUS_USER=<username>
