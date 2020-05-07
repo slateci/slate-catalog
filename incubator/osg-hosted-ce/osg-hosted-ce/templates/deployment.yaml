@@ -30,37 +30,41 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      {{ if .Values.VomsmapOverride }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-      {{ end }}
-      {{ if .Values.GridmapOverride }}
+      {{ if .Values.DnRemoteUserMapping }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
       {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
-          secretName: {{ .Values.Cluster.PrivateKeySecret }}
+          secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
           items:
           - key: bosco.key
             path: bosco.key
             mode: 256
-      {{ if .Values.Certificate.Secret }}
-      - name: osg-hosted-ce-hostcertkeypair-volume
+      {{ if .Values.HostCredentials.HostCertSecret }}
+      - name: osg-hosted-ce-hostcert-volume
         secret:
-          secretName: {{ .Values.Certificate.Secret }}
+          secretName: {{ .Values.HostCredentials.HostCertSecret }}
           items:
-            - key: hostcert.pem
+            - key: host.cert
               path: hostcert.pem
               mode: 256
-            - key: hostkey.pem
+      {{end}}
+      {{ if .Values.HostCredentials.HostKeySecret }}
+      - name: osg-hosted-ce-hostkey-volume
+        secret:
+          secretName: {{ .Values.HostCredentials.HostKeySecret }}
+          items:
+            - key: host.key
               path: hostkey.pem
               mode: 256
       {{end}}
       {{ if .Values.BoscoOverrides.Enabled }}
-      {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
+      {{ if .Values.BoscoOverrides.GitKeySecret }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
         secret:
           secretName: {{ .Values.BoscoOverrides.GitKeySecret }}
@@ -81,10 +85,14 @@ spec:
       initContainers:
       - name: logging-sidecar-init
         image: opensciencegrid/hosted-ce:fresh
+        imagePullPolicy: Always
         command: ['/bin/chown','condor:condor','/var/log/condor-ce']
         volumeMounts:
         - name: log-volume
           mountPath: /var/log/condor-ce
+      {{ end }}
+      {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
+      hostNetwork: true
       {{ end }}
       containers:
       {{ if .Values.HTTPLogger.Enabled }}
@@ -125,11 +133,13 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
-        {{ if .Values.Certificate.Secret }}
-        - name: osg-hosted-ce-hostcertkeypair-volume
+        {{ if .Values.HostCredentials.HostCertSecret }}
+        - name: osg-hosted-ce-hostcert-volume
           mountPath: /etc/grid-security/hostcert.pem
           subPath: hostcert.pem
-        - name: osg-hosted-ce-hostcertkeypair-volume
+        {{ end }}
+        {{ if .Values.HostCredentials.HostKeySecret }}
+        - name: osg-hosted-ce-hostkey-volume
           mountPath: /etc/grid-security/hostkey.pem
           subPath: hostkey.pem
         {{ end }}
@@ -142,12 +152,10 @@ spec:
           mountPath: /etc/osg/git.key
           subPath: git.key
         {{ end }}
-        {{ if .Values.VomsmapOverride }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
           mountPath: /etc/grid-security/voms-mapfile
           subPath: voms-mapfile
-        {{ end }}
-        {{ if .Values.GridmapOverride }}
+        {{ if .Values.DnRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
@@ -160,20 +168,29 @@ spec:
           containerPort: 80
           protocol: TCP
         env:
+        {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
+        - name: _CONDOR_NETWORK_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: CE_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        {{ else if eq .Values.Networking.ServiceType "LoadBalancer" }} 
         - name: _CONDOR_NETWORK_HOSTNAME
           value: {{ .Values.Networking.Hostname }}
         - name: CE_HOSTNAME
           value: {{ .Values.Networking.Hostname }}
+        {{ end }}
         - name: CE_CONTACT
-          value: {{ .Values.Site.ContactEmail }}
+          value: {{ .Values.Topology.ContactEmail }}
         - name: RESOURCE_NAME
-          value: {{ .Values.Site.Resource }}
+          value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
-          value: {{ .Values.Cluster.RemoteHost }}
+          value: {{ .Values.RemoteCluster.LoginHost }}
         - name: REMOTE_BATCH
-          value: {{ .Values.Cluster.RemoteBatch }}
-        - name: REMOTE_OS_VER
-          value: {{ .Values.Cluster.OperatingSystem }}
+          value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"
@@ -184,7 +201,7 @@ spec:
         - name: BOSCO_GIT_ENDPOINT
           value: {{ .Values.BoscoOverrides.GitEndpoint }}
         - name: BOSCO_DIRECTORY
-          value: {{ .Values.Site.Resource }}
+          value: {{ .Values.Topology.Resource }}
         {{ end }}
         lifecycle:
           preStop:

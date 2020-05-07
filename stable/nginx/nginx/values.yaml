@@ -22,7 +22,13 @@ Ingress:
   # The class of the ingress controller to use. 
   # For SLATE this should be 'slate'. 
   Class: slate
-  
+
+#Defines what IP ranges can access the app
+#If disabled all IP addresses can access the app
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs: 
+    - 0.0.0.0/0
 ### SLATE-START ###
 SLATE:
   Cluster:
