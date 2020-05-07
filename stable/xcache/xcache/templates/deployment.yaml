@@ -158,5 +158,4 @@ spec:
           {{- end }}
           - name: xcache-meta
             mountPath: "/xcache-meta"
-            readOnly: true
         {{ end }}
