@@ -1,5 +1,4 @@
 # Generates app name as "condor-worker-[Instance]"
-
 Instance: ""
 
 HTTPLogger:
