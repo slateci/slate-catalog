@@ -2,6 +2,14 @@
 # Results in a name like "stashcache-[Instance]"
 Instance: ""
 
+#Allows for the creation a a network policy that limits what cidrs can access this app
+#By default it is turned off
+#Default allowed cidr will create an allow all policy
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
+
 # Host Certificate and Key
 # The keys contained in the secret must be:
 #    hostcert.pem
