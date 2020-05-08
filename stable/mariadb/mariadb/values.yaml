@@ -3,6 +3,14 @@
 ##
 Instance: global
 
+#Allows for the creation a a network policy that limits what cidrs can access this app
+#By default it is turned off
+#Default allowed cidr will create an allow all policy
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
+
 service:
   ## Kubernetes service type, ClusterIP and NodePort are supported at present
   type: ClusterIP
