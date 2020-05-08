@@ -1,6 +1,14 @@
 # Generates app name as "gridftp-[Instance]"
 Instance: global
 
+#Allows for the creation a a network policy that limits what cidrs can access this app
+#By default it is turned off
+#Default allowed cidr will create an allow all policy
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
+
 GridFTPConfig:
   # The name of the secret that was created for the front end SSL certificate and key.
   # These must be PEM files named 'hostcert.pem' and 'hostkey.pem' respectively.
