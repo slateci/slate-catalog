@@ -3,6 +3,13 @@
 # Declare variables to be passed into your templates.
 
 Instance: ''
+#Allows for the creation a a network policy that limits what cidrs can access this app
+#By default it is turned off
+#Default allowed cidr will create an allow all policy
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
 
 # Whether to run only on specially marked nodes. 
 # If nodeSelection is true, this service will only run on a node
