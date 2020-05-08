@@ -1,6 +1,14 @@
 # SLATE platform instance tag
 Instance: ""
 
+#Allows for the creation a a network policy that limits what cidrs can access this app
+#By default it is turned off
+#Default allowed cidr will create an allow all policy
+SecurityNetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
+
 ## set kubernetes cluster domain where minio is running
 ##
 clusterDomain: cluster.local
