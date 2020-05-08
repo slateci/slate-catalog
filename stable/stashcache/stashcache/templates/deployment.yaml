@@ -78,7 +78,6 @@ spec:
         - name: stashcache-config
           mountPath: "/etc/osg/image-config.d/20-image-init.sh"
           subPath: xcache_image_init.sh
-          mode: 493
         - name: stashcache-config
           mountPath: "/etc/xrootd/config.d/90-local.cfg"
           subPath: 90-local.cfg
