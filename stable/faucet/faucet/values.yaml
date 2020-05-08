@@ -48,3 +48,7 @@ Configuration: |-
           - rule:
               actions:
                   allow: True
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+  - 0.0.0.0/0

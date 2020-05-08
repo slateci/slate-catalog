@@ -61,3 +61,10 @@ ldap:
   # `config` is the content of `ldap.toml` that will be stored in the created secret
   config: ""
 
+#Defines what IP ranges can access the app
+#If disabled all IP addresses can access the app
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs: 
+    - 0.0.0.0/0
+    
