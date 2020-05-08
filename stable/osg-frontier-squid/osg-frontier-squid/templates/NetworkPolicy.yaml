@@ -1,0 +1,34 @@
+{{ if .Values.NetworkPolicy.Enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "osg-frontier-squid.fullname" . }}
+  labels:
+    app: {{ template "osg-frontier-squid.name" . }}
+    chart: {{ template "osg-frontier-squid.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "osg-frontier-squid.name" . }}
+      chart: {{ template "osg-frontier-squid.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  - to:
+    {{- range .Values.NetworkPolicy.AllowedCIDRs}}
+    - ipBlock:
+        cidr: {{ . }}
+    {{- end }}
+  ingress:
+  - from:
+    {{- range .Values.NetworkPolicy.AllowedCIDRs}}
+    - ipBlock:
+        cidr: {{ . }}
+    {{- end }}
+{{ end }}
+---
