@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "xrootd.fullname" . }}
+  labels:
+    app: {{ template "xrootd.name" . }}
+    chart: {{ template "xrootd.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  type: NodePort
+  selector:
+    app: {{ template "xrootd.name" . }}
+    chart: {{ template "xrootd.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+  ports:
+    - protocol: TCP
+      name: xrootd
+      port: 1094
+      targetPort: 1094

@@ -1,0 +1,9 @@
+{{ if not .Values.Site.Name }}
+  {{ required "A site name (Site.Name) should be set" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if and .Values.SystemConfig.HostDataDirectory .Values.SystemConfig.PVCName }}
+  {{ required "SystemConfig.HostDataDirectory and SystemConfig.PVCName should not both be set" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (or .Values.SystemConfig.HostDataDirectory .Values.SystemConfig.PVCName) }}
+  {{ required "Either SystemConfig.HostDataDirectory or SystemConfig.PVCName should be set" .Values.Error_DoNotSet }}
+{{ end }}

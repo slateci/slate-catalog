@@ -1,0 +1,43 @@
+# Label for this particular deployed instance
+# Results in a name like "xrootd-[Instance]"
+Instance: ""
+
+# Host Certificate and Key
+# The keys contained in the secret must be:
+#    hostcert.pem
+#    hostkey.pem
+# run 'slate secret create --help' for usage
+# Leaving this as the empty string will disable the authenticated cache.
+hostCertSecret:
+
+SystemConfig:
+  # A directory on the host system from which xrootd should serve data. 
+  # Mutually exclusive with use of PVCName. 
+  HostDataDirectory: 
+  # the name of an existing persistent volume claim from which xrootd should 
+  # serve data. Mutually exclusive with use of HostDataDirectory. 
+  PVCName:
+  # A selector expression which should be used to select the nodes on which this 
+  # application can run. This may be used, for example, in conjunction with a 
+  # node label which indicates nodes which have a particular filesystem 
+  # available. 
+  # NodeSelector: "hasLustre: \"true\""
+
+XRootD:
+  # Authorization settings for the un-authenticated cache interface
+  # See https://opensciencegrid.org/docs/data/xrootd/xrootd-authorization
+  authfile: |-
+    u * / rl
+  # If set, this should be the name of a secret which contains a key 'grid-mapfile'
+  gridmapSecret:
+  # If set, this should be the name of a secret which contains a key 'voms-map-file'
+  vomsmapSecret:
+  # Any extra settings which should be injected into the xrootd configuration. 
+  # These will be added to the end of the chain of config files. 
+  # ConfigFile: |+
+  #   all.export /data
+
+Site:
+  # The name that the cache will use for itself when reporting to OSG 
+  # infrastructure
+  Name: 
