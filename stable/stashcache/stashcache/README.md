@@ -13,8 +13,8 @@ Settings for the cache can be customized using the standard Helm values mechanis
 ###Deployment
 ```console
 $ slate app get-conf stashcache > stashcache.yaml
-$ slate app install stashchache --group <group-name> --cluster <cluster-name> stashcache.yaml
+$ slate app install stashchache --group <group-name> --cluster <cluster-name> --conf stashcache.yaml
 ```
 
 #Configuration and usage
-For more information on using StaschCache please see this [documentation](https://opensciencegrid.org/docs/data/stashcache/overview/)
+For more information on using StashCache please see this [documentation](https://opensciencegrid.org/docs/data/stashcache/overview/)
