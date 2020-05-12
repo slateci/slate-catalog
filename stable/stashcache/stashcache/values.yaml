@@ -29,14 +29,11 @@ StashCache:
   BlockSize: 1M
   # to prefetch chunks that were not requested
   Prefetch: 0
-
-# Authorization settings for the un-authenticated cache interface
-authfileNoAuth: u * / rl
-
-# Authorization settings for the authenticated cache interface
-authfileAuth: u * / rl
-
-# Robots policy configuration
-stashcacheRobots: |-
-  User-agent: *
-  Disallow: /
+  # Authorization settings for the un-authenticated cache interface
+  authfileNoAuth: u * / rl
+  # Authorization settings for the authenticated cache interface
+  authfileAuth: u * / rl
+  # Robots policy configuration
+  stashcacheRobots: |-
+    User-agent: *
+    Disallow: /

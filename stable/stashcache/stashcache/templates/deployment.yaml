@@ -58,7 +58,7 @@ spec:
       {{ end }}
       containers:
       - name: stashcache
-        image: opensciencegrid/stash-cache:20190709-2328
+        image: opensciencegrid/stash-cache:fresh
         imagePullPolicy: Always
         env:
         - name: XC_ROOTDIR
@@ -101,3 +101,4 @@ spec:
           periodSeconds: 60
         ports:
         - containerPort: 1094
+        - containerPort: 8000
