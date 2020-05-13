@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "xrootd.fullname" . }}
+  labels:
+    app: {{ template "xrootd.name" . }}
+    chart: {{ template "xrootd.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "xrootd.name" . }}
+      chart: {{ template "xrootd.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "xrootd.name" . }}
+        chart: {{ template "xrootd.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      volumes:
+      - name: xrootd-config
+        configMap:
+          name: {{ template "xrootd.fullname" . }}-config
+          defaultMode: 420
+      - name: xrootd-data
+        {{ if .Values.SystemConfig.HostDataDirectory }}
+        hostPath:
+          path: {{ .Values.SystemConfig.HostDataDirectory }}
+        {{ end }}
+        {{ if .Values.SystemConfig.PVCName }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.SystemConfig.PVCName }}
+        {{ end }}
+      {{ if .Values.hostCertSecret}}
+      - name: host-certificate
+        secret:
+          secretName: {{ .Values.hostCertSecret }}
+          items:
+          - key: hostcert.pem
+            path: hostcert.pem
+          - key: hostkey.pem
+            path: hostkey.pem
+      {{ end }}
+      {{ if .Values.XRootD.gridmapSecret}}
+      - name: gridmap
+        secret:
+          secretName: {{ .Values.XRootD.gridmapSecret }}
+          items:
+          - key: grid-mapfile
+            path: grid-mapfile
+      {{ end }}
+      {{ if .Values.XRootD.vomsmapSecret}}
+      - name: vomsmap
+        secret:
+          secretName: {{ .Values.XRootD.vomsmapSecret }}
+          items:
+          - key: voms-map-file
+            path: voms-map-file
+      {{ end }}
+      containers:
+      - name: xrootd
+        image: opensciencegrid/xrootd-standalone:20200501-2135
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: "/data"
+          name: xrootd-data
+          readOnly: false
+        - name: xrootd-config
+          mountPath: "/etc/xrootd/config.d/10-site-variables.cfg"
+          subPath: 10-site-variables.cfg
+        - name: xrootd-config
+          mountPath: "/etc/xrootd/auth_file"
+          subPath: Authfile-noauth
+        {{ if .Values.hostCertSecret }}
+        - mountPath: /etc/grid-security/hostcert.pem
+          name: host-certificate
+          readOnly: true
+          subPath: hostcert.pem 
+        - mountPath: /etc/grid-security/hostkey.pem
+          name: host-certificate
+          readOnly: true
+          subPath: hostkey.pem
+        {{ end }}
+        {{ if .Values.XRootD.gridmapSecret}}
+        - mountPath: /etc/grid-security/grid-mapfile
+          name: gridmap
+          subPath: grid-mapfile
+        {{ end }}
+        {{ if .Values.XRootD.vomsmapSecret}}
+        - mountPath: /etc/grid-security/voms-map-file
+          name: vomsmap
+          subPath: voms-map-file
+        {{ end }}
+        livenessProbe:
+          tcpSocket:
+            port: 1094
+          initialDelaySeconds: 180
+          periodSeconds: 60
+        ports:
+        - containerPort: 1094
+      {{ if .Values.SystemConfig.NodeSelector }}
+      nodeSelector:
+        {{ .Values.SystemConfig.NodeSelector }}
+      {{ end }}

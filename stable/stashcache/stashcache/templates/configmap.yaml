@@ -1,11 +1,11 @@
 apiVersion: v1
 data:
   Authfile-noauth: |-
-{{ .Values.authfileNoAuth | indent 4 }}
+{{ .Values.StashCache.authfileNoAuth | indent 4 }}
   Authfile-auth: |-
-{{ .Values.authfileAuth | indent 4 }}
+{{ .Values.StashCache.authfileAuth | indent 4 }}
   stashcache-robots.txt: |-
-{{ .Values.stashcacheRobots | indent 4 }}
+{{ .Values.StashCache.stashcacheRobots | indent 4 }}
   xcache_image_init.sh: |-
     #!/bin/sh
     

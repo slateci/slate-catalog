@@ -1,0 +1,20 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "xrootd.fullname" . }}-config
+  labels:
+    app: {{ template "xrootd.name" . }}
+    chart: {{ template "xrootd.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  Authfile-noauth: |-
+{{ .Values.XRootD.authfile | indent 4 }}
+  10-site-variables.cfg: |+
+    set sitename = {{ .Values.Site.Name }}
+    set resourcename = {{ .Values.Site.Name }}
+    set rootdir = /data
+  99-local.cfg: |-
+{{ if .Values.XRootD.ConfigFile }}
+{{ .Values.XRootD.ConfigFile | indent 4 }}
+{{ end }}
