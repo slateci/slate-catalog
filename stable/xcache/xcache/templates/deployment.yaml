@@ -132,6 +132,10 @@ spec:
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
           volumeMounts:
+          {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $nindex }}
+            mountPath: "/xcache-data_{{ $nindex }}"
+          {{- end }}
           - name: xcache-meta
             mountPath: "/xcache-meta"
             readOnly: true
@@ -141,6 +145,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command: ["/run_shuffler.sh"]
           env:
+          - name: XC_SITE
+            value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_REPORT_COLLECTOR
+            value: "{{ .Values.Monitoring.Collector }}"
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories -}}
           {{ if .hot }}
           - name: XC_HOT_{{ $nindex }}
