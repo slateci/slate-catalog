@@ -65,7 +65,7 @@ data:
     JOB_ROUTER_DEFAULTS @=jrd
     $(JOB_ROUTER_DEFAULTS)
     [
-    GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }}", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}");
+    GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}");
     ]
     @jrd
 
