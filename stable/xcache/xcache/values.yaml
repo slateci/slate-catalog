@@ -21,15 +21,9 @@ Monitoring:
   Collector: http://uct2-collectd.mwt2.org:8080
 
 XCacheConfig:
-  # Setting Hot to true will run shuffler. 
-  # Don't do it unless one of the cache directories has hot set to true.
-  Hot: true
-  # Local directory to be used as a cache
+  # Local directories to be used as a cache
   CacheDirectories:
     - path: /scratch_HOT
-      hot: true
-      hotWHM: 0.60
-      hotLWM: 0.40
     - path: /scratch_B
   MetaDirectory: /scratch_meta
   # Space usage
