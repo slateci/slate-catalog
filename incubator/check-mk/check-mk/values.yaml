@@ -1,7 +1,8 @@
 # Default values for check-mk.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.\
-Instance: global
+Instance: "checkmktest"
+StorageClass: nfs-provisioner
 replicaCount: 1
 service:
   name: check-mk
