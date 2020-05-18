@@ -62,10 +62,14 @@ data:
     TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
 {{ end }}
 
+    # HACK: The job router doesn't recognize grid universe routes (the default) without
+    # a "GridResource" attribute and the Gridmanager doesn't evaluate GridResource expressions.
+    # So we set a dummy "GridResource" attribute and use "eval_set_GridResource"  to force the
     JOB_ROUTER_DEFAULTS @=jrd
     $(JOB_ROUTER_DEFAULTS)
     [
-    GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}");
+    GridResource = "intentionally left blank";
+    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}");
     ]
     @jrd
 
