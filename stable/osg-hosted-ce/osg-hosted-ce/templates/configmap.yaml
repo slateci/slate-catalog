@@ -16,49 +16,36 @@ data:
     group = OSG
     {{ end }}
     host_name = localhost
-    resource = {{ .Values.Site.Resource }}
-    resource_group = {{ .Values.Site.ResourceGroup }}
-    sponsor = {{ .Values.Site.Sponsor }}
-    site_policy = UNAVAILABLE
-    contact = {{ .Values.Site.Contact }}
-    email = {{ .Values.Site.ContactEmail }}
-    city = {{ .Values.Site.City }}
-    country = {{ .Values.Site.Country }}
-    latitude = {{ .Values.Site.Latitude }}
-    longitude = {{ .Values.Site.Longitude }}
+    resource = {{ .Values.Topology.Resource }}
+    sponsor = {{ .Values.Topology.Sponsor }}
+    contact = {{ .Values.Topology.Contact }}
+    email = {{ .Values.Topology.ContactEmail }}
+    city = {{ .Values.Topology.City }}
+    country = {{ .Values.Topology.Country }}
+    latitude = {{ .Values.Topology.Latitude }}
+    longitude = {{ .Values.Topology.Longitude }}
 
     [BOSCO]
     enabled = False
 
-    [Misc Services]
-    edit_lcmaps_db = True
-    authorization_method = vomsmap
-
     [Storage]
-    se_available = False
-    default_se = None
-    grid_dir = {{ .Values.Storage.GridDir }}
-    app_dir = UNSET
-    data_dir = None
-    worker_node_temp = {{ .Values.Storage.WorkerNodeTemp }}
+    grid_dir = {{ .Values.RemoteCluster.GridDir }}
+    worker_node_temp = {{ .Values.RemoteCluster.WorkerNodeTemp }}
 
-    [Subcluster {{ .Values.Site.Resource }}]
-    name = {{ .Values.Site.Resource }}
-    ram_mb = {{ .Values.Cluster.Memory }}
-    cores_per_node = {{ .Values.Cluster.CoresPerNode }}
-    max_wall_time = {{ .Values.Cluster.MaxWallTime }}
-    allowed_vos = {{ .Values.Cluster.AllowedVOs }}
+    [Subcluster {{ .Values.Topology.Resource }}]
+    name = {{ .Values.Topology.Resource }}
+    ram_mb = {{ .Values.RemoteCluster.MemoryPerNode }}
+    cores_per_node = {{ .Values.RemoteCluster.CoresPerNode }}
+    max_wall_time = {{ .Values.RemoteCluster.MaxWallTime }}
+    allowed_vos = *
 
     [Squid]
-    {{ if .Values.Squid.Location }}
+    {{ if .Values.RemoteCluster.Squid }}
     enabled = True
     {{ else }}
     enabled = False
     {{ end }}
-    location =  {{ .Values.Squid.Location }}
-    policy = DEFAULT
-    cache_size = DEFAULT
-    memory_size = DEFAULT
+    location =  {{ .Values.RemoteCluster.Squid }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -74,8 +61,23 @@ data:
 {{ if .Values.Networking.RequestIP }}
     TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
 {{ end }}
+
+    # HACK: The job router doesn't recognize grid universe routes (the default) without
+    # a "GridResource" attribute and the Gridmanager doesn't evaluate GridResource expressions.
+    # So we set a dummy "GridResource" attribute and use "eval_set_GridResource"  to force the
+    JOB_ROUTER_DEFAULTS @=jrd
+    $(JOB_ROUTER_DEFAULTS)
+    [
+    GridResource = "intentionally left blank";
+    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}");
+    ]
+    @jrd
+
+    JOB_ROUTER_ENTRIES = [Name = "Hosted_CE_default_route"]
+
+    JOB_ROUTER_ROUTE_NAMES = Hosted_CE_default_route
+    # Operator-provided HTCondor-CE configuration below this line
 {{ .Values.HTCondorCeConfig | default "" | indent 4 }}
-{{ if .Values.VomsmapOverride }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -88,9 +90,12 @@ metadata:
     release: {{ .Release.Name }}
 data:
   voms-mapfile: |+
-{{ .Values.VomsmapOverride | indent 4 }}
-{{ end }}
-{{ if .Values.GridmapOverride }}
+    {{- range $index, $map := .Values.VoRemoteUserMapping }}
+    {{- range $voms, $user := $map }}
+    {{ $voms | quote }} {{ $user }}
+    {{- end }}
+    {{- end }}
+{{ if .Values.DnRemoteUserMapping }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -103,7 +108,11 @@ metadata:
     release: {{ .Release.Name }}
 data:
   grid-mapfile: |+
-{{ .Values.GridmapOverride | indent 4 }}
+    {{- range $index, $map := .Values.DnRemoteUserMapping }}
+    {{- range $dn, $user := $map }}
+    {{ $dn | quote }} {{ $user }}
+    {{- end}}
+    {{- end }}
 {{ end }}
 {{ if .Values.HTTPLogger.Enabled }}
 ---

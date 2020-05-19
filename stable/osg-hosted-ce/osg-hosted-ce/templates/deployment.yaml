@@ -30,19 +30,17 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      {{ if .Values.VomsmapOverride }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-      {{ end }}
-      {{ if .Values.GridmapOverride }}
+      {{ if .Values.DnRemoteUserMapping }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
       {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
-          secretName: {{ .Values.Cluster.PrivateKeySecret }}
+          secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
           items:
           - key: bosco.key
             path: bosco.key
@@ -66,7 +64,7 @@ spec:
               mode: 256
       {{end}}
       {{ if .Values.BoscoOverrides.Enabled }}
-      {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
+      {{ if .Values.BoscoOverrides.GitKeySecret }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
         secret:
           secretName: {{ .Values.BoscoOverrides.GitKeySecret }}
@@ -154,12 +152,10 @@ spec:
           mountPath: /etc/osg/git.key
           subPath: git.key
         {{ end }}
-        {{ if .Values.VomsmapOverride }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
           mountPath: /etc/grid-security/voms-mapfile
           subPath: voms-mapfile
-        {{ end }}
-        {{ if .Values.GridmapOverride }}
+        {{ if .Values.DnRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
@@ -188,13 +184,13 @@ spec:
           value: {{ .Values.Networking.Hostname }}
         {{ end }}
         - name: CE_CONTACT
-          value: {{ .Values.Site.ContactEmail }}
+          value: {{ .Values.Topology.ContactEmail }}
         - name: RESOURCE_NAME
-          value: {{ .Values.Site.Resource }}
+          value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
-          value: {{ .Values.Cluster.RemoteHost }}
+          value: {{ .Values.RemoteCluster.LoginHost }}
         - name: REMOTE_BATCH
-          value: {{ .Values.Cluster.RemoteBatch }}
+          value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"
@@ -205,7 +201,7 @@ spec:
         - name: BOSCO_GIT_ENDPOINT
           value: {{ .Values.BoscoOverrides.GitEndpoint }}
         - name: BOSCO_DIRECTORY
-          value: {{ .Values.Site.Resource }}
+          value: {{ .Values.Topology.Resource }}
         {{ end }}
         lifecycle:
           preStop:
