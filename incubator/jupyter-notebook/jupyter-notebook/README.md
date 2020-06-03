@@ -46,7 +46,7 @@ Then, add the generated token to the file:
      
 Alternatively, if you have a JupyterLab password hash you'd like to use, you can just add it to the config file under Jupyter>Password. This is only useful for users who have access to another Jupyter Lab as the hashed password generation needs a Jupyter function called "notebook.auth.security.passwd()". 
 
-Once your done with this part, the configuration would look like:
+Once you're done with this part, the configuration would look like:
 
 	Jupyter:
      NB_USER: 'slate'

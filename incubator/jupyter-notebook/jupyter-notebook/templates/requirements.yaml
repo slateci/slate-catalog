@@ -1,0 +1,19 @@
+{{ if not (kindIs "float64" .Values.Resources.CPU) }}
+  {{ required "Resources.CPU must be a number (in thousandths of CPU cores)" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (eq .Values.Resources.CPU (floor .Values.Resources.CPU)) }}
+  {{ required "Resources.CPU must be an integer" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (gt .Values.Resources.CPU 0.0) }}
+  {{ required "Resources.CPU must be greater than zero" .Values.Error_DoNotSet }}
+{{ end }}
+
+{{ if not (kindIs "float64" .Values.Resources.Memory) }}
+  {{ required "Resources.Memory must be a number (in megabytes)" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (eq .Values.Resources.Memory (floor .Values.Resources.Memory)) }}
+  {{ required "Resources.Memory must be an integer" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (gt .Values.Resources.Memory 0.0) }}
+  {{ required "Resources.Memory must be greater than zero" .Values.Error_DoNotSet }}
+{{ end }}

@@ -4,12 +4,16 @@ metadata:
   name: jupyter-{{ .Values.Instance }}-startup
   labels:
     app: {{ template "jupyter.name" . }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
   startup_script.sh: |+
     #!/bin/bash
-    #
-    #sleep 10
+    
+    # users won't be able to run `unminimize anyway`
+    rm /etc/update-motd.d/60-unminimize
+    
     mkdir -p /home/{{ .Values.Jupyter.NB_USER }}/.ssh
     {{ if eq .Values.SSH.Enabled true }}
     echo {{ .Values.SSH.SSH_Public_Key }} > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
@@ -23,3 +27,25 @@ data:
     cat /etc/supervisor/supervisord.d/htcondor.conf  >> /etc/supervisor/conf.d/supervisord.conf
     {{ end }}
     /usr/bin/supervisord
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jupyter-{{ .Values.Instance }}-motd
+  labels:
+    app: {{ template "jupyter.name" . }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  99-limits: |+
+    #!/bin/sh
+    millicores={{ .Values.Resources.CPU }}
+    cores=$(expr ${millicores} / 1000)
+    if [ "$(expr ${cores} '*' 1000)" -ne "${millicores}" ]; then
+        cores=$(printf ${cores}'.%.3i' $(expr ${millicores} % 1000) | sed 's|0*$||')
+    fi
+    echo
+    echo "This container is configured with:"
+    echo "  ${cores} CPU core(s)"
+    echo "  {{ .Values.Resources.Memory }} MB of RAM"

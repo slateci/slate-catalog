@@ -11,24 +11,38 @@ Ingress:
   # For SLATE this should be 'slate'. 
   Class: slate
 Jupyter:
-#Change this if you want to have a custom username and home dirctory
+  #Change this if you want to have a custom username and home dirctory
   NB_USER: 'jovyan'
-#The below hashed password can only be generated using a Jupyter function called "notebook.auth.security.passwd()" So you don't have access to another Jupyter setup to use that function, you should probably leave the Sample default value. (It doesn't correspond to a real password)  
+  #The below hashed password can only be generated using a Jupyter function called "notebook.auth.security.passwd()" So you don't have access to another Jupyter setup to use that function, you should probably leave the Sample default value. (It doesn't correspond to a real password)  
   Password: 'sha1:94491e2a6996:9024SampleHashedPassword5cf4276925cb6b151'
-#Generate a random token for authentication and add it below
+  #Generate a random token for authentication and add it below
   Token: '90246f039b038==RandomlyGenerated==cf4276925cb6b151'
-#condor-submit config
+Resources:
+  # The maximum amount of CPU resources the notebook should be able to use
+  # in units of thousandths of a CPU core, e.g. 1000 == 1 CPU core. 
+  CPU: 1000
+  # The maximum amount of memory the notebook should be able to use, 
+  # in megabytes. 
+  # Note that jupyter and other built-in components use some memory,
+  # so somewhat less than the value specified here will be available 
+  # to user code. 
+  Memory: 256
+
 CondorConfig:
+  #Change this to true and set the other variables in this section 
+  #to enable the notebook to submit batch jobs to an HTCondor pool
   Enabled: false
-#Add the IP address for the condor collector
+  #Add the IP address for the condor collector
   CollectorHost: 127.0.0.1
-#Add the port number for the condor collector
+  #Add the port number for the condor collector
   CollectorPort: 30287
-#Add the SLATE secret that your created with the condor submit token
+  #Add the SLATE secret that your created with the condor submit token
   AuthTokenSecret: submit-auth-token
-SSH:  
+SSH:
+  #Change this to true and set a public key below to enable direct 
+  #login to the notebook container with SSH
   Enabled: false
-#Do NOT use your SSH private key here. Your public ssh key starts with 'ssh-rsa'
+  #Do NOT use your SSH private key here. Your public ssh key starts with 'ssh-rsa'
   SSH_Public_Key: 'ssh-rsa AAAAB3N=====SamplePublicSSHKey======vH6Edp6+J81Itt+x8Cy/JrjMhzSjAs5Gt1RiKdMSmhclGz3s+h/KL8f12tjA3Uk0PSPqgRTN2L435/X1Hche7CiT6ZJqpCoxa8J4mbLzYaLeGWnNremJ90Q/udO+IUYvviDsgDeB1msIDWfIylDxMteMZ50WTkPVur+Yl2TG6mxNNdNshzHSxtOM3IB2+Q9ChYRFB59J38Wx1+9/1Mnf53 slate'
 
 ### SLATE-START ###

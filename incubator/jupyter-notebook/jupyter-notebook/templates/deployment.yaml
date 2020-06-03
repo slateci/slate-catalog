@@ -40,6 +40,13 @@ spec:
           - key: startup_script.sh
             path: startup_script.sh
             mode: 0755
+      - name: jupyter-{{ .Values.Instance }}-motd
+        configMap:
+          name: jupyter-{{ .Values.Instance }}-motd
+          items:
+          - key: 99-limits
+            path: 99-limits
+            mode: 0755
       containers:
       - name: scipy-notebook
         image: slateci/jupyter-condor:latest
@@ -60,7 +67,14 @@ spec:
           value: {{ .Values.Jupyter.Password | quote }} 
         - name: JupyterToken
           value: {{ .Values.Jupyter.Token | quote }} 
-
+        resources:
+          requests:
+            # For CPU only, set request as half of limit
+            cpu: "{{ div .Values.Resources.CPU 2 }}m"
+            memory: "{{ .Values.Resources.Memory }}Mi"
+          limits:
+            cpu: "{{ .Values.Resources.CPU }}m"
+            memory: "{{ .Values.Resources.Memory }}Mi"
         ports:
         - containerPort: 8888
         command: ["/usr/bin/startup_script.sh"] 
@@ -73,4 +87,7 @@ spec:
         - name: jupyter-{{ .Values.Instance }}-startup
           mountPath: "/usr/bin/startup_script.sh"
           subPath: startup_script.sh
+        - name: jupyter-{{ .Values.Instance }}-motd
+          mountPath: "/etc/update-motd.d/99-limits"
+          subPath: 99-limits
 
