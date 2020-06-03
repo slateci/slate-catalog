@@ -142,10 +142,6 @@ spec:
               port: {{ .Values.Service.Port }}
             initialDelaySeconds: 180
             periodSeconds: 60
-          lifecycle:
-            preStop:
-              exec:
-                command: ["./updateAGISstatus.sh","{{ .Values.SiteConfig.AGISprotocolID }}","DISABLED"]
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:

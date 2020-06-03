@@ -1,7 +1,7 @@
 # Instance to label use case of XCache deployment
 # Generates app name as "xcache-[Instance]"
 # Enables unique instances of XCache in one namespace
-Instance: ""
+Instance: umich-test
 
 Service:
   # Port that the service will utilize.
@@ -15,7 +15,7 @@ SiteConfig:
   Name: MWT2
   # AGIS protocol ID. 433 is a dummy value. 
   # can be looked up in this URL: http://atlas-agis.cern.ch/agis/serviceprotocol/edit/433/
-  AGISprotocolID: 433
+  #AGISprotocolID: 433
 
 Monitoring:
   Collector: http://uct2-collectd.mwt2.org:8080
