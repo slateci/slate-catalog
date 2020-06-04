@@ -11,8 +11,17 @@ Ingress:
   # For SLATE this should be 'slate'. 
   Class: slate
 Jupyter:
-  #Change this if you want to have a custom username and home dirctory
+  #Change this if you want to have a custom username and home directory
   NB_USER: 'jovyan'
+  #Change this if you want to have a custom unix UID, 
+  #for example, to match one you use on a shared filesystem
+  NB_UID: 1000
+  #Change this if you want to have a custom default unix GID, 
+  #for example, to match one you use on a shared filesystem
+  NB_GID: 100
+  #If you change NB_GID you should set this to the name you want your 
+  #custom group to have. This must be different from any existing group name
+  NB_GROUP: my-group
   #The below hashed password can only be generated using a Jupyter function called "notebook.auth.security.passwd()" So you don't have access to another Jupyter setup to use that function, you should probably leave the Sample default value. (It doesn't correspond to a real password)  
   Password: 'sha1:94491e2a6996:9024SampleHashedPassword5cf4276925cb6b151'
   #Generate a random token for authentication and add it below

@@ -11,20 +11,32 @@ data:
   startup_script.sh: |+
     #!/bin/bash
     
-    # users won't be able to run `unminimize anyway`
+    # users won't be able to run `unminimize` anyway
     rm /etc/update-motd.d/60-unminimize
     
+    NB_UID={{ .Values.Jupyter.NB_UID }}
+    NB_GID={{ .Values.Jupyter.NB_GID }}
+    NB_GROUP={{ .Values.Jupyter.NB_GROUP }}
+    
+    #create the user's ssh config directory, and if necessary the whole home directory
     mkdir -p /home/{{ .Values.Jupyter.NB_USER }}/.ssh
     {{ if eq .Values.SSH.Enabled true }}
-    echo {{ .Values.SSH.SSH_Public_Key }} > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
-    chmod 0600 /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
+    echo '{{ .Values.SSH.SSH_Public_Key }}' > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
+    chmod 600 /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
     {{ end }}
-    chown -R 1000:100 /home/$NB_USER
+    #if the group is not the default, create it
+    if [ $NB_GID -ne 100 ]; then
+      groupadd -g "$NB_GID" "$NB_GROUP"
+    fi
+    #set the UID and ensure correct ownership of the home directory and contents
+    usermod -u $NB_UID -g $NB_GID jovyan
+    chown -R ${NB_UID}:${NB_GID} /home/$NB_USER
+    #add other services to supervisor's configuration if needed
     {{ if eq .Values.SSH.Enabled true}}
-    cat /etc/supervisor/supervisord.d/sshd.conf >> /etc/supervisor/conf.d/supervisord.conf
+    mv /etc/supervisor/supervisord.d/sshd.conf /etc/supervisor/conf.d/
     {{ end }}
     {{ if eq .Values.CondorConfig.Enabled true}}
-    cat /etc/supervisor/supervisord.d/htcondor.conf  >> /etc/supervisor/conf.d/supervisord.conf
+    mv /etc/supervisor/supervisord.d/htcondor.conf /etc/supervisor/conf.d/
     {{ end }}
     /usr/bin/supervisord
 ---

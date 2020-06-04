@@ -17,3 +17,29 @@
 {{ if not (gt .Values.Resources.Memory 0.0) }}
   {{ required "Resources.Memory must be greater than zero" .Values.Error_DoNotSet }}
 {{ end }}
+
+{{ if not (kindIs "float64" .Values.Jupyter.NB_UID) }}
+  {{ required "Jupyter.NB_UID must be a number" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (eq .Values.Jupyter.NB_UID (floor .Values.Jupyter.NB_UID)) }}
+  {{ required "Jupyter.NB_UID must be an integer" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (gt .Values.Jupyter.NB_UID 0.0) }}
+  {{ required "Jupyter.NB_UID must be greater than zero" .Values.Error_DoNotSet }}
+{{ end }}
+
+{{ if not (kindIs "float64" .Values.Jupyter.NB_GID) }}
+  {{ required "Jupyter.NB_GID must be a number" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (eq .Values.Jupyter.NB_GID (floor .Values.Jupyter.NB_GID)) }}
+  {{ required "Jupyter.NB_GID must be an integer" .Values.Error_DoNotSet }}
+{{ end }}
+{{ if not (gt .Values.Jupyter.NB_GID 0.0) }}
+  {{ required "Jupyter.NB_GID must be greater than zero" .Values.Error_DoNotSet }}
+{{ end }}
+
+{{ if ne .Values.Jupyter.NB_GID 100.0 }}
+  {{ if not .Values.Jupyter.NB_GROUP }}
+    {{ required "Jupyter.NB_GROUP must be set when Jupyter.NB_GID is set to a non-default value" .Values.Error_DoNotSet }}
+  {{ end }}
+{{ end }}
