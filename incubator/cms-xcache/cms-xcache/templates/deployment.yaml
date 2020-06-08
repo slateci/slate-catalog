@@ -177,5 +177,3 @@ spec:
             name: data10
           - mountPath: /data11
             name: data11
-          - name: xcache-meta
-            mountPath: "/xcache-meta"
