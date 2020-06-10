@@ -1,4 +1,3 @@
-{{ if .Values.ExtraConf.Enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -14,32 +13,32 @@ data:
     grep -v cache_dir /etc/squid/squid.conf.frontierdefault > /etc/squid/squid.conf
     echo '
     acl NET_LOCAL src {{ .Values.SquidConf.IPRange }}
-    {{ if .Values.ExtraConf.MonitoringIPRange }}
-    acl HOST_MONITOR src {{ .Values.ExtraConf.MonitoringIPRange }}
+    {{ if .Values.SquidConf.MonitoringIPRange }}
+    acl HOST_MONITOR src {{ .Values.SquidConf.MonitoringIPRange }}
     {{ end }}
     cache_mem {{ .Values.SquidConf.CacheMem }} MB
-    {{ if .Values.ExtraConf.Workers }}
-    workers {{ .Values.ExtraConf.Workers }}
+    {{ if .Values.SquidConf.Workers }}
+    workers {{ .Values.SquidConf.Workers }} # multiple worker case
     cache_dir ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256
     logformat awstats %>a kid${process_number} %un [%{%d/%b/%Y:%H:%M:%S}tl.%03tu %{%z}tl] "%rm %ru HTTP/%rv" %>Hs %<st %Ss:%Sh %tr "%{X-Frontier-Id}>h %{cvmfs-info}>h" "%{Referer}>h" "%{User-Agent}>h"
     visible_hostname '`uname -n`'/${process_number}
-    {{ else }}
-    cache_dir ufs $SQUID_CACHE_DISK_LOCATION {{ .Values.SquidConf.CacheSize }} 16 256
+    {{ else }} # single worker case
+    cache_dir ufs /var/cache/squid {{ .Values.SquidConf.CacheSize }} 16 256
     {{ end }}
-    {{ if .Values.ExtraConf.Cpu_Affinity_Map }}
-    cpu_affinity_map {{ .Values.ExtraConf.Cpu_Affinity_Map }}
+    {{ if .Values.SquidConf.Cpu_Affinity_Map }}
+    cpu_affinity_map {{ .Values.SquidConf.Cpu_Affinity_Map }}
     {{ end }}
-    {{ if .Values.ExtraConf.Logfile_Rotate }}
-    logfile_rotate {{ .Values.ExtraConf.Logfile_Rotate }}
+    {{ if .Values.SquidConf.Logfile_Rotate }}
+    logfile_rotate {{ .Values.SquidConf.Logfile_Rotate }}
     {{ end }}
     acl URN proto URN
     http_access deny URN
     ' >> /etc/squid/squid.conf
     
-    {{ if .Values.ExtraConf.Workers }}
+    {{ if .Values.SquidConf.Workers }}
     chown -R squid:squid /var/cache/squid
     if [[ ! -d /var/cache/squid/squid0/00 ]]; then
-      for kid in $(seq 0 {{ .Values.ExtraConf.Workers }}); do
+      for kid in $(seq 0 {{ .Values.SquidConf.Workers }}); do
         echo "Initializing cache for worker $kid..."
         grep -v cache_dir /etc/squid/squid.conf.frontierdefault > squid_init.conf
         echo "cache_dir ufs /var/cache/squid/squid${kid} {{ .Values.SquidConf.CacheSize }} 16 256" >> squid_init.conf
@@ -54,5 +53,4 @@ data:
         /usr/sbin/squid -N -f /etc/squid/squid.conf -z
     fi
     {{ end }}
-    echo "End of 60-image-post-init.sh"
-{{ end }}
+    echo "End of custom 60-image-post-init.sh"

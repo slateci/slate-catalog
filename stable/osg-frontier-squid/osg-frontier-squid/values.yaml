@@ -1,7 +1,7 @@
 # Instance to label use case of Frontier Squid deployment
 # Generates app name as "osg-frontier-squid-[Instance]"
 # Enables unique instances of Frontier Squid in one namespace
-Instance: global
+Instance: ""
 
 ### SLATE-START ###
 # Deployment specific information used for the SLATE methodology
@@ -56,24 +56,22 @@ SquidConf:
   # The default set of ranges are those defined in RFC 1918 and typically used 
   # within kubernetes clusters. 
   IPRange: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
-  
-  # Hostname (FQDN) for the cluster node you want this instance to schedule on.
-  # This will also be the hostname used to access the squid if ExternalVisibility is set to NodePort
-  # Set this to null to be randomly assigned an available node
-NodeSelection:  
-  Hostname: null
-
-  #If extra configuration options are wanted, the values for said options should be inserted here
-  #By default these extra configuration options are turned off, set ExtraConfig to True to turn them on
-
-ExtraConf:
-  Enabled: false
 
   # The range of IP addresses that will be allowed to query the service's monitoring data.
   # Multiple ranges can be provided, each seperated by a space.
   # Example: 128.142.0.0/16 188.185.0.0/17
   MonitoringIPRange: 127.0.0.1/32
 
+  # Set this if you want to run more than one cache process concurrently.
+  # Cache memory/disk space is not shared; values configured above are per process. 
   #Workers: 4
+  # This setting can be used to pin cache processes to CPU cores
   #Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
+  # Configure the number of names to use when rotating logfiles
   #Logfile_Rotate: "10"
+  
+NodeSelection:  
+  # Hostname (FQDN) for the cluster node you want this instance to schedule on.
+  # This will also be the hostname used to access the squid if ExternalVisibility is set to NodePort
+  # Set this to null to be randomly assigned an available node
+  Hostname: null
