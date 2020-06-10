@@ -32,6 +32,14 @@ Service:
   # that attempting to select a port manually outside the NodePort range will
   # fail. 
   #NodePort: 31200
+  # Port the service will use for serving monitoring data
+  MonitoringPort: 3401
+  # External port on which the monitoring will be accessible when using
+  # NodePort visibility. The default behavior, if this value is not set, is for 
+  # Kubernetes to select a port randomly from within its NodePort range. Note
+  # that attempting to select a port manually outside the NodePort range will
+  # fail. 
+  #MonitoringNodePort: 31201
 
 SquidConf:
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
@@ -60,6 +68,12 @@ NodeSelection:
 
 ExtraConf:
   Enabled: false
-  Workers: 4
-  Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
-  Logfile_Rotate: "10"
+
+  # The range of IP addresses that will be allowed to query the service's monitoring data.
+  # Multiple ranges can be provided, each seperated by a space.
+  # Example: 128.142.0.0/16 188.185.0.0/17
+  MonitoringIPRange: 127.0.0.1/32
+
+  #Workers: 4
+  #Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
+  #Logfile_Rotate: "10"

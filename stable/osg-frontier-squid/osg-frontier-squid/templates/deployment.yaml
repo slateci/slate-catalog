@@ -42,6 +42,9 @@ spec:
         ports:
         - containerPort: 3128
           name: squid
+        - containerPort: 3401
+          name: monitoring
+          protocol: UDP
         env:
         - name: SQUID_IPRANGE
           value: "{{ .Values.SquidConf.IPRange }}"

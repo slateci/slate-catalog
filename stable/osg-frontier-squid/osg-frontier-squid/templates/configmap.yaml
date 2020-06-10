@@ -14,17 +14,29 @@ data:
     grep -v cache_dir /etc/squid/squid.conf.frontierdefault > /etc/squid/squid.conf
     echo '
     acl NET_LOCAL src {{ .Values.SquidConf.IPRange }}
+    {{ if .Values.ExtraConf.MonitoringIPRange }}
+    acl HOST_MONITOR src {{ .Values.ExtraConf.MonitoringIPRange }}
+    {{ end }}
     cache_mem {{ .Values.SquidConf.CacheMem }} MB
+    {{ if .Values.ExtraConf.Workers }}
     workers {{ .Values.ExtraConf.Workers }}
     cache_dir ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256
-    cpu_affinity_map {{ .Values.ExtraConf.Cpu_Affinity_Map }}
     logformat awstats %>a kid${process_number} %un [%{%d/%b/%Y:%H:%M:%S}tl.%03tu %{%z}tl] "%rm %ru HTTP/%rv" %>Hs %<st %Ss:%Sh %tr "%{X-Frontier-Id}>h %{cvmfs-info}>h" "%{Referer}>h" "%{User-Agent}>h"
     visible_hostname '`uname -n`'/${process_number}
+    {{ else }}
+    cache_dir ufs $SQUID_CACHE_DISK_LOCATION {{ .Values.SquidConf.CacheSize }} 16 256
+    {{ end }}
+    {{ if .Values.ExtraConf.Cpu_Affinity_Map }}
+    cpu_affinity_map {{ .Values.ExtraConf.Cpu_Affinity_Map }}
+    {{ end }}
+    {{ if .Values.ExtraConf.Logfile_Rotate }}
     logfile_rotate {{ .Values.ExtraConf.Logfile_Rotate }}
+    {{ end }}
     acl URN proto URN
     http_access deny URN
     ' >> /etc/squid/squid.conf
     
+    {{ if .Values.ExtraConf.Workers }}
     chown -R squid:squid /var/cache/squid
     if [[ ! -d /var/cache/squid/squid0/00 ]]; then
       for kid in $(seq 0 {{ .Values.ExtraConf.Workers }}); do
@@ -36,5 +48,11 @@ data:
       done
     fi
     rm -f /dev/shm/squid-*.shm
+    {{ else }}
+    if [[ ! -d /var/cache/squid/00 ]]; then
+        echo "Initializing cache..."
+        /usr/sbin/squid -N -f /etc/squid/squid.conf -z
+    fi
+    {{ end }}
     echo "End of 60-image-post-init.sh"
 {{ end }}

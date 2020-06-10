@@ -19,9 +19,19 @@ spec:
     instance: {{ .Values.Instance | quote }}
   ports:
   - port: {{ .Values.Service.Port }}
+    name: cache
     targetPort: squid
     {{ if eq .Values.Service.ExternalVisibility "NodePort" }}
     {{ if .Values.Service.NodePort }}
     nodePort: {{ .Values.Service.NodePort }}
+    {{ end }}
+    {{ end }}
+  - port: {{ .Values.Service.MonitoringPort }}
+    name: monitoring
+    targetPort: monitoring
+    protocol: UDP
+    {{ if eq .Values.Service.ExternalVisibility "NodePort" }}
+    {{ if .Values.Service.NodePort }}
+    nodePort: {{ .Values.Service.MonitoringNodePort }}
     {{ end }}
     {{ end }}
