@@ -54,3 +54,14 @@ data:
     fi
     {{ end }}
     echo "End of custom 60-image-post-init.sh"
+{{ if .Values.SquidConf.LogToStdout }}
+  # Inject an extra helper to copy the squid logs to supervisor's stdout, 
+  # where Docker can capture them. 
+  50-squid-log-dump.conf: |+
+    [program:squid-log-dump]
+    command=/bin/sh -c "until [ -f /var/log/squid/access.log ]; do sleep 1; done; tail -n 0 -F /var/log/squid/access.log"
+    user=squid
+    autorestart=true
+    stdout_logfile=/dev/stdout
+    stdout_logfile_maxbytes=0
+{{ end }}

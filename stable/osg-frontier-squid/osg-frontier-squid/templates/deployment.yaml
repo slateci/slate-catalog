@@ -49,6 +49,11 @@ spec:
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /etc/osg/image-config.d/60-image-post-init.sh
           subPath: 60-image-post-init.sh 
+        {{ if .Values.SquidConf.LogToStdout }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
+          mountPath: /etc/supervisord.d/50-squid-log-dump.conf
+          subPath: 50-squid-log-dump.conf 
+        {{ end }}
         # Storage location of the cache data
         - mountPath: /var/cache/squid/osg-frontier-squid-{{ .Values.Instance }}-cache
           subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
@@ -61,6 +66,10 @@ spec:
             - key: 60-image-post-init.sh
               path: 60-image-post-init.sh
               mode: 448
+            {{ if .Values.SquidConf.LogToStdout }}
+            - key: 50-squid-log-dump.conf
+              path: 50-squid-log-dump.conf
+            {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
         {{ if .Values.SLATE.LocalStorage }}
           persistentVolumeClaim:

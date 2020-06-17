@@ -56,11 +56,13 @@ SquidConf:
   # The default set of ranges are those defined in RFC 1918 and typically used 
   # within kubernetes clusters. 
   IPRange: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
-
   # The range of IP addresses that will be allowed to query the service's monitoring data.
   # Multiple ranges can be provided, each seperated by a space.
   # Example: 128.142.0.0/16 188.185.0.0/17
   MonitoringIPRange: 127.0.0.1/32
+  # Write all access_log messages to standard output where they can be viewed with the 
+  # Docker/Kubernetes/SLATE log mechanisms, instead of to a file inside the container. 
+  LogToStdout: True
 
   # Set this if you want to run more than one cache process concurrently.
   # Cache memory/disk space is not shared; values configured above are per process. 
