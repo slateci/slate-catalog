@@ -17,6 +17,7 @@ data:
     {{ end }}
     host_name = localhost
     resource = {{ .Values.Topology.Resource }}
+    resource_group = {{ .Values.Topology.ResourceGroup }}
     sponsor = {{ .Values.Topology.Sponsor }}
     contact = {{ .Values.Topology.Contact }}
     email = {{ .Values.Topology.ContactEmail }}
