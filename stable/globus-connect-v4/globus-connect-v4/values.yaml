@@ -46,8 +46,9 @@ ExternalPath: /export
 InternalPath: /mnt
 # The name of a PersistentVolumeClaim which should be mounted as backing storage.
 PVCName: 
-# If set, use a nodeSelector (`globus=true`) to run only on a matching nodes. 
+# If set, use a nodeSelector to run only on a matching nodes. 
 # This is useful when only certain nodes on the cluster mount the appropriate 
 # backing filesystem. It may be desirable to turn this off when using a PVC as
 # backing storage, since this tends not to tie to a specific node. 
-UseNodeSelector: true
+# e.g., "NodeSelector: globus" will match nodes with "globus=true"
+# NodeSelector: globus

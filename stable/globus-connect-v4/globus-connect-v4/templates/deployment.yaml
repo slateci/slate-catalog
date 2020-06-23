@@ -84,7 +84,7 @@ spec:
         - name: pvc-volume
           mountPath: {{ .Values.ExternalPath }}
         {{ end }}
-      {{ if .Values.UseNodeSelector }}
+      {{ if .Values.NodeSelector }}
       nodeSelector:
-        globus: "true"
+        {{ .Values.NodeSelector }}: "true"
       {{ end }}
