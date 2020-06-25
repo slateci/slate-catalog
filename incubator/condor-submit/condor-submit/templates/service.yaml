@@ -13,10 +13,10 @@ spec:
  - port: 22
    protocol: TCP
    name: ssh
- - port: {{ .Values.ExternalCondorPort }}
+ - port: {{ .Values.CondorConfig.ExternalCondorPort }}
    protocol: TCP
    name: condor
-   nodePort: {{ .Values.ExternalCondorPort }}
+   nodePort: {{ .Values.CondorConfig.ExternalCondorPort }}
  selector:
    app: {{ template "condor-submit.fullname" . }}
    instance: {{ .Values.Instance | quote }}

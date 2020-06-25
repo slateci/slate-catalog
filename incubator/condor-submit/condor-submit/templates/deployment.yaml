@@ -117,7 +117,7 @@ spec:
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
         - name: condor-token-volume
-          mountPath: /etc/condor/password
+          mountPath: /root/condor_password
           subPath: password
         {{ if eq .Values.UserConfig.Mode "connectapi" }}
         - name: {{ template "condor-submit.name" . }}-provisioner-configuration
