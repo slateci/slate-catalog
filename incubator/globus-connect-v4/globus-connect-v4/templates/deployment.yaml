@@ -1,0 +1,90 @@
+{{ if and .Values.InternalPath .Values.PVCName }}
+  {{ required "InternalPath and PVCName should not both be set" .Values.Error_DoNotSet }}
+{{ end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "globus-connect.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "globus-connect.fullname" . }}
+      chart: {{ template "globus-connect.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "globus-connect.fullname" . }}
+        chart: {{ template "globus-connect.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      volumes:
+      - name: {{ template "globus-connect.fullname" . }}-config
+        configMap:
+          name: globus-{{ .Values.Instance }}-configuration
+          items:
+          - key: globus-connect-server.conf
+            path: globus-connect-server.conf
+      - name: {{ template "globus-connect.fullname" . }}-passwd
+        secret:
+          secretName: {{ .Values.GlobusPasswdSecret }}
+          items: 
+          - key: passwd
+            path: passwd
+      {{ if .Values.InternalPath }}
+      - name: dfs-volume
+        hostPath:
+        # directory location on host
+          path: {{ .Values.InternalPath }}
+      {{ end }}
+      {{ if .Values.PVCName }}
+      - name: pvc-volume
+        persistentVolumeClaim:
+        # use the requested PVC:
+          claimName: {{ .Values.PVCName }}
+      {{ end }}
+      hostNetwork: true
+      containers:
+      - name: "gcs4"
+        image: slateci/gcs4:development
+        imagePullPolicy: Always
+        command: ["/usr/local/bin/supervisord_startup.sh"]
+        env: 
+        - name: GLOBUS_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.GlobusCredentialSecret }}
+              key: GLOBUS_USER
+        - name: GLOBUS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.GlobusCredentialSecret }}
+              key: GLOBUS_PASSWORD
+        {{ if .Values.GlobusConfig.GridFTP.Server }}
+        - name: GLOBUS_SERVER
+          value: {{ .Values.GlobusConfig.GridFTP.Server }}
+        {{ end }}
+        - name: TERM
+          value: 'xterm'
+        volumeMounts:
+        - name: {{ template "globus-connect.fullname" . }}-config
+          mountPath: "/etc/globus-connect-server.conf"
+          subPath: globus-connect-server.conf
+        - name: {{ template "globus-connect.fullname" . }}-passwd
+          mountPath: "/root/passwd"
+          subPath: passwd
+        {{ if and .Values.ExternalPath .Values.InternalPath }}
+        - name: dfs-volume
+          mountPath: {{ .Values.ExternalPath }}
+        {{ end }}
+        {{ if and .Values.ExternalPath .Values.PVCName }}
+        - name: pvc-volume
+          mountPath: {{ .Values.ExternalPath }}
+        {{ end }}
+      {{ if .Values.NodeSelector }}
+      nodeSelector:
+        {{ .Values.NodeSelector }}: "true"
+      {{ end }}
