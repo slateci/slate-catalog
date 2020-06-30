@@ -1,16 +1,5 @@
 # XCache
 
-**NOTE**: This SLATE application requires a X509 certificate to be
-installed on the target cluster in order to successfully deploy. Click [here](https://portal.slateci.io/secrets) to add a secret in the SLATE portal.
-
-*Image source*: https://github.com/slateci/XCache
-
-## Usage
-```console
-$ slate app get-conf xcache > xcache.yaml
-$ slate app install --group <group-name> --cluster <cluster-name> xcache.yaml
-```
-
 ## Introduction
 XCache is a service that provides caching of data accessed using [xrootd protocol](http://xrootd.org/). It sits in between client and an upstream xrootd servers and can cache/prefetch full files or only blocks already requested. 
 
@@ -20,7 +9,7 @@ To set it up one needs to change values in values.yaml, all other variables have
 
 ```
 SiteConfig:
-  Name: MWT2  
+  Name: MWT2
   AGISprotocolID: 433
 
 XCacheConfig:
@@ -33,7 +22,7 @@ Service:
   
 XCache nodes should be tainted:
 ```
-kubectl taint nodes "xcache nodename" special=true:PreferNoSchedule
+kubectl taint nodes "xcache nodename" xcache=true:PreferNoSchedule
 ```
 and labeled:
 ```

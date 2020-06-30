@@ -29,9 +29,10 @@ spec:
         xcache-capable: "true"
       
       tolerations:
-      - key: "special"
-        operator: "Exists"
-        effect: PreferNoSchedule
+      - key: "xcache"
+        operator: "Equal"
+        value: "true"
+        effect: "PreferNoSchedule"
 
       volumes:
       - name: x509-data

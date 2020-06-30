@@ -46,5 +46,5 @@ XCacheConfig:
 
 image:
   repository: slateci/xcache
-  tag: latest
+  tag: v5rc4
   pullPolicy: Always
