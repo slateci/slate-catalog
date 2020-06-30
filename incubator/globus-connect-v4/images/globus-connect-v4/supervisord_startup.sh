@@ -34,7 +34,7 @@ if [[ $? -eq 0 ]]; then
 			echo "Adding user $user"
 			useradd $user -d $home -u $uid -s $shell
 			echo "Adding $dn to the grid-mapfile"
-			echo $dn >> /etc/grid-security/grid-mapfile
+			echo "\"$dn\" $user" >> /etc/grid-security/grid-mapfile
 		fi
 	done < /root/passwd1
 fi
