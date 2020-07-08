@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: globus-{{ .Values.Instance}}-configuration
+  labels:
+    app: {{ template "globus-connect.fullname" . }}
+    chart: {{ template "globus-connect.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  globus-connect-server.conf: |+
+    [Globus]
+    User = %(GLOBUS_USER)s
+    Password = %(GLOBUS_PASSWORD)s
+
+    [Endpoint]
+    Name = {{ .Values.GlobusConfig.Endpoint.Name }}
+    Public = {{ .Values.GlobusConfig.Endpoint.Public }}
+    DefaultDirectory = {{ .Values.GlobusConfig.Endpoint.DefaultDirectory }}
+  
+    [Security]
+    FetchCredentialFromRelay = True
+    IdentityMethod = {{ .Values.GlobusConfig.Security.IdentityMethod }}
+
+    [GridFTP]
+    {{ if .Values.GlobusConfig.GridFTP.Server }}
+    Server = {{ .Values.GlobusConfig.GridFTP.Server }}
+    ServerBehindNAT = True
+    {{ else }}
+    Server = %(HOSTNAME)s
+    {{ end }}
+    IncomingPortRange = {{ .Values.GlobusConfig.GridFTP.IncomingPortRange }}
+    RestrictPaths = {{ .Values.GlobusConfig.GridFTP.RestrictPaths }}
+
+    [MyProxy]
+    {{ if .Values.GlobusConfig.MyProxyServer }}
+    Server = {{ .Values.GlobusConfig.MyProxyServer}}
+    ServerBehindNAT = True
+    {{ else }}
+    Server = %(HOSTNAME)s
+    {{ end }}

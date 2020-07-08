@@ -21,7 +21,8 @@ data:
     #create the user's ssh config directory, and if necessary the whole home directory
     mkdir -p /home/{{ .Values.Jupyter.NB_USER }}/.ssh
     {{ if eq .Values.SSH.Enabled true }}
-    echo '{{ .Values.SSH.SSH_Public_Key }}' > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
+    echo '
+{{ .Values.SSH.SSH_Public_Key | indent 4 }}' > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
     chmod 600 /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
     {{ end }}
     #if the group is not the default, create it
