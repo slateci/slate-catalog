@@ -1,185 +1,81 @@
-Instance: global
+# Default values for redis-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
-## Cluster settings
-cluster:
-  enabled: true
-  slaveCount: 1
+replicaCount: 1
 
-networkPolicy:
-  ## Specifies whether a NetworkPolicy should be created
-  ##
-  enabled: false
+image:
+  repository: redis
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+RedisCredentialSecret: redis-creds
 
 serviceAccount:
-  ## Specifies whether a ServiceAccount should be created
-  ##
-  create: false
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
-rbac:
-  ## Specifies whether RBAC resources should be created
-  ##
-  create: false
+podAnnotations: {}
 
-  role:
-    ## Rules to create. It follows the role specification
-    # rules:
-    #  - apiGroups:
-    #    - extensions
-    #    resources:
-    #      - podsecuritypolicies
-    #    verbs:
-    #      - use
-    #    resourceNames:
-    #      - gce.unprivileged
-    rules: []
+podSecurityContext: {}
+  # fsGroup: 2000
 
-## Use password authentication
-usePassword: true
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
 
-## Persist data to a persistent volume
-persistence: {}
-
-##
-## Redis Master parameters
-##
-master:
-  ## Redis port
+service:
+  type: NodePort
   port: 6379
-  ## Redis command arguments
-  ##
-  ## Can be used to specify command line arguments, for example:
-  ##
-  ## args:
-  ##  - "redis-server"
-  ##  - "--maxmemory-policy volatile-ttl"
-  args: []
-  ## Redis additional command line flags
-  ##
-  ## Can be used to specify command line flags, for example:
-  ##
-  ## redisExtraFlags:
-  ##  - "--maxmemory-policy volatile-ttl"
-  ##  - "--repl-backlog-size 1024mb"
-  extraFlags: []
-  ## Comma-separated list of Redis commands to disable
-  ##
-  ## Can be used to disable Redis commands for security reasons.
-  ## ref: https://github.com/bitnami/bitnami-docker-redis#disabling-redis-commands
-  ##
-  disableCommands: "FLUSHDB,FLUSHALL"
 
-  ## Redis Master additional pod labels and annotations
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  podLabels: {}
-  podAnnotations: {}
-
-  ## Configure extra options for Redis Master liveness and readiness probes
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
-  ##
-  livenessProbe:
-    enabled: true
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    successThreshold: 1
-    failureThreshold: 5
-  readinessProbe:
-    enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 10
-    timeoutSeconds: 1
-    successThreshold: 1
-    failureThreshold: 5
-
-  ## Redis Master Node selectors and tolerations for pod assignment
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
-  ##
-  # nodeSelector: {"beta.kubernetes.io/arch": "amd64"}
-  # tolerations: []
-  ## Redis Master pod/node affinity/anti-affinity
-  ##
-  affinity: {}
-
-  ## Redis Master Service properties
-  service:
-    ##  Redis Master Service type
-    type: ClusterIP
-    port: 6379
-
-    ## Provide any additional annotations which may be required. This can be used to
-    ## set the LoadBalancer service type to internal only.
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-    ##
-    annotations: {}
-    loadBalancerIP:
-
-  ## Redis Master Pod Security Context
-  ##
-  securityContext:
-    enabled: true
-    fsGroup: 1001
-    runAsUser: 1001
-
-  ## Enable persistence using Persistent Volume Claims
-  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-  ##
-  persistence:
-    enabled: true
-    ## The path the volume will be mounted at, useful when using different
-    ## Redis images.
-    path: /bitnami/redis/data
-    ## The subdirectory of the volume to mount to, useful in dev environments
-    ## and one PV for multiple services.
-    subPath: ""
-    ## redis data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-    accessModes:
-    - ReadWriteOnce
-    size: 8Gi
-
-  ## Update strategy, can be set to RollingUpdate or onDelete by default.
-  ## https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#updating-statefulsets
-  statefulset:
-    updateStrategy: RollingUpdate
-
-##
-## Redis Slave properties
-## Note: serviceType and service are mandatory parameters
-## The rest of the parameters, if undefined, will inherit those declared in Redis Master
-##
-slave:
-  ## Slave Service properties
-  service:
-    ##  Redis Slave Service type
-    type: ClusterIP
-    ## Provide any additional annotations which may be required. This can be used to
-    ## set the LoadBalancer service type to internal only.
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-    ##
-    annotations: {}
-    loadBalancerIP:
-
-  ## Redis Slave pod/node affinity/anti-affinity
-  ##
-  affinity: {}
-
-## Prometheus Exporter / Metrics
-##
-metrics:
+ingress:
   enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
-  service:
-    type: ClusterIP
-    annotations: {}
-  
-## Redis config file
-##
-configmap: |-
-#  Redis configuration file
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
