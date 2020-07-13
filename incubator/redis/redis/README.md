@@ -24,7 +24,7 @@ $ echo http://$NODE_IP:$NODE_PORT
 ## Redis Container Access
 
 By the end of installation, the command `$ echo http://$NODE_IP:$NODE_PORT` returns a URL, for example: `http://128.135.235.190:31239` </br>
-A Python3 script example to access the Redis container would be:
+Below is an example of Python3 script `redis_test.py` to access the Redis container:
 
 ```python
 import redis
