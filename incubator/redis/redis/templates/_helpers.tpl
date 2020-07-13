@@ -2,107 +2,62 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "redis.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Expand the chart plus release name (used by the chart label)
-*/}}
-{{- define "redis.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version -}}
-{{- end -}}
+{{- define "redis-chart.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "redis.fullname" -}}
-{{- $name := default .Chart.Name .Values.Instance -}}
-{{- if contains $name .Chart.Name -}}
-{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Chart.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the appropriate apiVersion for networkpolicy.
-*/}}
-{{- define "networkPolicy.apiVersion" -}}
-{{- if semverCompare ">=1.4-0, <1.7-0" .Capabilities.KubeVersion.GitVersion -}}
-{{- print "extensions/v1beta1" -}}
-{{- else -}}
-{{- print "networking.k8s.io/v1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return slave readiness probe
-*/}}
-{{- define "redis.slave.readinessProbe" -}}
-{{- $readinessProbe := .Values.slave.readinessProbe | default .Values.master.readinessProbe -}}
-{{- if $readinessProbe }}
-{{- if $readinessProbe.enabled }}
-readinessProbe:
-  initialDelaySeconds: {{ $readinessProbe.initialDelaySeconds | default .Values.master.readinessProbe.initialDelaySeconds }}
-  periodSeconds: {{ $readinessProbe.periodSeconds | default .Values.master.readinessProbe.periodSeconds }}
-  timeoutSeconds: {{ $readinessProbe.timeoutSeconds | default .Values.master.readinessProbe.timeoutSeconds }}
-  successThreshold: {{ $readinessProbe.successThreshold | default .Values.master.readinessProbe.successThreshold }}
-  failureThreshold: {{ $readinessProbe.failureThreshold | default .Values.master.readinessProbe.failureThreshold }}
-  exec:
-    command:
-    - sh
-    - -c
-    - /health/ping_local_and_master.sh
-{{- end }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return slave liveness probe
-*/}}
-{{- define "redis.slave.livenessProbe" -}}
-{{- $livenessProbe := .Values.slave.livenessProbe | default .Values.master.livenessProbe -}}
-{{- if $livenessProbe }}
-{{- if $livenessProbe.enabled }}
-livenessProbe:
-  initialDelaySeconds: {{ $livenessProbe.initialDelaySeconds | default .Values.master.livenessProbe.initialDelaySeconds }}
-  periodSeconds: {{ $livenessProbe.periodSeconds | default .Values.master.livenessProbe.periodSeconds }}
-  timeoutSeconds: {{ $livenessProbe.timeoutSeconds | default .Values.master.livenessProbe.timeoutSeconds }}
-  successThreshold: {{ $livenessProbe.successThreshold | default .Values.master.livenessProbe.successThreshold }}
-  failureThreshold: {{ $livenessProbe.failureThreshold | default .Values.master.livenessProbe.failureThreshold}}
-  exec:
-    command:
-    - sh
-    - -c
-    - /health/ping_local_and_master.sh
-{{- end }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return slave security context
-*/}}
-{{- define "redis.slave.securityContext" -}}
-{{- $securityContext := .Values.slave.securityContext | default .Values.master.securityContext -}}
-{{- if $securityContext }}
-{{- if $securityContext.enabled }}
-securityContext:
-  fsGroup: {{ $securityContext.fsGroup | default .Values.master.securityContext.fsGroup }}
-  runAsUser: {{ $securityContext.runAsUser | default .Values.master.securityContext.runAsUser }}
+{{- define "redis-chart.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
-{{- end -}}
+{{- end }}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "redis-chart.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "redis-chart.labels" -}}
+helm.sh/chart: {{ include "redis-chart.chart" . }}
+{{ include "redis-chart.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "redis-chart.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "redis-chart.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "redis.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "redis.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
+{{- define "redis-chart.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "redis-chart.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}

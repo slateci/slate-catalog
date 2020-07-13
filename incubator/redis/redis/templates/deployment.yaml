@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "redis-chart.fullname" . }}
+  labels:
+    app: {{ template "redis-chart.name" . }}
+    chart: {{ template "redis-chart.chart" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "redis-chart.name" . }}
+      chart: {{ template "redis-chart.chart" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "redis-chart.name" . }}
+        chart: {{ template "redis-chart.chart" . }}
+    spec:
+      containers:
+        - name: redis
+          image: "redis:6.0.5"
+          imagePullPolicy: Always
+          args: ["--requirepass", "$(REDIS_PASSWORD)"]
+          env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.RedisCredentialSecret }}
+                key: REDIS_PASSWORD
