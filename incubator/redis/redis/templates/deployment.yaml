@@ -20,7 +20,7 @@ spec:
       containers:
         - name: redis
           image: "redis:6.0.5"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           args: ["--requirepass", "$(REDIS_PASSWORD)"]
           env:
           - name: REDIS_PASSWORD
