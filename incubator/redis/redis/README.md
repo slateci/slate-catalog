@@ -11,8 +11,7 @@ $ slate secret create redis-creds --group <your group> --cluster <your cluster> 
 ```
 ## Installation
 ```bash
-$ slate app get-conf --dev redis > redis.yaml
-$ slate app install --group <your group> --cluster <your cluster> redis --conf redis.yaml
+$ slate app install --dev redis --group <your group> --cluster <your cluster> redis
 ```
 
 After installation, copy, paste and run the last three lines of output to get the application URL. For example:
@@ -29,11 +28,22 @@ A Python3 script example to access the Redis container would be:
 
 ```python
 import redis
+import sys
 
-r = redis.StrictRedis(host='128.135.235.190', port=31239, db=0, password='your_redis_password')
-print('set foo bar')
-print(r.set('foo','bar'))
-print('get foo')
-print(r.get('foo'))
+def main():
+  ip = sys.argv[1]
+  port_num = int(sys.argv[2])
+  r = redis.StrictRedis(host=ip, port=port_num, db=0, password='your_redis_password')
+  print('set foo bar')
+  print(r.set('foo','bar'))
+  print('get foo')
+  print(r.get('foo'))
+
+if __name__ == "__main__":
+  main()
 ```
 
+Run the python script with command:
+```bash
+$ python redis_test.py <IP address> <port number>
+```
