@@ -80,6 +80,8 @@ spec:
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
           - name: WQ_THREADS
             value: "{{ .Values.XCacheConfig.WQThreads }}"
+          - name: XC_SITE
+            value: "{{ .Values.SiteConfig.Name }}"
           - name: XC_MONITOR
             value: "{{ .Values.Monitoring.GStreamCollector }}"
           resources:

@@ -19,8 +19,8 @@ SiteConfig:
   CRICprotocolID: 433
 
 Monitoring:
-  Collector: http://uct2-collectd.mwt2.org:8080
-  GStreamCollector: 192.170.227.234:9000 
+  Collector: http://collector.atlas-ml.org:80
+  GStreamCollector: collector.atlas-ml.org:9000 
 
 XCacheConfig:
   # Local directories to be used as a cache
