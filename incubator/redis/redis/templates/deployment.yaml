@@ -6,36 +6,21 @@ metadata:
     app: {{ template "redis-chart.name" . }}
     chart: {{ template "redis-chart.chart" . }}
 spec:
-{{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-{{- end }}
+  replicas: 1
   selector:
     matchLabels:
       app: {{ template "redis-chart.name" . }}
       chart: {{ template "redis-chart.chart" . }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
       labels:
         app: {{ template "redis-chart.name" . }}
         chart: {{ template "redis-chart.chart" . }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "redis-chart.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: redis
+          image: "redis:6.0.5"
+          imagePullPolicy: IfNotPresent
           args: ["--requirepass", "$(REDIS_PASSWORD)"]
           env:
           - name: REDIS_PASSWORD
@@ -43,17 +28,3 @@ spec:
               secretKeyRef:
                 name: {{ .Values.RedisCredentialSecret }}
                 key: REDIS_PASSWORD
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
