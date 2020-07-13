@@ -5,6 +5,8 @@ metadata:
   labels:
     app: {{ template "redis-chart.name" . }}
     chart: {{ template "redis-chart.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,3 +17,5 @@ spec:
   selector:
     app: {{ template "redis-chart.name" . }}
     chart: {{ template "redis-chart.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
