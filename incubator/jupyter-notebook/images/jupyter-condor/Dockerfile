@@ -22,8 +22,8 @@ RUN yum -y install epel-release && yum -y update \
     wget \
     bzip2 \
     ca-certificates \
-    sudo \
- && yum clean all
+    sudo 
+# && yum clean all
 
 ###>>>>>RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen &&  locale-gen
 
@@ -241,7 +241,7 @@ RUN cd /root && \
 RUN cd /etc/yum.repos.d && \
     wget https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo
 
-RUN yum install condor supervisor openssh-server -y
+RUN yum install condor supervisor openssh-server -y && yum clean all
 
 RUN mkdir -p /var/log/supervisor
 ADD container-files /
@@ -250,11 +250,11 @@ RUN mkdir -p /var/run/sshd /var/log/supervisor
 RUN mkdir -p /etc/condor/passwords.d && \
     mkdir -p /etc/condor/tokens.d && \
     chown condor: /etc/condor/passwords.d && \
-    chown condor: /etc/condor/tokens.d
-RUN chmod 755 /usr/local/sbin/supervisord_startup.sh
+    chown condor: /etc/condor/tokens.d  && \
+    chmod 755 /usr/local/sbin/supervisord_startup.sh
 
-USER $NB_UID
-WORKDIR $HOME
+#USER $NB_UID
+#WORKDIR $HOME
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
 
