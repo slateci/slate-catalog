@@ -39,7 +39,8 @@ data:
     {{ if eq .Values.CondorConfig.Enabled true}}
     mv /etc/supervisor/supervisord.d/htcondor.conf /etc/supervisor/conf.d/
     {{ end }}
-    /usr/bin/supervisord
+    /usr/local/sbin/supervisord_startup.sh
+#    /usr/bin/supervisord
 ---
 apiVersion: v1
 kind: ConfigMap

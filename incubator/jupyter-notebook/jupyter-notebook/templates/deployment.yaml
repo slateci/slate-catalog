@@ -49,14 +49,19 @@ spec:
             mode: 0755
       containers:
       - name: scipy-notebook
-        image: slateci/jupyter-condor:latest
-        imagePullPolicy: "Always"
+        image: slateci/jupyter-condor-centos7:latest
+        #imagePullPolicy: "Always"
+        imagePullPolicy: "IfNotPresent"
         workingDir: /home/{{ .Values.Jupyter.NB_USER }}
         env:
         - name: JUPYTER_ENABLE_LAB
           value: 'yes'
         - name: NB_USER
-          value: {{ .Values.Jupyter.NB_USER | quote }}
+        {{ if eq .Values.Jupyter.NB_USER "root" }}
+          value: "jovyan"
+        {{ else }}
+          value: {{ .Values.Jupyter.NB_USER | default "jovyan" | quote }}
+        {{ end }}
         {{ if eq .Values.CondorConfig.Enabled true }}
         - name: _CONDOR_COLLECTOR_HOST
           value: {{ .Values.CondorConfig.CollectorHost | quote }}
@@ -67,6 +72,17 @@ spec:
           value: {{ .Values.Jupyter.Password | quote }} 
         - name: JupyterToken
           value: {{ .Values.Jupyter.Token | quote }} 
+        readinessProbe:
+          tcpSocket:
+            port: 8888
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8888
+          initialDelaySeconds: 15
+          periodSeconds: 30
+          failureThreshold: 3
         resources:
           requests:
             # For CPU only, set request as half of limit
