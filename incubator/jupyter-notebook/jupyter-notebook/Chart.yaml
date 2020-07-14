@@ -1,6 +1,6 @@
 apiVersion: "v2"
 name: "jupyter-notebook"
-version: 0.2.9
+version: 0.3.0
 appVersion: 1.16.0
 description: "A Jupyter Notebook with a condor-submit setup"
 type: application
