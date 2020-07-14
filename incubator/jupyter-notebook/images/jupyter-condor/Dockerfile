@@ -22,7 +22,7 @@ RUN yum -y install epel-release && yum -y update \
     wget \
     bzip2 \
     ca-certificates \
-    sudo 
+    sudo && yum clean all
 # && yum clean all
 
 ###>>>>>RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen &&  locale-gen
@@ -91,12 +91,12 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py37_${MINICONDA
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-# Install Tini
-RUN conda install --quiet --yes 'tini=0.18.0' && \
-    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-    conda clean --all -f -y && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+# Install Tini   << might not be needed so commenting for now
+#RUN conda install --quiet --yes 'tini=0.18.0' && \
+#    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
+#    conda clean --all -f -y && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
 
 # Install Jupyter Notebook, Lab, and Hub
 # Generate a notebook server config
@@ -153,7 +153,7 @@ RUN yum install -y \
 
 # ffmpeg for matplotlib anim & dvipng for latex labels
 RUN yum update -y && \
-    yum -y install python-matplotlib 
+    yum -y install python-matplotlib && yum clean all
 
 ###Didn't install ffmpeg 
 
@@ -207,9 +207,9 @@ RUN npm cache clean --force && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
-USER root
-RUN fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+#USER root
+#RUN fix-permissions "${CONDA_DIR}" && \
+#    fix-permissions "/home/${NB_USER}"
 
 USER $NB_UID
 # Install facets which does not have a pip or conda package at the moment
@@ -219,9 +219,10 @@ RUN git clone https://github.com/PAIR-code/facets.git && \
     rm -rf /tmp/facets && \
     ls -al "/home/${NB_USER}"
 
-USER root
-RUN fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+#USER root
+#RUN fix-permissions "${CONDA_DIR}" && \
+#    fix-permissions "/home/${NB_USER}"
+
 USER $NB_UID
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME="/home/${NB_USER}/.cache/"
@@ -229,12 +230,13 @@ ENV XDG_CACHE_HOME="/home/${NB_USER}/.cache/"
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
      ls -al "/home/${NB_USER}"
 USER root
-RUN    fix-permissions "/home/${NB_USER}"
+RUN  fix-permissions "${CONDA_DIR}" && \
+     fix-permissions "/home/${NB_USER}"
 
 
 WORKDIR $HOME
 
-USER root
+#USER root
 RUN cd /root && \
     wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor && \
     rpm --import RPM-GPG-KEY-HTCondor
@@ -243,18 +245,16 @@ RUN cd /etc/yum.repos.d && \
 
 RUN yum install condor supervisor openssh-server -y && yum clean all
 
-RUN mkdir -p /var/log/supervisor
+RUN mkdir -p /var/log/supervisor && \
+    mkdir -p /var/run/sshd /var/log/supervisor
 ADD container-files /
-RUN mkdir -p /var/run/sshd /var/log/supervisor
+#RUN mkdir -p /var/run/sshd /var/log/supervisor
 # Make sure we have some needed dirs
 RUN mkdir -p /etc/condor/passwords.d && \
     mkdir -p /etc/condor/tokens.d && \
     chown condor: /etc/condor/passwords.d && \
     chown condor: /etc/condor/tokens.d  && \
     chmod 755 /usr/local/sbin/supervisord_startup.sh
-
-#USER $NB_UID
-#WORKDIR $HOME
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
 
