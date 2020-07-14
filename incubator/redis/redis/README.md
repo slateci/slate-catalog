@@ -11,29 +11,36 @@ $ slate secret create redis-creds --group <your group> --cluster <your cluster> 
 ```
 ## Installation
 ```bash
-$ slate app get-conf --dev redis > redis.yaml
-$ slate app install --group <your group> --cluster <your cluster> redis --conf redis.yaml
+$ slate app install --dev redis --group <your group> --cluster <your cluster> redis
 ```
 
-After installation, copy, paste and run the last three lines of output to get the application URL. For example:
+After installation, run the following slate command to get the URL of the instance:
 
 ```bash
-$ export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services <service name>)
-$ export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
-$ echo http://$NODE_IP:$NODE_PORT
+$ slate instance info <instance ID>
 ```
 ## Redis Container Access
 
-By the end of installation, the command `$ echo http://$NODE_IP:$NODE_PORT` returns a URL, for example: `http://128.135.235.190:31239` </br>
-A Python3 script example to access the Redis container would be:
+Here is an example of Python3 script `redis_test.py` to access the Redis container:
 
 ```python
 import redis
+import sys
 
-r = redis.StrictRedis(host='128.135.235.190', port=31239, db=0, password='your_redis_password')
-print('set foo bar')
-print(r.set('foo','bar'))
-print('get foo')
-print(r.get('foo'))
+def main():
+  ip = sys.argv[1]
+  port_num = int(sys.argv[2])
+  r = redis.StrictRedis(host=ip, port=port_num, db=0, password='your_redis_password')
+  print('set foo bar')
+  print(r.set('foo','bar'))
+  print('get foo')
+  print(r.get('foo'))
+
+if __name__ == "__main__":
+  main()
 ```
 
+Run the python script with command:
+```bash
+$ python redis_test.py <IP address> <port number>
+```
