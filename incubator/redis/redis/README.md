@@ -14,17 +14,14 @@ $ slate secret create redis-creds --group <your group> --cluster <your cluster> 
 $ slate app install --dev redis --group <your group> --cluster <your cluster> redis
 ```
 
-After installation, copy, paste and run the last three lines of output to get the application URL. For example:
+After installation, run the following slate command to get the URL of the instance:
 
 ```bash
-$ export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services <service name>)
-$ export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
-$ echo http://$NODE_IP:$NODE_PORT
+$ slate instance info <instance ID>
 ```
 ## Redis Container Access
 
-By the end of installation, the command `$ echo http://$NODE_IP:$NODE_PORT` returns a URL, for example: `http://128.135.235.190:31239` </br>
-Below is an example of Python3 script `redis_test.py` to access the Redis container:
+Here is an example of Python3 script `redis_test.py` to access the Redis container:
 
 ```python
 import redis
