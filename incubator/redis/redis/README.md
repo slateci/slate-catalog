@@ -11,7 +11,7 @@ $ slate secret create redis-creds --group <your group> --cluster <your cluster> 
 ```
 ## Installation
 ```bash
-$ slate app install --dev redis --group <your group> --cluster <your cluster> redis
+$ slate app install --dev redis --group <your group> --cluster <your cluster>
 ```
 
 After installation, run the following slate command to get the URL of the instance:
@@ -42,5 +42,5 @@ if __name__ == "__main__":
 
 Run the python script with command:
 ```bash
-$ python redis_test.py <IP address> <port number>
+$ python3 redis_test.py <IP address> <port number>
 ```
