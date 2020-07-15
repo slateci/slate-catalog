@@ -34,10 +34,11 @@ data:
     chown -R ${NB_UID}:${NB_GID} /home/$NB_USER
     #add other services to supervisor's configuration if needed
     {{ if eq .Values.SSH.Enabled true}}
-    mv /etc/supervisor/supervisord.d/sshd.conf /etc/supervisor/conf.d/
+    mv /etc/supervisor/supervisord.d/sshd.conf /etc/supervisord.d/
+    ssh-keygen -A
     {{ end }}
     {{ if eq .Values.CondorConfig.Enabled true}}
-    mv /etc/supervisor/supervisord.d/htcondor.conf /etc/supervisor/conf.d/
+    mv /etc/supervisor/supervisord.d/htcondor.conf /etc/supervisord.d/
     {{ end }}
     /usr/local/sbin/supervisord_startup.sh
 #    /usr/bin/supervisord
