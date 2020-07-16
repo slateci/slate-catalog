@@ -14,3 +14,10 @@ RedisCredentialSecret: redis-creds # maps to <secret-name> as in the above
 service:
   type: NodePort
   port: 6379
+
+# Defines what IP ranges can access the app
+# If disabled all IP addresses can access the app
+NetworkPolicy:
+  Enable: false
+  AllowedCIDRs:
+    - 0.0.0.0/0
