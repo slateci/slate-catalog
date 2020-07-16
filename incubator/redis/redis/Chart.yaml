@@ -1,5 +1,5 @@
 apiVersion: v2
 name: redis
-version: 0.1.4
+version: 0.1.5
 appVersion: 6.0.5
 description: Open source, advanced key-value store. It is often referred to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.
