@@ -9,9 +9,10 @@ Create the password and a secret with:
 $ echo "REDIS_PASSWORD=<your_redis_password>" > <password file name>
 $ slate secret create redis-creds --group <your group> --cluster <your cluster> --from-env-file <password file name>
 ```
-## Installation
+## Installation: user can define the IP ranges that can access the app in redis.yaml
 ```bash
-$ slate app install --dev redis --group <your group> --cluster <your cluster>
+$ slate app get-conf --dev redis > redis.yaml
+$ slate app install --dev redis --group <your group> --cluster <your cluster> --conf redis.yaml
 ```
 
 After installation, run the following slate command to get the URL of the instance:
