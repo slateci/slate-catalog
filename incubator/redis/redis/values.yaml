@@ -18,6 +18,6 @@ service:
 # Defines what IP ranges can access the app
 # If disabled all IP addresses can access the app
 NetworkPolicy:
-  Enable: false
+  Enabled: false
   AllowedCIDRs:
     - 0.0.0.0/0
