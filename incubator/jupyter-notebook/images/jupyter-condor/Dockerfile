@@ -1,6 +1,7 @@
-##This Dockerfile is created from the Jupyterlab Docker images and modified 
-##to work with CentOS7 insteade of Ubuntu. To see the original Dockerfiles and
-##scripts, pleae refer to the official JupyterLab repo
+# The JupyterLab dependency installation commands in this Dockerfile are taken from 
+# the official upstream repos and modified as needed to work with CentOS and Condor.
+# To see the original Dockerfiles and scripts, please refer to the official JupyterLab
+# repos at https://hub.docker.com/u/jupyter/
  
 FROM centos:7
 
@@ -14,18 +15,13 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
 
-# Install all OS dependencies for notebook server that starts but lacks all
-# features (e.g., download as all possible file formats)
-###>>>>>ENV DEBIAN_FRONTEND noninteractive
 RUN yum -y install epel-release && yum -y update \
  && yum install -y \
     wget \
     bzip2 \
     ca-certificates \
     sudo && yum clean all
-# && yum clean all
 
-###>>>>>RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen &&  locale-gen
 
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
@@ -43,8 +39,6 @@ ENV PATH=$CONDA_DIR/bin:$PATH \
 COPY fix-permissions /usr/local/bin/fix-permissions
 RUN chmod a+rx /usr/local/bin/fix-permissions
 
-# Enable prompt color in the skeleton .bashrc before creating the default NB_USER
-RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc
 
 # Create NB_USER wtih name jovyan user with UID=1000 and in the 'users' group
 # and make sure these dirs are writable by the `users` group.
@@ -91,19 +85,7 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py37_${MINICONDA
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-# Install Tini   << might not be needed so commenting for now
-#RUN conda install --quiet --yes 'tini=0.18.0' && \
-#    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-#    conda clean --all -f -y && \
-#    fix-permissions $CONDA_DIR && \
-#    fix-permissions /home/$NB_USER
 
-# Install Jupyter Notebook, Lab, and Hub
-# Generate a notebook server config
-# Cleanup temporary files
-# Correct permissions
-# Do all this in a single RUN command to avoid duplicating all of the
-# files across image layers when the permissions change
 RUN conda install --quiet --yes \
     'notebook=6.0.3' \
     'jupyterhub=1.1.0' \
@@ -118,11 +100,7 @@ RUN conda install --quiet --yes \
 
 EXPOSE 8888
 
-# Configure container startup
-#ENTRYPOINT ["tini", "-g", "--"]
-#CMD ["start-notebook.sh"]
 
-# Copy local files as late as possible to avoid cache busting
 COPY start.sh start-notebook.sh start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
 
@@ -130,12 +108,7 @@ COPY jupyter_notebook_config.py /etc/jupyter/
 USER root
 RUN fix-permissions /etc/jupyter/
 
-# Switch back to jovyan to avoid accidental container runs as root
-#USER $NB_UID
-
 WORKDIR $HOME
-
-USER root
 
 # Install all OS dependencies for fully functional notebook server
 RUN yum install -y \
@@ -146,16 +119,10 @@ RUN yum install -y \
     unzip \      
     && yum clean all
 
-# Switch back to jovyan to avoid accidental container runs as root
-#USER $NB_UID
-
-#USER root
-
 # ffmpeg for matplotlib anim & dvipng for latex labels
 RUN yum update -y && \
     yum -y install python-matplotlib && yum clean all
 
-###Didn't install ffmpeg 
 
 USER $NB_UID
 
@@ -207,9 +174,6 @@ RUN npm cache clean --force && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
-#USER root
-#RUN fix-permissions "${CONDA_DIR}" && \
-#    fix-permissions "/home/${NB_USER}"
 
 USER $NB_UID
 # Install facets which does not have a pip or conda package at the moment
@@ -218,10 +182,6 @@ RUN git clone https://github.com/PAIR-code/facets.git && \
     jupyter nbextension install facets/facets-dist/ --sys-prefix && \
     rm -rf /tmp/facets && \
     ls -al "/home/${NB_USER}"
-
-#USER root
-#RUN fix-permissions "${CONDA_DIR}" && \
-#    fix-permissions "/home/${NB_USER}"
 
 USER $NB_UID
 # Import matplotlib the first time to build the font cache.
@@ -236,14 +196,14 @@ RUN  fix-permissions "${CONDA_DIR}" && \
 
 WORKDIR $HOME
 
-#USER root
 RUN cd /root && \
     wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor && \
     rpm --import RPM-GPG-KEY-HTCondor
 RUN cd /etc/yum.repos.d && \
-    wget https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo
+    #wget https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo
+    wget https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-development-rhel7.repo
 
-RUN yum install condor supervisor openssh-server -y && yum clean all
+RUN yum install condor supervisor openssh-server -y && yum clean all && pip install htcondor
 
 RUN mkdir -p /var/log/supervisor && \
     mkdir -p /var/run/sshd /var/log/supervisor
@@ -254,6 +214,8 @@ RUN mkdir -p /etc/condor/passwords.d && \
     mkdir -p /etc/condor/tokens.d && \
     chown condor: /etc/condor/passwords.d && \
     chown condor: /etc/condor/tokens.d  && \
+    chmod -R 755 /etc/condor && \ 
+    echo 'export PS1="\[\033[0;32m\]\u@\H:\[\033[0;32m\]\w\$\[\033[00m\] "' >> "/home/${NB_USER}/.bash_profile" && \
     chmod 755 /usr/local/sbin/supervisord_startup.sh
 
 CMD ["/usr/local/sbin/supervisord_startup.sh"]
