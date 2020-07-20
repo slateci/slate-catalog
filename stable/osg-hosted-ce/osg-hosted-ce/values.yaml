@@ -126,9 +126,9 @@ HostCredentials:
   # certificate.
   HostCertSecret: null
 
-# Choose which image to use for the specified container
-Containers:
-  osg-hosted-ce: opensciencegrid/hosted-ce:stable
+# Choose which tag to use for the specified containers
+ContainerTags:
+  osg-hosted-ce: stable
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:

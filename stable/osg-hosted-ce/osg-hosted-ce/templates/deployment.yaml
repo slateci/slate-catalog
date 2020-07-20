@@ -84,7 +84,7 @@ spec:
       {{ if .Values.HTTPLogger.Enabled }}
       initContainers:
       - name: logging-sidecar-init
-        image: {{ .Values.Containers.osg-hosted-ce }}
+        image: opensciencegrid/hosted-ce:{{ .Values.ContainerTags.osg-hosted-ce }}
         imagePullPolicy: Always
         command: ['/bin/chown','condor:condor','/var/log/condor-ce']
         volumeMounts:
@@ -121,7 +121,7 @@ spec:
         {{ end }}
       {{ end }}
       - name: osg-hosted-ce
-        image: {{ .Values.Containers.osg-hosted-ce }}
+        image: opensciencegrid/hosted-ce:{{ .Values.ContainerTags.osg-hosted-ce }}
         imagePullPolicy: Always
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
