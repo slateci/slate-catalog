@@ -128,7 +128,7 @@ HostCredentials:
 
 # Choose which tag to use for the specified containers
 ContainerTags:
-  osg-hosted-ce: stable
+  HostedCE: stable
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
