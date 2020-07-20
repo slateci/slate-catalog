@@ -4,7 +4,6 @@
 # repos at https://hub.docker.com/u/jupyter/
  
 FROM centos:7
-
 LABEL maintainer="SLATE Team"
 ARG NB_USER="jovyan"
 ARG NB_UID="1000"
@@ -22,7 +21,6 @@ RUN yum -y install epel-release && yum -y update \
     ca-certificates \
     sudo && yum clean all
 
-
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
     SHELL=/bin/bash \
@@ -38,7 +36,6 @@ ENV PATH=$CONDA_DIR/bin:$PATH \
 # Copy a script that we will use to correct permissions after running certain commands
 COPY fix-permissions /usr/local/bin/fix-permissions
 RUN chmod a+rx /usr/local/bin/fix-permissions
-
 
 # Create NB_USER wtih name jovyan user with UID=1000 and in the 'users' group
 # and make sure these dirs are writable by the `users` group.
@@ -85,7 +82,6 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py37_${MINICONDA
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-
 RUN conda install --quiet --yes \
     'notebook=6.0.3' \
     'jupyterhub=1.1.0' \
@@ -99,7 +95,6 @@ RUN conda install --quiet --yes \
     fix-permissions /home/$NB_USER
 
 EXPOSE 8888
-
 
 COPY start.sh start-notebook.sh start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
@@ -194,8 +189,6 @@ RUN  fix-permissions "${CONDA_DIR}" && \
      fix-permissions "/home/${NB_USER}"
 
 
-WORKDIR $HOME
-
 RUN cd /root && \
     wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor && \
     rpm --import RPM-GPG-KEY-HTCondor
@@ -203,10 +196,12 @@ RUN cd /etc/yum.repos.d && \
     #wget https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo
     wget https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-development-rhel7.repo
 
-RUN yum install condor supervisor openssh-server -y && yum clean all && pip install htcondor
+WORKDIR $HOME
+RUN yum install condor supervisor openssh-server -y && yum clean all && pip install htcondor && \
+    mkdir -p /var/log/supervisor && \
+    mkdir -p /var/run/sshd /var/log/supervisor && \
+    rm -rf /tmp/*
 
-RUN mkdir -p /var/log/supervisor && \
-    mkdir -p /var/run/sshd /var/log/supervisor
 ADD container-files /
 #RUN mkdir -p /var/run/sshd /var/log/supervisor
 # Make sure we have some needed dirs
