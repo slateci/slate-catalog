@@ -12,12 +12,26 @@ GlobusCredentialSecret: globus-creds # maps to <secret-name> as in the above
 # The following file must contain usernames and encrypted passwords for any 
 # users who may log in to the system. This user will be used to generate a
 # MyProxy certificate for the end user who will transfer files.
-# The file must follow passwd(5) format, with one user per line with an 
-# encrypted password in the second field:
+# 
+# The file must follow passwd(5) format. 
+#
+#                       **IMPORTANT** 
+# If you are using MyProxy authentication, you will additionally
+# need to include an encrypted password in the second field. 
+#          
 #   slateci:ENCRYPTEDPASSWORDHERE:1001:1001:SLATE CI:/home/slateci:/bin/bash
+#
 # Once this file has been created, store it as a SLATE secret with:
+#
 #   slate secret create <secret-name> --group <group> --cluster <cluster> \
 #     --from-file <filename>
+#
+# OTHERWISE, if you are using CILogon authentication (default) you will need to
+# provide an extended passwd(5)-format file with the users' X509 distinguished
+# name (DN) in the final field, e.g.:
+#   
+#   slateci:x:1001:1001:SLATE CI:/home/slateci:/DC=org/DC=cilogon/C=US/O=UNIX University/CN=Charlie Root A1234
+#
 GlobusPasswdSecret: globus-passwd # maps to <secret-name> as in the above
 
 # The below configuration approximately maps to the GCS configuration file
@@ -34,11 +48,8 @@ GlobusConfig:
     DefaultDirectory: /~/
   #Uncomment this field if you need to set the MyProxy server and/or port
   #MyProxyServer:
-  #These are unimplemented for now. If it is relevant please let us know.
-  #Security:
-  #  FetchCredentialFromRelay: True
-  #  IdentityMethod: "MyProxy"
-  #
+  Security:
+     IdentityMethod: "CILogon"
 
 # The path at which the storage should be mounted. 
 ExternalPath: /export

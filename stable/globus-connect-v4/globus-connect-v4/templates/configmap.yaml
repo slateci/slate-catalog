@@ -20,7 +20,7 @@ data:
   
     [Security]
     FetchCredentialFromRelay = True
-    IdentityMethod = MyProxy
+    IdentityMethod = {{ .Values.GlobusConfig.Security.IdentityMethod }}
 
     [GridFTP]
     {{ if .Values.GlobusConfig.GridFTP.Server }}
