@@ -49,7 +49,7 @@ spec:
       hostNetwork: true
       containers:
       - name: "gcs4"
-        image: slateci/gcs4:latest
+        image: slateci/gcs4:development
         imagePullPolicy: Always
         command: ["/usr/local/bin/supervisord_startup.sh"]
         env: 
