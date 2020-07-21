@@ -22,6 +22,8 @@ RemoteCluster:
   MemoryPerNode: 1024
   CoresPerNode: 4
   MaxWallTime: 1440
+  # Name for the remote bosco installation dir
+  BoscoDir: bosco
   # Absolute path to the local WN client installation
   # Do not use environment variables!
   GridDir: /home/osguser/bosco-osg-wn-client
