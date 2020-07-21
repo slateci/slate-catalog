@@ -20,6 +20,11 @@ data:
     
     #create the user's ssh config directory, and if necessary the whole home directory
     mkdir -p /home/{{ .Values.Jupyter.NB_USER }}/.ssh
+    #If user using custom username, sync files from old to new home directory and remove old one
+    {{ if ne .Values.Jupyter.NB_USER "jovyan" }}
+    rsync -a /home/jovyan/ /home/{{ .Values.Jupyter.NB_USER }}/ && rm -rf /home/jovyan
+    {{ end }}
+
     {{ if eq .Values.SSH.Enabled true }}
     echo '
 {{ .Values.SSH.SSH_Public_Key | indent 4 }}' > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
@@ -34,12 +39,14 @@ data:
     chown -R ${NB_UID}:${NB_GID} /home/$NB_USER
     #add other services to supervisor's configuration if needed
     {{ if eq .Values.SSH.Enabled true}}
-    mv /etc/supervisor/supervisord.d/sshd.conf /etc/supervisor/conf.d/
+    mv /etc/supervisor/supervisord.d/sshd.conf /etc/supervisord.d/
+    ssh-keygen -A
     {{ end }}
     {{ if eq .Values.CondorConfig.Enabled true}}
-    mv /etc/supervisor/supervisord.d/htcondor.conf /etc/supervisor/conf.d/
+    mv /etc/supervisor/supervisord.d/htcondor.conf /etc/supervisord.d/
     {{ end }}
-    /usr/bin/supervisord
+    /usr/local/sbin/supervisord_startup.sh
+#    /usr/bin/supervisord
 ---
 apiVersion: v1
 kind: ConfigMap
