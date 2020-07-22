@@ -24,7 +24,7 @@ data:
     {{ if ne .Values.Jupyter.NB_USER "jovyan" }}
     rsync -a /home/jovyan/ /home/{{ .Values.Jupyter.NB_USER }}/ && rm -rf /home/jovyan
     {{ end }}
-
+    chmod 700 /home/{{ .Values.Jupyter.NB_USER }}
     {{ if eq .Values.SSH.Enabled true }}
     echo '
 {{ .Values.SSH.SSH_Public_Key | indent 4 }}' > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
