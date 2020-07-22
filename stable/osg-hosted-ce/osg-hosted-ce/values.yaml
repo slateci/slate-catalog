@@ -126,6 +126,10 @@ HostCredentials:
   # certificate.
   HostCertSecret: null
 
+# Choose which tag to use for the specified containers
+ContainerTags:
+  HostedCE: stable
+
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
 # - Configures the CE as an ITB host
