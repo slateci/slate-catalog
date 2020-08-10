@@ -37,3 +37,6 @@ StashCache:
   stashcacheRobots: |-
     User-agent: *
     Disallow: /
+
+ContainerTags:
+  StashCache: latest
