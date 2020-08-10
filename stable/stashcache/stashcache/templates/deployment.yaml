@@ -58,7 +58,7 @@ spec:
       {{ end }}
       containers:
       - name: stashcache
-        image: opensciencegrid/stash-cache:20200727-1347
+        image: opensciencegrid/stash-cache:{{ .Values.ContainerTags.StashCache }}
         imagePullPolicy: Always
         env:
         - name: XC_ROOTDIR
