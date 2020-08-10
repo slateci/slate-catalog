@@ -39,4 +39,4 @@ StashCache:
     Disallow: /
 
 ContainerTags:
-  StashCache: latest
+  StashCache: fresh
