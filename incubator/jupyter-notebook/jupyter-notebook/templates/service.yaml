@@ -24,3 +24,9 @@ spec:
     port: 22
     protocol: TCP
   {{ end }}
+  {{ if eq .Values.CondorConfig.Enabled true }}
+  - name: condor
+    port: {{ .Values.CondorConfig.ExternalCondorPort }}
+    nodePort: {{ .Values.CondorConfig.ExternalCondorPort }}
+    protocol: TCP
+  {{ end }}

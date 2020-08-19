@@ -11,6 +11,11 @@ data:
   startup_script.sh: |+
     #!/bin/bash
     
+    # get the condor token where it needs to be, with the right ownership
+    cp -a /root/tokens/* /etc/condor/tokens.d/
+    chown -R condor: /etc/condor/tokens.d
+    chmod 400 /etc/condor/tokens.d/*
+
     # users won't be able to run `unminimize` anyway
     rm /etc/update-motd.d/60-unminimize
     
@@ -47,6 +52,33 @@ data:
     {{ end }}
     /usr/local/sbin/supervisord_startup.sh
 #    /usr/bin/supervisord
+{{ if .Values.CondorConfig.Enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jupyter-{{ .Values.Instance }}-condor-configuration
+  labels:
+    app: {{ template "jupyter.name" . }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  condor_config.local: |+
+    COLLECTOR_HOST = {{ .Values.CondorConfig.CollectorHost }}:{{ .Values.CondorConfig.CollectorPort }}
+    COLLECTOR_PORT = 
+    SHARED_PORT_PORT = {{ .Values.CondorConfig.ExternalCondorPort }}
+    COLLECTOR_USES_SHARED_PORT = true
+    SCHEDD.USE_SHARED_PORT = true
+    MASTER.COLLECTOR_HOST = $(IP_ADDRESS):$(SHARED_PORT_PORT) $(COLLECTOR_HOST)
+    SEC_PASSWORD_FILE = /etc/condor/password
+    ALLOW_NEGOTIATOR = $(ALLOW_NEGOTIATOR) negotiator@cm
+    ALLOW_WRITE = $(HOSTALLOW_WRITE) execute-side@matchsession
+    TRUST_DOMAIN = {{ .Values.CondorConfig.TrustDomain }}
+{{ if .Values.CondorConfig.ConfigFile }}
+{{ .Values.CondorConfig.ConfigFile  | indent 4 }}
+{{ end }}
+{{ end }}
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -55,22 +55,23 @@ Once you're done with this part, the configuration would look like:
 
  
 #### 2- Condor (Optional)  
-If you don't need to enable the condor submit functionality in this chart, you can skip this part. As indicated before, this part only configures the condor submit feature and assumes that the other condor components already exist. In order to submit jobs to a condor pool, a submit-token is used for authentication.
+If you don't need to enable the condor submit functionality in this chart, you can skip this part. As indicated before, this part only configures the condor submit feature and assumes that the other condor components already exist. In order to submit jobs to a condor pool, a token and a password are used for authentication.
  
-So to configure this feature, you will need to create a SLATE secret from the submit token. You can do that by pasting the token into a text file &lt;submit-token&gt; and adding one trailing newline character (\n). Then, use the slate command as follows:
+So, to configure this feature, you will need to create a SLATE secret from these cedentials. You can do that by pasting the token into a text file &lt;submit-token&gt;, the password into a file &lt;submit-password&gt;, ensuring that each has just one trailing newline character (\n). Then, use the slate command as follows:
 
-	$ slate secret create submit-auth-token --group <some group> --cluster <a cluster> --from-file condor_token=submit-token
+	$ slate secret create submit-auth-token --group <some group> --cluster <a cluster> --from-file condor_token=submit-token --from-file reverse_password=submit-password
 	Successfully created secret submit-auth-token with ID secret_dHiGnjAgR2A
  
  
 
-Now you can add to the configuration file the following HTCondor information: *CollectorHost* IP address, *CollectorPort* number, and the *submit-auth-secret*. A sample configuration for this part looks like:
+Now you can add to the configuration file the following HTCondor information: *CollectorHost* IP address, *CollectorPort* number, the *submit-auth-secret*, and *ExternalCondorPort*, which must be a port number which is currently unused on the cluster where the application is being installed. A sample configuration for this part looks like:
 
 	CondorConfig:
-      Enabled: true
-      CollectorHost: 128.214.138.10
-      CollectorPort: 30487
-      AuthTokenSecret: submit-auth-token
+	  Enabled: true
+	  CollectorHost: 128.214.138.10
+	  CollectorPort: 30487
+	  AuthTokenSecret: submit-auth-token
+	  ExternalCondorPort: 31862
   
 #### 3- SSH (Optional) 
 If you don't need to enable SSH access on your instance, then you can skip this section. Enabling this feature requires setting the Enabled flag to true and adding your SSH public key which would start with "ssh-rsa". A sample configuration for this part looks like this:
@@ -91,6 +92,7 @@ Once SLATE creates the requested resources needed for your JupyterLab instance, 
 	Services:
 	Name                               Cluster IP    External IP   Ports          URL                                     
 	slate-dev-jupyter-notebook-alidemo 10.96.150.245 <a-public-ip> 8888:30712/TCP http://slatenotebook.slate-dev.slateci.net/
+
 The URL can be found under Services, which in our example is *http://slatenotebook.slate-dev.slateci.net*.
 
 ##### Condor Hello World Test Job
@@ -110,7 +112,7 @@ Then, submit the job:
 	Submitting job(s).
 	1 job(s) submitted to cluster 1.
 
-A successful run will genearate a job.out file that has the "Hello World" inside.
+A successful run will genearate a job.out file that has the text "Hello World" inside.
 
 ##### SSH Access Test
 If you have deployed an instance of the application with SSH enabled, you should be able to ssh into it using the username you chose in the application configuration file. To get the IP address and port number for SSH, run the below command:
@@ -122,6 +124,8 @@ The output will list the SSH IP address and port under Services>URL and it would
 	Services:
 	Name                               Cluster IP    External IP   Ports          URL                                     
 	slate-dev-jupyter-notebook-alidemo 10.96.150.245 <a-public-ip> 22:30033/TCP   <ip-address>:<port-number>
+
+Multiple ports will often be listed; the one you want for SSH is the one which maps to the internal port 22. 
 
 Now, ssh into your deployed instance using the username you've chosen in your application configuration file:
 
