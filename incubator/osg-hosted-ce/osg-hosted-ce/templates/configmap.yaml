@@ -17,6 +17,7 @@ data:
     {{ end }}
     host_name = localhost
     resource = {{ .Values.Topology.Resource }}
+    resource_group = {{ .Values.Topology.ResourceGroup }}
     sponsor = {{ .Values.Topology.Sponsor }}
     contact = {{ .Values.Topology.Contact }}
     email = {{ .Values.Topology.ContactEmail }}
@@ -65,12 +66,12 @@ data:
     # HACK: The job router doesn't recognize grid universe routes (the default) without
     # a "GridResource" attribute and the Gridmanager doesn't evaluate GridResource expressions.
     # So we set a dummy "GridResource" attribute and use "eval_set_GridResource"  to force the
-    # Job Router to evaluate the expression and set "GridResource" as a string in the routed job
+    # JobRouter to respect our will
     JOB_ROUTER_DEFAULTS @=jrd
     $(JOB_ROUTER_DEFAULTS)
     [
     GridResource = "intentionally left blank";
-    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}");
+    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}", " --rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite");
     ]
     @jrd
 
