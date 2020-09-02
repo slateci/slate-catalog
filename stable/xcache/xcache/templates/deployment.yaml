@@ -76,6 +76,8 @@ spec:
             value: "{{ .Values.XCacheConfig.Prefetch }}"
           - name: AGIS_PROTOCOL_ID
             value: "{{ .Values.SiteConfig.AGISprotocolID }}"
+          - name: CRIC_PROTOCOL_ID
+            value: "{{ .Values.SiteConfig.CRICprotocolID }}"
           - name: WQ_BLOCKS_PER_LOOP
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
           - name: WQ_THREADS
