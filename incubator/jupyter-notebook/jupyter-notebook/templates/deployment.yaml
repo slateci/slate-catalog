@@ -39,8 +39,8 @@ spec:
         configMap:
           name: jupyter-{{ .Values.Instance }}-condor-configuration
           items:
-          - key: condor_config.local
-            path: condor_config.local
+          - key: condor_config.99-override
+            path: condor_config.99-override
             mode: 292
       {{ end }}
       - name: jupyter-{{ .Values.Instance }}-startup
@@ -121,8 +121,8 @@ spec:
           mountPath: /etc/condor/passwords.d/{{ .Values.CondorConfig.KeyName }}
           subPath: password
         - name: condor-configuration
-          mountPath: /etc/condor/condor_config.local
-          subPath: condor_config.local
+          mountPath: /etc/condor/config.d/99-override.conf
+          subPath: condor_config.99-override
         {{ end }}
         - name: jupyter-{{ .Values.Instance }}-startup
           mountPath: "/usr/bin/startup_script.sh"
