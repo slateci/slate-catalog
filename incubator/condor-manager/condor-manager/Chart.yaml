@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "8.9"
 description: HTCondor Central Manager Node
 name: condor-manager
-version: 0.1.0
+version: 0.1.1

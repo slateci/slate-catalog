@@ -5,7 +5,7 @@ RUN yum update -y && yum install -y epel-release
 
 # upcoming for tokens
 RUN yum install -y --enablerepo=osg-upcoming \
-  condor-8.9.5 \
+  condor \
   pwgen \
   supervisor \
   openssl \
