@@ -15,9 +15,10 @@ data:
     cp -a /root/tokens/* /etc/condor/tokens.d/
     chown -R condor: /etc/condor/tokens.d
     chmod 400 /etc/condor/tokens.d/*
+    condor_token_list
 
     # users won't be able to run `unminimize` anyway
-    rm /etc/update-motd.d/60-unminimize
+    rm -f /etc/update-motd.d/60-unminimize
     
     NB_UID={{ .Values.Jupyter.NB_UID }}
     NB_GID={{ .Values.Jupyter.NB_GID }}
@@ -64,17 +65,58 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
-  condor_config.local: |+
+  condor_config.99-override: |+
+    DAEMON_LIST = MASTER, COLLECTOR, SCHEDD, SHARED_PORT
+    
+    CONDOR_HOST = {{ .Values.CondorConfig.CollectorHost }}
     COLLECTOR_HOST = {{ .Values.CondorConfig.CollectorHost }}:{{ .Values.CondorConfig.CollectorPort }}
     COLLECTOR_PORT = 
     SHARED_PORT_PORT = {{ .Values.CondorConfig.ExternalCondorPort }}
-    COLLECTOR_USES_SHARED_PORT = true
     SCHEDD.USE_SHARED_PORT = true
     MASTER.COLLECTOR_HOST = $(IP_ADDRESS):$(SHARED_PORT_PORT) $(COLLECTOR_HOST)
-    SEC_PASSWORD_FILE = /etc/condor/password
-    ALLOW_NEGOTIATOR = $(ALLOW_NEGOTIATOR) negotiator@cm
-    ALLOW_WRITE = $(HOSTALLOW_WRITE) execute-side@matchsession
+    
+    MASTER_NAME = $(UTSNAME_NODENAME)
+    SCHEDD_NAME = $(UTSNAME_NODENAME)
+    FILESYSTEM_DOMAIN = $(UTSNAME_NODENAME)
+    UID_DOMAIN = $(UTSNAME_NODENAME)
     TRUST_DOMAIN = {{ .Values.CondorConfig.TrustDomain }}
+    TRUST_UID_DOMAIN = True
+
+    SEC_USE_FAMILY_SESSION = True
+    DISCARD_SESSION_KEYRING_ON_STARTUP = True
+    
+    MAIL=/bin/false
+    
+    RUNBENCHMARKS = FALSE
+    
+    # running under podman makes condor a bit unhappy
+    COLLECTOR_MAX_FILE_DESCRIPTORS = 1024
+    SCHEDD_MAX_FILE_DESCRIPTORS = 1024
+    SHARED_PORT_MAX_FILE_DESCRIPTORS = 1024
+    
+    #-- Authentication settings
+    SEC_DEFAULT_AUTHENTICATION = REQUIRED
+    SEC_DEFAULT_AUTHENTICATION_METHODS = IDTOKENS,FS
+    SEC_READ_AUTHENTICATION    = OPTIONAL
+    SEC_CLIENT_AUTHENTICATION  = OPTIONAL
+    SEC_ENABLE_MATCH_PASSWORD_AUTHENTICATION = TRUE
+    DENY_WRITE         = anonymous@*
+    DENY_ADMINISTRATOR = anonymous@*
+    DENY_DAEMON        = anonymous@*
+    DENY_NEGOTIATOR    = anonymous@*
+    DENY_CLIENT        = anonymous@*
+    
+    #--  Privacy settings
+    SEC_DEFAULT_ENCRYPTION = OPTIONAL
+    SEC_DEFAULT_INTEGRITY = REQUIRED
+    SEC_READ_INTEGRITY = OPTIONAL
+    SEC_CLIENT_INTEGRITY = OPTIONAL
+    SEC_READ_ENCRYPTION = OPTIONAL
+    SEC_CLIENT_ENCRYPTION = OPTIONAL
+    
+    #-- With strong security, do not use IP based controls
+    HOSTALLOW_WRITE = *
+
 {{ if .Values.CondorConfig.ConfigFile }}
 {{ .Values.CondorConfig.ConfigFile  | indent 4 }}
 {{ end }}
