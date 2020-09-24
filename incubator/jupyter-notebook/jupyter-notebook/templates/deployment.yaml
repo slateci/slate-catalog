@@ -36,6 +36,7 @@ spec:
 #          - key: reverse_password
 #            path: password
 #            mode: 256
+      {{ if .Values.CondorConfig.IsExternalPool }}
       - name: condor-configuration
         configMap:
           name: jupyter-{{ .Values.Instance }}-condor-configuration
@@ -43,6 +44,7 @@ spec:
           - key: condor_config.99-override
             path: condor_config.99-override
             mode: 292
+      {{ end }}
       {{ end }}
       - name: jupyter-{{ .Values.Instance }}-startup
         configMap:
@@ -68,7 +70,7 @@ spec:
           value: 'yes'
         - name: NB_USER
           value: {{ .Values.Jupyter.NB_USER | default "jovyan" | quote }}
-        {{ if eq .Values.CondorConfig.Enabled true }}
+        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
         - name: _CONDOR_TCP_FORWARDING_HOST
           valueFrom:
             fieldRef:
@@ -77,6 +79,12 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+        #If not an external pool
+        {{ else if eq .Values.CondorConfig.Enabled true }}
+        - name: _CONDOR_COLLECTOR_HOST
+          value: {{ .Values.CondorConfig.CollectorHost | quote }}
+        - name: _CONDOR_COLLECTOR_PORT
+          value: {{ .Values.CondorConfig.CollectorPort | quote }}        
         {{ end }}
         - name: JupyterPassword
           value: {{ .Values.Jupyter.Password | quote }} 
@@ -104,26 +112,28 @@ spec:
         ports:
         - containerPort: 8888
           protocol: TCP
-{{ if eq .Values.SSH.Enabled true }}
+        {{ if eq .Values.SSH.Enabled true }}
         - containerPort: 22
           protocol: TCP
-{{ end }}
-{{ if .Values.CondorConfig.Enabled }}
+        {{ end }}
+        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
         - containerPort: {{ .Values.CondorConfig.ExternalCondorPort }}
           protocol: TCP
-{{ end }}
+        {{ end }}
         command: ["/usr/bin/startup_script.sh"] 
         volumeMounts:
         {{ if eq .Values.CondorConfig.Enabled true }}
         - name: condor-token-volume
           mountPath: /root/tokens/condor_token
           subPath: condor_token
-        - name: condor-token-volume
-          mountPath: /etc/condor/passwords.d/{{ .Values.CondorConfig.KeyName }}
-          subPath: password
+#        - name: condor-token-volume
+#          mountPath: /etc/condor/passwords.d/{{ .Values.CondorConfig.KeyName }}
+#          subPath: password
+        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
         - name: condor-configuration
           mountPath: /etc/condor/config.d/99-override.conf
           subPath: condor_config.99-override
+        {{ end }}
         {{ end }}
         - name: jupyter-{{ .Values.Instance }}-startup
           mountPath: "/usr/bin/startup_script.sh"
@@ -131,4 +141,3 @@ spec:
         - name: jupyter-{{ .Values.Instance }}-motd
           mountPath: "/etc/update-motd.d/99-limits"
           subPath: 99-limits
-

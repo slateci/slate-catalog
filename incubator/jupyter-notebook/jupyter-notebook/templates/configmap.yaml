@@ -53,7 +53,7 @@ data:
     {{ end }}
     /usr/local/sbin/supervisord_startup.sh
 #    /usr/bin/supervisord
-{{ if .Values.CondorConfig.Enabled }}
+{{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
 ---
 apiVersion: v1
 kind: ConfigMap
