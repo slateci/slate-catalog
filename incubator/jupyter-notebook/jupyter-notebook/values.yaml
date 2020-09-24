@@ -51,6 +51,12 @@ CondorConfig:
   # the Kubernetes cluster's NodePort range. This range is usually, but not
   # always 30000-32767
   ExternalCondorPort: 9618
+  # This boolean variable needs to be set to true if this chart will be used to 
+  # submit jobs to the OSG central manager. If the intention is to use the chart
+  # with a local condor pool installed on SLATE, it needs to be set to false. In
+  # either case, this configuration will only take effect if the CondorConfig>Enabled
+  # is set to true.
+  IsExternalPool: false
   # This is the name used for the password from which the token for the collector 
   # host was created. It is a good idea to make sure that this does not match the 
   # name of any password which is present on the collector host
