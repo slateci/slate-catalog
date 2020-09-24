@@ -70,7 +70,8 @@ spec:
           value: 'yes'
         - name: NB_USER
           value: {{ .Values.Jupyter.NB_USER | default "jovyan" | quote }}
-        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
+        {{ if eq .Values.CondorConfig.IsExternalPool true }}
+        {{ if eq .Values.CondorConfig.Enabled true }}
         - name: _CONDOR_TCP_FORWARDING_HOST
           valueFrom:
             fieldRef:
@@ -79,6 +80,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+        {{ end }}
         #If not an external pool
         {{ else if eq .Values.CondorConfig.Enabled true }}
         - name: _CONDOR_COLLECTOR_HOST
@@ -116,9 +118,11 @@ spec:
         - containerPort: 22
           protocol: TCP
         {{ end }}
-        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
+        {{ if eq .Values.CondorConfig.Enabled true }}
+        {{ if eq .Values.CondorConfig.IsExternalPool true }}
         - containerPort: {{ .Values.CondorConfig.ExternalCondorPort }}
           protocol: TCP
+        {{ end }}
         {{ end }}
         command: ["/usr/bin/startup_script.sh"] 
         volumeMounts:
@@ -129,10 +133,12 @@ spec:
 #        - name: condor-token-volume
 #          mountPath: /etc/condor/passwords.d/{{ .Values.CondorConfig.KeyName }}
 #          subPath: password
-        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
+        {{ if eq .Values.CondorConfig.Enabled true }}
+        {{ if eq .Values.CondorConfig.IsExternalPool true }}
         - name: condor-configuration
           mountPath: /etc/condor/config.d/99-override.conf
           subPath: condor_config.99-override
+        {{ end }}
         {{ end }}
         {{ end }}
         - name: jupyter-{{ .Values.Instance }}-startup
