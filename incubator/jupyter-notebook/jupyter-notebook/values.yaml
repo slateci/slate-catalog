@@ -51,6 +51,7 @@ CondorConfig:
   # the Kubernetes cluster's NodePort range. This range is usually, but not
   # always 30000-32767
   ExternalCondorPort: 9618
+  IsExternalPool: true
   # This is the name used for the password from which the token for the collector 
   # host was created. It is a good idea to make sure that this does not match the 
   # name of any password which is present on the collector host
