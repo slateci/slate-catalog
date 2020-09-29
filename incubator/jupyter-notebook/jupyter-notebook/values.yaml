@@ -80,8 +80,9 @@ SSH:
 # Enable this section if you have additional middleware that needs to have an
 # open inbound tcp port to function.
 ExtraPort:
-  Enabled: false
-  Port: 31000
+  Enabled: true
+  LowPort:  31000
+  HighPort: 31002
 
 ### SLATE-START ###
 SLATE:
