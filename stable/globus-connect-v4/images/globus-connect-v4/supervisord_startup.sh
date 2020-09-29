@@ -12,7 +12,8 @@ if [[ $? -eq 0 ]]; then
     # kubernetes will strip newlines, but we need at least one so the while 
     # loop can read the file.  this strips any empty lines after..
     sed -i '/^$/d' /root/passwd1
-	while read -r user pass uid gid comment home shell dn; do
+    # there can be more than one DN, so we stuff them all into the last variable as a poor man's variadic function
+	while read -r user pass uid gid comment home shell dns; do
 		echo "username is: " $user
 		echo "password is: xxxxxxx"  # we dont watn to print out the password, actually
 		echo "uid is: " $uid
@@ -20,7 +21,7 @@ if [[ $? -eq 0 ]]; then
 		echo "comment is: " $comment
 		echo "home is: " $home
 		echo "shell is: " $shell
-        echo "X509 DN is: " $dn
+        echo "X509 DN(s) are: " $dns
 
         if [[ $dn == "" ]]; then
 			echo "No X509 DN found. Assuming password/MyProxy authentication"
@@ -33,8 +34,10 @@ if [[ $? -eq 0 ]]; then
 		else
 			echo "Adding user $user"
 			useradd $user -d $home -u $uid -s $shell
-			echo "Adding $dn to the grid-mapfile"
-			echo "\"$dn\" $user" >> /etc/grid-security/grid-mapfile
+            echo "Adding DN(s) to the gridmap file..."
+            for dn in $dns; do
+			    echo "\"$dn\" $user" | tee -a /etc/grid-security/grid-mapfile
+            done
 		fi
 	done < /root/passwd1
 fi
