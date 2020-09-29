@@ -27,9 +27,9 @@ data:
     xrd.report {{ .Values.Monitoring.Collector }} every 60s all sync
     xrootd.monitor all auth flush io 60s ident 5m mbuff 8k rbuff 4k rnums 3 window 10s dest files io info user redir xrootd.t2.ucsd.edu:9930
     # this is arbitrary as our client will provide origin
-    pss.origin = {{ .Values.Site.Origin }}
-    all.sitename {{ .Values.Site.Name }}
+    pss.origin = {{ .Values.SiteConfig.Origin }}
+    all.sitename {{ .Values.SiteConfig.Name }}
     # Connect to NDCMS manager
-    set xrdr = {{ .Values.Site.Manager }}
+    set xrdr = {{ .Values.SiteConfig.Manager }}
     # Tell everyone who the manager is
     all.manager $(xrdr):3121
