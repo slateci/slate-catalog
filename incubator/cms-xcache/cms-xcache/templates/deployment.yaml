@@ -36,7 +36,10 @@ spec:
       volumes:
       - name: cache-disks
         configMap:
-          name: {{ template "cms-xcache.fullname" . }}
+          name: {{ template "cms-xcache.fullname" . }}-disks
+      - name: xrootd-clustered
+        configMap:
+          name: {{ template "cms-xcache.fullname" . }}-monitoring
       - name: x509-data
         emptyDir:
           medium: Memory
@@ -124,8 +127,6 @@ spec:
             value: "{{ .Values.XCacheConfig.BlockSize }}"
           - name: XC_PREFETCH
             value: "{{ .Values.XCacheConfig.Prefetch }}"
-          - name: AGIS_PROTOCOL_ID
-            value: "{{ .Values.SiteConfig.AGISprotocolID }}"
           - name: WQ_BLOCKS_PER_LOOP
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
           - name: WQ_THREADS
@@ -147,6 +148,8 @@ spec:
           volumeMounts:
           - name: cache-disks
             mountPath: /etc/xrootd/cache-disks.config
+          - name: xrootd-clustered
+            mountPath: /etc/xrootd/xrootd-clustered.cfg
           - name: x509-data
             mountPath: "/etc/proxy/"
             readOnly: true
