@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "redis-chart.fullname" . }}
+  labels:
+    app: {{ template "redis-chart.name" . }}
+    chart: {{ template "redis-chart.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 6379
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "redis-chart.name" . }}
+    chart: {{ template "redis-chart.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}

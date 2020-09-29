@@ -11,8 +11,14 @@ data:
   startup_script.sh: |+
     #!/bin/bash
     
+    # get the condor token where it needs to be, with the right ownership
+    cp -a /root/tokens/* /etc/condor/tokens.d/
+    chown -R condor: /etc/condor/tokens.d
+    chmod 400 /etc/condor/tokens.d/*
+    condor_token_list
+
     # users won't be able to run `unminimize` anyway
-    rm /etc/update-motd.d/60-unminimize
+    rm -f /etc/update-motd.d/60-unminimize
     
     NB_UID={{ .Values.Jupyter.NB_UID }}
     NB_GID={{ .Values.Jupyter.NB_GID }}
@@ -20,8 +26,14 @@ data:
     
     #create the user's ssh config directory, and if necessary the whole home directory
     mkdir -p /home/{{ .Values.Jupyter.NB_USER }}/.ssh
+    #If user using custom username, sync files from old to new home directory and remove old one
+    {{ if ne .Values.Jupyter.NB_USER "jovyan" }}
+    rsync -a /home/jovyan/ /home/{{ .Values.Jupyter.NB_USER }}/ && rm -rf /home/jovyan
+    {{ end }}
+    chmod 700 /home/{{ .Values.Jupyter.NB_USER }}
     {{ if eq .Values.SSH.Enabled true }}
-    echo '{{ .Values.SSH.SSH_Public_Key }}' > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
+    echo '
+{{ .Values.SSH.SSH_Public_Key | indent 4 }}' > /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
     chmod 600 /home/{{ .Values.Jupyter.NB_USER }}/.ssh/authorized_keys
     {{ end }}
     #if the group is not the default, create it
@@ -33,12 +45,82 @@ data:
     chown -R ${NB_UID}:${NB_GID} /home/$NB_USER
     #add other services to supervisor's configuration if needed
     {{ if eq .Values.SSH.Enabled true}}
-    mv /etc/supervisor/supervisord.d/sshd.conf /etc/supervisor/conf.d/
+    mv /etc/supervisor/supervisord.d/sshd.conf /etc/supervisord.d/
+    ssh-keygen -A
     {{ end }}
     {{ if eq .Values.CondorConfig.Enabled true}}
-    mv /etc/supervisor/supervisord.d/htcondor.conf /etc/supervisor/conf.d/
+    mv /etc/supervisor/supervisord.d/htcondor.conf /etc/supervisord.d/
     {{ end }}
-    /usr/bin/supervisord
+    /usr/local/sbin/supervisord_startup.sh
+#    /usr/bin/supervisord
+{{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jupyter-{{ .Values.Instance }}-condor-configuration
+  labels:
+    app: {{ template "jupyter.name" . }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  condor_config.99-override: |+
+    DAEMON_LIST = MASTER, COLLECTOR, SCHEDD, SHARED_PORT
+    
+    CONDOR_HOST = {{ .Values.CondorConfig.CollectorHost }}
+    COLLECTOR_HOST = {{ .Values.CondorConfig.CollectorHost }}:{{ .Values.CondorConfig.CollectorPort }}
+    COLLECTOR_PORT = 
+    SHARED_PORT_PORT = {{ .Values.CondorConfig.ExternalCondorPort }}
+    SCHEDD.USE_SHARED_PORT = true
+    MASTER.COLLECTOR_HOST = $(IP_ADDRESS):$(SHARED_PORT_PORT) $(COLLECTOR_HOST)
+    
+    MASTER_NAME = $(UTSNAME_NODENAME)
+    SCHEDD_NAME = $(UTSNAME_NODENAME)
+    FILESYSTEM_DOMAIN = $(UTSNAME_NODENAME)
+    UID_DOMAIN = $(UTSNAME_NODENAME)
+    TRUST_DOMAIN = {{ .Values.CondorConfig.TrustDomain }}
+    TRUST_UID_DOMAIN = True
+
+    SEC_USE_FAMILY_SESSION = True
+    DISCARD_SESSION_KEYRING_ON_STARTUP = True
+    
+    MAIL=/bin/false
+    
+    RUNBENCHMARKS = FALSE
+    
+    # running under podman makes condor a bit unhappy
+    COLLECTOR_MAX_FILE_DESCRIPTORS = 1024
+    SCHEDD_MAX_FILE_DESCRIPTORS = 1024
+    SHARED_PORT_MAX_FILE_DESCRIPTORS = 1024
+    
+    #-- Authentication settings
+    SEC_DEFAULT_AUTHENTICATION = REQUIRED
+    SEC_DEFAULT_AUTHENTICATION_METHODS = IDTOKENS,FS
+    SEC_READ_AUTHENTICATION    = OPTIONAL
+    SEC_CLIENT_AUTHENTICATION  = OPTIONAL
+    SEC_ENABLE_MATCH_PASSWORD_AUTHENTICATION = TRUE
+    DENY_WRITE         = anonymous@*
+    DENY_ADMINISTRATOR = anonymous@*
+    DENY_DAEMON        = anonymous@*
+    DENY_NEGOTIATOR    = anonymous@*
+    DENY_CLIENT        = anonymous@*
+    
+    #--  Privacy settings
+    SEC_DEFAULT_ENCRYPTION = OPTIONAL
+    SEC_DEFAULT_INTEGRITY = REQUIRED
+    SEC_READ_INTEGRITY = OPTIONAL
+    SEC_CLIENT_INTEGRITY = OPTIONAL
+    SEC_READ_ENCRYPTION = OPTIONAL
+    SEC_CLIENT_ENCRYPTION = OPTIONAL
+    
+    #-- With strong security, do not use IP based controls
+    HOSTALLOW_WRITE = *
+
+{{ if .Values.CondorConfig.ConfigFile }}
+{{ .Values.CondorConfig.ConfigFile  | indent 4 }}
+{{ end }}
+{{ end }}
 ---
 apiVersion: v1
 kind: ConfigMap

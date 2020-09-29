@@ -18,6 +18,10 @@
   {{ required "Resources.Memory must be greater than zero" .Values.Error_DoNotSet }}
 {{ end }}
 
+{{ if eq .Values.Jupyter.NB_USER "root" }}
+   {{ required "Jupyter.NB_USER can't take root as a value. Please choose a valid username" .Values.Error_DoNotSet }}
+{{ end }}
+
 {{ if not (kindIs "float64" .Values.Jupyter.NB_UID) }}
   {{ required "Jupyter.NB_UID must be a number" .Values.Error_DoNotSet }}
 {{ end }}

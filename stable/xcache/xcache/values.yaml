@@ -16,9 +16,11 @@ SiteConfig:
   # AGIS protocol ID. 433 is a dummy value. 
   # can be looked up in this URL: http://atlas-agis.cern.ch/agis/serviceprotocol/edit/433/
   AGISprotocolID: 433
+  CRICprotocolID: 433
 
 Monitoring:
-  Collector: http://uct2-collectd.mwt2.org:8080
+  Collector: http://collector.atlas-ml.org:80
+  GStreamCollector: collector.atlas-ml.org:9000 
 
 XCacheConfig:
   # Local directories to be used as a cache
@@ -46,5 +48,5 @@ XCacheConfig:
 
 image:
   repository: slateci/xcache
-  tag: latest
+  tag: v5rc5
   pullPolicy: Always

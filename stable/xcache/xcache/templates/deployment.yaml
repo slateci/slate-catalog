@@ -29,9 +29,10 @@ spec:
         xcache-capable: "true"
       
       tolerations:
-      - key: "special"
-        operator: "Exists"
-        effect: PreferNoSchedule
+      - key: "xcache"
+        operator: "Equal"
+        value: "true"
+        effect: "PreferNoSchedule"
 
       volumes:
       - name: x509-data
@@ -75,10 +76,16 @@ spec:
             value: "{{ .Values.XCacheConfig.Prefetch }}"
           - name: AGIS_PROTOCOL_ID
             value: "{{ .Values.SiteConfig.AGISprotocolID }}"
+          - name: CRIC_PROTOCOL_ID
+            value: "{{ .Values.SiteConfig.CRICprotocolID }}"
           - name: WQ_BLOCKS_PER_LOOP
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
           - name: WQ_THREADS
             value: "{{ .Values.XCacheConfig.WQThreads }}"
+          - name: XC_SITE
+            value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_MONITOR
+            value: "{{ .Values.Monitoring.GStreamCollector }}"
           resources:
             requests:
               ephemeral-storage: "5Gi"
@@ -92,7 +99,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["./updateAGISstatus.sh","{{ .Values.SiteConfig.AGISprotocolID }}","DISABLED"]
+                command: ["./updateCRICstatus.sh","{{ .Values.SiteConfig.CRICprotocolID }}","DISABLED"]
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:

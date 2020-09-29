@@ -40,9 +40,16 @@ spec:
           - key: condor_token
             path: condor_token
             mode: 256
+          - key: reverse_password
+            path: password
+            mode: 256
       - name: {{ template "condor-submit.name" . }}-condor-configuration
         configMap:
           name: {{ template "condor-submit.name" . }}-condor-configuration
+          items:
+          - key: condor_config.local
+            path: condor_config.local
+            mode: 292
       {{ if eq .Values.UserConfig.Mode "connectapi" }}
       - name: {{ template "condor-submit.name" . }}-provisioner-configuration
         configMap:
@@ -90,6 +97,13 @@ spec:
       - name: condor-submit
         image: slateci/condor-submit:latest
         imagePullPolicy: Always
+        ports:
+        - name: ssh
+          containerPort: 22
+          protocol: TCP
+        - name: condor
+          containerPort: {{ .Values.CondorConfig.ExternalCondorPort }}
+          protocol: TCP
         volumeMounts:
         {{ if eq .Values.UserConfig.Mode "sssd" }} 
         - name: {{ template "condor-submit.name" . }}-auth-configuration
@@ -102,6 +116,9 @@ spec:
         - name: {{ template "condor-submit.name" . }}-condor-configuration
           mountPath: /etc/condor/condor_config.local
           subPath: condor_config.local
+        - name: condor-token-volume
+          mountPath: /etc/condor/password
+          subPath: password
         {{ if eq .Values.UserConfig.Mode "connectapi" }}
         - name: {{ template "condor-submit.name" . }}-provisioner-configuration
           mountPath: /usr/local/etc/ciconnect/_config
@@ -134,10 +151,14 @@ spec:
 #          mountPath: /cvmfs/atlas-condb.cern.ch
         {{ end }}
         env:
-        - name: _CONDOR_COLLECTOR_HOST
-          value: {{ .Values.CondorConfig.CollectorHost | quote }}
-        - name: _CONDOR_COLLECTOR_PORT
-          value: {{ .Values.CondorConfig.CollectorPort | quote }}
+        - name: _CONDOR_TCP_FORWARDING_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: _CONDOR_PRIVATE_NETWORK_INTERFACE
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         {{ if eq .Values.UserConfig.Mode "connectapi" }}
         - name: API_TOKEN
           valueFrom:

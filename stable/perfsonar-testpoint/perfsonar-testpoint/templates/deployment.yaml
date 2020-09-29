@@ -29,7 +29,7 @@ spec:
       hostNetwork: true
       containers:
       - name: perfsonar-testpoint
-        image: perfsonar/testpoint:4.2.2
+        image: perfsonar/testpoint:4.2.4
         imagePullPolicy: Always
         securityContext: 
           privileged: true

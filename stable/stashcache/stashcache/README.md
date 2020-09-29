@@ -1,4 +1,4 @@
-Z# Open Science Grid StashCache
+# Open Science Grid StashCache
 
 This chart installs the [StashCache](https://opensciencegrid.org/docs/data/stashcache/overview/) cache component. 
 
