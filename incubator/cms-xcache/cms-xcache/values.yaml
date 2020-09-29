@@ -7,7 +7,7 @@ Service:
   # Port that the service will utilize.
   Port: 1094
 
-Site:
+SiteConfig:
   Name: T3_US_NotreDame
   Origin: cmsxrootd.fnal.gov:1094
   Manager: ndcms.crc.nd.edu
