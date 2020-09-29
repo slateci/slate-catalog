@@ -23,7 +23,7 @@ if [[ $? -eq 0 ]]; then
 		echo "shell is: " $shell
         echo "X509 DN(s) are: " $dns
 
-        if [[ $dn == "" ]]; then
+        if [[ $dns == "" ]]; then
 			echo "No X509 DN found. Assuming password/MyProxy authentication"
 		    if [[ $pass == "" ]]; then
 				echo "Password for user $user seems to be empty.. cowardly skipping over this user"
