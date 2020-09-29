@@ -79,9 +79,9 @@ SSH:
 
 # Uncomment this section if you have additional middleware that needs to have
 # an open inbound tcp port to function.
-Network:
+ExtraPort:
   Enabled: true
-  ExtraPort: 31000
+  Port: 31000
 
 ### SLATE-START ###
 SLATE:
