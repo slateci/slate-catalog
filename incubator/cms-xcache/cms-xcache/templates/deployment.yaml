@@ -39,7 +39,7 @@ spec:
           name: {{ template "cms-xcache.fullname" . }}-disks
       - name: xrootd-clustered
         configMap:
-          name: {{ template "cms-xcache.fullname" . }}-monitoring
+          name: {{ template "cms-xcache.fullname" . }}-clustered
       - name: x509-data
         emptyDir:
           medium: Memory

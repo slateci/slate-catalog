@@ -14,7 +14,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "cms-xcache.fullname" . }}-monitoring
+  name: {{ template "cms-xcache.fullname" . }}-clustered
   labels:
     app: {{ template "cms-xcache.name" . }}
     chart: {{ template "cms-xcache.chart" . }}
