@@ -30,7 +30,7 @@ spec:
     nodePort: {{ .Values.CondorConfig.ExternalCondorPort }}
     protocol: TCP
   {{ end }}
-  {{ if Values.Network.ExtraPort }} 
+  {{ if .Values.Network.ExtraPort }} 
   - name: extra-port
     port: {{ .Values.Network.ExtraPort }}
     nodePort: {{ .Values.Network.ExtraPort }}
