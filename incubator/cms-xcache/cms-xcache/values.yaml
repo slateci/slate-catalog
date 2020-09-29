@@ -1,7 +1,7 @@
 # Instance to label use case of XCache deployment
 # Generates app name as "xcache-[Instance]"
 # Enables unique instances of XCache in one namespace
-Instance: umich-test
+Instance: ""
 
 Service:
   # Port that the service will utilize.
