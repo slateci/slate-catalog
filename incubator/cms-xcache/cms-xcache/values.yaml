@@ -6,10 +6,6 @@ Instance: umich-test
 Service:
   # Port that the service will utilize.
   Port: 1094
-  # External IP that may access the service
-  # 192.170.227.151 - localhost
-  # 192.170.227.231 - ml node - root://xcache.mwt2.org:1094
-  ExternalIP: 192.170.227.151 
 
 Monitoring:
   Collector: xrootd.t2.ucsd.edu:9930
