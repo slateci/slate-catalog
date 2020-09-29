@@ -7,6 +7,11 @@ Service:
   # Port that the service will utilize.
   Port: 1094
 
+Site:
+  Name: T3_US_NotreDame
+  Origin: cmsxrootd.fnal.gov:1094
+  Manager: ndcms.crc.nd.edu
+
 Monitoring:
   Collector: xrootd.t2.ucsd.edu:9930
 
