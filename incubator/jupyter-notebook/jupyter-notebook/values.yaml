@@ -77,6 +77,12 @@ SSH:
   #Do NOT use your SSH private key here. Your public ssh key starts with 'ssh-rsa'
   SSH_Public_Key: 'ssh-rsa AAAAB3N=====SamplePublicSSHKey======vH6Edp6+J81Itt+x8Cy/JrjMhzSjAs5Gt1RiKdMSmhclGz3s+h/KL8f12tjA3Uk0PSPqgRTN2L435/X1Hche7CiT6ZJqpCoxa8J4mbLzYaLeGWnNremJ90Q/udO+IUYvviDsgDeB1msIDWfIylDxMteMZ50WTkPVur+Yl2TG6mxNNdNshzHSxtOM3IB2+Q9ChYRFB59J38Wx1+9/1Mnf53 slate'
 
+# Enable this section if you have additional middleware that needs to have an
+# open inbound tcp port to function.
+ExtraPort:
+  Enabled: false
+  Port: 31000
+
 ### SLATE-START ###
 SLATE:
   Cluster:
