@@ -36,6 +36,8 @@ Resources:
   # so somewhat less than the value specified here will be available 
   # to user code. 
   Memory: 256
+  # Enable CVMFS
+  Cvmfs: false
 
 CondorConfig:
   #Change this to true and set the other variables in this section 
