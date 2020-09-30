@@ -1,6 +1,8 @@
 # SLATE instance tag
 Instance: ''
 
+newValue: ""
+
 # SSSD Configuration
 # This is an entire file which maps directly to /etc/sssd/sssd.conf
 # TODO (More Info)
