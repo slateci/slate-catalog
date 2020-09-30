@@ -6,19 +6,14 @@ Instance: ""
 Service:
   # Port that the service will utilize.
   Port: 1094
-  # External IP that may access the service
-  # 192.170.227.151 - localhost
-  # 192.170.227.231 - ml node - root://xcache.mwt2.org:1094
-  ExternalIP: 192.170.227.151 
 
 SiteConfig:
-  Name: MWT2
-  # AGIS protocol ID. 433 is a dummy value. 
-  # can be looked up in this URL: http://atlas-agis.cern.ch/agis/serviceprotocol/edit/433/
-  AGISprotocolID: 433
+  Name: T3_US_NotreDame
+  Origin: cmsxrootd.fnal.gov:1094
+  Manager: ndcms.crc.nd.edu
 
 Monitoring:
-  Collector: http://uct2-collectd.mwt2.org:8080
+  Collector: xrootd.t2.ucsd.edu:9930
 
 XCacheConfig:
   # The directory containing files to export from the cache
@@ -42,7 +37,7 @@ XCacheConfig:
   # This must be created BEFORE deploying XCache
   CertSecret: xcache-cert-secret
   # Disable OSG monitoring and reporting
-  DisableOSGMonitoring: false
+  DisableOSGMonitoring: true
   
 CacheDisks: |+
   oss.space data /data3/xcache

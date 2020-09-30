@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "cms-xcache.fullname" . }}
+  name: {{ template "cms-xcache.fullname" . }}-disks
   labels:
     app: {{ template "cms-xcache.name" . }}
     chart: {{ template "cms-xcache.chart" . }}
@@ -10,3 +10,26 @@ metadata:
 data: 
   cache-disks.config: |+
 {{ .Values.CacheDisks | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "cms-xcache.fullname" . }}-clustered
+  labels:
+    app: {{ template "cms-xcache.name" . }}
+    chart: {{ template "cms-xcache.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data: 
+  xrootd-clustered.cfg: |+
+    # Monitoring configuration. The latest recommendations are also kept at:
+    # https://twiki.cern.ch/twiki/bin/view/Main/XrootdMonitoring
+    xrd.report {{ .Values.Monitoring.Collector }} every 60s all sync
+    xrootd.monitor all auth flush io 60s ident 5m mbuff 8k rbuff 4k rnums 3 window 10s dest files io info user redir xrootd.t2.ucsd.edu:9930
+    # this is arbitrary as our client will provide origin
+    pss.origin = {{ .Values.SiteConfig.Origin }}
+    all.sitename {{ .Values.SiteConfig.Name }}
+    # Connect to NDCMS manager
+    set xrdr = {{ .Values.SiteConfig.Manager }}
+    # Tell everyone who the manager is
+    all.manager $(xrdr):3121
