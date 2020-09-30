@@ -60,6 +60,32 @@ spec:
           - key: 99-limits
             path: 99-limits
             mode: 0755
+      {{ if .Values.Resources.Cvmfs }}
+      - name: config-osg
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-config-osg-%s" .Values.Instance | trimSuffix "-" }}
+      - name: oasis
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-oasis-%s" .Values.Instance | trimSuffix "-" }}
+      - name: singularity
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-singularity-%s" .Values.Instance | trimSuffix "-" }}
+      - name: spt
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-spt-%s" .Values.Instance | trimSuffix "-" }}
+      - name: connect
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-connect-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-condb
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-nightlies
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
+      {{ end }}
       containers:
       - name: scipy-notebook
         image: slateci/jupyter-condor-centos7:latest
@@ -141,3 +167,21 @@ spec:
         - name: jupyter-{{ .Values.Instance }}-motd
           mountPath: "/etc/update-motd.d/99-limits"
           subPath: 99-limits
+        {{ if .Values.Resources.Cvmfs }}
+        - name: config-osg
+          mountPath: /cvmfs/config-osg.opensciencegrid.org
+        - name: oasis
+          mountPath: /cvmfs/oasis.opensciencegrid.org
+        - name: spt
+          mountPath: /cvmfs/spt.opensciencegrid.org
+        - name: connect
+          mountPath: /cvmfs/connect.opensciencegrid.org
+        - name: singularity
+          mountPath: /cvmfs/singularity.opensciencegrid.org
+#        - name: atlas
+#          mountPath: /cvmfs/atlas.cern.ch
+#        - name: atlas-nightlies
+#          mountPath: /cvmfs/atlas-nightlies.cern.ch
+#        - name: atlas-condb
+#          mountPath: /cvmfs/atlas-condb.cern.ch
+        {{ end }}
