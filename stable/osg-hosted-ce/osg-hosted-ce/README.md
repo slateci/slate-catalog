@@ -267,6 +267,36 @@ To avoid these rate limits, it's possible to bootstrap the certificate request p
           HostKeySecret: <YOUR HOST KEY SECRET NAME>
           HostCertSecret: <YOUR HOST CERT SECRET NAME>
 
+### NetworkPolicy
+
+A generic NetworkPolicy for restricting traffic to and from the HostedCE. Allows configuration based on a list of IP CIDR ranges.
+
+By default NetworkPolicy is disabled and the application is open to all traffic.
+
+Network Policy can be thought of like a firewall for the application.
+
+Traffic can be restricted to only allow communication between the CE, OSG Factory, and your own cluster environment.
+
+```
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+  - 0.0.0.0/0
+```
+
+Multiple CIDR ranges can be allowed in a list like so:
+
+```
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+  - 0.0.0.0/0
+  - 10.0.0.0/8
+  - 192.168.0.0/16 
+```
+
+This configuration creates both Ingress and Egress rules for the application's pods in Kubernetes.
+
 ### Developer 
 Simply disable this. It is in place for the purpose of OSG Internal Testbed hosts, and is not intended for use with production CEs.
 
@@ -337,6 +367,11 @@ HTTPLogger:
 HostCredentials:
   HostKeySecret: null
   HostCertSecret: null
+  
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+  - 0.0.0.0/0
   
 Developer:
   Enabled: false
