@@ -82,7 +82,7 @@ SSH:
 # Enable this section if you have additional middleware that needs to have an
 # open inbound tcp port to function.
 ExtraPort:
-  Enabled: true
+  Enabled: false
   LowPort:  31000
   HighPort: 31002
 
