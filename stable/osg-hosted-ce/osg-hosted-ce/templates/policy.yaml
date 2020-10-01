@@ -30,4 +30,11 @@ spec:
     - ipBlock:
         cidr: {{ . }}
     {{- end }}
+    ports:
+    - protocol: TCP
+      port: 9619
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 80
 {{ end }}
