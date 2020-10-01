@@ -14,12 +14,17 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
 
-RUN yum -y install epel-release && yum -y update \
- && yum install -y \
+RUN yum -y install epel-release
+RUN yum -y update
+RUN yum groupinstall "Development Tools" -y
+RUN yum install -y \
     wget \
     bzip2 \
     ca-certificates \
-    sudo && yum clean all
+    sudo \ 
+    gcc \
+    python3-devel
+RUN yum clean all 
 
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
