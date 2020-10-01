@@ -131,6 +131,14 @@ HostCredentials:
 # Choose which tag to use for the specified containers
 ContainerTags:
   HostedCE: stable
+  
+# OPTIONAL NetworkPolicy
+# Enabling NetworkPolicy will restrict network traffic allowing only 
+# traffic from the specified CIDR ranges to the application
+NetworkPolicy:
+  Enabled: false
+  AllowedCIDRs:
+  - 0.0.0.0/0
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
