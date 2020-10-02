@@ -275,7 +275,7 @@ By default NetworkPolicy is disabled and the application is open to all traffic.
 
 Network Policy can be thought of like a firewall for the application.
 
-Traffic can be restricted to only allow communication between the CE, OSG Factory, and your own cluster environment.
+Traffic can be restricted to only allow communication between the CE and OSG Factory:
 
 ```
 NetworkPolicy:
