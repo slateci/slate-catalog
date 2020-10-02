@@ -269,7 +269,7 @@ To avoid these rate limits, it's possible to bootstrap the certificate request p
 
 ### NetworkPolicy
 
-A generic NetworkPolicy for restricting traffic to and from the HostedCE. Allows configuration based on a list of IP CIDR ranges.
+A generic NetworkPolicy for restricting traffic to the HostedCE. Allows configuration based on a list of IP CIDR ranges.
 
 By default NetworkPolicy is disabled and the application is open to all traffic.
 
