@@ -20,10 +20,8 @@ spec:
   - Egress
   egress:
   - to:
-    {{- range .Values.NetworkPolicy.AllowedCIDRs}}
     - ipBlock:
-        cidr: {{ . }}
-    {{- end }}
+        cidr: 0.0.0.0/0
   ingress:
   - from:
     {{- range .Values.NetworkPolicy.AllowedCIDRs}}
