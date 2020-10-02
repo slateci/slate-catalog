@@ -73,7 +73,11 @@ data:
     GridResource = "intentionally left blank";
     eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ",
                                    Owner, "@", "{{ .Values.RemoteCluster.LoginHost }} ",
-                                   "--rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite");
+                                   "--rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite"
+                                   {{ if not .Values.RemoteCluster.SSHBatchMode }}
+                                   , " --rgahp-nobatchmode"
+                                   {{ end }}
+                                   );
     ]
     @jrd
 
