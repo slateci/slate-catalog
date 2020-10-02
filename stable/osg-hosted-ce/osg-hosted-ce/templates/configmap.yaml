@@ -71,7 +71,9 @@ data:
     $(JOB_ROUTER_DEFAULTS)
     [
     GridResource = "intentionally left blank";
-    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}", " --rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite");
+    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ",
+                                   Owner, "@", "{{ .Values.RemoteCluster.LoginHost }} ",
+                                   "--rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite");
     ]
     @jrd
 
