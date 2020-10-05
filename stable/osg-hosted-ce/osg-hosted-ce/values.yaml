@@ -32,6 +32,9 @@ RemoteCluster:
   WorkerNodeTemp: /tmp
   # <IP OR FQDN>:<PORT> for the site's local squid server, or 'null' if no site Squid
   Squid: null
+  # Control the value of the SSH BatchMode option used by the CE for
+  # communication with the remote cluster
+  SSHBatchMode: True
 
 Networking:
   ServiceType: "LoadBalancer"
