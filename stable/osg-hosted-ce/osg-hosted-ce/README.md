@@ -281,7 +281,7 @@ Traffic can be restricted to only allow communication between the CE and OSG Fac
 NetworkPolicy:
   Enabled: false
   AllowedCIDRs:
-  - 0.0.0.0/0
+  - 169.228.38.32/27
 ```
 
 Multiple CIDR ranges can be allowed in a list like so:
