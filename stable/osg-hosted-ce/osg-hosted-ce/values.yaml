@@ -141,7 +141,7 @@ ContainerTags:
 NetworkPolicy:
   Enabled: false
   AllowedCIDRs:
-  - 0.0.0.0/0
+  - 169.228.38.32/27
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
