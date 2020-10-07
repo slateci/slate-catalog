@@ -138,6 +138,7 @@ ContainerTags:
 # OPTIONAL NetworkPolicy
 # Enabling NetworkPolicy will restrict network traffic allowing only 
 # traffic from the specified CIDR ranges to the application
+# These are default ranges which will allow regular job submission from OSG Factory
 NetworkPolicy:
   Enabled: false
   AllowedCIDRs:
