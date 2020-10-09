@@ -11,6 +11,7 @@ Topology:
   Country: US
   Latitude: 0.00
   Longitude: 0.00
+  Production: true
 
 RemoteCluster:
   # SSH host

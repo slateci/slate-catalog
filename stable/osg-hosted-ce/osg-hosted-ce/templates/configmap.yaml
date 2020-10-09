@@ -10,7 +10,7 @@ metadata:
 data:
   99-local.ini: |
     [Site Information]
-    {{ if .Values.Developer.Enabled }}
+    {{ if or (.Values.Developer.Enabled) (not .Values.Topology.Production) }}
     group = OSG-ITB
     {{ else }}
     group = OSG
