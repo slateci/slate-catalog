@@ -185,6 +185,12 @@ spec:
         {{ end }}
         - name: CE_CONTACT
           value: {{ .Values.Topology.ContactEmail }}
+        - name: LE_STAGING
+          {{ if .Values.HostCredentials.LetsEncryptStaging }} # https://github.com/helm/helm/issues/2848
+          value: "true"
+          {{ else }}
+          value: "false"
+          {{ end }}
         - name: RESOURCE_NAME
           value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
