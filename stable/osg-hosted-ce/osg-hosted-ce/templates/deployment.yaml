@@ -56,7 +56,7 @@ spec:
           path: hostkey.pem
           mode: 256
       {{ else }}
-      {{ if .Values.HostCredentials.HostCertSecret }}
+      {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
       - name: osg-hosted-ce-hostcert-volume
         secret:
           secretName: {{ .Values.HostCredentials.HostCertSecret }}
@@ -153,7 +153,7 @@ spec:
           mountPath: /etc/grid-security/hostkey.pem
           subPath: hostkey.pem
         {{ else }}
-        {{ if .Values.HostCredentials.HostCertSecret }}
+        {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
         - name: osg-hosted-ce-hostcert-volume
           mountPath: /etc/grid-security/hostcert.pem
           subPath: hostcert.pem
