@@ -120,6 +120,10 @@ HTTPLogger:
   # Secret: my-secret
 
 HostCredentials:
+  # Name of the secret containing a host key and certificate in
+  # "tls.key" and "tls.crt", respectively. If defined, values of
+  # HostCertSecret and HostKeySecret are ignored.
+  HostCertKeySecret: null
   # Use a pre-existing host key to request a new Let's Encrypt
   # certificate If HostCertSecret is also specified, the Let's Encrypt
   # request is skipped.  Secret must contain a "host.key" key

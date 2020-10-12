@@ -45,7 +45,18 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
-      {{ if .Values.HostCredentials.HostCertSecret }}
+      {{ if .Values.HostCredentials.HostCertKeySecret }}
+      - name: osg-hosted-ce-hostcertkey-volume
+        secret: {{ .Values.HostCredentials.HostCertKeySecret }}
+        items:
+        - key: tls.crt
+          path: hostcert.pem
+          mode: 256
+        - key: tls.key
+          path: hostkey.pem
+          mode: 256
+      {{ else }}
+      {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
       - name: osg-hosted-ce-hostcert-volume
         secret:
           secretName: {{ .Values.HostCredentials.HostCertSecret }}
@@ -53,7 +64,7 @@ spec:
             - key: host.cert
               path: hostcert.pem
               mode: 256
-      {{end}}
+      {{ end }}
       {{ if .Values.HostCredentials.HostKeySecret }}
       - name: osg-hosted-ce-hostkey-volume
         secret:
@@ -62,7 +73,8 @@ spec:
             - key: host.key
               path: hostkey.pem
               mode: 256
-      {{end}}
+      {{ end }}
+      {{ end }}
       {{ if .Values.BoscoOverrides.Enabled }}
       {{ if .Values.BoscoOverrides.GitKeySecret }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
@@ -133,7 +145,15 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
-        {{ if .Values.HostCredentials.HostCertSecret }}
+        {{ if .Values.HostCredentials.HostCertKeySecret }}
+        - name: osg-hosted-ce-hostcertkey-volume
+          mountPath: /etc/grid-security/hostcert.pem
+          subPath: hostcert.pem
+        - name: osg-hosted-ce-hostcertkey-volume
+          mountPath: /etc/grid-security/hostkey.pem
+          subPath: hostkey.pem
+        {{ else }}
+        {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
         - name: osg-hosted-ce-hostcert-volume
           mountPath: /etc/grid-security/hostcert.pem
           subPath: hostcert.pem
@@ -142,6 +162,7 @@ spec:
         - name: osg-hosted-ce-hostkey-volume
           mountPath: /etc/grid-security/hostkey.pem
           subPath: hostkey.pem
+        {{ end }}
         {{ end }}
         {{ if .Values.HTTPLogger.Enabled }}
         - name: log-volume
