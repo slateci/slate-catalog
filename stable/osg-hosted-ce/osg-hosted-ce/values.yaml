@@ -11,6 +11,7 @@ Topology:
   Country: US
   Latitude: 0.00
   Longitude: 0.00
+  Production: true
 
 RemoteCluster:
   # SSH host
@@ -119,6 +120,10 @@ HTTPLogger:
   # Secret: my-secret
 
 HostCredentials:
+  # Name of the secret containing a host key and certificate in
+  # "tls.key" and "tls.crt", respectively. If defined, values of
+  # HostCertSecret and HostKeySecret are ignored.
+  HostCertKeySecret: null
   # Use a pre-existing host key to request a new Let's Encrypt
   # certificate If HostCertSecret is also specified, the Let's Encrypt
   # request is skipped.  Secret must contain a "host.key" key
@@ -130,6 +135,10 @@ HostCredentials:
   # Secret must contain a "host.cert" containing the encoded host
   # certificate.
   HostCertSecret: null
+  # If set to 'true', use the Let's Encrypt staging server. This is
+  # useful for avoiding Let's Encrypt rate limits when first setting
+  # up a CE. NOT SUITABLE FOR PRODUCTION USE.
+  LetsEncryptStaging: false
 
 # Choose which tag to use for the specified containers
 ContainerTags:
