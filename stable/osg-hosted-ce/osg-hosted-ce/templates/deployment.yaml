@@ -47,14 +47,15 @@ spec:
             mode: 256
       {{ if .Values.HostCredentials.HostCertKeySecret }}
       - name: osg-hosted-ce-hostcertkey-volume
-        secret: {{ .Values.HostCredentials.HostCertKeySecret }}
-        items:
-        - key: tls.crt
-          path: hostcert.pem
-          mode: 256
-        - key: tls.key
-          path: hostkey.pem
-          mode: 256
+        secret:
+          secretName: {{ .Values.HostCredentials.HostCertKeySecret }}
+          items:
+          - key: tls.crt
+            path: hostcert.pem
+            mode: 256
+          - key: tls.key
+            path: hostkey.pem
+            mode: 256
       {{ else }}
       {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
       - name: osg-hosted-ce-hostcert-volume
