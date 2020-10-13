@@ -370,7 +370,9 @@ HostCredentials:
 NetworkPolicy:
   Enabled: false
   AllowedCIDRs:
-  - 0.0.0.0/0
+  - 169.228.38.32/27
+  - 192.170.236.0/24
+  - 128.104.103.0/24
   
 Developer:
   Enabled: false
