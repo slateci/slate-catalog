@@ -220,6 +220,13 @@ This allows you to turn toggle HTTP logging side car. When it is enabled, it wil
 
 You may provide a SLATE secret with an `HTPASSWD` key containing password instead of having the container randomly
 generate a password.
+
+**TIP** You can create a SLATE secret containing a predefined password for the logger using a command like this:
+
+```
+slate secret create <name-of-your-secret> --group <your-group> --cluster <your-cluster> --from-literal HTPASSWD=<your-desired-password>
+```
+
 To disable this, comment out the `Secret` line (default).
 
 	HTTPLogger:
