@@ -135,6 +135,8 @@ To enable HostNetworking set
           Hostname: "<FQDN OF YOUR KUBERNETES NODE>"
           RequestIP: <IP ADDRESS OF YOUR KUBERNETES NODE>
 	  
+*HostNetwork should be avoided for Production CEs*
+	  
 
 ### VoRemoteUserMapping Section
 
