@@ -22,6 +22,12 @@ spec:
   - {}
   ingress:
   - from:
+    - podSelector:
+        matchLabels:
+          app: {{ template "osg-hosted-ce.name" . }}
+          chart: {{ template "osg-hosted-ce.chart" . }}
+          release: {{ .Release.Name }}
+          instance: {{ .Values.Instance | quote }}
     {{- range .Values.NetworkPolicy.AllowedCIDRs}}
     - ipBlock:
         cidr: {{ . }}
