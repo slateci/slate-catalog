@@ -117,11 +117,24 @@ Set `Location: null` to disable.
 
 The HostedCE application requires both forward and reverse DNS resolution for its publicly routable IP. Most SLATE clusters come pre-configured with a handful of "LoadBalancer" IP addresses that can be allocated automatically to different applications. You must set-up the DNS records for this address so you will need to request a specific address from the pool.
 
-If you do not know which addresses are available to your cluster, set `RequestIP: null` and deploy the application. Use `slate instance info <INSTANCE ID>` to see which IP address the application recieves, then set that IP in your config and redeploy. 
+If you do not know which addresses are available to your cluster, set `RequestIP: null` and deploy the application. Use `slate instance info <INSTANCE ID>` to see which IP address the application recieves, then set that IP in your config and redeploy.
+
+The default ServiceType is `LoadBalancer` and that value should be used with production CEs.
 
     Networking:
+      ServiceType: "LoadBalancer"
       Hostname: "<YOUR FQDN>"
       RequestIP: <IP ADDRESS>
+      
+*It is possible to run the CE in HostNetworking mode. This allows the container to use the host machine's network directly, and removes a lot of the isolation a container normally has from the host system.*
+
+To enable HostNetworking set
+
+	Networking:
+      	  ServiceType: "HostNetwork"
+          Hostname: "<FQDN OF YOUR KUBERNETES NODE>"
+          RequestIP: <IP ADDRESS OF YOUR KUBERNETES NODE>
+	  
 
 ### VoRemoteUserMapping Section
 
@@ -307,6 +320,7 @@ RemoteCluster:
   Location: squid.example.com:31192
 
 Networking:
+  ServiceType: "LoadBalancer"
   Hostname: "hosted-ce.example.com"
   RequestIP: 0.0.0.0
 
