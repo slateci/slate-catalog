@@ -131,7 +131,7 @@ The default ServiceType is `LoadBalancer` and that value should be used with pro
 To enable HostNetworking set
 
 	Networking:
-      	  ServiceType: "HostNetwork"
+      	   ServiceType: "HostNetwork"
           Hostname: "<FQDN OF YOUR KUBERNETES NODE>"
           RequestIP: <IP ADDRESS OF YOUR KUBERNETES NODE>
 	  
