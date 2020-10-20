@@ -9,7 +9,9 @@ metadata:
     instance: {{ .Values.Instance | quote }}
 data: 
   cache-disks.config: |+
-{{ .Values.CacheDisks | indent 4 }}
+    {{- range $index, $path := .Values.XCacheConfig.CacheDirectories }} 
+    oss.space {{ .path }} {{ .type }}
+    {{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
