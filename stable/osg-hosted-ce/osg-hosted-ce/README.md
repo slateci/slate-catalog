@@ -117,11 +117,26 @@ Set `Location: null` to disable.
 
 The HostedCE application requires both forward and reverse DNS resolution for its publicly routable IP. Most SLATE clusters come pre-configured with a handful of "LoadBalancer" IP addresses that can be allocated automatically to different applications. You must set-up the DNS records for this address so you will need to request a specific address from the pool.
 
-If you do not know which addresses are available to your cluster, set `RequestIP: null` and deploy the application. Use `slate instance info <INSTANCE ID>` to see which IP address the application recieves, then set that IP in your config and redeploy. 
+If you do not know which addresses are available to your cluster, set `RequestIP: null` and deploy the application. Use `slate instance info <INSTANCE ID>` to see which IP address the application recieves, then set that IP in your config and redeploy.
+
+The default ServiceType is `LoadBalancer` and that value should be used with production CEs.
 
     Networking:
+      ServiceType: "LoadBalancer"
       Hostname: "<YOUR FQDN>"
       RequestIP: <IP ADDRESS>
+      
+*It is possible to run the CE in HostNetworking mode. This allows the container to use the host machine's network directly, and removes a lot of the isolation a container normally has from the host system.*
+
+To enable HostNetworking set
+
+	Networking:
+      	   ServiceType: "HostNetwork"
+          Hostname: "<FQDN OF YOUR KUBERNETES NODE>"
+          RequestIP: <IP ADDRESS OF YOUR KUBERNETES NODE>
+	  
+*HostNetwork should be avoided for Production CEs*
+	  
 
 ### VoRemoteUserMapping Section
 
@@ -220,6 +235,13 @@ This allows you to turn toggle HTTP logging side car. When it is enabled, it wil
 
 You may provide a SLATE secret with an `HTPASSWD` key containing password instead of having the container randomly
 generate a password.
+
+**TIP** You can create a SLATE secret containing a predefined password for the logger using a command like this:
+
+```
+slate secret create <name-of-your-secret> --group <your-group> --cluster <your-cluster> --from-literal HTPASSWD=<your-desired-password>
+```
+
 To disable this, comment out the `Secret` line (default).
 
 	HTTPLogger:
@@ -300,6 +322,7 @@ RemoteCluster:
   Location: squid.example.com:31192
 
 Networking:
+  ServiceType: "LoadBalancer"
   Hostname: "hosted-ce.example.com"
   RequestIP: 0.0.0.0
 
