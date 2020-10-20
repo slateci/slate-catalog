@@ -46,7 +46,7 @@ spec:
           sizeLimit: "10Mi"
       - name: x509-certs-volume
         secret:
-          secretName: {{ .Values.CertSecret }}
+          secretName: {{ .Values.XCacheConfig.CertSecret }}
           items:
           - key: userkey
             path: userkey.pem
