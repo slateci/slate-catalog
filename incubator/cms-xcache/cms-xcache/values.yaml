@@ -38,7 +38,7 @@ XCacheConfig:
   CertSecret: xcache-cert-secret
   # Disable OSG monitoring and reporting
   DisableOSGMonitoring: true
-  LocalRoot: /xrootd-root
+  LocalRoot: /xcache/namespace
   CacheDirectories:
     - path: /data1/xcache
       type: data
