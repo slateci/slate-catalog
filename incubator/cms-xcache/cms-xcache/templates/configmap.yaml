@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data: 
-  xrootd-clustered.cfg: |-
+  xrootd-clustered.cfg: |+
     # Monitoring configuration. The latest recommendations are also kept at:
     # https://twiki.cern.ch/twiki/bin/view/Main/XrootdMonitoring
     xrd.report {{ .Values.Monitoring.Collector }} every 60s all sync
