@@ -43,7 +43,7 @@ spec:
           sizeLimit: "10Mi"
       - name: x509-certs-volume
         secret:
-          secretName: {{ .Values.XCacheConfig.CertSecret }}
+          secretName: {{ required "XCache Certificate is required" .Values.XCacheConfig.CertSecret }}
           items:
           - key: userkey
             path: userkey.pem
@@ -51,14 +51,14 @@ spec:
           - key: usercert
             path: usercert.pem
       {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
-      - name: {{ .type}}_{{ $nindex }}
+      - name: {{ .type }}_{{ $nindex }}
         hostPath:
           path: {{ .path }}
           type: Directory
       {{- end }}
       - name: localroot
         hostPath:
-          path: {{ .Values.LocalRoot }}
+          path: {{ required "LocalRoot is required" .Values.XCacheConfig.LocalRoot }}
           type: Directory
       containers:
         - name: cms-xcache
