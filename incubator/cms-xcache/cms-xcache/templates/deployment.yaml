@@ -113,7 +113,7 @@ spec:
           - name: localroot
             mountPath: {{ .Values.LocalRoot }}
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
-          - name: {{ .type }}-{{ $nindex }}
+          - name: {{ .type }}_{{ $nindex }}
             {{- if eq .type "data" }}
             mountPath: /xcache/data-{{ $nindex }}
             {{- else if eq .type "meta" }}
