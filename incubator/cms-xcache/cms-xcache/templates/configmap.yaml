@@ -11,12 +11,12 @@ data:
   xrootd-clustered.cfg: |+
     # Monitoring configuration. The latest recommendations are also kept at:
     # https://twiki.cern.ch/twiki/bin/view/Main/XrootdMonitoring
-    xrd.report {{ .Values.Monitoring.Collector }} every 60s all sync
-    xrootd.monitor all auth flush io 60s ident 5m mbuff 8k rbuff 4k rnums 3 window 10s dest files io info user redir {{ .Values.Monitoring.Collector }}
+    xrd.report {{ required "A collector is required" .Values.Monitoring.Collector }} every 60s all sync
+    xrootd.monitor all auth flush io 60s ident 5m mbuff 8k rbuff 4k rnums 3 window 10s dest files io info user redir {{ required "A collector is required" .Values.Monitoring.Collector }}
     # this is arbitrary as our client will provide origin
-    pss.origin = {{ .Values.SiteConfig.Origin }}
-    all.sitename {{ .Values.SiteConfig.Name }}
+    pss.origin = {{ required "An origin is required" .Values.SiteConfig.Origin }}
+    all.sitename {{ required "A site name is required" .Values.SiteConfig.Name }}
     # Connect to NDCMS manager
-    set xrdr = {{ .Values.SiteConfig.Manager }}
+    set xrdr = {{ required "A Manager is required" .Values.SiteConfig.Manager }}
     # Tell everyone who the manager is
     all.manager $(xrdr):3121
