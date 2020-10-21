@@ -51,7 +51,7 @@ spec:
           - key: usercert
             path: usercert.pem
       {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
-      - name: {{ .type }}_{{ $nindex }}
+      - name: {{ .type }}-{{ $nindex }}
         hostPath:
           path: {{ .path }}
           type: Directory
@@ -113,10 +113,10 @@ spec:
           - name: localroot
             mountPath: {{ required "LocalRoot is required" .Values.XCacheConfig.LocalRoot }}
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
-          - name: {{ .type }}_{{ $nindex }}
+          - name: {{ .type }}-{{ $nindex }}
             {{- if eq .type "data" }}
-            mountPath: /xcache/data_{{ $nindex }}
+            mountPath: /xcache/data-{{ $nindex }}
             {{- else if eq .type "meta" }}
-            mountPath: /xcache/meta_{{ $nindex }}
+            mountPath: /xcache/meta-{{ $nindex }}
             {{- end }}
           {{- end }}
