@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "xcache.fullname" . }}
+  labels:
+    app: {{ template "xcache.name" . }}
+    chart: {{ template "xcache.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "xcache.name" . }}
+      chart: {{ template "xcache.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+    
+  template:
+    metadata:
+      labels:
+        app: {{ template "xcache.name" . }}
+        chart: {{ template "xcache.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+
+      nodeSelector:
+        xcache-capable: "true"
+      
+      tolerations:
+      - key: "xcache"
+        operator: "Equal"
+        value: "true"
+        effect: "PreferNoSchedule"
+
+      volumes:
+      - name: x509-data
+        emptyDir:
+          medium: Memory
+          sizeLimit: "10Mi"
+      - name: x509-certs-volume
+        secret:
+          secretName: xcache-cert-secret
+          items:
+          - key: userkey
+            path: userkey.pem
+            mode: 256 
+          - key: usercert
+            path: usercert.pem
+      {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
+      - name: xcache-data-{{ $index }}
+        hostPath:
+          path: {{ .path }}
+      {{- end }}
+      - name: xcache-meta
+        hostPath:
+          path: {{ .Values.XCacheConfig.MetaDirectory }}
+      
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "opensciencegrid/atlas-xcache:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: XC_SPACE_HIGH_WM
+            value: "{{ .Values.XCacheConfig.HighWaterMark }}"
+          - name: XC_SPACE_LOW_WM
+            value: "{{ .Values.XCacheConfig.LowWaterMark }}"
+          - name: XC_PORT
+            value: "{{ .Values.Service.Port }}"
+          - name: XC_RAMSIZE
+            value: "{{ .Values.XCacheConfig.RamSize }}"
+          - name: XC_BLOCKSIZE
+            value: "{{ .Values.XCacheConfig.BlockSize }}"
+          - name: XC_PREFETCH
+            value: "{{ .Values.XCacheConfig.Prefetch }}"
+          - name: AGIS_PROTOCOL_ID
+            value: "{{ .Values.SiteConfig.AGISprotocolID }}"
+          - name: CRIC_PROTOCOL_ID
+            value: "{{ .Values.SiteConfig.CRICprotocolID }}"
+          - name: WQ_BLOCKS_PER_LOOP
+            value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
+          - name: WQ_THREADS
+            value: "{{ .Values.XCacheConfig.WQThreads }}"
+          - name: XC_SITE
+            value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_MONITOR
+            value: "{{ .Values.Monitoring.GStreamCollector }}"
+          {{ if eq .Values.XCacheConfig.Rootless true }}
+          - name: ROOTLESS
+            value: 1
+          {{ end }}
+          resources:
+            requests:
+              ephemeral-storage: "5Gi"
+            limits:
+              ephemeral-storage: "10Gi"
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.Service.Port }}
+            initialDelaySeconds: 180
+            periodSeconds: 60
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/local/sbin/updateCRICstatus.sh","{{ .Values.SiteConfig.CRICprotocolID }}","DISABLED"]
+          ports:
+            - containerPort: {{ .Values.Service.Port }}         
+          volumeMounts:
+          - name: x509-data
+            mountPath: "/etc/proxy/"
+            readOnly: true
+          - name: x509-certs-volume
+            mountPath: "/etc/grid-certs/"
+            readOnly: true
+          {{- range $nindex, $ndir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $nindex }}
+            mountPath: "/xcache-data_{{ $nindex }}"
+          {{- end }}
+          - name: xcache-meta
+            mountPath: "/xcache-meta"
+
+        - name: x509
+          image: "opensciencegrid/atlas-xcache:{{ .Values.image.tag }}"
+          command: ["/usr/local/sbin/run_x509_updater.sh"]
+          resources:
+            requests:
+              ephemeral-storage: "1Gi"
+          volumeMounts:
+          - name: x509-data
+            mountPath: "/etc/proxy/"
+            readOnly: false
+          - name: x509-certs-volume
+            mountPath: "/etc/grid-certs/"
+            readOnly: true
+
+        - name: reporter
+          image: "opensciencegrid/atlas-xcache:{{ .Values.image.tag }}"
+          command: ["/usr/local/sbin/run_cache_reporter.sh"]
+          env:
+          - name: XC_SITE
+            value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_REPORT_COLLECTOR
+            value: "{{ .Values.Monitoring.Collector }}"
+          volumeMounts:
+          {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $nindex }}
+            mountPath: "/xcache/data_{{ $nindex }}"
+          {{- end }}
+          - name: xcache-meta
+            mountPath: "/xcache/meta"
+            readOnly: true
+            
