@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "cms-xcache.fullname" . }}-clustered
+  name: {{ template "cms-xcache.fullname" . }}-config
   labels:
     app: {{ template "cms-xcache.name" . }}
     chart: {{ template "cms-xcache.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data: 
-  xrootd-clustered.cfg: |+
+  xrootd-config.cfg: |+
     # Monitoring configuration. The latest recommendations are also kept at:
     # https://twiki.cern.ch/twiki/bin/view/Main/XrootdMonitoring
     xrd.report {{ required "A collector is required" .Values.Monitoring.Collector }} every 60s all sync
