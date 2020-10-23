@@ -9,6 +9,9 @@ metadata:
     release: {{ .Release.Name }}
 data:
   99-local.ini: |
+    [Gateway]
+    job_envvar_path=$PATH
+
     [Site Information]
     {{ if or (.Values.Developer.Enabled) (not .Values.Topology.Production) }}
     group = OSG-ITB
