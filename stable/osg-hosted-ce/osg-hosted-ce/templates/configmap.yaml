@@ -66,6 +66,9 @@ data:
     TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
 {{ end }}
 
+    SLATE_HOSTED_CE = True
+    SCHEDD_ATTRS = $(SCHEDD_ATTRS) SLATE_HOSTED_CE
+
     # HACK: The job router doesn't recognize grid universe routes (the default) without
     # a "GridResource" attribute and the Gridmanager doesn't evaluate GridResource expressions.
     # So we set a dummy "GridResource" attribute and use "eval_set_GridResource"  to force the
