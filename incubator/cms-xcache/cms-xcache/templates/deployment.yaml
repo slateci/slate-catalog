@@ -45,11 +45,11 @@ spec:
         secret:
           secretName: {{ required "XCache Certificate is required" .Values.XCacheConfig.CertSecret }}
           items:
-          - key: userkey
-            path: userkey.pem
+          - key: hostkey
+            path: hostkey.pem
             mode: 256 
-          - key: usercert
-            path: usercert.pem
+          - key: hostcert
+            path: hostcert.pem
       {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
       - name: {{ .type }}-{{ $nindex }}
         hostPath:
