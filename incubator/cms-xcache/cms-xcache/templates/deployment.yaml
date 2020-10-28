@@ -108,7 +108,7 @@ spec:
             mountPath: "/etc/proxy/"
             readOnly: true
           - name: x509-certs-volume
-            mountPath: "/etc/grid-certs/"
+            mountPath: "/etc/grid-security/"
             readOnly: true
           - name: localroot
             mountPath: {{ required "LocalRoot is required" .Values.XCacheConfig.LocalRoot }}
