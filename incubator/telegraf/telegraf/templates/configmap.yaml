@@ -1,0 +1,70 @@
+# Handles configuration of the Telegraf monitoring service. 
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telegraf-{{ .Values.Instance }}-configuration
+  labels:
+    app: {{ template "telegraf.name" . }}
+    chart: {{ template "telegraf.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+
+# store Telegraf configuration file
+data:
+  # Use custom configuration file if specified.
+  {{ if eq .Values.telegrafConfig.useCustomConfig true }}
+    "telegraf.conf": {{ .Files.Get .Values.telegrafConfig.configPath | quote }}
+  {{ end }}
+
+  # Use parameterized configuration if specified.
+  {{ if ne .Values.telegrafConfig.useCustomConfig true }}
+  "telegraf.conf": |-
+    [global_tags]
+
+    # Configuration for telegraf agent
+    [agent]
+      interval = "5s"
+      round_interval = true
+      metric_batch_size = 1000
+      metric_buffer_limit = 10000
+      collection_jitter = "0s"
+      flush_interval = "10s"
+      flush_jitter = "0s"
+      precision = ""
+      hostname = ""
+      omit_hostname = false
+
+    # Send telegraf metrics to file(s)
+    [[outputs.file]]
+      # Files to write to
+      files = ["stdout", "/tmp/metrics.out"]
+      data_format = "influx"
+
+
+    [[outputs.influxdb]]
+
+      urls = [{{ .Values.endpoint | quote }}]
+
+      database = {{ .Values.database | quote }}
+
+    {{ range .Values.targets }}
+
+    [[inputs.snmp]]
+      ## Agent addresses to retrieve values from.
+      agents = [{{- range $value := .hostGroup.hosts }}
+      "udp://{{ $value }}",
+      {{ end -}}]
+
+      timeout = "5s"
+      version = 2
+      community = {{ .hostGroup.community | quote }}
+      retries = 3
+      max_repetitions = 10
+
+      # SNMP oids to poll
+      {{ .hostGroup.oids | indent 4 }}
+
+    {{ end }}
+
+  {{ end }} 

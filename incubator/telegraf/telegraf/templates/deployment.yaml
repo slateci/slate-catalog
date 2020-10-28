@@ -1,0 +1,39 @@
+# Describes a Kubernetes deployment of a container running Telegraf.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "telegraf.fullname" . }}
+  labels:
+    app: {{ template "telegraf.name" . }}
+    chart: {{ template "telegraf.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "telegraf.name" . }}
+      instance: {{ .Values.Instance | quote }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "telegraf.name" . }}
+        chart: {{ template "telegraf.chart" . }}
+        instance: {{ .Values.Instance | quote }}
+        release: {{ .Release.Name }}
+    spec:
+      hostNetwork: false
+      containers:
+        - name: telegraf
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - mountPath: /etc/telegraf/grnoc/conf.d
+              name: telegraf-volume 
+      volumes:
+        - name: telegraf-volume
+          # populate volume with config map data
+          configMap:
+            name: telegraf-{{ .Values.Instance }}-configuration
