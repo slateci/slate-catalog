@@ -5,25 +5,13 @@
 Instance: ""
 
 
-# The number of pods to spin up.
-replicaCount: 1
-
-
-# The image the application will use.
-# Leave this as-is.
-image:
-  repository: karlnewell/grnoc-telegraf-docker
-  tag: latest
-  pullPolicy: Always # (Always or IfNotPresent)
-
-
 # If useCustomConfig is set to true, all values below will be overwritten
 # by the specified custom Telegraf configuration file.
 # 
 # Otherwise, the values below will be used to set up SNMP monitoring.
 telegrafConfig:
   useCustomConfig: false
-  configPath: "files/prometheus-snmp.conf"
+  configPath: "files/telegraf.conf"
 
 
 # Specify hosts to monitor here.
@@ -36,39 +24,20 @@ targets:
   - hostGroup:
       community: "public"
       hosts:
-        - "10.10.1.2:161"
-        - "10.10.1.3:161"
-      oids: |-
-        [[inputs.snmp.table]]
-          oid = "IF-MIB::ifTable"
-          name = "interface"
-          inherit_tags = ["source"]
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifName"
-            name = "ifName"
-            is_tag = true
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifDescr"
-            name = "ifDescr"
-            is_tag = true
-  - hostGroup:
-      community: "public"
-      hosts:
-        - "10.10.1.4:161"
+        - "127.0.0.1:161"
       oids: |-
         [[inputs.snmp.field]]
           oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
           name = "uptime"
-
+  - hostGroup:
+      community: "public"
+      hosts:
+        - "127.0.0.1:161"
+        - "localhost:161"
+      oids: |-
         [[inputs.snmp.field]]
-          oid = "UCD-SNMP-MIB::laLoad.1"
-          name = "cpu1"
-
-        [[inputs.snmp.field]]
-          oid = "UCD-SNMP-MIB::laLoad.2"
-          name = "cpu2"
+          oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
+          name = "uptime"
 
 
 # The TS-DB endpoint to push data to. (InfluxDB)

@@ -10,7 +10,7 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: {{ template "telegraf.name" . }}
@@ -24,11 +24,10 @@ spec:
         instance: {{ .Values.Instance | quote }}
         release: {{ .Release.Name }}
     spec:
-      hostNetwork: false
       containers:
         - name: telegraf
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: karlnewell/grnoc-telegraf-docker:latest
+          imagePullPolicy: Always
           volumeMounts:
             - mountPath: /etc/telegraf/grnoc/conf.d
               name: telegraf-volume 
