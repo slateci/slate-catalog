@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "faucet.fullname" . }}
+  labels:
+    app: {{ template "faucet.name" . }}
+    chart: {{ template "faucet.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "faucet.name" . }}
+      instance: {{ .Values.Instance | quote }}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{ template "faucet.name" . }}
+        chart: {{ template "faucet.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      containers:
+      - env:
+        - name: FAUCET_CONFIG_STAT_RELOAD
+        - name: FAUCET_EVENT_SOCK
+        image: faucet/faucet:latest
+        name: faucet
+        ports:
+        - containerPort: 6653
+        - containerPort: 9302
+        resources: {}
+        command: ["sh", "-c", "faucet"]
+        volumeMounts:
+        - mountPath: /var/log/faucet
+          name: {{ template "faucet.name" . }}-claim
+        - mountPath: /etc/faucet
+          name: faucet-{{ .Values.Instance }}-configuration
+      restartPolicy: Always
+      volumes:
+      - name: {{ template "faucet.name" . }}-claim
+        persistentVolumeClaim:
+          claimName: {{ .Values.VolumeName }}
+      - name: faucet-{{ .Values.Instance }}-configuration
+        configMap:
+          name: faucet-{{ .Values.Instance }}-configuration
+status: {}

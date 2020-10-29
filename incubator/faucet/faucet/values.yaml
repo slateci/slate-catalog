@@ -1,0 +1,53 @@
+# Default values for faucet.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Instance name within SLATE
+Instance: global
+
+# StorageClass for logs (default nfs-client for minislate)
+StorageClass: nfs-client
+
+# Persistent Volume Name
+VolumeName: faucet-volume
+
+# Configuration data for faucet this is faucet.yaml
+Configuration: |-
+  vlans:
+      office:
+          vid: 100
+          description: "office network"
+
+  dps:
+      sw1:
+          dp_id: 0x1
+          hardware: "Open vSwitch"
+          interfaces:
+              1:
+                  name: "host1"
+                  description: "host2 network namespace"
+                  native_vlan: office
+              2:
+                  name: "host2"
+                  description: "host2 network namespace"
+                  native_vlan: office
+              3:
+                  name: "host3"
+                  native_vlan: office
+                  acls_in: [block-ping, allow-all]
+  acls:
+      block-ping:
+          - rule:
+              dl_type: 0x800      # IPv4
+              ip_proto: 1         # ICMP
+              actions:
+                  allow: False
+          - rule:
+              dl_type: 0x86dd     # IPv6
+              ip_proto: 58        # ICMPv6
+              actions:
+                  allow: False
+      allow-all:
+          - rule:
+              actions:
+                  allow: True
