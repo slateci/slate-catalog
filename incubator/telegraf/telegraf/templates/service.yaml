@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "telegraf.fullname" . }}
+  labels:
+    app: {{ template "telegraf.name" . }}
+    chart: {{ template "telegraf.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  type: NodePort
+  ports:
+  - name: prometheus
+    port: 9126
+    targetPort: 9126
+    protocol: TCP
+  selector:
+    app: {{ template "telegraf.name" . }}
+    instance: {{ .Values.Instance | quote }}

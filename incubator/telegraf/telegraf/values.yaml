@@ -1,0 +1,46 @@
+# SLATE Telegraf Monitoring Configuration
+
+
+# The slate instance value.
+Instance: ""
+
+
+# If useCustomConfig is set to true, all values below will be overwritten
+# by the specified custom Telegraf configuration file.
+# 
+# Otherwise, the values below will be used to set up SNMP monitoring.
+telegrafConfig:
+  useCustomConfig: false
+  configPath: "files/telegraf.conf"
+
+
+# Specify hosts to monitor here.
+# A hostGroup is a group of hosts that share settings. (e.g. community string, oids)
+# Hosts can be IP addresses or DNS names.
+# Port must also be specififed with a colon after hostname or address. (default is 161)
+# Specify oid section according to the Telegraf SNMP plugin format.
+# Documentation can be found at: https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp.
+targets:
+  - hostGroup:
+      community: "public"
+      hosts:
+        - "127.0.0.1:161"
+      oids: |-
+        [[inputs.snmp.field]]
+          oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
+          name = "uptime"
+  - hostGroup:
+      community: "public"
+      hosts:
+        - "127.0.0.1:161"
+        - "localhost:161"
+      oids: |-
+        [[inputs.snmp.field]]
+          oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
+          name = "uptime"
+
+
+# The TS-DB endpoint to push data to. (InfluxDB)
+# A protocol (udp or http) and a port must be specified
+endpoint: "http://127.0.0.1:9999"
+database: "telegraf"
