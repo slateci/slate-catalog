@@ -12,13 +12,6 @@ metadata:
 
 # store Telegraf configuration file
 data:
-  # Use custom configuration file if specified.
-  {{ if eq .Values.telegrafConfig.useCustomConfig true }}
-    "telegraf.conf": {{ .Files.Get .Values.telegrafConfig.configPath | quote }}
-  {{ end }}
-
-  # Use parameterized configuration if specified.
-  {{ if ne .Values.telegrafConfig.useCustomConfig true }}
   "telegraf.conf": |-
     [global_tags]
 
@@ -35,11 +28,12 @@ data:
       hostname = ""
       omit_hostname = false
 
-    # Send telegraf metrics to file(s)
+    # Send telegraf metrics to stdout and file if enabled
+    {{ if eq .Values.writeToStdout true }}
     [[outputs.file]]
-      # Files to write to
       files = ["stdout", "/tmp/metrics.out"]
       data_format = "influx"
+    {{ end }}
 
 
     [[outputs.influxdb]]
@@ -66,5 +60,3 @@ data:
       {{ .hostGroup.oids | indent 4 }}
 
     {{ end }}
-
-  {{ end }} 
