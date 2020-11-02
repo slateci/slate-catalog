@@ -14,6 +14,12 @@ telegrafConfig:
   configPath: "files/telegraf.conf"
 
 
+# Specifies the default data collection interval.
+# Time values can be specified by combining an integer value with a time unit.
+# Valid time units include "ns", "us", "ms", "s", "m" and "h".
+interval: "5s"
+
+
 # Specify hosts to monitor here.
 # A hostGroup is a group of hosts that share settings. (e.g. community string, oids)
 # Hosts can be IP addresses or DNS names.
