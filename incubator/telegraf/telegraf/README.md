@@ -25,8 +25,8 @@ The following table lists the configurable parameters of the Telegraf monitoring
 
 |           Parameter           |           Description           |           Default           |
 |-------------------------------|---------------------------------|-----------------------------|
-|`telegrafConfig.useCustomConfig`| Whether to use a custom configuration file. |`false`|
-|`telegrafConfig.configPath`| Path to optional custom configuration file. |`files/telegraf.conf`|
+|`writeToStdout`| Optionally write to stdout in container |`true`|
+|`interval`| Data collection interval |`5s`|
 |`targets.hostGroup.community`| Community string of `hostGroup` |`public`|
 |`targets.hostGroup.hosts`| Target hosts list |`127.0.0.1:161`|
 |`targets.hostGroup.oids`| SNMP OIDs to poll |*telegraf configuration monitoring system uptime*|
