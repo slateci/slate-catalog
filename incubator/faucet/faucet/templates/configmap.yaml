@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: faucet-{{ .Values.Instance }}-configuration
+  labels:
+    app: {{ template "faucet.name" . }}
+    chart: {{ template "faucet.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data: 
+  faucet.yaml: |-
+{{ .Values.Configuration | indent 4 }}
