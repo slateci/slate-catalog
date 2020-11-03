@@ -37,10 +37,6 @@ spec:
       - name: xrootd-config
         configMap:
           name: {{ template "cms-xcache.fullname" . }}-config
-      - name: x509-data
-        emptyDir:
-          medium: Memory
-          sizeLimit: "10Mi"
       - name: x509-certs-volume
         secret:
           secretName: {{ required "XCache Certificate is required" .Values.XCacheConfig.CertSecret }}
@@ -104,8 +100,6 @@ spec:
           volumeMounts:
           - name: xrootd-config
             mountPath: /etc/xrootd/config.d/xrootd-config.cfg
-          - name: x509-data
-            mountPath: "/etc/proxy/"
           - name: x509-certs-volume
             mountPath: /etc/grid-security/hostcert.pem
             subPath: hostcert.pem
