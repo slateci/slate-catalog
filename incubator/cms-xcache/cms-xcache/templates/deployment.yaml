@@ -106,10 +106,12 @@ spec:
             mountPath: /etc/xrootd/config.d/xrootd-config.cfg
           - name: x509-data
             mountPath: "/etc/proxy/"
-            readOnly: true
           - name: x509-certs-volume
-            mountPath: "/etc/grid-security/"
-            readOnly: true
+            mountPath: /etc/grid-security/hostcert.pem
+            subPath: hostcert.pem
+          - name: x509-certs-volume
+            mountPath: /etc/grid-security/hostkey.pem
+            subPath: hostkey.pem
           - name: localroot
             mountPath: {{ required "LocalRoot is required" .Values.XCacheConfig.LocalRoot }}
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
