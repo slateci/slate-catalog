@@ -37,10 +37,19 @@ data:
 
 
     # InfluxDB configuration
-    {{ if eq .Values.influxOutput true }}
+    {{ if eq .Values.influxOutput.enabled true }}
     [[outputs.influxdb]]
-      urls = [{{ .Values.endpoint | quote }}]
-      database = {{ .Values.database | quote }}
+      urls = [{{ .Values.influxOutput.endpoint | quote }}]
+      database = {{ .Values.influxOutput.database | quote }}
+    {{ end }}
+
+
+    # GlobalNOC database configuration
+    {{ if eq .Values.grnocOutput.enabled true }}
+    [[outputs.tsds]]
+      hostname = {{ .Values.grnocOutput.hostname | quote }}
+      username = {{ .Values.grnocOutput.username | quote }}
+      password = {{ .Values.grnocOutput.password | quote }}
     {{ end }}
 
 

@@ -41,6 +41,16 @@ targets:
           name = "uptime"
 
 
+# Configuration for GlobalNOC database output
+# Set enabled flag to true to enable GlobalNOC output.
+# Set hostname, username, and password accordingly.
+grnocOutput:
+  enabled: true
+  hostname: "tsds.hostname.net"
+  username: "tsds username"
+  password: "tsds password"
+
+
 # Configuration for InfluxDB output.
 # Set enabled flag to true to enable InfluxDB output.
 # Endpoint parameter must specify a protocol (udp or http) and a port.
