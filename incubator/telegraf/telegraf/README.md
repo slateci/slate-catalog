@@ -30,5 +30,6 @@ The following table lists the configurable parameters of the Telegraf monitoring
 |`targets.hostGroup.community`| Community string of `hostGroup` |`public`|
 |`targets.hostGroup.hosts`| Target hosts list |`127.0.0.1:161`|
 |`targets.hostGroup.oids`| SNMP OIDs to poll |*telegraf configuration monitoring system uptime*|
-|`endpoint`| Database endpoint |`http://127.0.0.1:9999`|
-|`database`| Database name |`telegraf`|
+|`influxOutput.enabled`| Whether to write to InfluxDB |`true`|
+|`influxOutput.endpoint`| Database endpoint |`http://127.0.0.1:9999`|
+|`influxOutput.database`| Database name |`telegraf`|

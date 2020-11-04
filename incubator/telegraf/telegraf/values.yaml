@@ -41,7 +41,11 @@ targets:
           name = "uptime"
 
 
-# The TS-DB endpoint to push data to. (InfluxDB)
-# A protocol (udp or http) and a port must be specified
-endpoint: "http://127.0.0.1:9999"
-database: "telegraf"
+# Configuration for InfluxDB output.
+# Set enabled flag to true to enable InfluxDB output.
+# Endpoint parameter must specify a protocol (udp or http) and a port.
+# Database parameter should be set to the database name.
+influxOutput:
+  enabled: true
+  endpoint: "http://127.0.0.1:9999"
+  database: "telegraf"

@@ -36,16 +36,19 @@ data:
     {{ end }}
 
 
+    # InfluxDB configuration
+    {{ if eq .Values.influxOutput true }}
     [[outputs.influxdb]]
-
       urls = [{{ .Values.endpoint | quote }}]
-
       database = {{ .Values.database | quote }}
+    {{ end }}
 
+
+    # Loop through host groups to monitor
     {{ range .Values.targets }}
 
     [[inputs.snmp]]
-      ## Agent addresses to retrieve values from.
+      # Enumerate agent addresses to retrieve values from.
       agents = [{{- range $value := .hostGroup.hosts }}
       "udp://{{ $value }}",
       {{ end -}}]
