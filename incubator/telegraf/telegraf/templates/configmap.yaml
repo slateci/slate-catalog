@@ -41,6 +41,13 @@ data:
     [[outputs.influxdb]]
       urls = [{{ .Values.influxOutput.endpoint | quote }}]
       database = {{ .Values.influxOutput.database | quote }}
+
+      # Authentication, if enabled
+      {{ if eq .Values.influxOutput.httpBasicAuth.enabled true }}
+      username = {{ .Values.influxOutput.httpBasicAuth.username | quote }}
+      password = {{ .Values.influxOutput.httpBasicAuth.password | quote }}
+      {{ end }}
+
     {{ end }}
 
 

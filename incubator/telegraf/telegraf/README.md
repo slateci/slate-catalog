@@ -37,3 +37,6 @@ The following table lists the configurable parameters of the Telegraf monitoring
 |`influxOutput.enabled`| Whether to write to InfluxDB |`true`|
 |`influxOutput.endpoint`| Database endpoint |`http://127.0.0.1:9999`|
 |`influxOutput.database`| Database name |`telegraf`|
+|`influxOutput.httpBasicAuth.enabled`| Whether http basic authentication is enabled |`false`|
+|`influxOutput.httpBasicAuth.username`| Database username |`telegraf`|
+|`influxOutput.httpBasicAuth.password`| Database password |`metrics`|

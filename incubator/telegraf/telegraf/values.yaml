@@ -59,3 +59,7 @@ influxOutput:
   enabled: true
   endpoint: "http://127.0.0.1:9999"
   database: "telegraf"
+  httpBasicAuth:
+    enabled: false
+    username: "telegraf"
+    password: "metrics"
