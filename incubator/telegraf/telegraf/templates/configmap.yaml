@@ -20,9 +20,9 @@ data:
       interval = {{ .Values.interval | quote }}
       round_interval = true
       metric_batch_size = 1000
-      metric_buffer_limit = 10000
+      metric_buffer_limit = 50000
       collection_jitter = "0s"
-      flush_interval = "10s"
+      flush_interval = "300s"
       flush_jitter = "0s"
       precision = ""
       hostname = ""
@@ -47,9 +47,49 @@ data:
     # GlobalNOC database configuration
     {{ if eq .Values.grnocOutput.enabled true }}
     [[outputs.tsds]]
+
+      # TSDS Measurement Type
+      measurement = "interface"
+
+      # TSDS Credentials
       hostname = {{ .Values.grnocOutput.hostname | quote }}
       username = {{ .Values.grnocOutput.username | quote }}
       password = {{ .Values.grnocOutput.password | quote }}
+
+      # Output Processing Interval (This should be greater than the JTI "sample_frequency")
+      interval = 60
+
+      # Sensors that are metadata fields
+      metadata = ["node", "intf", "description"]
+
+      # Sensors that should have their values tracked and then computed as a rate
+      rates = [
+        "input",
+        "output",
+        "inUcast",
+        "outUcast",
+        "inerror",
+        "outerror",
+        "indiscard",
+        "outdiscard",
+      ]
+
+      # An array of strings containing TSDS metadata/value aliases and their corresponding JTI resource path (space-delimited)
+        sensors = [
+          "intf ifName",
+          "node agent_host",
+          "description ifDescr",
+          "input ifInOctets",
+          "output ifOutOctets",
+          "inerror ifInErrors",
+          "outerror ifOutErrors",
+          "inUcast ifInUcastPkts",
+          "outUcast ifOutUcastPkts",
+          "indiscard ifInDiscards",
+          "outdiscard ifOutDiscards",
+          "status ifOperStatus",
+        ]
+
     {{ end }}
 
 
