@@ -27,6 +27,7 @@ The following table lists the configurable parameters of the Telegraf monitoring
 |-------------------------------|---------------------------------|-----------------------------|
 |`writeToStdout`| Optionally write to stdout in container |`true`|
 |`interval`| Data collection interval |`5s`|
+|`flushInterval`| Output flush interval |`300s`|
 |`targets.hostGroup.community`| Community string of `hostGroup` |`public`|
 |`targets.hostGroup.hosts`| Target hosts list |`127.0.0.1:161`|
 |`targets.hostGroup.oids`| SNMP OIDs to poll |*telegraf configuration monitoring system uptime*|

@@ -22,7 +22,7 @@ data:
       metric_batch_size = 1000
       metric_buffer_limit = 50000
       collection_jitter = "0s"
-      flush_interval = "300s"
+      flush_interval = {{ .Values.flushInterval | quote }}
       flush_jitter = "0s"
       precision = ""
       hostname = ""

@@ -15,6 +15,11 @@ writeToStdout: true
 interval: "5s"
 
 
+# Specifies time between output flushes.
+# Uses the same syntax as the interval parameter.
+flushInterval: "300s"
+
+
 # Specify hosts to monitor here.
 # A hostGroup is a group of hosts that share settings. (e.g. community string, oids)
 # Hosts can be IP addresses or DNS names.
@@ -51,7 +56,7 @@ grnocOutput:
   password: "tsds password"
 
 
-# Configuration for InfluxDB output.
+# Configuration for InfluxDB (v1) output.
 # Set enabled flag to true to enable InfluxDB output.
 # Endpoint parameter must specify a protocol (udp or http) and a port.
 # Database parameter should be set to the database name.
