@@ -9,8 +9,11 @@ metadata:
     release: {{ .Release.Name }}
 data:
   99-local.ini: |
+    [Gateway]
+    job_envvar_path=$PATH
+
     [Site Information]
-    {{ if .Values.Developer.Enabled }}
+    {{ if or (.Values.Developer.Enabled) (not .Values.Topology.Production) }}
     group = OSG-ITB
     {{ else }}
     group = OSG
@@ -63,6 +66,9 @@ data:
     TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
 {{ end }}
 
+    SLATE_HOSTED_CE = True
+    SCHEDD_ATTRS = $(SCHEDD_ATTRS) SLATE_HOSTED_CE
+
     # HACK: The job router doesn't recognize grid universe routes (the default) without
     # a "GridResource" attribute and the Gridmanager doesn't evaluate GridResource expressions.
     # So we set a dummy "GridResource" attribute and use "eval_set_GridResource"  to force the
@@ -71,7 +77,13 @@ data:
     $(JOB_ROUTER_DEFAULTS)
     [
     GridResource = "intentionally left blank";
-    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ", Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}", " --rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite");
+    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ",
+                                   Owner, "@", "{{ regexReplaceAllLiteral ":[0-9]*$" .Values.RemoteCluster.LoginHost "" }} ",
+                                   "--rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite"
+                                   {{ if not .Values.RemoteCluster.SSHBatchMode }}
+                                   , " --rgahp-nobatchmode"
+                                   {{ end }}
+                                   );
     ]
     @jrd
 
