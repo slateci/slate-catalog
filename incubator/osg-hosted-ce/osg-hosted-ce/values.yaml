@@ -124,6 +124,10 @@ HTTPLogger:
   # If you want to insert a password instead of using a randomly generated one,
   # point Secret to a K8S/SLATE secret below.
   # Secret: my-secret
+  
+  # If you want to enable persistent logging you can specify an existing SLATE volume
+  # To create a compatable SLATE volume run `slate volume create <volume-name> --accessMode ReadWriteMany --size 1Gi --storageClass local-path`
+  # Volume: my-volume
 
 HostCredentials:
   # Name of the secret containing a host key and certificate in

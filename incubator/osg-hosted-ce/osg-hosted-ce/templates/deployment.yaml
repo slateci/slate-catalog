@@ -88,8 +88,14 @@ spec:
       {{ end }}
       {{ end }}
       {{ if .Values.HTTPLogger.Enabled }}
+      {{ if .Values.HTTPLogger.Volume }}
+      - name: log-volume
+        persistentVolumeClaim:
+          claimName: {{ .Values.HTTPLogger.Volume }}
+      {{ else }}
       - name: log-volume
         emptyDir: {} 
+      {{ end }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
