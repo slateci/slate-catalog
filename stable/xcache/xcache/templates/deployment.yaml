@@ -99,7 +99,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["./updateCRICstatus.sh","{{ .Values.SiteConfig.CRICprotocolID }}","DISABLED"]
+                command: ["/usr/local/sbin/updateCRICstatus.sh","{{ .Values.SiteConfig.CRICprotocolID }}","DISABLED"]
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
@@ -118,7 +118,7 @@ spec:
 
         - name: x509
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          command: ["/run_x509_updater.sh"]
+          command: ["/usr/local/sbin/run_x509_updater.sh"]
           resources:
             requests:
               ephemeral-storage: "1Gi"
@@ -132,7 +132,7 @@ spec:
 
         - name: reporter
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          command: ["/run_cache_reporter.sh"]
+          command: ["/usr/local/sbin/run_cache_reporter.sh"]
           env:
           - name: XC_SITE
             value: "{{ .Values.SiteConfig.Name }}"
