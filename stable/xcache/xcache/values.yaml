@@ -47,6 +47,6 @@ XCacheConfig:
 
 
 image:
-  repository: slateci/xcache
-  tag: v5rc5
+  repository: opensciencegrid/atlas-xcache
+  tag: fresh
   pullPolicy: Always
