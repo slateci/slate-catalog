@@ -8,6 +8,8 @@ metadata:
     chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.Networking.Hostname }} 
 spec:
   type: LoadBalancer
   externalTrafficPolicy: "Local"
