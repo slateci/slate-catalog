@@ -1,4 +1,4 @@
-# Telegraf Monitoring with Prometheus
+# Telegraf SNMP Monitoring
 
 Uses Telegraf to pull SNMP metrics from various hosts.
 Pushes metrics to a user-specifiable TS-DB.

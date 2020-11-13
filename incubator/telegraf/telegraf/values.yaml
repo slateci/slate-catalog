@@ -26,11 +26,16 @@ flushInterval: "300s"
 # Port must also be specififed with a colon after hostname or address. (default is 161)
 # Specify oid section according to the Telegraf SNMP plugin format.
 # Documentation can be found at: https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp.
+# The counter64Bit parameter is only relevant if GRNOC output has been enabled.
+# Additionally, the OIDs section will be ignored if GRNOC output has been enabled.
+# To poll from devices with 32-bit SNMP counters, set this to false.
+# To poll from devices with 64-bit SNMP counters, set this to true.
 targets:
   - hostGroup:
       community: "public"
       hosts:
         - "127.0.0.1:161"
+      counter64Bit: false
       oids: |-
         [[inputs.snmp.field]]
           oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
@@ -40,6 +45,7 @@ targets:
       hosts:
         - "127.0.0.1:161"
         - "localhost:161"
+      counter64Bit: true
       oids: |-
         [[inputs.snmp.field]]
           oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
@@ -49,6 +55,8 @@ targets:
 # Configuration for GlobalNOC database output
 # Set enabled flag to true to enable GlobalNOC output.
 # Set hostname, username, and password accordingly.
+# Note that enabling GRNOC output results in a pre-defined set of
+# OIDs being polled, and will override user-specified OIDs.
 grnocOutput:
   enabled: true
   hostname: "tsds.hostname.net"
@@ -61,7 +69,7 @@ grnocOutput:
 # Endpoint parameter must specify a protocol (udp or http) and a port.
 # Database parameter should be set to the database name.
 influxOutput:
-  enabled: true
+  enabled: false
   endpoint: "http://127.0.0.1:9999"
   database: "telegraf"
   httpBasicAuth:
