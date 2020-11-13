@@ -1,35 +1,49 @@
 # SLATE Telegraf Monitoring Configuration
+# More information about configuring and running this application can be found here:
+# https://slateci.io/blog/telegraf-monitoring.html
 
 
 # The slate instance value.
 Instance: ""
 
-
-# Optionally write to stdout and local file in container.
+# Optionally write metrics to stdout and local file in container.
 writeToStdout: true
-
 
 # Specifies the default data collection interval.
 # Time values can be specified by combining an integer value with a time unit.
 # Valid time units include "ns", "us", "ms", "s", "m" and "h".
 interval: "5s"
 
-
 # Specifies time between output flushes.
 # Uses the same syntax as the interval parameter.
 flushInterval: "300s"
 
 
-# Specify hosts to monitor here.
+# Configuration for GlobalNOC database output
+# Set enabled flag to true to enable GlobalNOC output.
+# Set hostname, username, and password accordingly.
+# Note that enabling GRNOC output results in a pre-defined set of
+# OIDs being polled, and will override user-specified OIDs.
+grnocOutput:
+  enabled: true
+  hostname: "tsds.hostname.net"
+  username: "tsds username"
+  password: "tsds password"
+
+
+# Specify hosts to monitor here. Hosts can be IP addresses or DNS names.
 # A hostGroup is a group of hosts that share settings. (e.g. community string, oids)
-# Hosts can be IP addresses or DNS names.
 # Port must also be specififed with a colon after hostname or address. (default is 161)
-# Specify oid section according to the Telegraf SNMP plugin format.
+# Specify OIDs according to the Telegraf SNMP plugin format.
 # Documentation can be found at: https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp.
 # The counter64Bit parameter is only relevant if GRNOC output has been enabled.
-# Additionally, the OIDs section will be ignored if GRNOC output has been enabled.
-# To poll from devices with 32-bit SNMP counters, set this to false.
-# To poll from devices with 64-bit SNMP counters, set this to true.
+# The specified OIDs should take into account the counter type of the hosts to be monitored.
+#
+# GRNOC-specific configuration:
+# Enabling GRNOC database output results in a pre-configured set of OIDs being polled.
+# This means that the OIDs section will be ignored.
+# To poll from devices with 64-bit SNMP counters, set the counter64Bit paramter to true.
+# To poll from devices with 32-bit SNMP counters, set this parameter to false.
 targets:
   - hostGroup:
       community: "public"
@@ -50,18 +64,6 @@ targets:
         [[inputs.snmp.field]]
           oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
           name = "uptime"
-
-
-# Configuration for GlobalNOC database output
-# Set enabled flag to true to enable GlobalNOC output.
-# Set hostname, username, and password accordingly.
-# Note that enabling GRNOC output results in a pre-defined set of
-# OIDs being polled, and will override user-specified OIDs.
-grnocOutput:
-  enabled: true
-  hostname: "tsds.hostname.net"
-  username: "tsds username"
-  password: "tsds password"
 
 
 # Configuration for InfluxDB (v1) output.
