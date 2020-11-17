@@ -20,9 +20,9 @@ data:
       interval = {{ .Values.interval | quote }}
       round_interval = true
       metric_batch_size = 1000
-      metric_buffer_limit = 10000
+      metric_buffer_limit = 50000
       collection_jitter = "0s"
-      flush_interval = "10s"
+      flush_interval = {{ .Values.flushInterval | quote }}
       flush_jitter = "0s"
       precision = ""
       hostname = ""
@@ -36,27 +36,188 @@ data:
     {{ end }}
 
 
+    # InfluxDB configuration
+    {{ if eq .Values.influxOutput.enabled true }}
     [[outputs.influxdb]]
+      urls = [{{ .Values.influxOutput.endpoint | quote }}]
+      database = {{ .Values.influxOutput.database | quote }}
 
-      urls = [{{ .Values.endpoint | quote }}]
+      # Authentication, if enabled
+      {{ if eq .Values.influxOutput.httpBasicAuth.enabled true }}
+      username = {{ .Values.influxOutput.httpBasicAuth.username | quote }}
+      password = {{ .Values.influxOutput.httpBasicAuth.password | quote }}
+      {{ end }}
 
-      database = {{ .Values.database | quote }}
+    {{ end }}
 
+
+    # GlobalNOC database configuration
+    {{ if eq .Values.grnocOutput.enabled true }}
+    [[outputs.tsds]]
+
+      # TSDS Measurement Type
+      measurement = "interface"
+
+      # TSDS Credentials
+      hostname = {{ .Values.grnocOutput.hostname | quote }}
+      username = {{ .Values.grnocOutput.username | quote }}
+      password = {{ .Values.grnocOutput.password | quote }}
+
+      # Output Processing Interval (This should be greater than the JTI "sample_frequency")
+      interval = 60
+
+      # Sensors that are metadata fields
+      metadata = ["node", "intf", "description"]
+
+      # Sensors that should have their values tracked and then computed as a rate
+      rates = [
+        "input",
+        "output",
+        "inUcast",
+        "outUcast",
+        "inerror",
+        "outerror",
+        "indiscard",
+        "outdiscard",
+      ]
+
+      # An array of strings containing TSDS metadata/value aliases and their corresponding JTI resource path (space-delimited)
+        sensors = [
+          "intf ifName",
+          "node agent_host",
+          "description ifDescr",
+          "input ifInOctets",
+          "output ifOutOctets",
+          "inerror ifInErrors",
+          "outerror ifOutErrors",
+          "inUcast ifInUcastPkts",
+          "outUcast ifOutUcastPkts",
+          "indiscard ifInDiscards",
+          "outdiscard ifOutDiscards",
+          "status ifOperStatus",
+        ]
+        namepass = ["interface"]
+
+    {{ end }}
+
+
+    # Loop through host groups to monitor.
     {{ range .Values.targets }}
 
     [[inputs.snmp]]
-      ## Agent addresses to retrieve values from.
+      # Enumerate agent addresses to retrieve values from.
       agents = [{{- range $value := .hostGroup.hosts }}
       "udp://{{ $value }}",
       {{ end -}}]
 
-      timeout = "5s"
+      timeout = "15s"
       version = 2
+      # SNMP community string
       community = {{ .hostGroup.community | quote }}
-      retries = 3
-      max_repetitions = 10
+      retries = 2
+      max_repetitions = 15
 
-      # SNMP oids to poll
+      # Poll custom OIDs if grnoc output is disabled.
+      {{ if eq $.Values.grnocOutput.enabled false }}
       {{ .hostGroup.oids | indent 4 }}
+      {{ end }}
+
+      # Poll defined set of OIDs if grnoc output is enabled.
+      {{ if eq $.Values.grnocOutput.enabled true }}
+
+      # 64-bit counter OIDs
+      {{ if eq .hostGroup.counter64Bit true }}
+
+      [[inputs.snmp.table]]
+      name = "interface"
+      
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifName"
+      name = "ifName"
+      is_tag = true
+
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifDescr"
+      name = "ifDescr"
+      is_tag = true
+
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifInErrors"
+      name = "ifInErrors"
+
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifOutErrors"
+      name = "ifOutErrors"
+
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifInDiscards"
+      name = "ifInDiscards"
+
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifOutDiscards"
+      name = "ifOutDiscards"
+
+      [[inputs.snmp.table.field]]
+      name = "ifInOctets"
+      oid = "IF-MIB::ifHCInOctets" 
+     
+      [[inputs.snmp.table.field]]
+      name = "ifInUcastPkts"
+      oid = "IF-MIB::ifHCInUcastPkts" 
+     
+      [[inputs.snmp.table.field]]
+      name = "ifInMulticastPkts"
+      oid = "IF-MIB::ifHCInMulticastPkts" 
+      
+      [[inputs.snmp.table.field]]
+      name = "ifInBroadcastPkts"
+      oid = "IF-MIB::ifHCInBroadcastPkts"
+
+      [[inputs.snmp.table.field]]
+      name = "ifOutOctets"
+      oid = "IF-MIB::ifHCOutOctets"
+
+      [[inputs.snmp.table.field]]
+      name = "ifOutUcastPkts"
+      oid = "IF-MIB::ifHCOutUcastPkts"
+
+      [[inputs.snmp.table.field]]
+      name = "ifOutMulticastPkts"
+      oid = "IF-MIB::ifHCOutMulticastPkts"
+
+      [[inputs.snmp.table.field]]
+      name = "ifOutBroadcastPkts"
+      oid = "IF-MIB::ifHCOutBroadcastPkts"
+
+      [[inputs.snmp.table.field]]
+      name = "ifOperStatus"
+      oid = "IF-MIB::ifOperStatus"
+
+      [inputs.snmp.tagpass]
+        ifName = ["Vlan601","Vlan711", "Vlan710"]
+
+      {{ end }}
+
+      # 32-bit counter OIDs
+      {{ if eq .hostGroup.counter64Bit false }}
+
+      [[inputs.snmp.table]]
+        oid = "IF-MIB::ifTable"
+        name = "interface"
+        inherit_tags = ["source"]
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifName"
+          name = "ifName"
+          is_tag = true
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifDescr"
+          name = "ifDescr"
+          is_tag = true
+
+      {{ end }}
+
+      {{ end }}
 
     {{ end }}
