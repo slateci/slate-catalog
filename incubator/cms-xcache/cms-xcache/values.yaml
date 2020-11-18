@@ -3,6 +3,10 @@
 # Enables unique instances of XCache in one namespace
 Instance: ""
 
+# The node (in your Kubernetes cluster) to schedule this instance on
+# This hostname should match the host certificate provided in your SLATE secret
+Node: k8s-1.example.edu
+
 Service:
   # Port that the service will utilize.
   Port: 1094
