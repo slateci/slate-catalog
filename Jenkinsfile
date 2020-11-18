@@ -9,7 +9,7 @@ pipeline{
 					sh 'make'
 					script{
 						sh 'printenv'
-						if(env.env.GIT_BRANCH == 'origin/master'){
+						if(env.GIT_BRANCH == 'origin/master'){
 							sh 'make publish'
 						}
 					}
