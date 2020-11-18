@@ -24,15 +24,6 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
-
-      nodeSelector:
-        xcache-capable: "true"
-      
-      tolerations:
-      - key: "special"
-        operator: "Exists"
-        effect: PreferNoSchedule
-
       volumes:
       - name: xrootd-config
         configMap:
