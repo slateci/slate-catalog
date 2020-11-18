@@ -8,6 +8,7 @@ pipeline{
 					sh 'cmake3 ..'
 					sh 'make'
 					script{
+						sh 'printenv'
 						if(env.BRANCH_NAME == 'master'){
 							sh 'make publish'
 						}
