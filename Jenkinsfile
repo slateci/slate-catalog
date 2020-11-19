@@ -3,6 +3,7 @@ pipeline{
 	stages{
 		stage("Build"){
 			steps{
+				sh ( script: "/usr/local/bin/update_github_catalog_status pending ${env.GIT_COMMIT}" )
 				sh 'mkdir -p build'
 				dir('build'){
 					sh 'cmake3 ..'
@@ -28,6 +29,12 @@ pipeline{
 					slackSend(channel: "jenkins", color: "danger", message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} (Branch: ${env.GIT_BRANCH}) failed (${RESULTS_URL})")
 				}
 			}
+		}
+		success{
+			sh ( script: "/usr/local/bin/update_github_catalog_status success ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/catalog/" )
+		}
+		failure{
+			sh ( script: "/usr/local/bin/update_github_catalog_status failure ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/catalog/" )
 		}
 	}
 }
