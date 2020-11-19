@@ -32,22 +32,12 @@ pipeline{
 		}
 		success{
 			script{
-				if(env.GIT_BRANCH == 'origin/master'){
-					sh ( script: "/usr/local/bin/update_github_catalog_status success ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/catalog/${env.BUILD_ID}-log.txt" )
-				}
-				else {
-					sh ( script: "/usr/local/bin/update_github_catalog_status success ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/${env.JOB_NAME}/${env.BUILD_NUMBER}-log.txt" )
-				}
+				sh ( script: "/usr/local/bin/update_github_catalog_status success ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/${env.JOB_NAME}/${env.BUILD_NUMBER}-log.txt" )
 			}
 		}
 		failure{
 			script{
-				if(env.GIT_BRANCH == 'origin/master'){
-					sh ( script: "/usr/local/bin/update_github_catalog_status failure ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/catalog/${env.BUILD_ID}-log.txt" )
-				}
-				else {
-					sh ( script: "/usr/local/bin/update_github_catalog_status failure ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/${env.JOB_NAME}/${env.BUILD_NUMBER}-log.txt" )
-				}
+				sh ( script: "/usr/local/bin/update_github_catalog_status failure ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/${env.JOB_NAME}/${env.BUILD_NUMBER}-log.txt" )
 			}
 		}
 	}
