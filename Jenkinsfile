@@ -31,10 +31,10 @@ pipeline{
 			}
 		}
 		success{
-			sh ( script: "/usr/local/bin/update_github_catalog_status success ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/catalog/" )
+			sh ( script: "/usr/local/bin/update_github_catalog_status success ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/catalog/${env.BUILD_ID}-log.txt" )
 		}
 		failure{
-			sh ( script: "/usr/local/bin/update_github_catalog_status failure ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/catalog/" )
+			sh ( script: "/usr/local/bin/update_github_catalog_status failure ${env.GIT_COMMIT} https://jenkins.slateci.io/buildresults/catalog/${env.BUILD_ID}-log.txt" )
 		}
 	}
 }
