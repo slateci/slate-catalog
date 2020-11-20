@@ -25,10 +25,10 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: htcondor-{{ .Values.Instance }}-logger-startup
+  name: {{ template "cms-xcache.fullname" . }}-logging
   labels:
-    app: htcondor
-    chart: {{ template "htcondor.chart" . }}
+    app: {{ template "cms-xcache.name" . }} 
+    chart: {{ template "cms-xcache.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
