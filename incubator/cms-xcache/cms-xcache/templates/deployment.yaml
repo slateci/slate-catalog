@@ -78,6 +78,13 @@ spec:
           image: "opensciencegrid/cms-xcache:fresh"
           imagePullPolicy: Always
           env:
+          {{ if .Values.HTTPLogger.Secret }}
+          - name: HTPASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.HTTPLogger.Secret }}
+                key: HTPASSWD
+          {{ end }}
           - name: XC_ROOTDIR
             value: "{{ .Values.XCacheConfig.RootDir }}"
           - name: XC_RESOURCENAME
