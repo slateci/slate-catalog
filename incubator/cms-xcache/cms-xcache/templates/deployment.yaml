@@ -30,7 +30,7 @@ spec:
         emptyDir: {}
       - name: logger-startup
         configMap:
-          name: htcondor-{{ .Values.Instance }}-logger-startup
+          name: {{ template "cms-xcache.fullname" . }}-logging
       {{ end }}
       - name: xrootd-config
         configMap:
