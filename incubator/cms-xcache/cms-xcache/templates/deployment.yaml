@@ -124,7 +124,7 @@ spec:
           volumeMounts:
           {{ if .Values.HTTPLogger.Enabled }}
           - name: log-volume
-            mountPath: /var/log/condor
+            mountPath: /var/log
           {{ end }}
           - name: xrootd-config
             mountPath: /etc/xrootd/config.d/xrootd-config.cfg
