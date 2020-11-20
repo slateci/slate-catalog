@@ -19,3 +19,25 @@ spec:
     chart: {{ template "cms-xcache.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+---
+{{ if .Values.HTTPLogger.Enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cms-xcache.fullname" . }}
+  labels:
+    app: {{ template "cms-xcache.name" . }}
+    chart: {{ template "cms-xcache.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance }}
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: logs
+    protocol: TCP
+    name: logs
+  selector:
+    app: {{ template "cms-xcache.name" . }}
+    instance: {{ .Values.Instance }}
+{{ end }}

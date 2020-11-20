@@ -25,6 +25,13 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
       volumes:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {}
+      - name: logger-startup
+        configMap:
+          name: {{ template "cms-xcache.fullname" . }}-logging
+      {{ end }}
       - name: xrootd-config
         configMap:
           name: {{ template "cms-xcache.fullname" . }}-config
@@ -50,10 +57,34 @@ spec:
       nodeSelector: 
         kubernetes.io/hostname: {{ .Values.NodeName }} 
       containers:
+        {{ if .Values.HTTPLogger.Enabled }}
+        - name: logging-sidecar
+          image: "nginx:1.15.9"
+          command: ["/bin/bash"]
+          args: ["/usr/local/bin/start-nginx.sh"]
+          imagePullPolicy: IfNotPresent
+          ports:
+          - name: logs
+            containerPort: 8080
+            protocol: TCP
+          volumeMounts:
+          - name: log-volume
+            mountPath: /usr/share/nginx/html
+          - name: logger-startup
+            mountPath: /usr/local/bin/start-nginx.sh
+            subPath: start-nginx.sh
+        {{ end }}
         - name: cms-xcache
           image: "opensciencegrid/cms-xcache:fresh"
           imagePullPolicy: Always
           env:
+          {{ if .Values.HTTPLogger.Secret }}
+          - name: HTPASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.HTTPLogger.Secret }}
+                key: HTPASSWD
+          {{ end }}
           - name: XC_ROOTDIR
             value: "{{ .Values.XCacheConfig.RootDir }}"
           - name: XC_RESOURCENAME
@@ -91,6 +122,10 @@ spec:
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
+          {{ if .Values.HTTPLogger.Enabled }}
+          - name: log-volume
+            mountPath: /var/log
+          {{ end }}
           - name: xrootd-config
             mountPath: /etc/xrootd/config.d/xrootd-config.cfg
           - name: x509-certs-volume
