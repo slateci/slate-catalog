@@ -8,6 +8,11 @@ Instance: ""
 # Should match the FQDN of the node you want this instance to land on
 NodeName: k8s-1.example.edu
 
+# Enable optional sidecar logging
+HTTPLogger: 
+  Enabled: false
+  # Secret: my-secret
+
 Service:
   # Port that the service will utilize.
   Port: 1094
