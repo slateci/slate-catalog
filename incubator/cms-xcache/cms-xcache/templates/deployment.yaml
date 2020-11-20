@@ -114,13 +114,10 @@ spec:
               ephemeral-storage: "5Gi"
             limits:
               ephemeral-storage: "10Gi"
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.Service.Port }}
-            initialDelaySeconds: 180
-            periodSeconds: 60
           ports:
-            - containerPort: {{ .Values.Service.Port }}         
+            - name: xrootd
+              containerPort: {{ .Values.Service.Port }}
+              protocol: TCP
           volumeMounts:
           {{ if .Values.HTTPLogger.Enabled }}
           - name: log-volume
