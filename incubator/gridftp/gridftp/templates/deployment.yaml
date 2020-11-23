@@ -36,8 +36,13 @@ spec:
               path: passwd
         - name: gridftp-certificates
           secret:
-            secretName: {{ .Values.GridFTPConfig.HostSecretName }} 
-            defaultMode: 256
+            secretName: {{ .Values.GridFTPConfig.HostSecretName }}
+            items:
+            - key: userkey
+	      path: userkey.pem
+              defaultMode: 256
+            - key: usercert
+	      path: usercert.pem
         {{ if .Values.GridFTPConfig.InternalPath }}
         - name: filestore
           hostPath:
