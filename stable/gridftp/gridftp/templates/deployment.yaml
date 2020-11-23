@@ -73,7 +73,7 @@ spec:
             - name: pvc-volume
               mountPath: {{ .Values.GridFTPConfig.ExternalPath }}
             {{ end }}
-      {{ if .Values.GridFTPConfig.UseNodeSelector }}
+      {{ if .Values.NodeName }}
       nodeSelector:
-        gridftp: "true"
+        kubernetes.io/hostname: {{ .Values.NodeName }}
       {{ end }}
