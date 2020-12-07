@@ -1,6 +1,6 @@
 FROM centos:7
 LABEL maintainer lincolnb@uchicago.edu
-LABEL lastupdate 09-29-2020
+LABEL lastupdate 12-07-2020
 
 RUN yum update -y
 
