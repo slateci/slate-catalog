@@ -14,8 +14,15 @@ spec:
       name: xrootd
       port: {{ .Values.Service.Port }}
       targetPort: {{ .Values.Service.Port }}
+    {{ if .Values.HTTPLogger.Enabled }}
+    - port: 8080
+      targetPort: logs
+      protocol: TCP
+      name: logs
+    {{ end }}
   selector:
     app: {{ template "cms-xcache.name" . }}
     chart: {{ template "cms-xcache.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+    

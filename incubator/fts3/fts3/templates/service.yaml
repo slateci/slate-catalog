@@ -23,4 +23,3 @@ spec:
   selector:
     app: {{ template "fts3.fullname" . }}
     instance: {{ .Values.Instance }}
-release: {{ .Release.Name }}
