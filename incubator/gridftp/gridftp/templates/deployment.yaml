@@ -38,11 +38,11 @@ spec:
           secret:
             secretName: {{ .Values.GridFTPConfig.HostSecretName }}
             items:
-            - key: userkey
-              path: userkey.pem
+            - key: hostkey
+              path: hostkey.pem
               defaultMode: 256
-            - key: usercert
-              path: usercert.pem
+            - key: hostcert
+              path: hostcert.pem
         {{ if .Values.GridFTPConfig.InternalPath }}
         - name: filestore
           hostPath:
