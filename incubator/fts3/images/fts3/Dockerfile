@@ -13,6 +13,6 @@ RUN chmod 644 /etc/cron.d/fetch-crl
 #COPY fts-diff-4.0.1.sql /usr/share/fts-mysql/fts-diff-4.0.1.sql
 
 COPY 10-fts.conf /etc/supervisord.d/
-COPY 20-fts-config.sh /etc//etc/osg/image-config.d/
+COPY 20-fts-config.sh /etc/osg/image-config.d/
 
 ENTRYPOINT ["/usr/local/sbin/supervisord_startup.sh"]
