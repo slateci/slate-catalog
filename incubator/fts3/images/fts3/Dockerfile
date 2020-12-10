@@ -8,9 +8,10 @@ RUN yum install -y osg-ca-certs yum-plugin-priorities gfal2-all osg-gridftp gfal
 ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl
 
-#COPY fts3config etc/fts3/fts3config
-#COPY fts-msg-monitoring.conf etc/fts3/fts-msg-monitoring.conf
-#COPY fts-diff-4.0.1.sql /usr/share/fts-mysql/fts-diff-4.0.1.sql
+# remove me when we can remove the old way how this chart works 
+COPY fts3config etc/fts3/fts3config
+COPY fts-msg-monitoring.conf etc/fts3/fts-msg-monitoring.conf
+COPY fts-diff-4.0.1.sql /usr/share/fts-mysql/fts-diff-4.0.1.sql
 
 COPY 10-fts.conf /etc/supervisord.d/
 COPY 20-fts-config.sh /etc/osg/image-config.d/
