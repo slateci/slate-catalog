@@ -1,6 +1,6 @@
 FROM opensciencegrid/software-base:fresh
 LABEL description="File Transfer Service from CERN"
-LABEL maintainer lincolnb@uchicago.edu
+LABEL maintainer=lincolnb@uchicago.edu
 
 ADD "http://fts-repo.web.cern.ch/fts-repo/fts3-prod-el7.repo" "/etc/yum.repos.d/"
 RUN yum install -y osg-ca-certs yum-plugin-priorities gfal2-all osg-gridftp gfal2-util fts-server fts-client fts-rest fts-monitoring fts-mysql fts-server-selinux fts-rest-selinux fts-monitoring-selinux fts-msg fts-infosys cronie crontabs supervisor
