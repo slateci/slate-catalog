@@ -9,9 +9,9 @@ ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl
 
 # remove me when we can remove the old way how this chart works 
-COPY fts3config etc/fts3/fts3config
-COPY fts-msg-monitoring.conf etc/fts3/fts-msg-monitoring.conf
-COPY fts-diff-4.0.1.sql /usr/share/fts-mysql/fts-diff-4.0.1.sql
+#COPY /fts3config etc/fts3/fts3config
+#COPY fts-msg-monitoring.conf /etc/fts3/fts-msg-monitoring.conf
+COPY fts-schema-6.0.0.sql /etc/fts3/fts-schema-6.0.0.sql
 
 COPY 10-fts.conf /etc/supervisord.d/
 COPY 20-fts-config.sh /etc/osg/image-config.d/
