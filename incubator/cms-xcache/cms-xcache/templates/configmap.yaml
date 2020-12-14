@@ -31,7 +31,7 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data: 
-  common-site-local.cfg: |+
+  10-common-site-local.cfg: |+
     # Site-provided default values that are necessary for
     # variable substitutions in the OSG XRootD config files.
     #
