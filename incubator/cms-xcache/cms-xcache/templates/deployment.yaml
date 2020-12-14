@@ -34,7 +34,10 @@ spec:
       {{ end }}
       - name: xrootd-config
         configMap:
-          name: {{ template "cms-xcache.fullname" . }}-config
+          name: {{ template "cms-xcache.fullname" . }}-xrootd-config
+      - name: common-site-local
+        configMap:
+          name: {{ template "cms-xcache.fullname" . }}-common-site-local
       - name: x509-certs-volume
         secret:
           secretName: {{ required "XCache Certificate is required" .Values.XCacheConfig.CertSecret }}
@@ -131,6 +134,8 @@ spec:
           {{ end }}
           - name: xrootd-config
             mountPath: /etc/xrootd/config.d/xrootd-config.cfg
+          - name: common-site-local
+            mountPath: /etc/xrootd/config.d/10-common-site-local.cfg
           - name: x509-certs-volume
             mountPath: /etc/grid-security/hostcert.pem
             subPath: hostcert.pem
