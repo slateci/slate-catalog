@@ -73,14 +73,6 @@ spec:
           - name: logger-startup
             mountPath: /usr/local/bin/start-nginx.sh
             subPath: start-nginx.sh
-          - name: log-volume
-            mountPath: /var/log
-          - name: log-volume
-            mountPath: /var/log/condor
-          - name: log-volume
-            mountPath: /var/log/supervisor
-          - name: log-volume
-            mountPath: /var/log/xrootd
         {{ end }}
         - name: cms-xcache
           image: "opensciencegrid/cms-xcache:fresh"
