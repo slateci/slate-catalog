@@ -133,9 +133,11 @@ spec:
             mountPath: /var/log/xrootd
           {{ end }}
           - name: xrootd-config
-            mountPath: /etc/xrootd/config.d/xrootd-config.cfg
+            mountPath: /etc/xrootd/config.d
+            subPath: xrootd-config.cfg
           - name: common-site-local
-            mountPath: /etc/xrootd/config.d/10-common-site-local.cfg
+            mountPath: /etc/xrootd/config.d
+            subPath: 10-common-site-local.cfg
           - name: x509-certs-volume
             mountPath: /etc/grid-security/hostcert.pem
             subPath: hostcert.pem
