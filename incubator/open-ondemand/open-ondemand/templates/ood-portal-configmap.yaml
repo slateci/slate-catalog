@@ -1,0 +1,31 @@
+apiVersion: v1
+data:
+  ood_portal.yml: |
+    # /etc/ood/config/ood_portal.yml
+    ---
+        # List of Apache authentication directives
+        # NB: Be sure the appropriate Apache module is installed for this
+        # Default: (see below, uses basic auth with an htpasswd file)
+        auth:
+          - 'AuthType openid-connect'
+          - 'Require valid-user'
+    
+        # Redirect user to the following URI when accessing logout URI
+        # Example:
+        #     logout_redirect: '/oidc?logout=https%3A%2F%2Fwww.example.com'
+        # Default: '/pun/sys/dashboard/logout' (the Dashboard app provides a simple
+        # HTML page explaining logout to the user)
+        logout_redirect: '/oidc?logout=https%3A%2F%2Futah-dev1.chpc.utah.edu'
+    
+        # Sub-uri used by mod_auth_openidc for authentication
+        # Example:
+        #     oidc_uri: '/oidc'
+        # Default: null (disable OpenID Connect support)
+        oidc_uri: '/oidc'
+    
+        # Set up user mapping
+        user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex'
+kind: ConfigMap
+metadata:
+  name: {{ include "open-ondemand.fullname" . }}-ood-portal
+  namespace: default

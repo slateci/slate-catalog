@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "open-ondemand.fullname" . }}
+  labels:
+    {{- include "open-ondemand.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "open-ondemand.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+        - name: auth-config
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-auth-config
+            items:
+            - key: auth_openidc.conf
+              path: auth_openidc.conf
+        - name: ood-portal-config
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-ood-portal
+            items:
+            - key: ood_portal.yml
+              path: ood_portal.yml
+        - name: keycloak-setup
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
+            defaultMode: 0744 
+      containers:
+        - name: open-ondemand
+          image: dockerbox88/open-ondemand
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: shared-data
+              mountPath: /shared
+            - name: auth-config
+              mountPath: /opt/rh/httpd24/root/etc/httpd/conf.d
+            - name: ood-portal-config
+              mountPath: /etc/ood/config
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: INSTANCE_NAME
+              value: {{ include "open-ondemand.fullname" . }}
+        - name: keycloak
+          image: jstidd/keycloak
+          imagePullPolicy: Always
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
+          volumeMounts:
+            - name: shared-data
+              mountPath: /shared
+            - name: keycloak-setup
+              mountPath: /etc/keycloak/
+          ports:
+            - name: kc8080
+              containerPort: 8080
+              protocol: TCP
+---
