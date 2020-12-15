@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+data: 
+  "keycloak-setup.sh": {{ .Files.Get "setup/keycloak-setup.sh" | quote }}
+metadata:
+  name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
+  namespace: default
