@@ -22,4 +22,3 @@ data:
 kind: ConfigMap
 metadata:
   name: {{ include "open-ondemand.fullname" . }}-auth-config
-  namespace: default
