@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # The SLATE instance value.
-Instance: ""
+Instance: "global"
 
 replicaCount: 1
 

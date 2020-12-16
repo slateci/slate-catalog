@@ -33,6 +33,9 @@ spec:
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
             defaultMode: 0744 
+        - name: secret-volume
+          secret:
+            secretName: {{ include "open-ondemand.fullname" . }}-keycloak-password
       containers:
         - name: open-ondemand
           image: dockerbox88/open-ondemand
@@ -52,17 +55,15 @@ spec:
             - name: INSTANCE_NAME
               value: {{ include "open-ondemand.fullname" . }}
         - name: keycloak
-          image: jstidd/keycloak
+          image: dockerbox88/keycloak-ondemand
           imagePullPolicy: Always
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
           volumeMounts:
             - name: shared-data
               mountPath: /shared
             - name: keycloak-setup
               mountPath: /etc/keycloak/
+            - name: secret-volume
+              mountPath: /secret-volume
           ports:
             - name: kc8080
               containerPort: 8080
