@@ -28,4 +28,3 @@ data:
 kind: ConfigMap
 metadata:
   name: {{ include "open-ondemand.fullname" . }}-ood-portal
-  namespace: default
