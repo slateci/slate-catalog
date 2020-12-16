@@ -23,6 +23,6 @@ The following table lists the configurable parameters of the Open OnDemand appli
 
 |           Parameter           |           Description           |           Default           |
 |-------------------------------|---------------------------------|-----------------------------|
-|`Instance`| Optional string to differentiate SLATE experiment instances. |""|
+|`Instance`| Optional string to differentiate SLATE experiment instances. |`global`|
 |`replicaCount`| The number of replicas to create. |`1`|
 |`SLATE.Cluster.DNSName`| DNS name of the cluster the application is deployed on. |`utah-dev.slateci.net`|
