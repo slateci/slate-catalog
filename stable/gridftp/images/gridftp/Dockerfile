@@ -1,5 +1,7 @@
 FROM opensciencegrid/software-base:fresh
+LABEL lastupdate=12-16-2020
 
+RUN yum update -y
 RUN yum install osg-gridftp osg-ca-certs yum-plugin-priorities gfal2-all gfal2-util globus-proxy-utils -y
 
 # Set up the users and host certificate
