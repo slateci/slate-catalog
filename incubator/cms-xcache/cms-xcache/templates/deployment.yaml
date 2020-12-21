@@ -106,6 +106,10 @@ spec:
             value: "{{ .Values.XCacheConfig.WQThreads }}"
           - name: DISABLE_OSG_MONITORING
             value: "{{ .Values.XCacheConfig.DisableOSGMonitoring }}"
+          - name: XC_REDIRECTOR_FQDN
+            value: "{{ .Values.XCacheConfig.XCRedirectorFQDN }}"
+          - name: XC_REDIRECTOR_PORT
+            value: "{{ .Values.XCacheConfig.XCRedirectorPort }}"
           resources:
             requests:
               ephemeral-storage: "5Gi"
