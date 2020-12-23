@@ -23,24 +23,23 @@ spec:
         release: {{ .Release.Name }}
     spec:
       containers:
-      - name: postgresql
-        image: "bitnami/postgresql:latest"
-        imagePullPolicy: Always
-        env:
-          - name: POSTGRESQL_PASSWORD
-            value: {{ .Values.adminPassword | quote }} 
-        # Mount SLATE volume to persist data.
-        volumeMounts:
-          - name: postgresql-db
-            mountPath: /bitnami/postgresql
-        ports:
-        - name: http
-          containerPort: 80
-          protocol: TCP
-      restartPolicy: Always
+        - name: postgresql
+          image: "bitnami/postgresql:latest"
+          imagePullPolicy: Always
+          env:
+            - name: POSTGRESQL_PASSWORD
+              value: {{ .Values.adminPassword | quote }} 
+          # Mount SLATE volume to persist data.
+          volumeMounts:
+            - name: postgresql-db
+              mountPath: /bitnami/postgresql
+          ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
       volumes:
         # Claim previously-allocated SLATE volume.
-      - name: postgresql-db
-        persistentVolumeClaim:
-          claimName: {{ .Values.claimName }}
+        - name: postgresql-db
+          persistentVolumeClaim:
+            claimName: {{ .Values.claimName }}
 
