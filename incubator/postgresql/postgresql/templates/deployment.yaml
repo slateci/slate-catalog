@@ -26,6 +26,9 @@ spec:
       - name: postgresql
         image: "bitnami/postgresql:latest"
         imagePullPolicy: Always
+        env:
+          - name: POSTGRESQL_PASSWORD
+            value: {{ .Values.adminPassword | quote }} 
         # Mount SLATE volume to persist data.
         volumeMounts:
           - name: postgresql-db

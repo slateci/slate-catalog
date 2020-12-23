@@ -4,8 +4,11 @@
 # Instance tag to differentiate multiple instances of this same application.
 Instance: default
 
-# The name of the SLATE volume to claim
+# The name of the SLATE volume to claim.
 claimName: postgres-db
+
+# Database admin password.
+adminPassword: admin
 
 # Ingress control settings  
 Ingress:
@@ -13,7 +16,7 @@ Ingress:
   Enabled: true
   # The subdomain to associate with this service.
   # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
-  Subdomain: ""
+  Subdomain: "test"
   # The class of the ingress controller to use. 
   # For SLATE this should be 'slate'. 
   Class: slate
