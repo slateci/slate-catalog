@@ -1,0 +1,21 @@
+# PostgreSQL configuration
+
+
+# Instance tag to differentiate multiple instances of this same application.
+Instance: default
+
+# Ingress control settings  
+Ingress:
+  # If true, use ingress control.
+  Enabled: true
+  # The subdomain to associate with this service.
+  # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
+  Subdomain: ""
+  # The class of the ingress controller to use. 
+  # For SLATE this should be 'slate'. 
+  Class: slate
+
+
+SLATE:
+  Cluster:
+    DNSName: "utah-dev.slateci.net"
