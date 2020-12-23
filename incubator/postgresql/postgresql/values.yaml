@@ -4,6 +4,9 @@
 # Instance tag to differentiate multiple instances of this same application.
 Instance: default
 
+# The name of the SLATE volume to claim
+claimName: postgres-db
+
 # Ingress control settings  
 Ingress:
   # If true, use ingress control.

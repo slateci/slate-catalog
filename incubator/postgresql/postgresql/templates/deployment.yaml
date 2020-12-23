@@ -26,16 +26,18 @@ spec:
       - name: postgresql
         image: "bitnami/postgresql:latest"
         imagePullPolicy: Always
+        # Mount SLATE volume to persist data.
         volumeMounts:
-        - name: # TODO postgresql-{{ .Values.Instance }}-configuration
-          mountPath: # TODO /usr/share/postgresql/html
+          - name: postgresql-db
+            mountPath: /bitnami/postgresql
         ports:
         - name: http
           containerPort: 80
           protocol: TCP
       restartPolicy: Always
-      # TODO
       volumes:
-      - name: postgresql-{{ .Values.Instance }}-configuration
-        configMap:
-          name: postgresql-{{ .Values.Instance }}-configuration
+        # Claim previously-allocated SLATE volume.
+      - name: postgresql-db
+        persistentVolumeClaim:
+          claimName: {{ .Values.claimName }}
+
