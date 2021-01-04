@@ -24,7 +24,7 @@ A minimalist installation of the PostgreSQL database.
 
 ## Configuration
 
-The following table lists the configurable parameters of the Telegraf monitoring application and their default values.
+The following table lists the configurable parameters of the PostgreSQL database application and their default values.
 
 
 |           Parameter           |           Description           |           Default           |
