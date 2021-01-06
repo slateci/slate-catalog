@@ -24,16 +24,14 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
-
-      nodeSelector:
-        xcache-capable: "true"
-      
-      tolerations:
-      - key: "special"
-        operator: "Exists"
-        effect: PreferNoSchedule
-
       volumes:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {}
+      - name: logger-startup
+        configMap:
+          name: {{ template "cms-xcache.fullname" . }}-logging
+      {{ end }}
       - name: xrootd-config
         configMap:
           name: {{ template "cms-xcache.fullname" . }}-config
@@ -56,11 +54,37 @@ spec:
         hostPath:
           path: {{ required "LocalRoot is required" .Values.XCacheConfig.LocalRoot }}
           type: Directory
+      nodeSelector: 
+        kubernetes.io/hostname: {{ .Values.NodeName }} 
       containers:
+        {{ if .Values.HTTPLogger.Enabled }}
+        - name: logging-sidecar
+          image: "nginx:1.15.9"
+          command: ["/bin/bash"]
+          args: ["/usr/local/bin/start-nginx.sh"]
+          imagePullPolicy: IfNotPresent
+          ports:
+          - name: logs
+            containerPort: 8080
+            protocol: TCP
+          volumeMounts:
+          - name: log-volume
+            mountPath: /usr/share/nginx/html
+          - name: logger-startup
+            mountPath: /usr/local/bin/start-nginx.sh
+            subPath: start-nginx.sh
+        {{ end }}
         - name: cms-xcache
           image: "opensciencegrid/cms-xcache:fresh"
           imagePullPolicy: Always
           env:
+          {{ if .Values.HTTPLogger.Secret }}
+          - name: HTPASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.HTTPLogger.Secret }}
+                key: HTPASSWD
+          {{ end }}
           - name: XC_ROOTDIR
             value: "{{ .Values.XCacheConfig.RootDir }}"
           - name: XC_RESOURCENAME
@@ -90,14 +114,15 @@ spec:
               ephemeral-storage: "5Gi"
             limits:
               ephemeral-storage: "10Gi"
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.Service.Port }}
-            initialDelaySeconds: 180
-            periodSeconds: 60
           ports:
-            - containerPort: {{ .Values.Service.Port }}         
+            - name: xrootd
+              containerPort: {{ .Values.Service.Port }}
+              protocol: TCP
           volumeMounts:
+          {{ if .Values.HTTPLogger.Enabled }}
+          - name: log-volume
+            mountPath: /var/log
+          {{ end }}
           - name: xrootd-config
             mountPath: /etc/xrootd/config.d/xrootd-config.cfg
           - name: x509-certs-volume

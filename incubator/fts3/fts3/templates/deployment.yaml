@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment 
 metadata:
   name: {{ template "fts3.fullname" . }} 
@@ -9,6 +9,11 @@ metadata:
     instance: {{ .Values.Instance }}
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "fts3.fullname" . }}
+      instance: {{ .Values.Instance }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
@@ -26,10 +31,11 @@ spec:
         - name: fts3-configs
           secret:
             secretName: {{ .Values.FTS3Config.ConfigSecretName }}
-            default: 256
+            defaultMode: 256
       containers:
         - name: fts3
           image: slateci/fts3
+          imagePullPolicy: Always
           env:
           {{ if .Values.FTS3Config.DatabaseUpgrade }}
           - name: DATABASE_UPGRADE
@@ -48,5 +54,3 @@ spec:
               mountPath: /tmp/fts3-configs/
             - name: fts3-host-pems
               mountPath: /tmp/fts3-host-pems/
-      nodeSelector:
-        fts3: "true"
