@@ -9,27 +9,35 @@ Service:
   # External IP that may access the service
   # 192.170.227.151 - localhost
   # 192.170.227.231 - ml node - root://xcache.mwt2.org:1094
-  ExternalIP: 192.170.227.151 
-  MetricsPort: 9101
+  # 192.170.236.171 - river-dev
+  ExternalIP: 192.170.236.171
 
 SiteConfig:
-  Name: MWT2
-  # AGIS protocol ID. 433 is a dummy value. 
-  # can be looked up in this URL: http://atlas-agis.cern.ch/agis/serviceprotocol/edit/433/
-  AGISprotocolID: 433
+  Name: Home
+  InstanceID: xc_xps
+  # CRIC protocol ID. 433 is a dummy value. 
+  # can be looked up in this URL: https://atlas-cric.cern.ch/api/core/service/query/?json
+  # Endpoints can be created here: https://atlas-cric.cern.ch/core/service/create/
+  CRICprotocolID: 433
 
 Monitoring:
-  Collector: http://uct2-collectd.mwt2.org:8080
+  Collector: http://collector.atlas-ml.org:80
+  GStreamCollector: collector.atlas-ml.org:9000 
+  VPheartbeat: https://vps.cern.ch/liveness
 
 XCacheConfig:
-  # Local directory to be used as a cache
+  # Local directories to be used as a cache
+  
   CacheDirectories:
-    - /scratch_A
-    - /scratch_B
-  MetaDirectory: /scratch_meta
+    # - path: /C/scratch/data
+    - path: /tmp
+  # MetaDirectory: /C/scratch/meta
+  MetaDirectory: /tmp
+
   # Space usage
   HighWaterMark: 0.95
   LowWaterMark: 0.90
+  
   # The amount of memory XCache is allowed to use (in GB)
   RamSize: 16g
   # Minimal chunk size that will be prefetched/cached.
@@ -43,5 +51,8 @@ XCacheConfig:
   # This must be created BEFORE deploying XCache
   CertSecret: xcache-cert-secret
 
+
 image:
-  tag: experimental  
+  repository: ivukotic/docker-xcache
+  tag: latest
+  pullPolicy: Always

@@ -74,8 +74,6 @@ spec:
             value: "{{ .Values.XCacheConfig.BlockSize }}"
           - name: XC_PREFETCH
             value: "{{ .Values.XCacheConfig.Prefetch }}"
-          - name: AGIS_PROTOCOL_ID
-            value: "{{ .Values.SiteConfig.AGISprotocolID }}"
           - name: CRIC_PROTOCOL_ID
             value: "{{ .Values.SiteConfig.CRICprotocolID }}"
           - name: WQ_BLOCKS_PER_LOOP
@@ -96,6 +94,16 @@ spec:
               port: {{ .Values.Service.Port }}
             initialDelaySeconds: 180
             periodSeconds: 60
+          readinessProbe:
+            exec:
+              command:
+              - "/usr/local/sbin/heartbeat.sh"
+              - "{{.Values.Monitoring.VPheartbeat}}"
+              - "{{.Values.SiteConfig.Name}}"
+              - "{{.Values.SiteConfig.InstanceID}}"
+              - "{{.Values.Service.ExternalIP}}:{{.Values.Service.Port}}"
+            initialDelaySeconds: 60
+            periodSeconds: 30
           lifecycle:
             preStop:
               exec:
