@@ -395,7 +395,7 @@ Next you will need to convert it to PKCS12 format for voms. These commands will 
 
 Be sure that both files have the correct file permissions
 
-`chmod 600 hostkey.pem && chmod 600 usercert.pem`
+`chmod 600 userkey.pem && chmod 600 usercert.pem`
 
 ### Install HTCondorCE Client 
 
