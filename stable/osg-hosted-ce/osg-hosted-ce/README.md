@@ -389,13 +389,13 @@ Create a cert and download it. You'll need to remember the password you set.
 
 Next you will need to convert it to PKCS12 format for voms. These commands will prompt for your password.
 
-`openssl pkcs12 -in usercred.p12 -nocerts  -out hostkey.pem`
+`openssl pkcs12 -in usercred.p12 -nocerts  -out userkey.pem`
 
-`openssl pkcs12 -in usercred.p12 -nocerts -nodes -out hostkey.pem`
+`openssl pkcs12 -in usercred.p12 -nocerts -nodes -out usercert.pem`
 
 Be sure that both files have the correct file permissions
 
-`chmod 600 hostkey.pem && chmod 600 hostcert.pem`
+`chmod 600 userkey.pem && chmod 600 usercert.pem`
 
 ### Install HTCondorCE Client 
 
@@ -413,7 +413,7 @@ Then install the tools
 
 You should be able to use your cert to initialize your grid proxy
 
-`voms-proxy-init -cert hostcert.pem -key hostkey.pem --debug`
+`voms-proxy-init -cert usercert.pem -key userkey.pem --debug`
 
 Here I use the `--debug` flag because `voms-proxy-init` won't give us very helpful output, if it fails.
 

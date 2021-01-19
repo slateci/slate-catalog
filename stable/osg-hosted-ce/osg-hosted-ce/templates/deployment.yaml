@@ -169,10 +169,12 @@ spec:
         - name: log-volume
           mountPath: /var/log/condor-ce
         {{ end }}
-        {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
+        {{ if .Values.BoscoOverrides.Enabled }}
+        {{ if .Values.BoscoOverrides.GitKeySecret }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
           mountPath: /etc/osg/git.key
           subPath: git.key
+        {{ end }}
         {{ end }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
           mountPath: /etc/grid-security/voms-mapfile
