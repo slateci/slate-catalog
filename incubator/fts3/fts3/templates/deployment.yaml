@@ -28,10 +28,10 @@ spec:
           secret:
             secretName: {{ .Values.FTS3Config.HostSecretName }}
             defaultMode: 256
-        - name: fts3-configs
-          secret:
-            secretName: {{ .Values.FTS3Config.ConfigSecretName }}
-            defaultMode: 256
+        # - name: fts3-configs
+        #   secret:
+        #     secretName: {{ .Values.FTS3Config.ConfigSecretName }}
+        #     defaultMode: 256
       containers:
         - name: fts3
           image: slateci/fts3
@@ -50,7 +50,7 @@ spec:
             value: {{ .Values.FTS3Config.RESTHost }}
           {{ end }}
           volumeMounts:
-            - name: fts3-configs
-              mountPath: /tmp/fts3-configs/
             - name: fts3-host-pems
               mountPath: /tmp/fts3-host-pems/
+            # - name: fts3-configs
+            #   mountPath: /tmp/fts3-configs/

@@ -32,9 +32,6 @@ spec:
         configMap:
           name: {{ template "cms-xcache.fullname" . }}-logging
       {{ end }}
-      - name: xrootd-config
-        configMap:
-          name: {{ template "cms-xcache.fullname" . }}-config
       - name: x509-certs-volume
         secret:
           secretName: {{ required "XCache Certificate is required" .Values.XCacheConfig.CertSecret }}
@@ -109,6 +106,10 @@ spec:
             value: "{{ .Values.XCacheConfig.WQThreads }}"
           - name: DISABLE_OSG_MONITORING
             value: "{{ .Values.XCacheConfig.DisableOSGMonitoring }}"
+          - name: XC_REDIRECTOR_FQDN
+            value: "{{ .Values.XCacheConfig.XCRedirectorFQDN }}"
+          - name: XC_REDIRECTOR_PORT
+            value: "{{ .Values.XCacheConfig.XCRedirectorPort }}"
           resources:
             requests:
               ephemeral-storage: "5Gi"
@@ -122,9 +123,13 @@ spec:
           {{ if .Values.HTTPLogger.Enabled }}
           - name: log-volume
             mountPath: /var/log
+          - name: log-volume
+            mountPath: /var/log/condor
+          - name: log-volume
+            mountPath: /var/log/supervisor
+          - name: log-volume
+            mountPath: /var/log/xrootd
           {{ end }}
-          - name: xrootd-config
-            mountPath: /etc/xrootd/config.d/xrootd-config.cfg
           - name: x509-certs-volume
             mountPath: /etc/grid-security/hostcert.pem
             subPath: hostcert.pem

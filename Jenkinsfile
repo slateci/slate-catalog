@@ -9,7 +9,6 @@ pipeline{
 					sh 'cmake3 ..'
 					sh 'make'
 					script{
-						sh 'printenv'
 						if(env.GIT_BRANCH == 'origin/master'){
 							sh 'make publish'
 						}

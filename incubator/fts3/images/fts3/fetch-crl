@@ -1,0 +1,7 @@
+# Cron job running by default every 6 hours, at 45 minutes past the hour
+# with  +/- 3 minutes sleep.
+# The cron job file can be enabled/disabled with
+# systemctl start fetch-crl-cron
+# systemctl enable fetch-crl-cron
+
+45 */6 * * * root /usr/sbin/fetch-crl -p 5 -r 360 > /var/log/fetch-crl 2>&1
