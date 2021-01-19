@@ -76,11 +76,11 @@ spec:
             value: "{{ .Values.XCacheConfig.Prefetch }}"
           - name: CRIC_PROTOCOL_ID
             value: "{{ .Values.SiteConfig.CRICprotocolID }}"
-          - name: WQ_BLOCKS_PER_LOOP
+          - name: XC_WQ_BLOCKS_PER_LOOP
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
-          - name: WQ_THREADS
+          - name: XC_WQ_THREADS
             value: "{{ .Values.XCacheConfig.WQThreads }}"
-          - name: XC_SITE
+          - name: XC_RESOURCENAME
             value: "{{ .Values.SiteConfig.Name }}"
           - name: XC_MONITOR
             value: "{{ .Values.Monitoring.GStreamCollector }}"
@@ -107,7 +107,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/usr/local/sbin/updateCRICstatus.sh","{{ .Values.SiteConfig.CRICprotocolID }}","DISABLED"]
+                command: ["/usr/local/sbin/update-cric-status.sh","{{ .Values.SiteConfig.CRICprotocolID }}","DISABLED"]
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
@@ -119,10 +119,10 @@ spec:
             readOnly: true
           {{- range $nindex, $ndir := .Values.XCacheConfig.CacheDirectories }}
           - name: xcache-data-{{ $nindex }}
-            mountPath: "/xcache-data_{{ $nindex }}"
+            mountPath: "/xcache/data_{{ $nindex }}"
           {{- end }}
           - name: xcache-meta
-            mountPath: "/xcache-meta"
+            mountPath: "/xcache/meta"
 
         - name: x509
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -151,9 +151,9 @@ spec:
           volumeMounts:
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
           - name: xcache-data-{{ $nindex }}
-            mountPath: "/xcache-data_{{ $nindex }}"
+            mountPath: "/xcache/data_{{ $nindex }}"
           {{- end }}
           - name: xcache-meta
-            mountPath: "/xcache-meta"
+            mountPath: "/xcache/meta"
             readOnly: true
             

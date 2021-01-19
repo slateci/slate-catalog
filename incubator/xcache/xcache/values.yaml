@@ -7,10 +7,11 @@ Service:
   # Port that the service will utilize.
   Port: 1094
   # External IP that may access the service
-  # 192.170.227.151 - localhost
+  # 98.206.166.200 - localhost
   # 192.170.227.231 - ml node - root://xcache.mwt2.org:1094
   # 192.170.236.171 - river-dev
-  ExternalIP: 192.170.236.171
+  # 192.170.236.158 - river
+  ExternalIP: 98.206.166.200
 
 SiteConfig:
   Name: Home
@@ -54,5 +55,8 @@ XCacheConfig:
 
 image:
   repository: ivukotic/docker-xcache
-  tag: latest
+  tag: latest  
   pullPolicy: Always
+  # repository: docker-xcache
+  # tag: latest
+  # pullPolicy: Never
