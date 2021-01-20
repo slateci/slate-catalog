@@ -29,9 +29,10 @@ spec:
         xcache-capable: "true"
       
       tolerations:
-      - key: "special"
-        operator: "Exists"
-        effect: PreferNoSchedule
+      - key: "xcache"
+        operator: "Equal"
+        value: "true"
+        effect: "PreferNoSchedule"
 
       volumes:
       - name: x509-data
@@ -50,7 +51,7 @@ spec:
       {{- range $index, $dir := .Values.XCacheConfig.CacheDirectories }}
       - name: xcache-data-{{ $index }}
         hostPath:
-          path: {{ $dir }}
+          path: {{ .path }}
       {{- end }}
       - name: xcache-meta
         hostPath:
@@ -58,8 +59,8 @@ spec:
       
       containers:
         - name: {{ .Chart.Name }}
-          image: slateci/xcache:{{ .Values.image.tag }}
-          imagePullPolicy: Always
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: XC_SPACE_HIGH_WM
             value: "{{ .Values.XCacheConfig.HighWaterMark }}"
@@ -73,12 +74,16 @@ spec:
             value: "{{ .Values.XCacheConfig.BlockSize }}"
           - name: XC_PREFETCH
             value: "{{ .Values.XCacheConfig.Prefetch }}"
-          - name: AGIS_PROTOCOL_ID
-            value: "{{ .Values.SiteConfig.AGISprotocolID }}"
-          - name: WQ_BLOCKS_PER_LOOP
+          - name: CRIC_PROTOCOL_ID
+            value: "{{ .Values.SiteConfig.CRICprotocolID }}"
+          - name: XC_WQ_BLOCKS_PER_LOOP
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
-          - name: WQ_THREADS
+          - name: XC_WQ_THREADS
             value: "{{ .Values.XCacheConfig.WQThreads }}"
+          - name: XC_RESOURCENAME
+            value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_MONITOR
+            value: "{{ .Values.Monitoring.GStreamCollector }}"
           resources:
             requests:
               ephemeral-storage: "5Gi"
@@ -89,10 +94,20 @@ spec:
               port: {{ .Values.Service.Port }}
             initialDelaySeconds: 180
             periodSeconds: 60
+          readinessProbe:
+            exec:
+              command:
+              - "/usr/local/sbin/heartbeat.sh"
+              - "{{.Values.Monitoring.VPheartbeat}}"
+              - "{{.Values.SiteConfig.Name}}"
+              - "{{.Values.SiteConfig.InstanceID}}"
+              - "{{.Values.Service.ExternalIP}}:{{.Values.Service.Port}}"
+            initialDelaySeconds: 60
+            periodSeconds: 30
           lifecycle:
             preStop:
               exec:
-                command: ["./updateAGISstatus.sh","{{ .Values.SiteConfig.AGISprotocolID }}","DISABLED"]
+                command: ["/usr/local/sbin/update-cric-status.sh","{{ .Values.SiteConfig.CRICprotocolID }}","DISABLED"]
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:
@@ -104,15 +119,16 @@ spec:
             readOnly: true
           {{- range $nindex, $ndir := .Values.XCacheConfig.CacheDirectories }}
           - name: xcache-data-{{ $nindex }}
-            mountPath: "/xcache-data_{{ $nindex }}"
+            mountPath: "/xcache/data_{{ $nindex }}"
           {{- end }}
           - name: xcache-meta
-            mountPath: "/xcache-meta"
+            mountPath: "/xcache/meta"
 
         - name: x509
-          image: slateci/xcache:{{ .Values.image.tag }}
-          imagePullPolicy: Always
-          command: ["/run_x509_updater.sh"]
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["/usr/local/sbin/run_x509_updater.sh"]
+          # command: ["sleep"]
+          # args: ["9999999"]
           resources:
             requests:
               ephemeral-storage: "1Gi"
@@ -125,42 +141,19 @@ spec:
             readOnly: true
 
         - name: reporter
-          image: slateci/xcache:{{ .Values.image.tag }}
-          imagePullPolicy: Always
-          command: ["/run_cache_reporter.sh"]
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["/usr/local/sbin/run_cache_reporter.sh"]
           env:
           - name: XC_SITE
             value: "{{ .Values.SiteConfig.Name }}"
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
           volumeMounts:
+          {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $nindex }}
+            mountPath: "/xcache/data_{{ $nindex }}"
+          {{- end }}
           - name: xcache-meta
-            mountPath: "/xcache-meta"
+            mountPath: "/xcache/meta"
             readOnly: true
-
-        - name: metrics
-          image: quay.io/prometheus/node-exporter
-          imagePullPolicy: Always
-          args: 
-            - --web.listen-address=:{{ .Values.Service.MetricsPort }}
-            - --no-collector.arp
-            - --no-collector.bcache
-            - --no-collector.bonding
-            - --no-collector.edac
-            - --no-collector.entropy
-            - --no-collector.infiniband
-            - --no-collector.hwmon
-            - --no-collector.ipvs
-            - --no-collector.mdadm
-            - --no-collector.nfs
-            - --no-collector.nfsd
-            - --no-collector.pressure
-            - --no-collector.sockstat
-            - --no-collector.stat
-            - --no-collector.textfile
-            - --no-collector.time
-            - --no-collector.timex
-            - --no-collector.uname
-            - --no-collector.vmstat
-            - --no-collector.zfs
-            - --web.disable-exporter-metrics
+            

@@ -7,3 +7,5 @@ lsetup rucio
 get your grid proxy
 xrdcp -f root://{{ .Values.Service.ExternalIP }}:{{ .Values.Service.Port }}//root://xrootd.aglt2.org:1094//pnfs/aglt2.org/atlasdatadisk/rucio/mc16_13TeV/28/56/AOD.12953611._000017.pool.root.1 /dev/null
 
+at least one node has to have a label: xcache-capable: "true" (kubectl label nodes docker-desktop xcache-capable=true)
+preferably that node should also have PreferNoSchedule: true
