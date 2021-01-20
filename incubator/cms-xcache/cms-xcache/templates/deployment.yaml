@@ -100,9 +100,9 @@ spec:
             value: "{{ .Values.XCacheConfig.Prefetch }}"
           - name: XC_ROOTDIR
             value: "{{ .Values.XCacheConfig.LocalRoot }}"
-          - name: XC_WQ_BLOCKS_PER_LOOP
+          - name: WQ_BLOCKS_PER_LOOP
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
-          - name: XC_WQ_THREADS
+          - name: WQ_THREADS
             value: "{{ .Values.XCacheConfig.WQThreads }}"
           - name: DISABLE_OSG_MONITORING
             value: "{{ .Values.XCacheConfig.DisableOSGMonitoring }}"
