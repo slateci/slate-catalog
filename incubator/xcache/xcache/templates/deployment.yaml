@@ -144,7 +144,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command: ["/usr/local/sbin/run_cache_reporter.sh"]
           env:
-          - name: XC_SITE
+          - name: XC_RESOURCENAME
             value: "{{ .Values.SiteConfig.Name }}"
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
