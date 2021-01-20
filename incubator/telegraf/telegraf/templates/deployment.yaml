@@ -26,7 +26,8 @@ spec:
     spec:
       containers:
         - name: telegraf
-          image: karlnewell/grnoc-telegraf-docker:latest
+          # image: karlnewell/grnoc-telegraf-docker:latest
+          image: karlnewell/tsds-telegraf
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: /etc/telegraf/grnoc/conf.d
