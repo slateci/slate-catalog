@@ -7,6 +7,29 @@ Instance: "global"
 
 replicaCount: 1
 
+setupKeycloak: true
+
+# SLATE volume to claim
+claimName: keycloak-db
+
+# SLATE Cluster DNS name
 SLATE:
   Cluster:
     DNSName: "utah-dev.slateci.net"
+
+# LDAP/Kerberos setup and configuration
+setupLDAP: true
+ldap:
+  connectionURL: "ldap://ldap.chpc.utah.edu"
+  importUsers: "true"
+  rdnLDAPAttribute:  "uid"
+  uuidLDAPAttribute: "uidNumber"
+  userObjectClasses: "inetOrgPerson, organizationalPerson"
+  usersDN: "ou=People,dc=chpc,dc=utah,dc=edu"
+kerberos:
+  realm: "AD.UTAH.EDU"
+  serverPrincipal: "HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU"
+  keyTab: "/etc/krb5.keytab"
+  kerberosPasswordAuth: "true"
+  debug: "true"
+
