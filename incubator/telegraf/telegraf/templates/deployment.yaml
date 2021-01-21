@@ -30,7 +30,7 @@ spec:
           image: karlnewell/tsds-telegraf
           imagePullPolicy: Always
           volumeMounts:
-            - mountPath: /etc/telegraf/grnoc/conf.d
+            - mountPath: /etc/telegraf/conf.d
               name: telegraf-volume 
       volumes:
         - name: telegraf-volume
