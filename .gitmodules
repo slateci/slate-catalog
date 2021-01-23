@@ -1,0 +1,3 @@
+[submodule "incubator/open-ondemand/images/open-ondemand"]
+	path = incubator/open-ondemand/images/open-ondemand
+	url = https://github.com/skoutes/open-ondemand
