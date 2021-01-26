@@ -23,6 +23,10 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
+      {{ if .Values.NodeSelection }}
+      nodeSelector: 
+        kubernetes.io/hostname: {{ .Values.NodeName }}
+      {{ end }}
       volumes:
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
@@ -169,10 +173,12 @@ spec:
         - name: log-volume
           mountPath: /var/log/condor-ce
         {{ end }}
-        {{ if .Values.BoscoOverrides.RepoNeedsPrivKey }}
+        {{ if .Values.BoscoOverrides.Enabled }}
+        {{ if .Values.BoscoOverrides.GitKeySecret }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
           mountPath: /etc/osg/git.key
           subPath: git.key
+        {{ end }}
         {{ end }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
           mountPath: /etc/grid-security/voms-mapfile
