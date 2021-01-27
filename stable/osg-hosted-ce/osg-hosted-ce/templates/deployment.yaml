@@ -23,6 +23,10 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
+      {{ if .Values.NodeSelection }}
+      nodeSelector: 
+        kubernetes.io/hostname: {{ .Values.NodeName }}
+      {{ end }}
       volumes:
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
