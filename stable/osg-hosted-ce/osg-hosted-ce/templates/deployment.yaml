@@ -25,7 +25,7 @@ spec:
     spec:
       {{ if .Values.NodeSelection }}
       nodeSelector: 
-        kubernetes.io/hostname: {{ .Values.NodeName }}
+        kubernetes.io/hostname: {{ .Values.NodeSelection }}
       {{ end }}
       volumes:
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
