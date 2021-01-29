@@ -125,6 +125,10 @@ HTTPLogger:
   # point Secret to a K8S/SLATE secret below.
   # Secret: my-secret
 
+# If a specific node is desired for scheduling
+# set this to the hostname of the desired node
+NodeSelection: null
+
 HostCredentials:
   # Name of the secret containing a host key and certificate in
   # "tls.key" and "tls.crt", respectively. If defined, values of
