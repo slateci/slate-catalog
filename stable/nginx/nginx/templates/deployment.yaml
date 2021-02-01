@@ -20,6 +20,7 @@ spec:
         app: {{ template "nginx.name" . }}
         chart: {{ template "nginx.chart" . }}
         instance: {{ .Values.Instance | quote }}
+        instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
         release: {{ .Release.Name }}
     spec:
       containers:
@@ -29,12 +30,17 @@ spec:
         volumeMounts:
         - name: nginx-{{ .Values.Instance }}-configuration
           mountPath: /usr/share/nginx/html
+        - name: slate-volume
+          mountPath: /root
         ports:
         - name: http
           containerPort: 80
           protocol: TCP
       restartPolicy: Always
       volumes:
+      - name: slate-volume
+        persistentVolumeClaim:
+          claimName: test-volume
       - name: nginx-{{ .Values.Instance }}-configuration
         configMap:
           name: nginx-{{ .Values.Instance }}-configuration
