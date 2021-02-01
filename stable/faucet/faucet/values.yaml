@@ -48,3 +48,8 @@ Configuration: |-
           - rule:
               actions:
                   allow: True
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "default-id"
+### SLATE-END ###
