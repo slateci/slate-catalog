@@ -63,3 +63,8 @@ PVCName:
 # backing storage, since this tends not to tie to a specific node. 
 # e.g., "NodeSelector: globus" will match nodes with "globus=true"
 # NodeSelector: globus
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "default-id"
+### SLATE-END ###
