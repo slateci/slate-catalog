@@ -60,6 +60,11 @@ spec:
           - key: 99-limits
             path: 99-limits
             mode: 0755
+      {{ if .Values.PersistentVolume }}
+      - name: jupyter-{{ .Values.Instance }}-persistent-volume
+        persistentVolumeClaim:
+          claimName: {{ .Values.PersistentVolume }} 
+      {{ end }}
       {{ if .Values.Resources.Cvmfs }}
       - name: config-osg
         persistentVolumeClaim:
@@ -148,6 +153,10 @@ spec:
         {{ end }}
         command: ["/usr/bin/startup_script.sh"] 
         volumeMounts:
+        {{ if .Values.PersistentVolume }}
+        - name: jupyter-{{ .Values.Instance }}-persistent-volume
+          mountPath: /home/{{ .Values.Jupyter.NB_USER }}/data
+        {{ end }}
         {{ if eq .Values.CondorConfig.Enabled true }}
         - name: condor-token-volume
           mountPath: /root/tokens/condor_token
