@@ -33,3 +33,7 @@ kerberos:
   kerberosPasswordAuth: "true"
   debug: "true"
 
+# Shell application setup
+cluster1:
+  name: "Kingspeak"
+  host: "kingspeak.chpc.utah.edu"

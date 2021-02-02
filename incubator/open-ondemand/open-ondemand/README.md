@@ -25,7 +25,7 @@ This application additionally requires a SLATE volume to persist authentication 
 
 ## Configuration
 
-The following table lists the configurable parameters of the Open OnDemand application and their default       values.
+The following table lists the configurable parameters of the Open OnDemand application and their default values.
 
 |           Parameter           |           Description           |           Default           |
 |-------------------------------|---------------------------------|-----------------------------|
@@ -46,27 +46,6 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`kerberos.keyTab`| Kerberos configuration |`/etc/krb5.keytab`| 
 |`kerberos.kerberosPasswordAuth`| Use Kerberos for password authentication. |`true`| 
 |`kerberos.debug`| Writes additional debug logs if enabled. |`true`| 
+|`cluster1.name`| Name of cluster to connect to. |`Kingspeak`| 
+|`cluster1.host`| Hostname of cluster to connect to. |`kingspeak.chpc.utah.edu`| 
 
-
-## Configure Shell Application
-
-To configure nodes for remote shell access, yaml files must be placed in the
-`/etc/ood/config/clusters.d/` directory.
-When configured correctly, any node where a user has SSH permissions can be
-accessed through the Open OnDemand web portal.
-
-v2:
-  metadata:
-    title: "node1"
-    url: "https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php"
-    hidden: false
-  login:
-    host: "node1.example1.com"
-  job:
-    adapter: "linux_host"
-    submit_host: "node1.example1.com"  # This is the head for a login round robin
-    ssh_hosts: # These are the actual login nodes, need to have full host name for the regex to work
-      - node1.example1.com
-    site_timeout: 7200
-    debug: true
----

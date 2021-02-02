@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-data:
-  "kingspeak.yml": {{ .Files.Get "setup/kingspeak.yml" | quote }}
-metadata:
-  name: {{ include "open-ondemand.fullname" . }}-cluster-setup
