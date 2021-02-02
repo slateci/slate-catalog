@@ -32,12 +32,6 @@ spec:
             items:
             - key: clusters.yaml
               path: clusters.yaml
-        - name: sssd-config
-          configMap:
-            name: {{ include "open-ondemand.fullname" . }}-sssd-conf
-            items:
-            - key: sssd.conf
-              path: sssd.conf
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
