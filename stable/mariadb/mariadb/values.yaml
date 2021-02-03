@@ -230,3 +230,9 @@ metrics:
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "9104"
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###
