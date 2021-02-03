@@ -58,5 +58,5 @@ CondorConfigFile: |-
 ### SLATE-START ###
 SLATE:
   Instance:
-    ID: "default-id"
+    ID: "untagged"
 ### SLATE-END ###
