@@ -17,12 +17,6 @@ spec:
       volumes:
         - name: shared-data
           emptyDir: {}
-        - name: auth-config
-          configMap:
-            name: {{ include "open-ondemand.fullname" . }}-auth-config
-            items:
-            - key: auth_openidc.conf
-              path: auth_openidc.conf
         - name: ood-portal-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-ood-portal
@@ -32,10 +26,16 @@ spec:
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-            defaultMode: 0744 
-        - name: secret-volume
-          secret:
-            secretName: {{ include "open-ondemand.fullname" . }}-keycloak-password
+        - name: shell-app-setup
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-shell-setup
+            items:
+            - key: clusters.yaml
+              path: clusters.yaml
+        # Claim SLATE volume to persist Keycloak data.
+        - name: keycloak-db
+          persistentVolumeClaim:
+            claimName: {{ .Values.claimName }}
       containers:
         - name: open-ondemand
           image: dockerbox88/open-ondemand
@@ -43,27 +43,56 @@ spec:
           volumeMounts:
             - name: shared-data
               mountPath: /shared
-            - name: auth-config
-              mountPath: /opt/rh/httpd24/root/etc/httpd/conf.d
             - name: ood-portal-config
-              mountPath: /etc/ood/config
+              mountPath: /etc/ood/config/ood_portal.yml
+              subPath: ood_portal.yml
+            - name: shell-app-setup
+              mountPath: /etc/ood/config/clusters.d/clusters.yaml
+              subPath: clusters.yaml
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
           env:
-            - name: INSTANCE_NAME
-              value: {{ include "open-ondemand.fullname" . }}
+            - name: SLATE_INSTANCE_NAME
+              value: {{ .Values.Instance }}
+            - name: SLATE_CLUSTER_NAME
+              value: {{ .Values.SLATE.Cluster.DNSName }}
         - name: keycloak
-          image: dockerbox88/keycloak-ondemand
+          image: jboss/keycloak:4.8.3.Final
           imagePullPolicy: Always
+          # Run script if setupKeycloak parameter is enabled.
+          {{ if eq .Values.setupKeycloak true }}
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
+          {{ end }}
           volumeMounts:
             - name: shared-data
               mountPath: /shared
             - name: keycloak-setup
               mountPath: /etc/keycloak/
-            - name: secret-volume
-              mountPath: /secret-volume
+              # Mount SLATE volume to the location of the Keycloak database.
+            - name: keycloak-db
+              mountPath: "/opt/jboss/keycloak/standalone/data"
+          env:
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true" 
+              # Set Keycloak default username and password
+            - name: KEYCLOAK_USER
+              value: "admin"
+            - name: KEYCLOAK_PASSWORD
+              value: {{ randAlphaNum 12 | b64enc | quote }}
+              # Specify database type (default Java H2 database)
+            - name: DB_VENDOR 
+              value: "h2"
+            - name: SLATE_INSTANCE_NAME
+              value: {{ .Values.Instance }}
+            - name: SLATE_CLUSTER_NAME
+              value: {{ .Values.SLATE.Cluster.DNSName }}
+            - name: SLATE_SETUP_LDAP
+              value: {{ .Values.setupLDAP | quote }}
           ports:
             - name: kc8080
               containerPort: 8080
