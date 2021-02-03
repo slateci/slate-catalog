@@ -40,3 +40,9 @@ StashCache:
 
 ContainerTags:
   StashCache: fresh
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###
