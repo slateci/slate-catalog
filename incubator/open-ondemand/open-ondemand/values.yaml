@@ -12,10 +12,14 @@ setupKeycloak: true
 # SLATE volume to claim
 claimName: keycloak-db
 
-# SLATE Cluster DNS name
+### SLATE-START ###
 SLATE:
+  Instance:
+    ID: "default-id"
+# SLATE Cluster DNS name
   Cluster:
     DNSName: "utah-dev.slateci.net"
+### SLATE-END ###
 
 # LDAP/Kerberos setup and configuration
 setupLDAP: true
@@ -37,10 +41,3 @@ kerberos:
 cluster1:
   name: "Kingspeak"
   host: "kingspeak.chpc.utah.edu"
-
-
-### SLATE-START ###
-SLATE:
-  Instance:
-    ID: "default-id"
-### SLATE-END ###
