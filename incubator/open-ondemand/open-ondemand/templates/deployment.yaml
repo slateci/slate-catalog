@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "open-ondemand.selectorLabels" . | nindent 6 }}
+      {{ .Values.SLATE.Instance.ID | quote }}
   template:
     metadata:
       labels:
@@ -38,7 +39,7 @@ spec:
             claimName: {{ .Values.claimName }}
       containers:
         - name: open-ondemand
-          image: dockerbox88/open-ondemand
+          image: slateci/open-ondemand:1.8.1
           imagePullPolicy: Always
           volumeMounts:
             - name: shared-data

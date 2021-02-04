@@ -37,3 +37,10 @@ kerberos:
 cluster1:
   name: "Kingspeak"
   host: "kingspeak.chpc.utah.edu"
+
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "default-id"
+### SLATE-END ###
