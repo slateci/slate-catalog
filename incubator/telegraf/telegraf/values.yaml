@@ -78,3 +78,9 @@ influxOutput:
     enabled: false
     username: "telegraf"
     password: "metrics"
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "default-id"
+### SLATE-END ###
