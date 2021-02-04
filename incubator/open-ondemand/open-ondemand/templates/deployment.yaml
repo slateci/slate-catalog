@@ -4,12 +4,12 @@ metadata:
   name: {{ include "open-ondemand.fullname" . }}
   labels:
     {{- include "open-ondemand.labels" . | nindent 4 }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "open-ondemand.selectorLabels" . | nindent 6 }}
-      {{ .Values.SLATE.Instance.ID | quote }}
   template:
     metadata:
       labels:
