@@ -2,6 +2,9 @@
 # used to manage multiple instances of the same application
 Instance: ''
 
+# Persistent Volume mounted as 'data' in the user's home directory
+PersistentVolume: 
+
 # Ingress control settings  
 Ingress:
   # The subdomain to associate with this service.

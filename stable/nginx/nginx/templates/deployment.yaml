@@ -20,6 +20,7 @@ spec:
         app: {{ template "nginx.name" . }}
         chart: {{ template "nginx.chart" . }}
         instance: {{ .Values.Instance | quote }}
+        instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
         release: {{ .Release.Name }}
     spec:
       containers:

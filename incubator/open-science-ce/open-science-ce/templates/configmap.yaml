@@ -71,8 +71,10 @@ metadata:
     release: {{ .Release.Name }}
 data:
   99-instance.conf: |+
-    # Allow the CE to communicate with the local collector via pod IP
-    JOB_ROUTER_SCHEDD2_POOL = $(UTSNAME_NODENAME):9618
+    # osg-flock packaging now uses IDTOKENS and we rely on flock as
+    # the submit host collector
+    JOB_ROUTER_SCHEDD_NAME = $(NETWORK_HOSTNAME)
+    JOB_ROUTER_SCHEDD2_POOL = flock.opensciencegrid.org:9618
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
@@ -190,8 +192,7 @@ data:
     # Force container daemons to talk over the container IP
     PRIVATE_NETWORK_NAME = $(UTSNAME_NODENAME)
     PRIVATE_NETWORK_INTERFACE = $(IP_ADDRESS)
-    # Tell local daemons to contact the collector via container hostname
-    COLLECTOR_HOST = $(UTSNAME_NODENAME)
+
 {{ if .Values.Networking.Hostname }}
     # Force HTCondor to use the requested hostname
     NETWORK_HOSTNAME = {{ .Values.Networking.Hostname }}

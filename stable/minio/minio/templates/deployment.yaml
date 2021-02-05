@@ -8,6 +8,7 @@ metadata:
     chart: {{ template "minio.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
     heritage: {{ .Release.Service }}
 spec:
   strategy:
