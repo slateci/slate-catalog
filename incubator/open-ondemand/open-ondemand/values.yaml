@@ -16,10 +16,9 @@ claimName: keycloak-db
 SLATE:
   Instance:
     ID: "untagged"
-### SLATE-END ###
   Cluster:
-# SLATE Cluster DNS name
     DNSName: "utah-dev.slateci.net"
+### SLATE-END ###
 
 # LDAP/Kerberos setup and configuration
 setupLDAP: true
