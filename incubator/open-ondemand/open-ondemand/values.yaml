@@ -37,6 +37,10 @@ kerberos:
   debug: "true"
 
 # Shell application setup
-cluster1:
-  name: "Kingspeak"
-  host: "kingspeak.chpc.utah.edu"
+clusters:
+  - cluster:
+      name: "Kingspeak"
+      host: "kingspeak.chpc.utah.edu"
+  - cluster:
+      name: "Notchpeak"
+      host: "notchpeak.chpc.utah.edu"
