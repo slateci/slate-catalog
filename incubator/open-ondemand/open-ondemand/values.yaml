@@ -37,6 +37,7 @@ kerberos:
   debug: "true"
 
 # Shell application setup
+# Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
       name: "Kingspeak"
