@@ -5,7 +5,7 @@ metadata:
 data:
 
   {{ range .Values.clusters }}
-  cluster-{{ .cluster.name }}.yml: |
+  cluster-{{ .cluster.name | lower | nospace }}.yml: |
     ---
     v2:
       metadata:
@@ -13,5 +13,4 @@ data:
         priority: 2
       login:
         host: {{ .cluster.host | quote }}
-    ---
   {{ end }}
