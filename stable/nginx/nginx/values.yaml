@@ -33,4 +33,6 @@ NetworkPolicy:
 SLATE:
   Cluster:
     DNSName: "some-cluster.slateci.net"
+  Instance:
+    ID: "untagged"
 ### SLATE-END ###

@@ -4,6 +4,7 @@ metadata:
   name: {{ include "open-ondemand.fullname" . }}
   labels:
     {{- include "open-ondemand.labels" . | nindent 4 }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -38,7 +39,7 @@ spec:
             claimName: {{ .Values.claimName }}
       containers:
         - name: open-ondemand
-          image: dockerbox88/open-ondemand
+          image: slateci/open-ondemand:1.8.1
           imagePullPolicy: Always
           volumeMounts:
             - name: shared-data
