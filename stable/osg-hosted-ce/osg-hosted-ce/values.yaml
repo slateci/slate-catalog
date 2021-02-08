@@ -160,3 +160,9 @@ ContainerTags:
 # - Generates a test CA and self-signed host cert/key pair
 Developer:
   Enabled: false
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###
