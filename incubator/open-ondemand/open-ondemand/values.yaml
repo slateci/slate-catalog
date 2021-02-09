@@ -37,6 +37,11 @@ kerberos:
   debug: "true"
 
 # Shell application setup
-cluster1:
-  name: "Kingspeak"
-  host: "kingspeak.chpc.utah.edu"
+# Add another cluster section for each backend cluster you wish to connect to
+clusters:
+  - cluster:
+      name: "Kingspeak"
+      host: "kingspeak.chpc.utah.edu"
+  - cluster:
+      name: "Notchpeak"
+      host: "notchpeak.chpc.utah.edu"

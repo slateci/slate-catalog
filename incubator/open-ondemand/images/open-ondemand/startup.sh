@@ -43,4 +43,4 @@ sleep 10
 supervisorctl restart incron
 # Add users from Keycloak API
 sleep 15
-cat /shared/users.txt | tr " " "\n" | xargs -L 1 useradd -M
+newusers /shared/newusers.txt
