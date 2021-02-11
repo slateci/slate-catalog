@@ -3,11 +3,14 @@ kind: ConfigMap
 metadata:
   name: {{ include "open-ondemand.fullname" . }}-shell-setup
 data:
-  clusters.yaml: |
+
+  {{ range .Values.clusters }}
+  cluster-{{ .cluster.name | lower | nospace }}.yml: |
     ---
     v2:
       metadata:
-        title: "{{ .Values.cluster1.name }}"
+        title: {{ .cluster.name | quote }}
         priority: 2
       login:
-        host: "{{ .Values.cluster1.host }}"
+        host: {{ .cluster.host | quote }}
+  {{ end }}
