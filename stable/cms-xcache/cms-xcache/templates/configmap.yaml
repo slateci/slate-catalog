@@ -8,6 +8,7 @@ metadata:
     chart: {{ template "cms-xcache.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 data:
   start-nginx.sh: |+
     #!/bin/bash -e
