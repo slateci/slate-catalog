@@ -35,7 +35,7 @@ spec:
             defaultMode: 0744 
       containers:
         - name: open-ondemand
-          image: dockerbox88/open-ondemand
+          image: slateci/open-ondemand:1.8.1
           imagePullPolicy: Always
           volumeMounts:
             - name: shared-data
