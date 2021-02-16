@@ -23,7 +23,7 @@ slate secret create --group <group> --cluster <cluster> --from-env-file=mariadb-
 
 Finally, you can install the application like so:
 ```bash
-slate install mariadb --conf mariadb.yaml --cluster <cluster> --group <group>
+slate app install mariadb --conf mariadb.yaml --cluster <cluster> --group <group>
 ```
 
 The command deploys MariaDB on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.

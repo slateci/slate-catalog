@@ -4,6 +4,7 @@ metadata:
   name: {{ include "open-ondemand.fullname" . }}
   labels:
     {{- include "open-ondemand.labels" . | nindent 4 }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -17,12 +18,6 @@ spec:
       volumes:
         - name: shared-data
           emptyDir: {}
-        - name: auth-config
-          configMap:
-            name: {{ include "open-ondemand.fullname" . }}-auth-config
-            items:
-            - key: auth_openidc.conf
-              path: auth_openidc.conf
         - name: ood-portal-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-ood-portal
@@ -32,7 +27,18 @@ spec:
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-            defaultMode: 0744 
+        {{ range .Values.clusters }}
+        - name: cluster-{{ .cluster.name | lower | nospace }}-setup
+          configMap:
+            name: {{ include "open-ondemand.fullname" $ }}-shell-setup
+            items:
+            - key: cluster-{{ .cluster.name | lower | nospace }}.yml
+              path: cluster-{{ .cluster.name | lower | nospace }}.yml
+        {{ end }}
+        # Claim SLATE volume to persist Keycloak data.
+        - name: keycloak-db
+          persistentVolumeClaim:
+            claimName: {{ .Values.claimName }}
       containers:
         - name: open-ondemand
           image: slateci/open-ondemand:1.8.1
@@ -40,29 +46,58 @@ spec:
           volumeMounts:
             - name: shared-data
               mountPath: /shared
-            - name: auth-config
-              mountPath: /opt/rh/httpd24/root/etc/httpd/conf.d
             - name: ood-portal-config
-              mountPath: /etc/ood/config
+              mountPath: /etc/ood/config/ood_portal.yml
+              subPath: ood_portal.yml
+            {{ range .Values.clusters }}
+            - name: cluster-{{ .cluster.name | lower | nospace }}-setup
+              mountPath: /etc/ood/config/clusters.d/cluster-{{ .cluster.name | lower | nospace }}.yml
+              subPath: cluster-{{ .cluster.name | lower | nospace }}.yml
+            {{ end }}
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
           env:
-            - name: INSTANCE_NAME
-              value: {{ include "open-ondemand.fullname" . }}
+            - name: SLATE_INSTANCE_NAME
+              value: {{ .Values.Instance }}
+            - name: SLATE_CLUSTER_NAME
+              value: {{ .Values.SLATE.Cluster.DNSName }}
         - name: keycloak
-          image: jstidd/keycloak
+          image: jboss/keycloak:4.8.3.Final
           imagePullPolicy: Always
+          # Run script if setupKeycloak parameter is enabled.
+          {{ if eq .Values.setupKeycloak true }}
           lifecycle:
             postStart:
               exec:
                 command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
+          {{ end }}
           volumeMounts:
             - name: shared-data
               mountPath: /shared
             - name: keycloak-setup
               mountPath: /etc/keycloak/
+              # Mount SLATE volume to the location of the Keycloak database.
+            - name: keycloak-db
+              mountPath: "/opt/jboss/keycloak/standalone/data"
+          env:
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true" 
+              # Set Keycloak default username and password
+            - name: KEYCLOAK_USER
+              value: "admin"
+            - name: KEYCLOAK_PASSWORD
+              value: {{ randAlphaNum 12 | b64enc | quote }}
+              # Specify database type (default Java H2 database)
+            - name: DB_VENDOR 
+              value: "h2"
+            - name: SLATE_INSTANCE_NAME
+              value: {{ .Values.Instance }}
+            - name: SLATE_CLUSTER_NAME
+              value: {{ .Values.SLATE.Cluster.DNSName }}
+            - name: SLATE_SETUP_LDAP
+              value: {{ .Values.setupLDAP | quote }}
           ports:
             - name: kc8080
               containerPort: 8080

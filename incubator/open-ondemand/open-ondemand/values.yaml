@@ -3,10 +3,45 @@
 # Declare variables to be passed into your templates.
 
 # The SLATE instance value.
-Instance: ""
+Instance: "global"
 
 replicaCount: 1
 
+setupKeycloak: true
+
+# SLATE volume to claim
+claimName: keycloak-db
+
+### SLATE-START ###
 SLATE:
+  Instance:
+    ID: "untagged"
   Cluster:
     DNSName: "utah-dev.slateci.net"
+### SLATE-END ###
+
+# LDAP/Kerberos setup and configuration
+setupLDAP: true
+ldap:
+  connectionURL: "ldap://ldap.chpc.utah.edu"
+  importUsers: "true"
+  rdnLDAPAttribute:  "uid"
+  uuidLDAPAttribute: "uidNumber"
+  userObjectClasses: "inetOrgPerson, organizationalPerson"
+  usersDN: "ou=People,dc=chpc,dc=utah,dc=edu"
+kerberos:
+  realm: "AD.UTAH.EDU"
+  serverPrincipal: "HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU"
+  keyTab: "/etc/krb5.keytab"
+  kerberosPasswordAuth: "true"
+  debug: "true"
+
+# Shell application setup
+# Add another cluster section for each backend cluster you wish to connect to
+clusters:
+  - cluster:
+      name: "Kingspeak"
+      host: "kingspeak.chpc.utah.edu"
+  - cluster:
+      name: "Notchpeak"
+      host: "notchpeak.chpc.utah.edu"
