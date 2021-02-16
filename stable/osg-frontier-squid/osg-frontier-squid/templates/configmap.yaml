@@ -53,6 +53,7 @@ data:
         /usr/sbin/squid -N -f /etc/squid/squid.conf -z
     fi
     {{ end }}
+    chown -R squid:squid /var/cache/squid
     echo "End of custom 60-image-post-init.sh"
 {{ if .Values.SquidConf.LogToStdout }}
   # Inject an extra helper to copy the squid logs to supervisor's stdout, 
