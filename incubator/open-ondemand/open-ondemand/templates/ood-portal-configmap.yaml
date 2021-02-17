@@ -1,4 +1,7 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "open-ondemand.fullname" . }}-ood-portal
 data:
   ood_portal.yml: |
     # /etc/ood/config/ood_portal.yml
@@ -15,7 +18,7 @@ data:
         #     logout_redirect: '/oidc?logout=https%3A%2F%2Fwww.example.com'
         # Default: '/pun/sys/dashboard/logout' (the Dashboard app provides a simple
         # HTML page explaining logout to the user)
-        logout_redirect: '/oidc?logout=https%3A%2F%2Futah-dev1.chpc.utah.edu'
+        logout_redirect: '/oidc?logout=https%3A%2F%2F{{ .Values.Instance }}.ondemand.{{ .Values.SLATE.Cluster.DNSName }}'
     
         # Sub-uri used by mod_auth_openidc for authentication
         # Example:
@@ -25,6 +28,3 @@ data:
     
         # Set up user mapping
         user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex'
-kind: ConfigMap
-metadata:
-  name: {{ include "open-ondemand.fullname" . }}-ood-portal

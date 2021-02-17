@@ -52,3 +52,9 @@ image:
   repository: slateci/xcache
   tag: testing
   pullPolicy: Always
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###

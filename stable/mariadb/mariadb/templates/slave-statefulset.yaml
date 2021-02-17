@@ -10,6 +10,7 @@ metadata:
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
     instance: {{ .Values.Instance | quote }} 
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 spec:
   selector:
     matchLabels:
