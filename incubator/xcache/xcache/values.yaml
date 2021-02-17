@@ -21,8 +21,8 @@ SiteConfig:
   CRICprotocolID: 433
 
 Monitoring:
-  Collector: http://collector.atlas-ml.org:80
-  GStreamCollector: collector.atlas-ml.org:9000 
+  Collector: http://xcache.atlas-ml.org:80
+  GStreamCollector: xcache.atlas-ml.org:9000 
   VPheartbeat: https://vps.cern.ch/liveness
 
 XCacheConfig:

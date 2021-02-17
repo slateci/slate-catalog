@@ -100,7 +100,7 @@ spec:
               - "/usr/local/sbin/heartbeat.sh"
               - "{{.Values.Monitoring.VPheartbeat}}"
               - "{{.Values.SiteConfig.Name}}"
-              - "{{.Values.SiteConfig.Instance}}"
+              - "{{.Values.Instance}}"
               - "{{.Values.Service.ExternalIP}}:{{.Values.Service.Port}}"
             initialDelaySeconds: 60
             periodSeconds: 30
