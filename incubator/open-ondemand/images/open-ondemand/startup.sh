@@ -38,5 +38,8 @@ supervisorctl restart apache
 #chmod 0600 /etc/sssd/sssd.conf
 #authconfig --update --enablesssd --enablesssdauth --enablemkhomedir
 # Add users from Keycloak API
-sleep 30
+while [ ! -f /shared/newusers.txt ]
+do
+	sleep 2
+done
 newusers /shared/newusers.txt
