@@ -146,6 +146,8 @@ spec:
           env:
           - name: XC_RESOURCENAME
             value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_INSTANCE
+            value: {{ .Values.Instance | quote }}
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
           volumeMounts:
