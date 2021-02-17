@@ -1,7 +1,7 @@
 # Instance to label use case of XCache deployment
 # Generates app name as "xcache-[Instance]"
 # Enables unique instances of XCache in one namespace
-Instance: global
+Instance: slate01
 
 Service:
   # Port that the service will utilize.
@@ -11,11 +11,10 @@ Service:
   # 192.170.227.231 - ml node - root://xcache.mwt2.org:1094
   # 192.170.236.171 - river-dev
   # 192.170.236.158 - river
-  ExternalIP: 98.206.166.200
+  ExternalIP: 192.170.236.171
 
 SiteConfig:
   Name: Home
-  InstanceID: xc_xps
   # CRIC protocol ID. 433 is a dummy value. 
   # can be looked up in this URL: https://atlas-cric.cern.ch/api/core/service/query/?json
   # Endpoints can be created here: https://atlas-cric.cern.ch/core/service/create/

@@ -14,17 +14,21 @@ $ slate app install --group <group-name> --cluster <cluster-name> xcache.yaml
 ## Introduction
 XCache is a service that provides caching of data accessed using [xrootd protocol](http://xrootd.org/). It sits in between client and an upstream xrootd servers and can cache/prefetch full files or only blocks already requested. 
 
-To run this chart one needs a k8s cluster with a node labeled: __xcache-capable: "true"__. This node will have at least 10Gbps connection and at least few TB local disk (preferably mounted at __/scratch__).
+To run this chart one needs a k8s cluster with a node labeled: __xcache: "<Instance>"__. Instance is the same value as in values.yaml file. This node will have at least 10Gbps connection and at least few TB local disk (preferably mounted at __/scratch__).
 
 To set it up one needs to change values in values.yaml, all other variables have good default values:
 
 ```
+Instance: <Instance> # change only if you have more than one XCache server. 
 SiteConfig:
   Name: MWT2
-  AGISprotocolID: 433
+  CRICprotocolID: 433
 
 XCacheConfig:
-  CacheDirectory: /scratch
+  CacheDirectories:
+    - path: /scratch/1
+    - path: /scratch/2
+  MetaDirectory: /scratch/meta
 
 Service:
   # External IP that may access the service
@@ -37,7 +41,7 @@ kubectl taint nodes "xcache nodename" xcache=true:PreferNoSchedule
 ```
 and labeled:
 ```
-kubectl label nodes <your-node-name> xcache-capable=true
+kubectl label nodes <your-node-name> xcache=<Instance>
 ```
 
 ## Prerequisites
