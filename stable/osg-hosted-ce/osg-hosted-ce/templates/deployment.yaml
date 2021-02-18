@@ -28,6 +28,11 @@ spec:
         kubernetes.io/hostname: {{ .Values.NodeSelection }}
       {{ end }}
       volumes:
+      {{ if .Values.Persistence.LibCondorCeVolume }}
+      - name: lib-condor-ce
+        persistentVolumeClaim:
+          claimName: {{ .Value.Persistence.LibCondorCeVolume }}
+      {{ end }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-configuration
@@ -92,8 +97,14 @@ spec:
       {{ end }}
       {{ end }}
       {{ if .Values.HTTPLogger.Enabled }}
+      {{ if .Values.Persistence.LogVolume }}
+      - name: log-volume
+        persistentVolumeClaim:
+          claimName: {{ .Values.Persistence.LogVolume }}
+      {{ else }}
       - name: log-volume
         emptyDir: {} 
+      {{ end }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
@@ -150,6 +161,10 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
+        {{ if .Values.Persistence.LibCondorCeVolume }}
+        - name: lib-condor-ce
+          mountPath: /var/lib/condor-ce
+        {{ end }}
         {{ if .Values.HostCredentials.HostCertKeySecret }}
         - name: osg-hosted-ce-hostcertkey-volume
           mountPath: /etc/grid-security/hostcert.pem
@@ -239,7 +254,9 @@ spec:
         - name: BOSCO_DIRECTORY
           value: {{ .Values.Topology.Resource }}
         {{ end }}
+        {{  if not .Values.Persistence.LibCondorCeVolume }}
         lifecycle:
           preStop:
             exec:
               command: ["/usr/local/bin/drain-ce.sh"]
+        {{ end }}
