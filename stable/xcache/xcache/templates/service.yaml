@@ -14,7 +14,6 @@ spec:
       name: xrootd
       port: {{ .Values.Service.Port }}
       targetPort: {{ .Values.Service.Port }}
-      # nodePort: 31094
   externalIPs:
   - {{ .Values.Service.ExternalIP }}
   selector:
