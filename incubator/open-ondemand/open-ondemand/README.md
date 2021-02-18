@@ -32,8 +32,8 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`Instance`| Optional string to differentiate SLATE experiment instances. |`global`|
 |`replicaCount`| The number of replicas to create. |`1`|
 |`setupKeycloak`| Runs Keycloak setup script if enabled. |`true`|
-|`claimName`| The name of the SLATE volume to store configuration in. |`keycloak-db`| 
-|`SLATE.Cluster.DNSName`| DNS name of the cluster the application is deployed on. |`utah-dev.slateci.net`|
+|`volume.storageClass`| The volume provisioner from which to request the Keycloak backing volume |`local-path`| 
+|`volume.size`| The amount of storage to request for the volume |`50M`| 
 |`setupLDAP`| Set up LDAP automatically based on following values. |`true`| 
 |`ldap.connectionURL`| URL to access LDAP at. |`ldap://your-ldap-here`| 
 |`ldap.importUsers`| Import LDAP users to Keycloak. |`true`| 
