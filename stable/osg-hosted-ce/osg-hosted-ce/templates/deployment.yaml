@@ -31,7 +31,7 @@ spec:
       {{ if .Values.Persistence.LibCondorCeVolume }}
       - name: lib-condor-ce
         persistentVolumeClaim:
-          claimName: {{ .Value.Persistence.LibCondorCeVolume }}
+          claimName: {{ .Values.Persistence.LibCondorCeVolume }}
       {{ end }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
