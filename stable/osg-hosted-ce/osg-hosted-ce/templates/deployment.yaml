@@ -254,7 +254,9 @@ spec:
         - name: BOSCO_DIRECTORY
           value: {{ .Values.Topology.Resource }}
         {{ end }}
+        {{  if not .Values.Persistence.LibCondorCeVolume }}
         lifecycle:
           preStop:
             exec:
               command: ["/usr/local/bin/drain-ce.sh"]
+        {{ end }}
