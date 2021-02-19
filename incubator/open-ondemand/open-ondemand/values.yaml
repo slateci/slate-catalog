@@ -44,15 +44,15 @@ clusters:
         singularity_image: /uufs/chpc.utah.edu/sys/installdir/ood/centos7_lmod.sif  # Something like centos_7.6.sif
         tmux_bin: /usr/bin/tmux
       basic_script: 
-        - module purge
-        - %s
+        - "module purge"
+        - "%s"
       vnc_script: 
-        - #!/bin/bash
-        - set -x
-        - export PATH='/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH'
-        - export WEBSOCKIFY_CMD='/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify'
-        - export XDG_RUNTIME_DIR=$(mktemp -d)
-        - %s
+        - "#!/bin/bash"
+        - "set -x"
+        - "export PATH='/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH'"
+        - "export WEBSOCKIFY_CMD='/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify'"
+        - "export XDG_RUNTIME_DIR=$(mktemp -d)""
+        - "%s"
 #  - cluster:
 #      name: "Notchpeak"
 #      host: "notchpeak.chpc.utah.edu"
