@@ -27,7 +27,7 @@ spec:
     spec:
 
       nodeSelector:
-        xcache-capable: "true"
+        xcache: {{ .Values.Instance | quote }}
       
       tolerations:
       - key: "xcache"
@@ -101,7 +101,7 @@ spec:
               - "/usr/local/sbin/heartbeat.sh"
               - "{{.Values.Monitoring.VPheartbeat}}"
               - "{{.Values.SiteConfig.Name}}"
-              - "{{.Values.SiteConfig.InstanceID}}"
+              - "{{.Values.Instance}}"
               - "{{.Values.Service.ExternalIP}}:{{.Values.Service.Port}}"
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -145,6 +145,8 @@ spec:
           env:
           - name: XC_RESOURCENAME
             value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_INSTANCE
+            value: {{ .Values.Instance | quote }}
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
           volumeMounts:
