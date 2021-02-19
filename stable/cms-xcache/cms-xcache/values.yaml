@@ -61,3 +61,9 @@ XCacheConfig:
       type: data
     - path: /meta
       type: meta
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###
