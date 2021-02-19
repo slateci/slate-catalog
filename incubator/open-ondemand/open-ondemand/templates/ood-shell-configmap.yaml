@@ -16,7 +16,7 @@ data:
       job:
         adapter: "linux_host"
         submit_host: {{ .cluster.name | quote }}
-        ssh_hosts: {{ .cluster.job.ssh_hosts | indent 6 }}
+        ssh_hosts: {{ .cluster.job.ssh_hosts | quote }}
         site_timeout: 7200
         debug: true
         singularity_bin: {{ .cluster.job.singularity_bin | quote }}
@@ -24,13 +24,15 @@ data:
         singularity_image: {{ .cluster.job.singularity_image | quote }}
         strict_host_checking: false
         tmux_bin: {{ .cluster.job.tmux_bin | quote }}
-#      batch_connect:
-#        basic:
-#          script_wrapper: |
-#           #!/bin/bash
-#            ###### your_script_here ######
-#        vnc:
-#          script_wrapper: |
-#            #!/bin/bash
-#            ###### your_vnc_startup_here ######
+      batch_connect:
+        basic:
+          script_wrapper:
+            {{- range .cluster.batch_connect.basic.script_wrapper }}
+              {{ . }}
+            {{- end }}
+        vnc:
+          script_wrapper: 
+            {{- range .cluster.batch_connect.vnc.script_wrapper }}
+              {{ . }}
+            {{- end }}
   {{ end }}
