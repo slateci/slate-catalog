@@ -46,16 +46,16 @@ clusters:
         batch_connect:
           basic:
             script_wrapper: |
-              module purge
-              %s
+              - 'module purge'
+              - '%s'
           vnc:
             script_wrapper: |
-              #!/bin/bash
-              set -x
-              export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
-              export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
-              export XDG_RUNTIME_DIR=$(mktemp -d)
-              %s
+              - '#!/bin/bash'
+              - 'set -x'
+              - 'export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"'
+              - 'export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"'
+              - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+              - '%s'
 #  - cluster:
 #      name: "Notchpeak"
 #      host: "notchpeak.chpc.utah.edu"
