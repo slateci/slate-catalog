@@ -30,9 +30,11 @@ data:
             {{- range .cluster.basic_script }}
             {{ . }}
             {{- end }}
+          set_host: {{ .cluster.host | quote }}
         vnc:
           script_wrapper: |
             {{- range .cluster.vnc_script }}
             {{ . }}
             {{- end }}
+          set_host: {{ .cluster.host | quote }}
   {{ end }}
