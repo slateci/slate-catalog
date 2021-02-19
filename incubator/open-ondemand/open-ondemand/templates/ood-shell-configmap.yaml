@@ -28,11 +28,11 @@ data:
         basic:
           script_wrapper:
             {{- range .cluster.batch_connect.basic.script_wrapper }}
-              {{ . }}
+            {{ . }}
             {{- end }}
         vnc:
           script_wrapper: 
             {{- range .cluster.batch_connect.vnc.script_wrapper }}
-              {{ . }}
+            {{ . }}
             {{- end }}
   {{ end }}
