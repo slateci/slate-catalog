@@ -31,7 +31,7 @@ data:
             {{ . }}
             {{- end }}
         vnc:
-          script_wrapper: |-
+          script_wrapper: |
             {{- range .cluster.vnc_script }}
             {{ . }}
             {{- end }}
