@@ -13,7 +13,7 @@ data:
         priority: 2
       login:
         host: {{ .cluster.host | quote }}
-      job: {{ .cluster.job }}
+      job: {{ .cluster.job | quote }}
 #      batch_connect:
 #        basic:
 #          script_wrapper: |
