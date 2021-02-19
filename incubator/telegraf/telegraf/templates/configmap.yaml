@@ -12,29 +12,83 @@ metadata:
 
 # store Telegraf configuration file
 data:
+  {{ if eq .Values.grnocOutput.enabled true }}
+  "config.yaml": |-
+
+    credentials:
+      url: {{ .Values.grnocOutput.hostname | quote }}
+      username: {{ .Values.grnocOutput.username | quote }}
+      password: {{ .Values.grnocOutput.password | quote }}
+
+    data:
+      - tsds_name: interface
+        telegraf_name: interface
+        interval: 60
+        metadata:
+          - from: agent_host
+            to: "node"
+          - from: ifName
+            to: "intf"
+        optional_metadata:
+          - from: ifAlias
+            to: description
+          # Take all the ip addresses and roll them up
+          - from: ip_address_*
+            to: interface_address
+            field_name: value
+        fields:
+          - from: ifInErrors
+            to: inerror
+            rate: true
+          - from: ifOutErrors
+            to: outerror
+            rate: true
+          - from: ifHCInOctets
+            to: input
+            rate: true
+          - from: ifHCOutOctets
+            to: output
+            rate: true
+          - from: ifHCInUcastPkts
+            to: inUcast
+            rate: true
+          - from: ifHCOutUcastPkts
+            to: outUcast
+            rate: true
+          - from: ifInDiscards
+            to: indiscard
+            rate: true
+          - from: ifOutDiscards
+            to: outdiscard
+            rate: true
+          - from: ifOperStatus
+            to: status
+
+  {{ end }}
+
   "telegraf.conf": |-
 
-    # Tags that will be added to all Metrics
-    [global_tags]
+  # Tags that will be added to all Metrics
+  [global_tags]
 
-    # Telegraf Agent Config
-    [agent]
-      interval = {{ .Values.interval | quote }}
-      round_interval = true
-      metric_batch_size = 1000
-      metric_buffer_limit = 100000
-      collection_jitter = "10s"
-      flush_interval = {{ .Values.flushInterval | quote }}
-      flush_jitter = "10s"
-      precision = ""
+  # Telegraf Agent Config
+  [agent]
+    interval = {{ .Values.interval | quote }}
+    round_interval = true
+    metric_batch_size = 1000
+    metric_buffer_limit = 100000
+    collection_jitter = "10s"
+    flush_interval = {{ .Values.flushInterval | quote }}
+    flush_jitter = "10s"
+    precision = ""
 
 
-    # Send telegraf metrics to stdout and file if enabled
-    {{ if eq .Values.writeToStdout true }}
-    [[outputs.file]]
-      files = ["stdout", "/tmp/metrics.out"]
-      data_format = "influx"
-    {{ end }}
+  # Send telegraf metrics to stdout and file if enabled
+  {{ if eq .Values.writeToStdout true }}
+  [[outputs.file]]
+    files = ["stdout", "/tmp/metrics.out"]
+    data_format = "influx"
+  {{ end }}
 
 
     # InfluxDB configuration
