@@ -18,11 +18,11 @@ data:
         submit_host: {{ .cluster.name | quote }}
         site_timeout: 7200
         debug: true
-        singularity_bin: {{ .cluster.host.job.singularity_bin | quote }}
-        singularity_bindpath: {{ .cluster.host.job.singularity_bindpath | quote }}
-        singularity_image: {{ .cluster.host.job.singularity_image | quote }}
+        singularity_bin: {{ .cluster.job.singularity_bin | quote }}
+        singularity_bindpath: {{ .cluster.job.singularity_bindpath | quote }}
+        singularity_image: {{ .cluster.job.singularity_image | quote }}
         strict_host_checking: false
-        tmux_bin: {{ .cluster.host.job.tmux_bin | quote}}
+        tmux_bin: {{ .cluster.job.tmux_bin | quote }}
 #      batch_connect:
 #        basic:
 #          script_wrapper: |
