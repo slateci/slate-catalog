@@ -40,6 +40,11 @@ clusters:
       name: "Notchpeak"
       host: "notchpeak.chpc.utah.edu"
 
+# Configure additional test users to be added to Keycloak.
+testUsers:
+  - user:
+      name: "test"
+      tempPassword: "test"
 
 ### SLATE-START ###
 SLATE:
