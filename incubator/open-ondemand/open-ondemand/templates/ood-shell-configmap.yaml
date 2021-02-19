@@ -13,4 +13,14 @@ data:
         priority: 2
       login:
         host: {{ .cluster.host | quote }}
+      job: {{ .cluster.job }}
+#      batch_connect:
+#        basic:
+#          script_wrapper: |
+#           #!/bin/bash
+#            ###### your_script_here ######
+#        vnc:
+#          script_wrapper: |
+#            #!/bin/bash
+#            ###### your_vnc_startup_here ######
   {{ end }}
