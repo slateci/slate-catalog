@@ -13,20 +13,21 @@ metadata:
 # store Telegraf configuration file
 data:
   "telegraf.conf": |-
+
+    # Tags that will be added to all Metrics
     [global_tags]
 
-    # Configuration for telegraf agent
+    # Telegraf Agent Config
     [agent]
       interval = {{ .Values.interval | quote }}
       round_interval = true
       metric_batch_size = 1000
-      metric_buffer_limit = 50000
-      collection_jitter = "0s"
+      metric_buffer_limit = 100000
+      collection_jitter = "10s"
       flush_interval = {{ .Values.flushInterval | quote }}
-      flush_jitter = "0s"
+      flush_jitter = "10s"
       precision = ""
-      hostname = ""
-      omit_hostname = false
+
 
     # Send telegraf metrics to stdout and file if enabled
     {{ if eq .Values.writeToStdout true }}
@@ -50,61 +51,61 @@ data:
 
     {{ end }}
 
-
     # GlobalNOC database configuration
     {{ if eq .Values.grnocOutput.enabled true }}
-    [[outputs.tsds]]
-
-      # TSDS Measurement Type
-      measurement = "interface"
-
-      # TSDS Credentials
-      hostname = {{ .Values.grnocOutput.hostname | quote }}
-      username = {{ .Values.grnocOutput.username | quote }}
-      password = {{ .Values.grnocOutput.password | quote }}
-
-      # Output Processing Interval (This should be greater than the JTI "sample_frequency")
-      interval = 60
-
-      # Sensors that are metadata fields
-      metadata = ["node", "intf", "description"]
-
-      # Sensors that should have their values tracked and then computed as a rate
-      rates = [
-        "input",
-        "output",
-        "inUcast",
-        "outUcast",
-        "inerror",
-        "outerror",
-        "indiscard",
-        "outdiscard",
-      ]
-
-      # An array of strings containing TSDS metadata/value aliases and their corresponding JTI resource path (space-delimited)
-        sensors = [
-          "intf ifName",
-          "node agent_host",
-          "description ifDescr",
-          "input ifInOctets",
-          "output ifOutOctets",
-          "inerror ifInErrors",
-          "outerror ifOutErrors",
-          "inUcast ifInUcastPkts",
-          "outUcast ifOutUcastPkts",
-          "indiscard ifInDiscards",
-          "outdiscard ifOutDiscards",
-          "status ifOperStatus",
-        ]
-        namepass = ["interface"]
+    [[outputs.execd]]
+      namepass = ["interface"]
+      command = ["/usr/bin/python3", "/usr/bin/tsds-output.py", "/etc/telegraf/conf.d/config.yaml"]  
+      data_format = "json"
+      restart_delay = "10s"
 
     {{ end }}
+
+
+    [[processors.starlark]]
+    namepass = ["interface", "interface_address"]
+    source = '''
+    state = {}
+
+    def apply(metric):
+       #print("metric = %s" % metric) 
+
+       if "ifHCInOctets" in metric.fields:
+           metric.fields["ifHCInOctets"] *= 8
+       if "ifHCOutOctets" in metric.fields:
+           metric.fields["ifHCOutOctets"] *= 8
+
+       if "ifIndex" in metric.tags:
+           ipInfo = state.get(metric.tags["ifIndex"], [])
+           ipInfo = sorted(ipInfo, key = lambda x: x.tags["ipAdEntAddr"])
+
+           i = 0    
+           for result in ipInfo:    
+               value = result.tags["ipAdEntAddr"]
+               metric.tags["ip_address_%s" % i] = value
+               i += 1 
+
+       if "ipAdEntIfIndex" in metric.tags:
+           ifIndex = metric.tags["ipAdEntIfIndex"]
+           ip_list = state.setdefault(ifIndex, [])
+
+           ip_list = [x for x in ip_list if x.time > metric.time - (60*10)]
+
+           if not [x for x in ip_list if x.tags["ipAdEntAddr"] == metric.tags["ipAdEntAddr"]]:
+               ip_list.append(deepcopy(metric))
+
+           #print("STATE = %s" % ip_list)
+           state[ifIndex] = ip_list
+
+       return metric
+    '''
 
 
     # Loop through host groups to monitor.
     {{ range .Values.targets }}
 
     [[inputs.snmp]]
+
       # Enumerate agent addresses to retrieve values from.
       agents = [{{- range $value := .hostGroup.hosts }}
       "udp://{{ $value }}",
@@ -112,7 +113,7 @@ data:
 
       timeout = "15s"
       version = 2
-      # SNMP community string
+      # SNMP community string.
       community = {{ .hostGroup.community | quote }}
       retries = 2
       max_repetitions = 15
@@ -130,6 +131,7 @@ data:
 
       [[inputs.snmp.table]]
       name = "interface"
+      # inherit_tags = [ "source" ]
       
       [[inputs.snmp.table.field]]
       oid = "IF-MIB::ifName"
@@ -158,51 +160,54 @@ data:
       name = "ifOutDiscards"
 
       [[inputs.snmp.table.field]]
-      name = "ifInOctets"
+      name = "ifHCInOctets"
       oid = "IF-MIB::ifHCInOctets" 
      
       [[inputs.snmp.table.field]]
-      name = "ifInUcastPkts"
+      name = "ifHCInUcastPkts"
       oid = "IF-MIB::ifHCInUcastPkts" 
      
       [[inputs.snmp.table.field]]
-      name = "ifInMulticastPkts"
+      name = "ifHCInMulticastPkts"
       oid = "IF-MIB::ifHCInMulticastPkts" 
       
       [[inputs.snmp.table.field]]
-      name = "ifInBroadcastPkts"
+      name = "ifHCInBroadcastPkts"
       oid = "IF-MIB::ifHCInBroadcastPkts"
 
       [[inputs.snmp.table.field]]
-      name = "ifOutOctets"
+      name = "ifHCOutOctets"
       oid = "IF-MIB::ifHCOutOctets"
 
       [[inputs.snmp.table.field]]
-      name = "ifOutUcastPkts"
+      name = "ifHCOutUcastPkts"
       oid = "IF-MIB::ifHCOutUcastPkts"
 
       [[inputs.snmp.table.field]]
-      name = "ifOutMulticastPkts"
+      name = "ifHCOutMulticastPkts"
       oid = "IF-MIB::ifHCOutMulticastPkts"
 
       [[inputs.snmp.table.field]]
-      name = "ifOutBroadcastPkts"
+      name = "ifHCOutBroadcastPkts"
       oid = "IF-MIB::ifHCOutBroadcastPkts"
 
       [[inputs.snmp.table.field]]
       name = "ifOperStatus"
       oid = "IF-MIB::ifOperStatus"
 
+
       [inputs.snmp.tagpass]
         ifName = ["Vlan601","Vlan711", "Vlan710"]
 
       {{ end }}
 
+
       # 32-bit counter OIDs
       {{ if eq .hostGroup.counter64Bit false }}
 
+      # Walk the ifXTable for counters, names, etc.
       [[inputs.snmp.table]]
-        oid = "IF-MIB::ifTable"
+        oid = "IF-MIB::ifXTable"
         name = "interface"
         inherit_tags = ["source"]
 
@@ -212,12 +217,38 @@ data:
           is_tag = true
 
         [[inputs.snmp.table.field]]
-          oid = "IF-MIB::ifDescr"
-          name = "ifDescr"
+          oid = "IF-MIB::ifIndex"
+          name = "ifIndex"
           is_tag = true
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifAlias"
+          name = "ifAlias"
+          is_tag = true
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifInErrors"
+          name = "ifInErrors"
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifOutErrors"
+          name = "ifOutErrors"
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifInDiscards"
+          name = "ifInDiscards"
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifOutDiscards"
+          name = "ifOutDiscards"
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifOperStatus"
+          name = "ifOperStatus"
 
       {{ end }}
 
       {{ end }}
 
     {{ end }}
+
