@@ -28,11 +28,11 @@ data:
         basic:
           script_wrapper:
             {{- range .cluster.basic_script }}
-            - {{ . | title | quote }}
+            - {{ . }}
             {{- end }}
         vnc:
           script_wrapper: 
             {{- range .cluster.vnc_script }}
-            - {{ . | title | quote }}
+            - {{ . }}
             {{- end }}
   {{ end }}
