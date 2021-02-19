@@ -27,12 +27,12 @@ data:
       batch_connect:
         basic:
           script_wrapper:
-            {{- range .cluster.batch_connect.basic.script_wrapper }}
+            {{- range $.cluster.batch_connect.basic.script_wrapper }}
             - {{ . | title | quote }}
             {{- end }}
         vnc:
           script_wrapper: 
-            {{- range .cluster.batch_connect.vnc.script_wrapper }}
+            {{- range $.cluster.batch_connect.vnc.script_wrapper }}
             - {{ . | title | quote }}
             {{- end }}
   {{ end }}
