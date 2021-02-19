@@ -45,4 +45,6 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`kerberos.debug`| Writes additional debug logs if enabled. |`true`| 
 |`clusters.cluster.name`| Name of cluster to connect to. |`Kingspeak`| 
 |`clusters.cluster.host`| Hostname of cluster to connect to. |`kingspeak.chpc.utah.edu`| 
+|`testUsers.user.name`| Username of test user to add. |`test`| 
+|`testUsers.user.tempPassword`| Temporary password to set for test user. |`test`| 
 
