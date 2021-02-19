@@ -30,11 +30,11 @@ data:
             {{- range .cluster.basic_script }}
             {{ . }}
             {{- end }}
-          set_host: {{ .cluster.host | quote }}
+          set_host: "host=$(hostname -s).chpc.utah.edu"
         vnc:
           script_wrapper: |
             {{- range .cluster.vnc_script }}
             {{ . }}
             {{- end }}
-          set_host: {{ .cluster.host | quote }}
+          set_host: "host=$(hostname -s).chpc.utah.edu"
   {{ end }}
