@@ -51,7 +51,7 @@ clusters:
         - "set -x"
         - "export PATH='/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH'"
         - "export WEBSOCKIFY_CMD='/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify'"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)""
+        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
         - "%s"
 #  - cluster:
 #      name: "Notchpeak"
