@@ -45,7 +45,7 @@ clusters:
         tmux_bin: /usr/bin/tmux
       basic_script: 
         - "#!/bin/bash"
-        - "if [ -z "$LMOD_VERSION" ]; then"
+        - "if [ -z '$LMOD_VERSION' ]; then"
         - "  source /etc/profile.d/chpc.sh"
         - "fi"
         - "export XDG_RUNTIME_DIR=$(mktemp -d)"
