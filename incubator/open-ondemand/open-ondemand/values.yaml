@@ -43,10 +43,10 @@ clusters:
         singularity_bindpath: /etc,/mnt,/media,/opt,/run,/srv,/usr,/var,/uufs,/scratch
         singularity_image: /uufs/chpc.utah.edu/sys/installdir/ood/centos7_lmod.sif  # Something like centos_7.6.sif
         tmux_bin: /usr/bin/tmux
-      basic_script: |
+      basic_script: 
         - module purge
         - %s
-      vnc_script: |
+      vnc_script: 
         - #!/bin/bash
         - set -x
         - export PATH='/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH'
