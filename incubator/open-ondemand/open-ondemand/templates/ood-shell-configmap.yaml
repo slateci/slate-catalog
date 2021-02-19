@@ -26,12 +26,12 @@ data:
         tmux_bin: {{ .cluster.job.tmux_bin | quote }}
       batch_connect:
         basic:
-          script_wrapper: |
+          script_wrapper: |-
             {{- range .cluster.basic_script }}
             - {{ . | quote }}
             {{- end }}
         vnc:
-          script_wrapper: |
+          script_wrapper: |-
             {{- range .cluster.vnc_script }}
             - {{ . | quote }}
             {{- end }}
