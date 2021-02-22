@@ -7,8 +7,8 @@ data:
   {{ range .Values.clusters }}
   desktop-{{ .cluster.name | lower | nospace }}.yml: |
     ---
-    title: "{{ .cluster.name }} desktop"
-    cluster: {{ .cluster.name | quote }}
+    title: {{ .cluster.name | lower | nospace }}-desktop
+    cluster: {{ .cluster.name | lower | nospace | quote }}
     submit: "linux_host"
     attributes:
       bc_queue: null
