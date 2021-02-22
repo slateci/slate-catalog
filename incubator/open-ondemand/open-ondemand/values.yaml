@@ -56,9 +56,6 @@ clusters:
         - "export WEBSOCKIFY_CMD='/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify'"
         - "export XDG_RUNTIME_DIR=$(mktemp -d)"
         - "%s"
-#  - cluster:
-#      name: "Notchpeak"
-#      host: "notchpeak.chpc.utah.edu"
 
 # Configure additional test users to be added to Keycloak.
 testUsers:
