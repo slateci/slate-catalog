@@ -36,7 +36,7 @@ spec:
               path: cluster-{{ .cluster.name | lower | nospace }}.yml
         - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-desktop-host
+            name: {{ include "open-ondemand.fullname" $ }}-desktop-host
             items:
             - key: desktop-{{ .cluster.name | lower | nospace }}.yml
               path: desktop-{{ .cluster.name | lower | nospace }}.yml
