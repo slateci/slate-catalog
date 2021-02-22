@@ -13,6 +13,7 @@ data:
         priority: 2
       login:
         host: {{ .cluster.host | quote }}
+      {{ if .cluster.desktopEnable }}
       job:
         adapter: "linux_host"
         submit_host: {{ .cluster.name | quote }}
@@ -37,4 +38,5 @@ data:
             {{ . }}
             {{- end }}
           set_host: "host=$(hostname -s).chpc.utah.edu"
+      {{ end }}
   {{ end }}
