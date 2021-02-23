@@ -34,14 +34,6 @@ spec:
             items:
             - key: cluster-{{ .cluster.name | lower | nospace }}.yml
               path: cluster-{{ .cluster.name | lower | nospace }}.yml
-        {{ if eq .cluster.desktopEnable true }}
-        - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
-          configMap:
-            name: {{ include "open-ondemand.fullname" $ }}-desktop-host
-            items:
-            - key: desktop-{{ .cluster.name | lower | nospace }}.yml
-              path: desktop-{{ .cluster.name | lower | nospace }}.yml
-        {{ end }}
         {{ end }}
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
@@ -58,14 +50,9 @@ spec:
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
             {{ range .Values.clusters }}
-            # Shell app
             - name: cluster-{{ .cluster.name | lower | nospace }}-setup
               mountPath: /etc/ood/config/clusters.d/cluster-{{ .cluster.name | lower | nospace }}.yml
               subPath: cluster-{{ .cluster.name | lower | nospace }}.yml
-            # Desktop app
-            - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
-              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster/desktop-{{ .cluster.name | lower | nospace }}.yml
-              subPath: desktop-{{ .cluster.name | lower | nospace }}.yml
             {{ end }}
           ports:
             - name: http

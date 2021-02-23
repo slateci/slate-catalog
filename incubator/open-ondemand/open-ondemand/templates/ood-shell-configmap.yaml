@@ -13,30 +13,4 @@ data:
         priority: 2
       login:
         host: {{ .cluster.host | quote }}
-      {{ if .cluster.desktopEnable }}
-      job:
-        adapter: "linux_host"
-        submit_host: {{ .cluster.name | quote }}
-        ssh_hosts: {{ .cluster.job.ssh_hosts | quote }}
-        site_timeout: 7200
-        debug: true
-        singularity_bin: {{ .cluster.job.singularity_bin | quote }}
-        singularity_bindpath: {{ .cluster.job.singularity_bindpath | quote }}
-        singularity_image: {{ .cluster.job.singularity_image | quote }}
-        strict_host_checking: false
-        tmux_bin: {{ .cluster.job.tmux_bin | quote }}
-      batch_connect:
-        basic:
-          script_wrapper: |
-            {{- range .cluster.basic_script }}
-            {{ . }}
-            {{- end }}
-          set_host: "host=$(hostname -s).chpc.utah.edu"
-        vnc:
-          script_wrapper: |
-            {{- range .cluster.vnc_script }}
-            {{ . }}
-            {{- end }}
-          set_host: "host=$(hostname -s).chpc.utah.edu"
-      {{ end }}
   {{ end }}
