@@ -30,6 +30,8 @@ It would be good to figure out how to save this initial password. (SLATE secret?
 
 ## Volume Setup
 
+*Volume setup is no longer necessary*
+
 `utah-dev` volume creation: `slate volume create --group slate-dev --cluster utah-dev --size 50M --storageClass local-path keycloak-db`
 
 This will create the volume in the `slate-group-slate-dev` namespace. 
