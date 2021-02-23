@@ -116,43 +116,43 @@ data:
       {{ end }}
 
 
-      [[processors.starlark]]
-      namepass = ["interface", "interface_address"]
-      source = '''
-      state = {}
+    [[processors.starlark]]
+    namepass = ["interface", "interface_address"]
+    source = '''
+    state = {}
 
-      def apply(metric):
-         #print("metric = %s" % metric) 
+    def apply(metric):
+       #print("metric = %s" % metric) 
 
-         if "ifHCInOctets" in metric.fields:
-             metric.fields["ifHCInOctets"] *= 8
-         if "ifHCOutOctets" in metric.fields:
-             metric.fields["ifHCOutOctets"] *= 8
+       if "ifHCInOctets" in metric.fields:
+           metric.fields["ifHCInOctets"] *= 8
+       if "ifHCOutOctets" in metric.fields:
+           metric.fields["ifHCOutOctets"] *= 8
 
-         if "ifIndex" in metric.tags:
-             ipInfo = state.get(metric.tags["ifIndex"], [])
-             ipInfo = sorted(ipInfo, key = lambda x: x.tags["ipAdEntAddr"])
+       if "ifIndex" in metric.tags:
+           ipInfo = state.get(metric.tags["ifIndex"], [])
+           ipInfo = sorted(ipInfo, key = lambda x: x.tags["ipAdEntAddr"])
 
-             i = 0    
-             for result in ipInfo:    
-                 value = result.tags["ipAdEntAddr"]
-                 metric.tags["ip_address_%s" % i] = value
-                 i += 1 
+           i = 0    
+           for result in ipInfo:    
+               value = result.tags["ipAdEntAddr"]
+               metric.tags["ip_address_%s" % i] = value
+               i += 1 
 
-         if "ipAdEntIfIndex" in metric.tags:
-             ifIndex = metric.tags["ipAdEntIfIndex"]
-             ip_list = state.setdefault(ifIndex, [])
+       if "ipAdEntIfIndex" in metric.tags:
+           ifIndex = metric.tags["ipAdEntIfIndex"]
+           ip_list = state.setdefault(ifIndex, [])
 
-             ip_list = [x for x in ip_list if x.time > metric.time - (60*10)]
+           ip_list = [x for x in ip_list if x.time > metric.time - (60*10)]
 
-             if not [x for x in ip_list if x.tags["ipAdEntAddr"] == metric.tags["ipAdEntAddr"]]:
-                 ip_list.append(deepcopy(metric))
+           if not [x for x in ip_list if x.tags["ipAdEntAddr"] == metric.tags["ipAdEntAddr"]]:
+               ip_list.append(deepcopy(metric))
 
-             #print("STATE = %s" % ip_list)
-             state[ifIndex] = ip_list
+           #print("STATE = %s" % ip_list)
+           state[ifIndex] = ip_list
 
-         return metric
-      '''
+       return metric
+    '''
 
 
       # Loop through host groups to monitor.
