@@ -9,16 +9,10 @@ replicaCount: 1
 
 setupKeycloak: true
 
-# SLATE volume to claim
-claimName: keycloak-db
-
-### SLATE-START ###
-SLATE:
-  Instance:
-    ID: "untagged"
-  Cluster:
-    DNSName: "utah-dev.slateci.net"
-### SLATE-END ###
+# Keycloak volume parameters
+volume:
+  storageClass: local-path
+  size: 50M
 
 # LDAP/Kerberos setup and configuration
 setupLDAP: true
@@ -45,3 +39,17 @@ clusters:
   - cluster:
       name: "Notchpeak"
       host: "notchpeak.chpc.utah.edu"
+
+# Configure additional test users to be added to Keycloak.
+testUsers:
+  - user:
+      name: "test"
+      tempPassword: "test"
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+  Cluster:
+    DNSName: "utah-dev.slateci.net"
+### SLATE-END ###

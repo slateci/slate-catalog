@@ -83,6 +83,12 @@ data:
                 $keycloak create components -r ondemand -s name=kerberos-ldap-provider -s providerId=ldap -s providerType=org.keycloak.storage.UserStorageProvider -s 'config.priority=["0"]' -s 'config.enabled=["true"]' -s 'config.fullSyncPeriod=["-1"]' -s 'config.changedSyncPeriod=["-1"]' -s 'config.cachePolicy=["DEFAULT"]' -s 'config.batchSizeForSync=["1000"]' -s 'config.editMode=["READ_ONLY"]' -s 'config.syncRegistrations=["false"]' -s 'config.vendor=["other"]' -s 'config.usernameLDAPAttribute=["uid"]' -s 'config.rdnLDAPAttribute=[{{ .Values.ldap.rdnLDAPAttribute | quote }}]' -s 'config.uuidLDAPAttribute=[{{ .Values.ldap.uuidLDAPAttribute | quote }}]' -s 'config.userObjectClasses=[{{ .Values.ldap.userObjectClasses | quote }}]' -s 'config.connectionUrl=[{{ .Values.ldap.connectionURL | quote }}]' -s 'config.usersDn=[{{ .Values.ldap.usersDN | quote }}]' -s 'config.authType=["none"]' -s 'config.searchScope=["1"]' -s 'config.useTruststoreSpi=["ldapsOnly"]' -s 'config.connectionPooling=["true"]' -s 'config.pagination=["true"]' -s 'config.allowKerberosAuthentication=["true"]' -s 'config.serverPrincipal=[{{ .Values.kerberos.serverPrincipal | quote }}]' -s 'config.keyTab=[{{ .Values.kerberos.keyTab | quote }}]' -s 'config.kerberosRealm=[{{ .Values.kerberos.realm | quote }}]' -s 'config.debug=[{{ .Values.kerberos.debug | quote }}]' -s 'config.useKerberosForPasswordAuthentication=[{{ .Values.kerberos.kerberosPasswordAuth | quote }}]' -s 'config.importEnabled=[{{ .Values.ldap.importUsers | quote }}]'
         fi
 
+        # Add test users from values.yaml into OnDemand realm
+        {{ range .Values.testUsers }}
+        $keycloak create users -r ondemand -s username={{ .user.name }} -s enabled=true
+        $keycloak set-password -r ondemand --username {{ .user.name }} --new-password {{ .user.tempPassword }} --temporary
+        {{ end }}
+
         # Get ldap user-storage id
         ldap_id=$($keycloak get components -r ondemand --fields id,name | awk '/,$/ { printf("%s\t", $0); next } 1' | grep "kerberos-ldap-provider" | tr -d '"' | tr -d ":," | sed -e 's/name//g' | sed -e 's/kerberos-ldap-provider//g' | sed -e 's/\bid//g' | awk '{$1=$1};1')
 
