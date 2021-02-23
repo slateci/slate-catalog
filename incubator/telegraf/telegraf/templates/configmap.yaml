@@ -92,30 +92,31 @@ data:
 
 
       # InfluxDB configuration
-      {{ if eq .Values.influxOutput.enabled true }}
-      [[outputs.influxdb]]
-        urls = [{{ .Values.influxOutput.endpoint | quote }}]
-        database = {{ .Values.influxOutput.database | quote }}
+    {{ if eq .Values.influxOutput.enabled true }}
+    [[outputs.influxdb]]
+      urls = [{{ .Values.influxOutput.endpoint | quote }}]
+      database = {{ .Values.influxOutput.database | quote }}
 
-        # Authentication, if enabled
-        {{ if eq .Values.influxOutput.httpBasicAuth.enabled true }}
-        username = {{ .Values.influxOutput.httpBasicAuth.username | quote }}
-        password = {{ .Values.influxOutput.httpBasicAuth.password | quote }}
-        {{ end }}
-
+      # Authentication, if enabled
+      {{ if eq .Values.influxOutput.httpBasicAuth.enabled true }}
+      username = {{ .Values.influxOutput.httpBasicAuth.username | quote }}
+      password = {{ .Values.influxOutput.httpBasicAuth.password | quote }}
       {{ end }}
 
-      # GlobalNOC database configuration
-      {{ if eq .Values.grnocOutput.enabled true }}
-      [[outputs.execd]]
-        namepass = ["interface"]
-        command = ["/usr/bin/python3", "/usr/bin/tsds-output.py", "/etc/telegraf/conf.d/config.yaml"]  
-        data_format = "json"
-        restart_delay = "10s"
+    {{ end }}
 
-      {{ end }}
+    # GlobalNOC database configuration
+    {{ if eq .Values.grnocOutput.enabled true }}
+    [[outputs.execd]]
+      namepass = ["interface"]
+      command = ["/usr/bin/python3", "/usr/bin/tsds-output.py", "/etc/telegraf/conf.d/config.yaml"]  
+      data_format = "json"
+      restart_delay = "10s"
+
+    {{ end }}
 
 
+    {{ if eq .Values.grnocOutput.enabled true }} 
     [[processors.starlark]]
     namepass = ["interface", "interface_address"]
     source = '''
@@ -153,156 +154,157 @@ data:
 
        return metric
     '''
+    {{ end }}
 
 
-      # Loop through host groups to monitor.
-      {{ range .Values.targets }}
+    # Loop through host groups to monitor.
+    {{ range .Values.targets }}
 
-      [[inputs.snmp]]
+    [[inputs.snmp]]
 
-        # Enumerate agent addresses to retrieve values from.
-        agents = [{{- range $value := .hostGroup.hosts }}
-        "udp://{{ $value }}",
-        {{ end -}}]
+      # Enumerate agent addresses to retrieve values from.
+      agents = [{{- range $value := .hostGroup.hosts }}
+      "udp://{{ $value }}",
+      {{ end -}}]
 
-        timeout = "15s"
-        version = 2
-        # SNMP community string.
-        community = {{ .hostGroup.community | quote }}
-        retries = 2
-        max_repetitions = 15
+      timeout = "15s"
+      version = 2
+      # SNMP community string.
+      community = {{ .hostGroup.community | quote }}
+      retries = 2
+      max_repetitions = 15
 
-        # Poll custom OIDs if grnoc output is disabled.
-        {{ if eq $.Values.grnocOutput.enabled false }}
-        {{ .hostGroup.oids | indent 4 }}
-        {{ end }}
+      # Poll custom OIDs if grnoc output is disabled.
+      {{ if eq $.Values.grnocOutput.enabled false }}
+      {{ .hostGroup.oids | indent 4 }}
+      {{ end }}
 
-        # Poll defined set of OIDs if grnoc output is enabled.
-        {{ if eq $.Values.grnocOutput.enabled true }}
+      # Poll defined set of OIDs if grnoc output is enabled.
+      {{ if eq $.Values.grnocOutput.enabled true }}
 
-        # 64-bit counter OIDs
-        {{ if eq .hostGroup.counter64Bit true }}
+      # 64-bit counter OIDs
+      {{ if eq .hostGroup.counter64Bit true }}
 
-        [[inputs.snmp.table]]
-        name = "interface"
-        # inherit_tags = [ "source" ]
+      [[inputs.snmp.table]]
+      name = "interface"
+      # inherit_tags = [ "source" ]
         
-        [[inputs.snmp.table.field]]
-        oid = "IF-MIB::ifName"
-        name = "ifName"
-        is_tag = true
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifName"
+      name = "ifName"
+      is_tag = true
 
-        [[inputs.snmp.table.field]]
-        oid = "IF-MIB::ifDescr"
-        name = "ifDescr"
-        is_tag = true
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifDescr"
+      name = "ifDescr"
+      is_tag = true
 
-        [[inputs.snmp.table.field]]
-        oid = "IF-MIB::ifInErrors"
-        name = "ifInErrors"
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifInErrors"
+      name = "ifInErrors"
 
-        [[inputs.snmp.table.field]]
-        oid = "IF-MIB::ifOutErrors"
-        name = "ifOutErrors"
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifOutErrors"
+      name = "ifOutErrors"
 
-        [[inputs.snmp.table.field]]
-        oid = "IF-MIB::ifInDiscards"
-        name = "ifInDiscards"
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifInDiscards"
+      name = "ifInDiscards"
 
-        [[inputs.snmp.table.field]]
-        oid = "IF-MIB::ifOutDiscards"
-        name = "ifOutDiscards"
+      [[inputs.snmp.table.field]]
+      oid = "IF-MIB::ifOutDiscards"
+      name = "ifOutDiscards"
 
-        [[inputs.snmp.table.field]]
-        name = "ifHCInOctets"
-        oid = "IF-MIB::ifHCInOctets" 
+      [[inputs.snmp.table.field]]
+      name = "ifHCInOctets"
+      oid = "IF-MIB::ifHCInOctets" 
        
-        [[inputs.snmp.table.field]]
-        name = "ifHCInUcastPkts"
-        oid = "IF-MIB::ifHCInUcastPkts" 
+      [[inputs.snmp.table.field]]
+      name = "ifHCInUcastPkts"
+      oid = "IF-MIB::ifHCInUcastPkts" 
        
-        [[inputs.snmp.table.field]]
-        name = "ifHCInMulticastPkts"
-        oid = "IF-MIB::ifHCInMulticastPkts" 
+      [[inputs.snmp.table.field]]
+      name = "ifHCInMulticastPkts"
+      oid = "IF-MIB::ifHCInMulticastPkts" 
         
-        [[inputs.snmp.table.field]]
-        name = "ifHCInBroadcastPkts"
-        oid = "IF-MIB::ifHCInBroadcastPkts"
+      [[inputs.snmp.table.field]]
+      name = "ifHCInBroadcastPkts"
+      oid = "IF-MIB::ifHCInBroadcastPkts"
 
-        [[inputs.snmp.table.field]]
-        name = "ifHCOutOctets"
-        oid = "IF-MIB::ifHCOutOctets"
+      [[inputs.snmp.table.field]]
+      name = "ifHCOutOctets"
+      oid = "IF-MIB::ifHCOutOctets"
 
-        [[inputs.snmp.table.field]]
-        name = "ifHCOutUcastPkts"
-        oid = "IF-MIB::ifHCOutUcastPkts"
+      [[inputs.snmp.table.field]]
+      name = "ifHCOutUcastPkts"
+      oid = "IF-MIB::ifHCOutUcastPkts"
 
-        [[inputs.snmp.table.field]]
-        name = "ifHCOutMulticastPkts"
-        oid = "IF-MIB::ifHCOutMulticastPkts"
+      [[inputs.snmp.table.field]]
+      name = "ifHCOutMulticastPkts"
+      oid = "IF-MIB::ifHCOutMulticastPkts"
 
-        [[inputs.snmp.table.field]]
-        name = "ifHCOutBroadcastPkts"
-        oid = "IF-MIB::ifHCOutBroadcastPkts"
+      [[inputs.snmp.table.field]]
+      name = "ifHCOutBroadcastPkts"
+      oid = "IF-MIB::ifHCOutBroadcastPkts"
 
-        [[inputs.snmp.table.field]]
-        name = "ifOperStatus"
-        oid = "IF-MIB::ifOperStatus"
-
-
-        [inputs.snmp.tagpass]
-          ifName = ["Vlan601","Vlan711", "Vlan710"]
-
-        {{ end }}
+      [[inputs.snmp.table.field]]
+      name = "ifOperStatus"
+      oid = "IF-MIB::ifOperStatus"
 
 
-        # 32-bit counter OIDs
-        {{ if eq .hostGroup.counter64Bit false }}
-
-        # Walk the ifXTable for counters, names, etc.
-        [[inputs.snmp.table]]
-          oid = "IF-MIB::ifXTable"
-          name = "interface"
-          inherit_tags = ["source"]
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifName"
-            name = "ifName"
-            is_tag = true
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifIndex"
-            name = "ifIndex"
-            is_tag = true
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifAlias"
-            name = "ifAlias"
-            is_tag = true
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifInErrors"
-            name = "ifInErrors"
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifOutErrors"
-            name = "ifOutErrors"
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifInDiscards"
-            name = "ifInDiscards"
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifOutDiscards"
-            name = "ifOutDiscards"
-
-          [[inputs.snmp.table.field]]
-            oid = "IF-MIB::ifOperStatus"
-            name = "ifOperStatus"
-
-        {{ end }}
-
-        {{ end }}
+      [inputs.snmp.tagpass]
+        ifName = ["Vlan601","Vlan711", "Vlan710"]
 
       {{ end }}
+
+
+      # 32-bit counter OIDs
+      {{ if eq .hostGroup.counter64Bit false }}
+
+      # Walk the ifXTable for counters, names, etc.
+      [[inputs.snmp.table]]
+        oid = "IF-MIB::ifXTable"
+        name = "interface"
+        inherit_tags = ["source"]
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifName"
+          name = "ifName"
+          is_tag = true
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifIndex"
+          name = "ifIndex"
+          is_tag = true
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifAlias"
+          name = "ifAlias"
+          is_tag = true
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifInErrors"
+          name = "ifInErrors"
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifOutErrors"
+          name = "ifOutErrors"
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifInDiscards"
+          name = "ifInDiscards"
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifOutDiscards"
+          name = "ifOutDiscards"
+
+        [[inputs.snmp.table.field]]
+          oid = "IF-MIB::ifOperStatus"
+          name = "ifOperStatus"
+
+      {{ end }}
+
+      {{ end }}
+
+    {{ end }}
 
