@@ -5,36 +5,38 @@ metadata:
 data:
 
   {{ range .Values.clusters }}
+  {{- range $cluster := .cluster }}
   form.yml: |
-  ---
-  attributes:
-    desktop: "mate"
-    bc_vnc_idle: 0
-    bc_vnc_resolution:
-      required: true
-    node_type: null
-    cluster:
-      widget: "select"
-      options:
-        {{- $cluster.name | quote }}
-      help: |
-        Select a node or cluster to create this desktop session on.
-      num_cores:
-        widget: "number_field"
-        label: "Number of tasks (CPU cores)"
-        value: 1
-        min: 1
-        step: 1
-  
-  form:
-    - cluster
-    - bc_vnc_idle
-    - desktop
-    - bc_account
-    - bc_num_hours
-    - bc_num_slots
-    - node_type
-    - bc_queue
-    - bc_vnc_resolution
-    - bc_email_on_started
+    ---
+    attributes:
+      desktop: "mate"
+      bc_vnc_idle: 0
+      bc_vnc_resolution:
+        required: true
+      node_type: null
+      cluster:
+        widget: "select"
+        options:
+          {{ $cluster.name | quote }}
+        help: |
+          Select a node or cluster to create this desktop session on.
+        num_cores:
+          widget: "number_field"
+          label: "Number of tasks (CPU cores)"
+          value: 1
+          min: 1
+          step: 1
+    
+    form:
+      - cluster
+      - bc_vnc_idle
+      - desktop
+      - bc_account
+      - bc_num_hours
+      - bc_num_slots
+      - node_type
+      - bc_queue
+      - bc_vnc_resolution
+      - bc_email_on_started
+  {{ end }}
   {{ end }}
