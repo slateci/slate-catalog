@@ -10,8 +10,12 @@ data:
     title: {{ .cluster.name | lower | nospace }}-desktop
     cluster: {{ .cluster.name | lower | nospace | quote }}
     submit: "linux_host"
+    form:
+      - desktop
+      - bc_num_hours
     attributes:
       bc_queue: null
       bc_account: null
+      bc_num_slots: 1
       num_cores: none
   {{ end }}
