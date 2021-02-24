@@ -43,7 +43,7 @@ spec:
               path: desktop-{{ .cluster.name | lower | nospace }}.yml
         - name: bc-desktop-form
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-desktop-form
+            name: {{ include "open-ondemand.fullname" $ }}-desktop-form
             items:
             - key: form.yml
               path: form.yml
