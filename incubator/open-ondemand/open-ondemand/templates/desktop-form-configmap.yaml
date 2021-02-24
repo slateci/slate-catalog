@@ -4,7 +4,6 @@ metadata:
   name: {{ include "open-ondemand.fullname" . }}-desktop-form
 data:
 
-  {{ range .Values.clusters }}
   form.yml: |
     ---
     attributes:
@@ -16,7 +15,7 @@ data:
       cluster:
         widget: "select"
         options:
-          {{- range $cluster := .cluster }}
+          {{- range $cluster := .Values.clusters }}
           - {{ $cluster.name | quote }}
           {{- end }}
         help: |
@@ -39,4 +38,3 @@ data:
       - bc_queue
       - bc_vnc_resolution
       - bc_email_on_started
-  {{ end }}
