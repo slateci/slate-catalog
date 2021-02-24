@@ -5,7 +5,6 @@ metadata:
 data:
 
   {{ range .Values.clusters }}
-  {{- range $cluster := .cluster }}
   form.yml: |
     ---
     attributes:
@@ -17,7 +16,9 @@ data:
       cluster:
         widget: "select"
         options:
-          {{ $cluster.name | quote }}
+          {{- range $.cluster.name }}
+          - {{ . | title | quote }}
+          {{- end }}
         help: |
           Select a node or cluster to create this desktop session on.
         num_cores:
@@ -38,5 +39,4 @@ data:
       - bc_queue
       - bc_vnc_resolution
       - bc_email_on_started
-  {{ end }}
   {{ end }}
