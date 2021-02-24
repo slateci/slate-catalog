@@ -23,7 +23,7 @@ data:
     data:
       - tsds_name: interface
         telegraf_name: interface
-        interval: 60
+        interval: {{ .Values.flushInterval }}
         metadata:
           - from: agent_host
             to: "node"
@@ -73,7 +73,7 @@ data:
 
     # Telegraf Agent Config
     [agent]
-      interval = {{ .Values.interval | quote }}
+      interval = {{ .Values.collectionInterval | quote }}
       round_interval = true
       metric_batch_size = 1000
       metric_buffer_limit = 100000
@@ -164,7 +164,7 @@ data:
 
       # Enumerate agent addresses to retrieve values from.
       agents = [{{- range $value := .hostGroup.hosts }}
-      "udp://{{ $value }}",
+      "{{ $value }}",
       {{ end -}}]
 
       timeout = "15s"
