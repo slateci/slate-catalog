@@ -28,8 +28,8 @@ The following table lists the configurable parameters of the Telegraf monitoring
 |-------------------------------|---------------------------------|-----------------------------|
 |`Instance`| Optional string to differentiate SLATE experiment instances |""|
 |`writeToStdout`| Optionally write to stdout in container |`true`|
-|`interval`| Data collection interval |`5s`|
-|`flushInterval`| Output flush interval |`300s`|
+|`collectionInterval`| Data collection interval |`5s`|
+|`flushInterval`| Output flush interval |`15s`|
 |`grnocOutput.enabled`| Whether to write to GlobalNOC database |`true`|
 |`grnocOutput.hostname`| Database endpoint |`tsds.hostname.net`|
 |`grnocOutput.username`| Database username |`tsds username`|
