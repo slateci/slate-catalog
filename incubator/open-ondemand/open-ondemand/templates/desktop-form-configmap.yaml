@@ -16,7 +16,7 @@ data:
       cluster:
         widget: "select"
         options:
-          {{- range $.cluster.name }}
+          {{- range .cluster.name }}
           - {{ . | title | quote }}
           {{- end }}
         help: |
