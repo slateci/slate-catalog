@@ -16,8 +16,8 @@ data:
       cluster:
         widget: "select"
         options:
-          {{- range .cluster.name }}
-          - {{ . | title | quote }}
+          {{- range $name := .cluster.name }}
+          - {{ $name | quote }}
           {{- end }}
         help: |
           Select a node or cluster to create this desktop session on.
