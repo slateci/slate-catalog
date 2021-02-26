@@ -27,13 +27,10 @@ spec:
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-        {{ range .Values.clusters }}
-        - name: cluster-{{ .cluster.name | lower | nospace }}-setup
+        - name: cluster-config-files
           configMap:
-            name: {{ include "open-ondemand.fullname" $ }}-shell-setup
-            items:
-            - key: cluster-{{ .cluster.name | lower | nospace }}.yml
-              path: cluster-{{ .cluster.name | lower | nospace }}.yml
+            name: {{ include "open-ondemand.fullname" . }}-shell-setup
+        {{ range .Values.clusters }}
         {{ if eq .cluster.desktopEnable true }}
         - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
           configMap:
@@ -57,11 +54,10 @@ spec:
             - name: ood-portal-config
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
-            {{ range .Values.clusters }}
             # Shell app
-            - name: cluster-{{ .cluster.name | lower | nospace }}-setup
-              mountPath: /etc/ood/config/clusters.d/cluster-{{ .cluster.name | lower | nospace }}.yml
-              subPath: cluster-{{ .cluster.name | lower | nospace }}.yml
+            - name: cluster-config-files
+              mountPath: /etc/ood/config/clusters.d
+            {{ range .Values.clusters }}
             # Desktop app
             {{ if eq .cluster.desktopEnable true }}
             - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
