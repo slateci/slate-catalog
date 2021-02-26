@@ -17,7 +17,8 @@ data:
       job:
         adapter: "linux_host"
         submit_host: {{ .cluster.name | quote }}
-        ssh_hosts: {{ .cluster.job.ssh_hosts | quote }}
+        ssh_hosts: 
+        - {{ .cluster.job.ssh_hosts | quote }}
         site_timeout: 7200
         debug: true
         singularity_bin: {{ .cluster.job.singularity_bin | quote }}
