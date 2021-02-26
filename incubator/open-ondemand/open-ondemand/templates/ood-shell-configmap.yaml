@@ -5,7 +5,7 @@ metadata:
 data:
 
   {{ range .Values.clusters }}
-  cluster-{{ .cluster.name | lower | nospace }}.yml: |
+  {{ .cluster.name | lower | nospace }}.yml: |
     ---
     v2:
       metadata:

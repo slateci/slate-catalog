@@ -32,8 +32,8 @@ spec:
           configMap:
             name: {{ include "open-ondemand.fullname" $ }}-shell-setup
             items:
-            - key: cluster-{{ .cluster.name | lower | nospace }}.yml
-              path: cluster-{{ .cluster.name | lower | nospace }}.yml
+            - key: {{ .cluster.name | lower | nospace }}.yml
+              path: {{ .cluster.name | lower | nospace }}.yml
         {{ if eq .cluster.desktopEnable true }}
         - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
           configMap:
@@ -71,9 +71,9 @@ spec:
               subPath: ood_portal.yml
             {{ range .Values.clusters }}
             # Shell app
-            - name: cluster-{{ .cluster.name | lower | nospace }}-setup
+            - name: {{ .cluster.name | lower | nospace }}-setup
               mountPath: /etc/ood/config/clusters.d/cluster-{{ .cluster.name | lower | nospace }}.yml
-              subPath: cluster-{{ .cluster.name | lower | nospace }}.yml
+              subPath: {{ .cluster.name | lower | nospace }}.yml
             # Desktop app
             {{ if eq .cluster.desktopEnable true }}
             - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
