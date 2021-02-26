@@ -8,7 +8,7 @@ data:
   desktop-{{ .cluster.name | lower | nospace }}.yml: |
     ---
     title: {{ .cluster.name | lower | nospace }}-desktop
-    cluster: {{ .cluster.name | lower | nospace | quote }}
+    cluster: cluster-{{ .cluster.name | lower | nospace }}
     submit: "linux_host"
     form:
       - desktop
