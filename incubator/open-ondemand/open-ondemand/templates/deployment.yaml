@@ -49,7 +49,7 @@ spec:
               path: form.yml
         - name: bc-desktop-submit
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-submit-form
+            name: {{ include "open-ondemand.fullname" $ }}-submit-form
             items:
             - key: submit.form.yml.erb
               path: submit.form.yml.erb
