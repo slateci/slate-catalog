@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "open-ondemand.fullname" . }}-submit-form
 data:
-  submit.form.yml.erb:  |
+  submit.yml.erb:  |
     ---
     batch_connect:
       template: vnc
