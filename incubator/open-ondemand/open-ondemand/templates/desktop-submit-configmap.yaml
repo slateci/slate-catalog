@@ -6,9 +6,9 @@ data:
   submit.form.yml.erb:  |
     ---
     batch_connect:
-  	  template: vnc
+      template: vnc
     script:
-  	  <%- if /frisco/.match(cluster) == nil -%>
+      <%- if /frisco/.match(cluster) == nil -%>
       native:
         <%- if num_cores != "none" -%>
         - "-n <%= num_cores %>"
