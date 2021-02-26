@@ -77,6 +77,7 @@ WORKDIR /root
 RUN mkdir /etc/ood/config/apps/bc_desktop
 RUN mkdir /etc/ood/config/apps/bc_desktop/single_cluster
 RUN mv /var/www/ood/apps/sys/bc_desktop/form.yml /var/www/ood/apps/sys/bc_desktop/form.yml.org
+RUN mv /var/www/ood/apps/sys/bc_desktop/submit.form.yml.erb /var/www/ood/apps/sys/bc_desktop/submit.form.yml.erb.org
 
 # Some security precautions
 RUN chmod 0700 /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh
