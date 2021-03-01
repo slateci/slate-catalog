@@ -77,6 +77,7 @@ SquidConf:
   MaxAccessLog: "20M"  
   # Set the value for the cpu resource request - default is 2
   cpu: "2"
+
 NodeSelection:  
   # Hostname (FQDN) for the cluster node you want this instance to schedule on.
   # This will also be the hostname used to access the squid if ExternalVisibility is set to NodePort
