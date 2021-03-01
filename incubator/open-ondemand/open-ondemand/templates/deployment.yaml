@@ -47,12 +47,12 @@ spec:
             items:
             - key: form.yml
               path: form.yml
-        - name: bc-desktop-submit
-          configMap:
-            name: {{ include "open-ondemand.fullname" $ }}-submit-form
-            items:
-            - key: submit.yml.erb
-              path: submit.yml.erb
+#        - name: bc-desktop-submit
+#          configMap:
+#            name: {{ include "open-ondemand.fullname" $ }}-submit-form
+#            items:
+#            - key: submit.yml.erb
+#              path: submit.yml.erb
         {{ end }}
         {{ end }}
         # Claim SLATE volume to persist Keycloak data.
@@ -82,9 +82,9 @@ spec:
             - name: bc-desktop-form
               mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
               subPath: form.yml
-            - name:  bc-desktop-submit
-              mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
-              subPath: submit.yml.erb
+#            - name:  bc-desktop-submit
+#              mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
+#              subPath: submit.yml.erb
             {{ end }}
             {{ end }}
           ports:
