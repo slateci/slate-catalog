@@ -10,6 +10,10 @@ metadata:
 data:
   60-customization.awk: |
     setoption("acl HOST_MONITOR src", "{{ .Values.SquidConf.MonitoringIPRange }}")
+    {{- if .Values.SquidConf.RESTRICT_DEST }}
+    setoptionparameter("acl RESTRICT_DEST", 3, "{{ .Values.SquidConf.RESTRICT_DEST }}")
+    uncomment("http_access deny !RESTRICT_DEST")
+    {{- end }}
     {{ if .Values.SquidConf.Cpu_Affinity_Map }}setoption("cpu_affinity_map", "{{ .Values.SquidConf.Cpu_Affinity_Map }}"){{ end }}
     {{ if .Values.SquidConf.Logfile_Rotate }}setoption("logfile_rotate", "{{ .Values.SquidConf.Logfile_Rotate }}"){{ end }}
     {{- if .Values.SquidConf.Workers -}}

@@ -39,11 +39,21 @@ spec:
       - name: osg-frontier-squid
         image: opensciencegrid/frontier-squid:fresh
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "2"
+            ephemeral-storage: "2Gi"
+          limits:
+            ephemeral-storage: "5Gi"
         env:
         - name: SQUID_IPRANGE
           value: {{ .Values.SquidConf.IPRange }}
         - name: SQUID_CACHE_MEM
           value: '{{ .Values.SquidConf.CacheMem }} MB'  
+        {{ if .Values.SquidConf.MaxAccessLog }}
+        - name: SQUID_MAX_ACCESS_LOG
+          value: {{ .Values.SquidConf.MaxAccessLog }}
+        {{ end }} 
         ports:
         - containerPort: 3128
           name: squid
