@@ -1,7 +1,7 @@
 # Version of Kubernetes in use
 apiVersion: v1
 # Version of application packaged for installation
-appVersion: 3.5.28
+appVersion: 3.5.27
 description: A Helm chart for configuration and deployment of the Open Science Grid's Frontier Squid application.
 name: osg-frontier-squid
 # Chart version
