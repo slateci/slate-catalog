@@ -35,6 +35,11 @@ spec:
       - name: osg-frontier-squid
         image: opensciencegrid/frontier-squid:development
         imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            ephemeral-storage: "1Gi"
+          limits:
+            ephemeral-storage: "5Gi"
         ports:
         - containerPort: 3128
           name: squid
