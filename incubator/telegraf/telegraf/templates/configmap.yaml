@@ -77,9 +77,9 @@ data:
       round_interval = true
       metric_batch_size = 1000
       metric_buffer_limit = 100000
-      collection_jitter = "10s"
+      collection_jitter = {{ .Values.collectionJitter | quote }}
       flush_interval = {{ .Values.flushInterval | quote }}
-      flush_jitter = "10s"
+      flush_jitter = {{ .Values.flushJitter | quote }}
       precision = ""
 
 
