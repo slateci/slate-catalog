@@ -37,11 +37,11 @@ spec:
       containers:
       # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid
-        image: opensciencegrid/frontier-squid:fresh
+        image: opensciencegrid/frontier-squid:release
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: "2"
+            cpu: {{ .Values.SquidConf.cpu }}
             ephemeral-storage: "2Gi"
           limits:
             ephemeral-storage: "5Gi"
@@ -60,6 +60,9 @@ spec:
         - containerPort: 3401
           name: monitoring
           protocol: UDP
+          {{ if and .Values.NodeSelection.Hostname .Values.NodeSelection.OpenDefaultMonPort }}
+          hostPort: 3401
+          {{ end }}
         volumeMounts:
 # Commetned out and will probably not be needed. We're using the default 60-image-post-init.sh script 
 # that comes with upstream image. Our custom config has been moved to the .awk file added through configmap
