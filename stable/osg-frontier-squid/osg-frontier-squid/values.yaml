@@ -84,5 +84,5 @@ NodeSelection:
   # Set this to null to be randomly assigned an available node 
   Hostname: null
   # Set the below flag to true if you want to expose defautl port on the target node
-  # Open default monitoring port (3401) -- This flag has no effect if Hostname is not set in this conf file 
+  # Open default monitoring port (3401) -- This flag has no effect if Hostname is not set above in this conf file.
   OpenDefaultMonPort: False
