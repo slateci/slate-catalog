@@ -81,7 +81,7 @@ data:
 {{ end }}
 {{ if .Values.SquidConf.CleanLog }}
   # Truncates log file every 2 min 
-  55-squid-log-dump.conf: |+
+  55-squid-log-clean.conf: |+
     [program:squid-log-trunc]
     command=/bin/sh -c "while true; do truncate -s 0 /var/log/squid/access.log; sleep 120; done "
     user=squid
