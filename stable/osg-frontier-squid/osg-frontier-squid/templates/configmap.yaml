@@ -90,3 +90,13 @@ data:
     stdout_logfile=/dev/stdout
     stdout_logfile_maxbytes=0
 {{ end }}
+{{ if .Values.SquidConf.CleanLog }}
+  # Truncates log file every 2 min 
+  55-squid-log-clean.conf: |+
+    [program:squid-log-trunc]
+    command=/bin/sh -c "while true; do truncate -s 0 /var/log/squid/access.log; sleep 120; done "
+    user=squid
+    autorestart=true
+    stdout_logfile=/dev/stdout
+    stdout_logfile_maxbytes=0
+{{ end }}

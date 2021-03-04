@@ -39,12 +39,6 @@ spec:
       - name: osg-frontier-squid
         image: opensciencegrid/frontier-squid:release
         imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: {{ .Values.SquidConf.cpu }}
-            ephemeral-storage: "2Gi"
-          limits:
-            ephemeral-storage: "5Gi"
         env:
         - name: SQUID_IPRANGE
           value: {{ .Values.SquidConf.IPRange }}
@@ -54,6 +48,12 @@ spec:
         - name: SQUID_MAX_ACCESS_LOG
           value: {{ .Values.SquidConf.MaxAccessLog }}
         {{ end }} 
+        resources:
+          requests:
+            cpu: {{ .Values.SquidConf.cpu }}
+            ephemeral-storage: {{ .Values.SquidConf.RequestEphemeralSize }}Gi
+          limits:
+            ephemeral-storage: {{ .Values.SquidConf.LimitEphemeralSize }}Gi
         ports:
         - containerPort: 3128
           name: squid
@@ -64,7 +64,7 @@ spec:
           hostPort: 3401
           {{ end }}
         volumeMounts:
-# Commetned out and will probably not be needed. We're using the default 60-image-post-init.sh script 
+# Commented out and will probably not be needed. We're using the default 60-image-post-init.sh script 
 # that comes with upstream image. Our custom config has been moved to the .awk file added through configmap
 #        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
 #          mountPath: /etc/osg/image-config.d/60-image-post-init.sh
@@ -73,6 +73,11 @@ spec:
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /etc/supervisord.d/50-squid-log-dump.conf
           subPath: 50-squid-log-dump.conf 
+        {{ end }}
+        {{ if .Values.SquidConf.CleanLog }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
+          mountPath: /etc/supervisord.d/55-squid-log-clean.conf
+          subPath: 55-squid-log-clean.conf 
         {{ end }}
         # Storage location of the cache data
         - mountPath: /var/cache/squid/osg-frontier-squid-{{ .Values.Instance }}-cache
@@ -99,6 +104,10 @@ spec:
             {{ if .Values.SquidConf.LogToStdout }}
             - key: 50-squid-log-dump.conf
               path: 50-squid-log-dump.conf
+            {{ end }}
+            {{ if .Values.SquidConf.CleanLog }}
+            - key: 55-squid-log-clean.conf
+              path: 55-squid-log-clean.conf
             {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
         {{ if .Values.SLATE.LocalStorage }}
