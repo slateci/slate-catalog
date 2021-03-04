@@ -19,10 +19,17 @@ data:
     {{- if .Values.SquidConf.Workers -}}
     setoption("workers", {{ .Values.SquidConf.Workers }} )
     setoption("cache_dir", "ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256")
+    {{- if .Values.SquidConf.DisableLogging -}}
+    setoption("access_log", "none")
+    {{- else -}}
     setoptionparameter("logformat awstats", 3, "kid${process_number}")
+    {{ end }}
     setoption("visible_hostname", "'`uname -n`'/${process_number}")
     {{- else }} # single worker case
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
+    {{- if .Values.SquidConf.DisableLogging -}}
+    setoption("access_log", "none")
+    {{- end }}
     {{ end }}
 # The below 60-image-post-init.sh script is not mounted and the above new script takes care of the customization needed
 # 2-3 setttings are done vai env vars as per the OSG docs
