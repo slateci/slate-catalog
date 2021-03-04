@@ -46,9 +46,9 @@ spec:
           value: '{{ .Values.SquidConf.CacheMem }} MB'  
         resources:
           requests:
-            ephemeral-storage: "1Gi"
+            ephemeral-storage: {{ .Values.SquidConf.RequestEphemeralSize }}Gi
           limits:
-            ephemeral-storage: "5Gi"
+            ephemeral-storage: {{ .Values.SquidConf.LimitEphemeralSize }}Gi
         ports:
         - containerPort: 3128
           name: squid
