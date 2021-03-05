@@ -50,7 +50,7 @@ spec:
         {{ end }} 
         resources:
           requests:
-            cpu: {{ .Values.SquidConf.cpu }}
+            cpu: {{ .Values.SquidConf.CPU }}
             ephemeral-storage: {{ .Values.SquidConf.RequestEphemeralSize }}Gi
           limits:
             ephemeral-storage: {{ .Values.SquidConf.LimitEphemeralSize }}Gi
