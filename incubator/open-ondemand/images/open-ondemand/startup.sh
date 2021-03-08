@@ -37,10 +37,9 @@ supervisorctl restart apache
 #chown root:root /etc/sssd/sssd.conf
 #chmod 0600 /etc/sssd/sssd.conf
 #authconfig --update --enablesssd --enablesssdauth --enablemkhomedir
-# Set up incron
-usermod -a G ondemand-nginx incronuser
-sleep 10
-supervisorctl restart incron
 # Add users from Keycloak API
-sleep 15
-cat /shared/users.txt | tr " " "\n" | xargs -L 1 useradd -M
+while [ ! -f /shared/newusers.txt ]
+do
+	sleep 2
+done
+newusers /shared/newusers.txt

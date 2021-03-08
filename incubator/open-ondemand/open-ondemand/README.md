@@ -8,18 +8,15 @@ This application additionally requires a SLATE volume to persist authentication 
 
 `slate app get-conf open-ondemand > ood.yaml`
 
-`slate volume create --group <group_name> --cluster <cluster> --size <volume_size> --storageClass <storage_class> volume-name
-
 `slate app install open-ondemand --group <group_name> --cluster <cluster> --conf ood.yaml`
 
 
 ## Usage:
 
 * Retrieve default configuration file. (see first command above)
-* Create a SLATE volume to persist configuration. (see second command above)
 * Modify configuration file to ensure appropriate setup.
-	* Set the `SLATE.Cluster.DNSName` value to the DNS name of the cluster the application is being installed on
-	* Set the `claimName` value to the name of the previously created SLATE volume.
+	* Set `volume.storageClass` to a value that is supported by your cluster.
+	* List backend cluster names and host names.
 * Install app with custom configuration onto a SLATE cluster. (see last command above)
 
 
@@ -32,8 +29,8 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`Instance`| Optional string to differentiate SLATE experiment instances. |`global`|
 |`replicaCount`| The number of replicas to create. |`1`|
 |`setupKeycloak`| Runs Keycloak setup script if enabled. |`true`|
-|`claimName`| The name of the SLATE volume to store configuration in. |`keycloak-db`| 
-|`SLATE.Cluster.DNSName`| DNS name of the cluster the application is deployed on. |`utah-dev.slateci.net`|
+|`volume.storageClass`| The volume provisioner from which to request the Keycloak backing volume |`local-path`| 
+|`volume.size`| The amount of storage to request for the volume |`50M`| 
 |`setupLDAP`| Set up LDAP automatically based on following values. |`true`| 
 |`ldap.connectionURL`| URL to access LDAP at. |`ldap://your-ldap-here`| 
 |`ldap.importUsers`| Import LDAP users to Keycloak. |`true`| 
@@ -46,6 +43,8 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`kerberos.keyTab`| Kerberos configuration |`/etc/krb5.keytab`| 
 |`kerberos.kerberosPasswordAuth`| Use Kerberos for password authentication. |`true`| 
 |`kerberos.debug`| Writes additional debug logs if enabled. |`true`| 
-|`cluster1.name`| Name of cluster to connect to. |`Kingspeak`| 
-|`cluster1.host`| Hostname of cluster to connect to. |`kingspeak.chpc.utah.edu`| 
+|`clusters.cluster.name`| Name of cluster to connect to. |`Kingspeak`| 
+|`clusters.cluster.host`| Hostname of cluster to connect to. |`kingspeak.chpc.utah.edu`| 
+|`testUsers.user.name`| Username of test user to add. |`test`| 
+|`testUsers.user.tempPassword`| Temporary password to set for test user. |`test`| 
 

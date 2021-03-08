@@ -27,16 +27,26 @@ spec:
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-        - name: shell-app-setup
+        {{ range .Values.clusters }}
+        - name: cluster-{{ .cluster.name | lower | nospace }}-setup
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-shell-setup
+            name: {{ include "open-ondemand.fullname" $ }}-shell-setup
             items:
-            - key: clusters.yaml
-              path: clusters.yaml
+            - key: cluster-{{ .cluster.name | lower | nospace }}.yml
+              path: cluster-{{ .cluster.name | lower | nospace }}.yml
+        {{ if eq .cluster.desktopEnable true }}
+        - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
+          configMap:
+            name: {{ include "open-ondemand.fullname" $ }}-desktop-host
+            items:
+            - key: desktop-{{ .cluster.name | lower | nospace }}.yml
+              path: desktop-{{ .cluster.name | lower | nospace }}.yml
+        {{ end }}
+        {{ end }}
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
-            claimName: {{ .Values.claimName }}
+            claimName: keycloak-persistent-volume-{{ .Values.Instance }}
       containers:
         - name: open-ondemand
           image: slateci/open-ondemand:1.8.1
@@ -47,9 +57,18 @@ spec:
             - name: ood-portal-config
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
-            - name: shell-app-setup
-              mountPath: /etc/ood/config/clusters.d/clusters.yaml
-              subPath: clusters.yaml
+            {{ range .Values.clusters }}
+            # Shell app
+            - name: cluster-{{ .cluster.name | lower | nospace }}-setup
+              mountPath: /etc/ood/config/clusters.d/cluster-{{ .cluster.name | lower | nospace }}.yml
+              subPath: cluster-{{ .cluster.name | lower | nospace }}.yml
+            # Desktop app
+            {{ if eq .cluster.desktopEnable true }}
+            - name: cluster-{{ .cluster.name | lower | nospace }}-desktop-host
+              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster/desktop-{{ .cluster.name | lower | nospace }}.yml
+              subPath: desktop-{{ .cluster.name | lower | nospace }}.yml
+            {{ end }}
+            {{ end }}
           ports:
             - name: http
               containerPort: 80

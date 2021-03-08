@@ -17,7 +17,9 @@ Pushes metrics to a user-specifiable TS-DB.
 * Modify configuration file to ensure appropriate metrics are scraped.
 * Modify configuration to send to proper database endpoint.
 * Install app with custom configuration onto a SLATE cluster. (see second command above)
-* A more detailed tutorial on this application can be found [here](https://slateci.io/blog). 
+
+
+A more detailed tutorial on this application can be found [here](https://slateci.io/blog/telegraf-monitoring.html).
 
 
 ## Configuration
@@ -28,8 +30,10 @@ The following table lists the configurable parameters of the Telegraf monitoring
 |-------------------------------|---------------------------------|-----------------------------|
 |`Instance`| Optional string to differentiate SLATE experiment instances |""|
 |`writeToStdout`| Optionally write to stdout in container |`true`|
-|`interval`| Data collection interval |`5s`|
-|`flushInterval`| Output flush interval |`300s`|
+|`collectionInterval`| Data collection interval |`5s`|
+|`collectionJitter`| Data jitter interval |`10s`|
+|`flushInterval`| Output flush interval |`15s`|
+|`flushJitter`| Output jitter interval |`10s`|
 |`grnocOutput.enabled`| Whether to write to GlobalNOC database |`true`|
 |`grnocOutput.hostname`| Database endpoint |`tsds.hostname.net`|
 |`grnocOutput.username`| Database username |`tsds username`|

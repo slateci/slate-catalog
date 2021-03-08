@@ -1,5 +1,5 @@
 apiVersion: v2
 name: telegraf
-version: 0.3.1
-appVersion: 0.1.1
+version: 0.4.2
+appVersion: 1.17.0
 description: "Deploys an SNMP monitoring service using Telegraf."

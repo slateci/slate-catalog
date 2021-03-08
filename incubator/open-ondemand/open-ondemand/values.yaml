@@ -9,16 +9,10 @@ replicaCount: 1
 
 setupKeycloak: true
 
-# SLATE volume to claim
-claimName: keycloak-db
-
-### SLATE-START ###
-SLATE:
-  Instance:
-    ID: "untagged"
-  Cluster:
-    DNSName: "utah-dev.slateci.net"
-### SLATE-END ###
+# Keycloak volume parameters
+volume:
+  storageClass: local-path
+  size: 50M
 
 # LDAP/Kerberos setup and configuration
 setupLDAP: true
@@ -37,6 +31,48 @@ kerberos:
   debug: "true"
 
 # Shell application setup
-cluster1:
-  name: "Kingspeak"
-  host: "kingspeak.chpc.utah.edu"
+# Add another cluster section for each backend cluster you wish to connect to
+clusters:
+  - cluster:
+      name: "frisco1"
+      host: "frisco1.chpc.utah.edu"
+      desktopEnable: false
+      job:
+        ssh_hosts: "[ 'frisco1.chpc.utah.edu' ]"
+        singularity_bin: /uufs/chpc.utah.edu/sys/installdir/singularity3/std/bin/singularity
+        singularity_bindpath: /etc,/mnt,/media,/opt,/run,/srv,/usr,/var,/uufs,/scratch
+        singularity_image: /uufs/chpc.utah.edu/sys/installdir/ood/centos7_lmod.sif  # Something like centos_7.6.sif
+        tmux_bin: /usr/bin/tmux
+      basic_script: 
+        - "#!/bin/bash"
+        - "if [ -z '$LMOD_VERSION' ]; then"
+        - "  source /etc/profile.d/chpc.sh"
+        - "fi"
+        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
+        - "%s"
+      vnc_script: 
+        - "#!/bin/bash"
+        - "set -x"
+        - "export PATH='/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH'"
+        - "export WEBSOCKIFY_CMD='/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify'"
+        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
+        - "%s"
+  - cluster:
+      name: "Notchpeak"
+      host: "notchpeak.chpc.utah.edu"
+      desktopEnable: false
+
+# Configure additional test users to be added to Keycloak.
+testUsers:
+  - user:
+      name: "test"
+      tempPassword: "test"
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+  Cluster:
+    DNSName: "utah-dev.slateci.net"
+### SLATE-END ###
+      

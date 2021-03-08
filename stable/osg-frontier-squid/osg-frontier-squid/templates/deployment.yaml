@@ -37,8 +37,18 @@ spec:
       containers:
       # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid
-        image: opensciencegrid/frontier-squid:20210106-2231
+        image: opensciencegrid/frontier-squid:fresh
         imagePullPolicy: Always
+        env:
+        - name: SQUID_IPRANGE
+          value: {{ .Values.SquidConf.IPRange }}
+        - name: SQUID_CACHE_MEM
+          value: '{{ .Values.SquidConf.CacheMem }} MB'  
+        resources:
+          requests:
+            ephemeral-storage: {{ .Values.SquidConf.RequestEphemeralSize }}Gi
+          limits:
+            ephemeral-storage: {{ .Values.SquidConf.LimitEphemeralSize }}Gi
         ports:
         - containerPort: 3128
           name: squid
@@ -46,19 +56,36 @@ spec:
           name: monitoring
           protocol: UDP
         volumeMounts:
-        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
-          mountPath: /etc/osg/image-config.d/60-image-post-init.sh
-          subPath: 60-image-post-init.sh 
+# Commented out and will probably not be needed. We're using the default 60-image-post-init.sh script 
+# that comes with upstream image. Our custom config has been moved to the .awk file added through configmap
+#        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
+#          mountPath: /etc/osg/image-config.d/60-image-post-init.sh
+#          subPath: 60-image-post-init.sh 
         {{ if .Values.SquidConf.LogToStdout }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /etc/supervisord.d/50-squid-log-dump.conf
           subPath: 50-squid-log-dump.conf 
         {{ end }}
+        {{ if .Values.SquidConf.CleanLog }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
+          mountPath: /etc/supervisord.d/55-squid-log-clean.conf
+          subPath: 55-squid-log-clean.conf 
+        {{ end }}
         # Storage location of the cache data
         - mountPath: /var/cache/squid/osg-frontier-squid-{{ .Values.Instance }}-cache
           subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
           name: osg-frontier-squid-{{ .Values.Instance }}-data
+        - mountPath: /etc/squid/customize.d/60-customization.awk
+          subPath: 60-customization.awk
+          name: osg-frontier-squid-{{ .Values.Instance }}-awk
       volumes:
+        - name: osg-frontier-squid-{{ .Values.Instance }}-awk
+          configMap:
+            name: {{ template "osg-frontier-squid.fullname" . }}
+            items:
+            - key: 60-customization.awk
+              path: 60-customization.awk
+              mode: 420
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           configMap:
             name: {{ template "osg-frontier-squid.fullname" . }}
@@ -69,6 +96,10 @@ spec:
             {{ if .Values.SquidConf.LogToStdout }}
             - key: 50-squid-log-dump.conf
               path: 50-squid-log-dump.conf
+            {{ end }}
+            {{ if .Values.SquidConf.CleanLog }}
+            - key: 55-squid-log-clean.conf
+              path: 55-squid-log-clean.conf
             {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
         {{ if .Values.SLATE.LocalStorage }}
