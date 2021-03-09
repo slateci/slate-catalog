@@ -42,6 +42,8 @@ Service:
   #MonitoringNodePort: 31201
 
 SquidConf:
+  # The number of CPU cores allocated to the Squid application. The default is 2.
+  CPU: 2
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
   # Per Frontier Squid, do not consume more than 1/8 of system memory with Frontier Squid
   CacheMem: 4096
@@ -59,6 +61,8 @@ SquidConf:
   # The default set of ranges are those defined in RFC 1918 and typically used 
   # within kubernetes clusters. 
   IPRange: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+  # The regular expressiion to restrict outbound traffic
+  #RESTRICT_DEST: "^(((cms|atlas).*frontier.*)\\.cern\\.ch)|frontier.*\\.racf\\.bnl\\.gov$"
   # The range of IP addresses that will be allowed to query the service's monitoring data.
   # Multiple ranges can be provided, each seperated by a space.
   # Example: 128.142.0.0/16 188.185.0.0/17
@@ -66,6 +70,9 @@ SquidConf:
   # Write all access_log messages to standard output where they can be viewed with the 
   # Docker/Kubernetes/SLATE log mechanisms, instead of to a file inside the container. 
   LogToStdout: True
+
+  # To disable logging, set the below flag to true
+  #DisableLogging: False
   # truncates log file every 2 minutes.
   CleanLog: False
   # Set this if you want to run more than one cache process concurrently.
@@ -74,10 +81,15 @@ SquidConf:
   # This setting can be used to pin cache processes to CPU cores
   #Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
   # Configure the number of names to use when rotating logfiles
-  #Logfile_Rotate: "10"
-  
+  Logfile_Rotate: "50"
+  # Set the max size for the access log file
+  MaxAccessLog: "20M"  
+
 NodeSelection:  
   # Hostname (FQDN) for the cluster node you want this instance to schedule on.
   # This will also be the hostname used to access the squid if ExternalVisibility is set to NodePort
   # Set this to null to be randomly assigned an available node 
   Hostname: null
+  # Set the below flag to true if you want to expose defautl port on the target node
+  # Open default monitoring port (3401) -- This flag has no effect if Hostname is not set above in this conf file.
+  OpenDefaultMonPort: False
