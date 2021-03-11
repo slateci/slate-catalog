@@ -54,8 +54,8 @@ SquidConf:
   # This is the total storage (in GiB) beyound the CacheSize. If logging disabled, 1 and 5
   # would be reasonable values for request and limit respectively. With logging enabled, higher
   # values would be advisable if target cluster or node supports that.
-  RequestEphemeralSize: 5
-  LimitEphemeralSize: 15
+  RequestEphemeralSize: 3
+  LimitEphemeralSize: 10
   # The range of incoming IP addresses that will be allowed to use the proxy.
   # Multiple ranges can be provided, each seperated by a space.
   # Example: 192.168.1.1/32 192.168.2.1/32
