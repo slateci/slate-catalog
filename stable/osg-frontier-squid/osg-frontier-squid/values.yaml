@@ -51,9 +51,9 @@ SquidConf:
   # The default is 10000 MB (10 GB), but more is advisable if the system supports it.
   # Current limit is 999999 MB, a limit inherent to helm's number conversion system.
   CacheSize: 10000
-  # This is the total storage (in GiB) beyound the CacheSize. If you have have logging disabled, 1 and 5
-  # would be reasonable values for request and limit. With logging enabled, higher values would be advisable
-  # if target cluster or node supports it.
+  # This is the total storage (in GiB) beyound the CacheSize. If logging disabled, 1 and 5
+  # would be reasonable values for request and limit. With logging enabled, higher values
+  # would be advisable if target cluster or node supports that.
   RequestEphemeralSize: 5
   LimitEphemeralSize: 15
   # The range of incoming IP addresses that will be allowed to use the proxy.
