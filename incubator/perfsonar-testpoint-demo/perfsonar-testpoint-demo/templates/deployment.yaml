@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "perfsonar-testpoint-demo.fullname" . }}
+  labels:
+    app: {{ template "perfsonar-testpoint-demo.name" . }}
+    chart: {{ template "perfsonar-testpoint-demo.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "perfsonar-testpoint-demo.name" . }}
+      chart: {{ template "perfsonar-testpoint-demo.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{ template "perfsonar-testpoint-demo.name" . }}
+        chart: {{ template "perfsonar-testpoint-demo.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      nodeSelector:
+        # For Node Selection
+        {{ if .Values.NodeSelection.Hostname }}
+        kubernetes.io/hostname: {{ .Values.NodeSelection.Hostname }}
+        {{ end }}
+      hostNetwork: true
+      containers:
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: logging-sidecar
+        image: "nginx:1.15.9"
+        command: ["/bin/bash"]
+        args: ["/usr/local/bin/start-nginx.sh"]
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: logs
+          containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: log-volume
+          mountPath: /usr/share/nginx/html
+        - name: logger-startup
+          mountPath: /usr/local/bin/start-nginx.sh
+          subPath: start-nginx.sh
+      {{ end }}
+      - name: perfsonar-testpoint
+#        image: perfsonar/testpoint:latest
+#        image: perfsonar-demo:latest
+        image: perfsonar-demo:latest
+        imagePullPolicy: IfNotPresent
+        securityContext: 
+          privileged: true
+#        command: ["/usr/bin/startup_script.sh"] 
+#        command: "pscheduler troubleshoot"
+        volumeMounts:
+        - name: perfsonar-demo-{{ .Values.Instance }}-startup
+          mountPath: "/usr/bin/startup_script.sh"
+          subPath: startup_script.sh
+        - name: perfsonar-test-{{ .Values.Instance }}-startup
+          mountPath: "/usr/bin/run-my-tests.sh"
+          subPath: run-my-tests.sh
+        {{ if .Values.HTTPLogger.Enabled }}
+        - name: log-volume
+          mountPath: /var/log/demo
+        {{ end }}
+      restartPolicy: Always
+      {{ if .Values.nodeSelection }}
+      nodeSelector:
+        perfsonar: enabled
+      {{ end }}
+      volumes:
+      - name: perfsonar-demo-{{ .Values.Instance }}-startup
+        configMap:
+          name: perfsonar-demo-{{ .Values.Instance }}-startup
+          items:
+          - key: startup_script.sh
+            path: startup_script.sh
+            mode: 0755      
+      - name: perfsonar-test-{{ .Values.Instance }}-startup
+        configMap:
+          name: perfsonar-demo-{{ .Values.Instance }}-startup
+          items:
+          - key: run-my-tests.sh
+            path: run-my-tests.sh
+            mode: 0755
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {}
+      - name: logger-startup
+        configMap:
+          name: perfsonar-demo-{{ .Values.Instance }}-startup
+      {{ end }}
+status: {}

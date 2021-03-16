@@ -1,0 +1,21 @@
+{{ if  .Values.HTTPLogger.Enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "perfsonar-testpoint-demo.fullname" . }}
+  labels:
+    app: {{ template "perfsonar-testpoint-demo.name" . }}
+    chart: {{ template "perfsonar-testpoint-demo.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: logs
+    protocol: TCP
+    name: logs
+  selector:
+    app: {{ template "perfsonar-testpoint-demo.name" . }}
+    instance: {{.Values.Instance | quote }}
+{{ end }}

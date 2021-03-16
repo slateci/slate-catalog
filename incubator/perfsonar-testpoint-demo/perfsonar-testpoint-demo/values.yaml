@@ -1,0 +1,21 @@
+# Default values for perfsonar-testpoint.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+Instance: ''
+
+# Whether to run only on specially marked nodes. 
+# If nodeSelection is true, this service will only run on a node
+# which has the `perfsonar: enabled` label applied to it. 
+# Otherwise, it will allow itself to be scheduled on any node. 
+nodeSelection: false
+
+NodeSelection:  
+  Hostname: null
+HTTPLogger: 
+  Enabled: true
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###
