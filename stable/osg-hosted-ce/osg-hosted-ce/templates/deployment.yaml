@@ -242,6 +242,10 @@ spec:
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR
           value: {{ .Values.RemoteCluster.BoscoDir | default "bosco" }}
+        {{ if .Values.BoscoOverrides.URL }}
+        - name: BOSCO_TARBALL_URL
+          value: {{ .Values.BoscoOverrides.URL }}
+        {{ end }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"
