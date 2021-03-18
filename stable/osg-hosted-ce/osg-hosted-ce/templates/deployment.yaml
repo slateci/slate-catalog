@@ -244,7 +244,7 @@ spec:
           value: {{ .Values.RemoteCluster.BoscoDir | default "bosco" }}
         {{ if .Values.BoscoOverrides.URL }}
         - name: BOSCO_TARBALL_URL
-          value: {{ .Values.BoscoOverrides.URL }}
+          value: {{ .Values.BoscoOverrides.TarballURL }}
         {{ end }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848

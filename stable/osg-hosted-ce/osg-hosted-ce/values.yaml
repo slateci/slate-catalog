@@ -128,7 +128,7 @@ BoscoOverrides:
   GitKeySecret: null
   # Bosco tarball URL to use for installation on the remote login host
   # instead of the default determined by the Hosted CE
-  URL: null
+  TarballURL: null
 
 # Enable a logging sidecar
 HTTPLogger:
