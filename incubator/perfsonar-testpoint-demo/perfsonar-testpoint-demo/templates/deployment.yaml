@@ -55,7 +55,7 @@ spec:
 #        image: perfsonar/testpoint:latest
 #        image: perfsonar-demo:latest
         image: perfsonar-demo:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         securityContext: 
           privileged: true
 #        command: ["/usr/bin/startup_script.sh"] 
@@ -72,10 +72,6 @@ spec:
           mountPath: /var/log/demo
         {{ end }}
       restartPolicy: Always
-      {{ if .Values.nodeSelection }}
-      nodeSelector:
-        perfsonar: enabled
-      {{ end }}
       volumes:
       - name: perfsonar-demo-{{ .Values.Instance }}-startup
         configMap:
