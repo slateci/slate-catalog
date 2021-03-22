@@ -56,8 +56,8 @@ SquidConf:
   # for request and limit respectively. With logging enabled and Pod.UseHostpathLogDir set
   # to false, higher values would be advisable if target cluster or node supports that.
   # The below default values assume that logging is enabled.
-  RequestEphemeralSize: 8026
-  LimitEphemeralSize: 12240
+  RequestEphemeralSize: 7000
+  LimitEphemeralSize: 12000
   # The range of incoming IP addresses that will be allowed to use the proxy.
   # Multiple ranges can be provided, each seperated by a space.
   # Example: 192.168.1.1/32 192.168.2.1/32
