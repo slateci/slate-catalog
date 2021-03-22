@@ -97,6 +97,8 @@ SquidConf:
   UseHostpathLogDir: false
 
 Pod:
+  # Set to true if you want to use the host's timezone settings. This would affect the timestamps of log messages.
+  # Default timezone is UTC.
   UseHostTimezone: false
 
 NodeSelection:  
