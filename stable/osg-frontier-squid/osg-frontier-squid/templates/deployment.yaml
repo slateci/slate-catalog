@@ -88,6 +88,15 @@ spec:
         - mountPath: /etc/squid/customize.d/60-customization.awk
           subPath: 60-customization.awk
           name: osg-frontier-squid-{{ .Values.Instance }}-awk
+        {{ if .Values.Pod.UseHostTimezone }}
+        - name: tz
+          mountPath: /etc/localtime
+          readOnly: true
+        {{ end }}
+        {{ if and .Values.SquidConf.UseHostpathLogDir .Values.NodeSelection.Hostname }}
+        - name: squid-log-dir
+          mountPath: /var/log/squid
+        {{ end }}
       volumes:
         - name: osg-frontier-squid-{{ .Values.Instance }}-awk
           configMap:
@@ -117,4 +126,15 @@ spec:
             claimName: osg-frontier-squid-{{ .Values.Instance }}-pvc
         {{ else }}
           emptyDir: {}
+        {{ end }}
+        {{ if .Values.Pod.UseHostTimezone }}
+        - name: tz
+          hostPath:
+            path: /etc/localtime
+        {{ end }}
+        {{ if and .Values.SquidConf.UseHostpathLogDir .Values.NodeSelection.Hostname }}
+        - name: squid-log-dir
+          hostPath:
+            path: /var/log/slate/hostPath/osg-frontier-squid
+            type: Directory
         {{ end }}
