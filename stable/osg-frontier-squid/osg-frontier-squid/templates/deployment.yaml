@@ -93,7 +93,7 @@ spec:
           mountPath: /etc/localtime
           readOnly: true
         {{ end }}
-        {{ if .Values.SquidConf.UseHostpathLogDir }}
+        {{ if and .Values.SquidConf.UseHostpathLogDir .Values.NodeSelection.Hostname }}
         - name: squid-log-dir
           mountPath: /var/log/squid
         {{ end }}
@@ -132,7 +132,7 @@ spec:
           hostPath:
             path: /etc/localtime
         {{ end }}
-        {{ if .Values.SquidConf.UseHostpathLogDir }}
+        {{ if and .Values.SquidConf.UseHostpathLogDir .Values.NodeSelection.Hostname }}
         - name: squid-log-dir
           hostPath:
             path: /var/log/slate/hostPath/osg-frontier-squid

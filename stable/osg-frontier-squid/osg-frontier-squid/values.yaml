@@ -91,15 +91,11 @@ SquidConf:
   Logfile_Rotate: "30"
   # Set the max size for the access log file
   MaxAccessLog: "20M"  
-  # Use local hostpath log dir (need to be set by cluster admin before squid deployment)
+  # Use local hostpath log dir
   # The directory "/var/log/slate/hostPath/osg-frontier-squid" must exist with rwx
-  # permissions for uid:10941
+  # permissions for uid:10941 on the target node.
+  # This configuration has no effect when NodeSelection.Hostname is not set below.
   UseHostpathLogDir: false
-
-Pod:
-  # Set to true if you want to use the host's timezone settings. This would affect the timestamps of log messages.
-  # Default timezone is UTC.
-  UseHostTimezone: false
 
 NodeSelection:  
   # Hostname (FQDN) for the cluster node you want this instance to schedule on.
@@ -109,3 +105,8 @@ NodeSelection:
   # Set the below flag to true if you want to expose defautl port on the target node
   # Open default monitoring port (3401) -- This flag has no effect if Hostname is not set above in this conf file.
   OpenDefaultMonPort: False
+
+Pod:
+  # Set to true if you want to use the host's timezone settings. This would affect the timestamps of log messages.
+  # Default timezone is UTC.
+  UseHostTimezone: false
