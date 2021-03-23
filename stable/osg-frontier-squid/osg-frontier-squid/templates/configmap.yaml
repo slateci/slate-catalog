@@ -10,15 +10,30 @@ metadata:
 data:
   60-customization.awk: |
     setoption("acl HOST_MONITOR src", "{{ .Values.SquidConf.MonitoringIPRange }}")
-    {{ if .Values.SquidConf.Cpu_Affinity_Map }}setoption("cpu_affinity_map", "{{ .Values.SquidConf.Cpu_Affinity_Map }}"){{ end }}
-    {{ if .Values.SquidConf.Logfile_Rotate }}setoption("logfile_rotate", "{{ .Values.SquidConf.Logfile_Rotate }}"){{ end }}
-    {{- if .Values.SquidConf.Workers -}}
+    {{- if .Values.SquidConf.RESTRICT_DEST }}
+    setoptionparameter("acl RESTRICT_DEST", 3, "{{ .Values.SquidConf.RESTRICT_DEST }}")
+    uncomment("http_access deny !RESTRICT_DEST")
+    {{- end }}
+    {{- if .Values.SquidConf.Cpu_Affinity_Map }}
+    setoption("cpu_affinity_map", "{{ .Values.SquidConf.Cpu_Affinity_Map }}")
+    {{- end }}
+    {{- if .Values.SquidConf.Logfile_Rotate }}
+    setoption("logfile_rotate", "{{ .Values.SquidConf.Logfile_Rotate }}")
+    {{- end }}
+    {{- if .Values.SquidConf.Workers }}
     setoption("workers", {{ .Values.SquidConf.Workers }} )
     setoption("cache_dir", "ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256")
+    {{- if .Values.SquidConf.DisableLogging }}
+    setoption("access_log", "none")
+    {{- else -}}
     setoptionparameter("logformat awstats", 3, "kid${process_number}")
+    {{ end }}
     setoption("visible_hostname", "'`uname -n`'/${process_number}")
-    {{- else }} # single worker case
+    {{ else }} # single worker case
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
+    {{- if .Values.SquidConf.DisableLogging }}
+    setoption("access_log", "none")
+    {{- end }}
     {{ end }}
 # The below 60-image-post-init.sh script is not mounted and the above new script takes care of the customization needed
 # 2-3 setttings are done vai env vars as per the OSG docs
