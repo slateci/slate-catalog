@@ -26,6 +26,8 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
 
+      hostNetwork: true
+      
       nodeSelector:
         xcache: {{ .Values.Instance | quote }}
       
