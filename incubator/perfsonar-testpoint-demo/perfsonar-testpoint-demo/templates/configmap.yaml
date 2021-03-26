@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: perfsonar-demo-{{ .Values.Instance }}-startup
+  name: perfsonar-checker-{{ .Values.Instance }}-startup
   labels:
-    app: {{ template "perfsonar-testpoint-demo.name" . }}
-    chart: {{ template "perfsonar-testpoint-demo.chart" . }}
+    app: {{ template "perfsonar-checker.name" . }}
+    chart: {{ template "perfsonar-checker.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:

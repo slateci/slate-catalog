@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "perfsonar-testpoint-demo.fullname" . }}
+  name: {{ template "perfsonar-checker.fullname" . }}
   labels:
-    app: {{ template "perfsonar-testpoint-demo.name" . }}
-    chart: {{ template "perfsonar-testpoint-demo.chart" . }}
+    app: {{ template "perfsonar-checker.name" . }}
+    chart: {{ template "perfsonar-checker.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
     instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
@@ -12,8 +12,8 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "perfsonar-testpoint-demo.name" . }}
-      chart: {{ template "perfsonar-testpoint-demo.chart" . }}
+      app: {{ template "perfsonar-checker.name" . }}
+      chart: {{ template "perfsonar-checker.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance | quote }}
   strategy:
@@ -22,8 +22,8 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        app: {{ template "perfsonar-testpoint-demo.name" . }}
-        chart: {{ template "perfsonar-testpoint-demo.chart" . }}
+        app: {{ template "perfsonar-checker.name" . }}
+        chart: {{ template "perfsonar-checker.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
@@ -53,46 +53,46 @@ spec:
       {{ end }}
       - name: perfsonar-testpoint
 #        image: perfsonar/testpoint:latest
-#        image: perfsonar-demo:latest
-        image: perfsonar-demo:latest
+#        image: perfsonar-checker:latest
+        image: perfsonar-checker:latest
         imagePullPolicy: Always
         securityContext: 
           privileged: true
 #        command: ["/usr/bin/startup_script.sh"] 
 #        command: "pscheduler troubleshoot"
         volumeMounts:
-        - name: perfsonar-demo-{{ .Values.Instance }}-startup
+        - name: perfsonar-checker-{{ .Values.Instance }}-startup
           mountPath: "/usr/bin/startup_script.sh"
           subPath: startup_script.sh
-        - name: perfsonar-test-{{ .Values.Instance }}-startup
-          mountPath: "/usr/bin/run-my-tests.sh"
-          subPath: run-my-tests.sh
-        - name: perfsonar-demo-{{ .Values.Instance }}-supervisord-conf
+#        - name: perfsonar-test-{{ .Values.Instance }}-startup
+#          mountPath: "/usr/bin/run-my-tests.sh"
+#          subPath: run-my-tests.sh
+        - name: perfsonar-checker-{{ .Values.Instance }}-supervisord-conf
           mountPath: "/etc/supervisord.conf"
           subPath: supervisord.conf
         {{ if .Values.HTTPLogger.Enabled }}
         - name: log-volume
-          mountPath: /var/log/demo
+          mountPath: /var/log/perfsonar-checker
         {{ end }}
       restartPolicy: Always
       volumes:
-      - name: perfsonar-demo-{{ .Values.Instance }}-startup
+      - name: perfsonar-checker-{{ .Values.Instance }}-startup
         configMap:
-          name: perfsonar-demo-{{ .Values.Instance }}-startup
+          name: perfsonar-checker-{{ .Values.Instance }}-startup
           items:
           - key: startup_script.sh
             path: startup_script.sh
             mode: 0755      
-      - name: perfsonar-test-{{ .Values.Instance }}-startup
+#      - name: perfsonar-test-{{ .Values.Instance }}-startup
+#        configMap:
+#          name: perfsonar-checker-{{ .Values.Instance }}-startup
+#          items:
+#          - key: run-my-tests.sh
+#            path: run-my-tests.sh
+#            mode: 0755
+      - name: perfsonar-checker-{{ .Values.Instance }}-supervisord-conf
         configMap:
-          name: perfsonar-demo-{{ .Values.Instance }}-startup
-          items:
-          - key: run-my-tests.sh
-            path: run-my-tests.sh
-            mode: 0755
-      - name: perfsonar-demo-{{ .Values.Instance }}-supervisord-conf
-        configMap:
-          name: perfsonar-demo-{{ .Values.Instance }}-startup
+          name: perfsonar-checker-{{ .Values.Instance }}-startup
           items:
           - key: supervisord.conf
             path: supervisord.conf
@@ -103,6 +103,6 @@ spec:
         emptyDir: {}
       - name: logger-startup
         configMap:
-          name: perfsonar-demo-{{ .Values.Instance }}-startup
+          name: perfsonar-checker-{{ .Values.Instance }}-startup
       {{ end }}
 status: {}

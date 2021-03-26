@@ -1,7 +1,7 @@
 #!/bin/bash
 
 print() {
-echo $1 | tee -a /var/log/demo/demo.out /proc/1/fd/1
+echo $1 | tee -a /var/log/perfsonar-checker/checker.log /proc/1/fd/1
 }
 
 print_to_terminal() {
@@ -10,7 +10,7 @@ cat $1 >> /proc/1/fd/1
 }
 
 print_to_flog() {
-cat $1 >> /var/log/demo/demo.out
+cat $1 >> /var/log/perfsonar-checker/checker.log
 }
 
 is_valid_fqdn() {
@@ -77,7 +77,7 @@ fi
 
 }
 
-mkdir -p /var/log/demo
+mkdir -p /var/log/perfsonar-checker
 dst1="$1"
 dst2="$2"
 dst3="$3"
