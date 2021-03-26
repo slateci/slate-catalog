@@ -94,7 +94,7 @@ spec:
           livenessProbe:
             tcpSocket:
               port: {{ .Values.Service.Port }}
-            initialDelaySeconds: 180
+            initialDelaySeconds: 600
             periodSeconds: 60
           readinessProbe:
             exec:
