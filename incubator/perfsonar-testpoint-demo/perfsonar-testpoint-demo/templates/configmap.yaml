@@ -29,6 +29,65 @@ data:
     echo "Done with all tests.." 
     echo "Sleeping for 3 mins.."
     sleep 360
+  supervisord.conf: |+
+    [supervisord]
+    nodaemon=true
+    
+    [program:rsyslog]
+    command=rsyslogd -n 
+    redirect_stderr=true
+    priority=1 
+   
+    ;[program:owampd]
+    ;chown=owamp:owamp
+    ;command=/usr/bin/owampd -c /etc/owamp-server -R /var/run
+    
+    [program:ls_registration_daemon]
+    chown=perfsonar:perfsonar
+    command=/usr/lib/perfsonar/bin/lsregistrationdaemon.pl --config=/etc/perfsonar/lsregistrationdaemon.conf --pidfile=/var/run/lsregistrationdaemon.pid --logger=/etc/perfsonar/lsregistrationdaemon-logger.conf --user=perfsonar --group=perfsonar
+    priority=2   
+    startretries=10
+    
+    [program:postgresql]                        ; postgress is needed by pscheduler
+    command=/usr/pgsql-10/bin/postgres -D /var/lib/pgsql/10/data
+    user=postgres
+    priority=1
+    
+    [program:httpd]                             ;  httpd is needed by pscheduler
+    command=/usr/bin/pidproxy /var/run/httpd.pid /bin/bash -c "/usr/sbin/httpd -DFOREGROUND -k start"
+    priority=1
+    
+    [program:pscheduler-ticker]
+    chown=pscheduler:pscheduler
+    command=/usr/bin/python3 /usr/libexec/pscheduler/daemons/ticker --daemon --pid-file /var/run/pscheduler-ticker.pid --dsn @/etc/pscheduler/database/database-dsn 
+    priority=1
+    
+    [program:pscheduler-archiver]
+    chown=pscheduler:pscheduler
+    command=/usr/bin/python3 /usr/libexec/pscheduler/daemons/archiver --daemon --pid-file /var/run/pscheduler-archiver.pid --dsn @/etc/pscheduler/database/database-dsn 
+    priority=1
+    
+    [program:pscheduler-scheduler]
+    chown=pscheduler:pscheduler
+    command=/usr/bin/python3 /usr/libexec/pscheduler/daemons/scheduler --daemon --pid-file /var/run/pscheduler-scheduler.pid --dsn @/etc/pscheduler/database/database-dsn 
+    priority=1
+    
+    [program:pscheduler-runner]
+    chown=pscheduler:pscheduler
+    command=/usr/bin/python3 /usr/libexec/pscheduler/daemons/runner --daemon --pid-file /var/run/pscheduler-runner.pid --dsn @/etc/pscheduler/database/database-dsn 
+    priority=1
+    
+    [program:psconfig_pscheduler_agent]
+    chown=perfsonar:perfsonar
+    command=/usr/lib/perfsonar/bin/psconfig_pscheduler_agent --config=/etc/perfsonar/psconfig/pscheduler-agent.json --logger=/etc/perfsonar/psconfig/pscheduler-agent-logger.conf --pidfile=/var/run/psconfig-pscheduler-agent.pid --user=perfsonar --group=perfsonar
+    priority=2
+    startretries=10
+ 
+    [program:slate-tests]
+    command=/usr/local/bin/run-perfsonar-tests.sh "{{ .Values.PerfsonarChecker.Dest1 }}" "{{ .Values.PerfsonarChecker.Dest2 }}" "{{ .Values.PerfsonarChecker.Dest3 }}"
+    priority=999
+    autorestart = false
+    startretries = 1
 {{ if .Values.HTTPLogger.Enabled }}
   start-nginx.sh: |+
     #!/bin/bash -e
