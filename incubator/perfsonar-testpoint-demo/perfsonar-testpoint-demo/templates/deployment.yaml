@@ -67,6 +67,9 @@ spec:
         - name: perfsonar-test-{{ .Values.Instance }}-startup
           mountPath: "/usr/bin/run-my-tests.sh"
           subPath: run-my-tests.sh
+        - name: perfsonar-demo-{{ .Values.Instance }}-supervisord-conf
+          mountPath: "/etc/supervisord.conf"
+          subPath: supervisord.conf
         {{ if .Values.HTTPLogger.Enabled }}
         - name: log-volume
           mountPath: /var/log/demo
@@ -87,6 +90,14 @@ spec:
           - key: run-my-tests.sh
             path: run-my-tests.sh
             mode: 0755
+      - name: perfsonar-demo-{{ .Values.Instance }}-supervisord-conf
+        configMap:
+          name: perfsonar-demo-{{ .Values.Instance }}-startup
+          items:
+          - key: supervisord.conf
+            path: supervisord.conf
+            mode: 0644
+
       {{ if .Values.HTTPLogger.Enabled }}
       - name: log-volume
         emptyDir: {}
