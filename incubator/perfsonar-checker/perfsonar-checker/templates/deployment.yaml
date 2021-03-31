@@ -54,7 +54,7 @@ spec:
       - name: perfsonar-testpoint
 #        image: perfsonar/testpoint:latest
 #        image: perfsonar-checker:latest
-        image: perfsonar-checker:latest
+        image: slateci/perfsonar-checker:latest
         imagePullPolicy: Always
         securityContext: 
           privileged: true
