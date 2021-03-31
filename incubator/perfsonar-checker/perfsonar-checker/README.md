@@ -24,7 +24,7 @@ Instance: ''
 NodeSelection:  
   Hostname: workernode3.slateci.io
 ```
-where `workernode3.slateci.io` is the DNS name of the node, in this case.
+where `workernode3.slateci.io` is the node's DNS name, in this case.
 
 If you would like to be able to see the full details of all the tests the Checker runs, you can enable the HTTPLogger in the configuration file like:
 
