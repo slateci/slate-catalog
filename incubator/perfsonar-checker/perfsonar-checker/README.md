@@ -37,7 +37,7 @@ Then simply install the app.
 `slate app install --dev perfsonar-checker --cluster <cluster name> --group <group name> --conf conf`
 
 # Results
-The tests run to three different destination servers so it could take some time for all tests to finish. Each test will log its results to a log file when they're ready. 
+The tests run to three different destination servers so it could take some time, probably around 15-20 minutes, for all tests to finish. Each test will log its results to a log file when they're ready.
 
 To see the summary results, you can run the the below command:
 
