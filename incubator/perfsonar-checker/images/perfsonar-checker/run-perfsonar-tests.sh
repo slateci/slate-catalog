@@ -58,7 +58,7 @@ run_all_tests_to() {
 if is_valid_fqdn "$1"; then 
 	if pscheduler ping $1; then
 
-		print "Running bandwidth test to: '$1' ....."	
+		print "Running throughput test to: '$1' ....."	
 		run_test "pscheduler task throughput -t 30 --dest $1"
 		print "Running latency test to: '$1' ....."  
 		run_test "pscheduler task latency --packet-count 18000 --packet-interval .01 --dest $1"

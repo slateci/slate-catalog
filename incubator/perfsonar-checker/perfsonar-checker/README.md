@@ -10,7 +10,7 @@ For all tests to run correctly, you must have proper NTP configuration on the ta
 
 Next, download the values configuration file as shown below:
 
-`slate app get-conf -o conf perfsonar-checker`
+`slate app get-conf --dev -o conf perfsonar-checker`
 
 Edit that file as needed. For example, if you have a cluster node dedicated for running perfSONAR, you can specify it in the configuration file like:
 
@@ -24,6 +24,8 @@ Instance: ''
 NodeSelection:  
   Hostname: workernode3.slateci.io
 ```
+where `workernode3.slateci.io` is the DNS name of the node, in this case.
+
 If you would like to be able to see the full details of all the tests the Checker runs, you can enable the HTTPLogger in the configuration file like:
 
 ```
@@ -32,10 +34,10 @@ HTTPLogger:
 ```
 Then simply install the app.
 
-`slate app install perfsonar-checker --cluster <cluster name> --group <group name> --conf conf`
+`slate app install --dev perfsonar-checker --cluster <cluster name> --group <group name> --conf conf`
 
 # Results
-The tests run to three different destination servers so they could take some time to compelete. Each test will log its results to a log file when they're ready. 
+The tests run to three different destination servers so it could take some time for all tests to finish. Each test will log its results to a log file when they're ready. 
 
 To see the summary results, you can run the the below command:
 
@@ -58,7 +60,7 @@ perfsonar-checker 10.233.29.42 155.XX..YY.ZZ 8080:30503/TCP 155.XX.YY.ZZ:30503
 
 ```
 
-Then you would need to retrive the username and randomly-generated password from the instance log which would look like:
+Then you would need to retrieve the username and randomly-generated password from the instance log which would look like:
 
 ```
 Your randomly generated logger credentials are
@@ -66,14 +68,15 @@ Your randomly generated logger credentials are
 username:080lo947nclu1vs6506
 **********************************************
 ```
+Once you have that, you can navigate to the URL from a web browser, use your credentials to log in, and view the content of the `perfsonar-checker.log` file.
 
 # Configuration and usage 
 
-This is the full user guide for the application.
+This is the full user guide for perfSONAR:
 
 http://docs.perfsonar.net/index.html#running-measurements-with-pscheduler
 
-Additional tools reference
+Additional tools reference:
 
 http://docs.perfsonar.net/pscheduler_ref_tests_tools.html
 
