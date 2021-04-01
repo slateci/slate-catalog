@@ -68,7 +68,7 @@ Your randomly generated logger credentials are
 username:080lo947nclu1vs6506
 **********************************************
 ```
-Once you have that, you can navigate to the URL from a web browser, use your credentials to log in, and view the content of the `perfsonar-checker.log` file.
+Once you have that, you can navigate to the URL from a web browser, use your credentials to log in, and view the content of the `checker.log` file.
 
 # Configuration and usage 
 
