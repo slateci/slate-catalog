@@ -47,6 +47,9 @@ SquidConf:
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
   # Per Frontier Squid, do not consume more than 1/8 of system memory with Frontier Squid
   CacheMem: 4096
+  # The maximum size (in KB) for an in-memory object - (Squid conf variable "maximum_object_size_in_memory")
+  # Default: 512
+  MaximumObjectSizeInMemoryi: 512
   # The amount of disk space (in MB) that Frontier Squid may use on the machine.
   # The default is 10000 MB (10 GB), but more is advisable if the system supports it.
   # Current limit is 999999 MB, a limit inherent to helm's number conversion system.
