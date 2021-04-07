@@ -54,6 +54,9 @@ SquidConf:
   # The default is 10000 MB (10 GB), but more is advisable if the system supports it.
   # Current limit is 999999 MB, a limit inherent to helm's number conversion system.
   CacheSize: 10000
+  # If True, the application will expect a hostPath to be present and writeable
+  # at /var/cache/squid on the host. 
+  # CacheDirOnHost: False
   # This is the total storage (in MiB) beyound the CacheSize. If logging is disabled or if
   # Pod.UseHostpathLogDir set to true(see below), 1024 and 5120 would be reasonable values
   # for request and limit respectively. With logging enabled and Pod.UseHostpathLogDir set
@@ -76,13 +79,12 @@ SquidConf:
   # Multiple ranges can be provided, each seperated by a space.
   # Example: 128.142.0.0/16 188.185.0.0/17
   MonitoringIPRange: 127.0.0.1/32
+
   # Write all access_log messages to standard output where they can be viewed with the 
   # Docker/Kubernetes/SLATE log mechanisms, instead of to a file inside the container. 
   LogToStdout: True
-
   # To disable logging, set the below flag to true
   #DisableLogging: False
-
   # truncates log file every 2 minutes.
   CleanLog: False
   # Set this if you want to run more than one cache process concurrently.
