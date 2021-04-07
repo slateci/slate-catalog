@@ -26,6 +26,7 @@ $ slate app install osg-frontier-squid --group <group-name> --cluster <cluster-n
 | CacheMem | The amount of memory that Squid may use for caching hot objects | `4096 MB` |
 | MaximumObjectSizeInMemory | The maximum size in KB for individual objects stored in memory| `512 KB` |
 | CacheSize | The amount of disk space that Squid may use for caching cold objects | `10000 MB` |
+| HostCacheDir | The hostPath where Squid should write disk cache files | `/var/cache/squid` |
 | RequestEphemeralSize | The amount of disk space (in MiB ) that the Squid is requesting beyond CacheSize | `7000 MiB` |
 | LimitEphemeralSize | The maximum amount of disk space (in MiB ) that Squid may use beyond CacheSize | `12000 MiB` |
 | IPRange | A space separated list of source address CIDRs that can access the cache. **NOTE** Incorrectly specifying this may lead to open proxies on your network! | `10.0.0.0/8 172.16.0.0/12 192.168.0.0/16` |

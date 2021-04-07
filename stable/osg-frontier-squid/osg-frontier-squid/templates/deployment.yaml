@@ -71,6 +71,10 @@ spec:
 #        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
 #          mountPath: /etc/osg/image-config.d/60-image-post-init.sh
 #          subPath: 60-image-post-init.sh 
+        {{ if .Values.SquidConf.HostCacheDir }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-cachedir
+          mountPath: /var/cache/squid 
+        {{ end }}
         {{ if .Values.SquidConf.LogToStdout }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /etc/supervisord.d/50-squid-log-dump.conf
@@ -98,6 +102,12 @@ spec:
           mountPath: /var/log/squid
         {{ end }}
       volumes:
+        {{ if .Values.SquidConf.HostCacheDir }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-cachedir
+          hostPath:
+            path: {{ .Values.SquidConf.HostCacheDir }} 
+            type: directory
+        {{ end }} 
         - name: osg-frontier-squid-{{ .Values.Instance }}-awk
           configMap:
             name: {{ template "osg-frontier-squid.fullname" . }}
