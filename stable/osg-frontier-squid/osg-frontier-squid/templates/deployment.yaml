@@ -88,11 +88,6 @@ spec:
           mountPath: /etc/supervisord.d/55-squid-log-clean.conf
           subPath: 55-squid-log-clean.conf 
         {{ end }}
-        # Storage location of the cache data
-        {{ 
-        - mountPath: /var/cache/squid/osg-frontier-squid-{{ .Values.Instance }}-cache
-          subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
-          name: osg-frontier-squid-{{ .Values.Instance }}-data
         - mountPath: /etc/squid/customize.d/60-customization.awk
           subPath: 60-customization.awk
           name: osg-frontier-squid-{{ .Values.Instance }}-awk
