@@ -54,8 +54,9 @@ SquidConf:
   # The default is 10000 MB (10 GB), but more is advisable if the system supports it.
   # Current limit is 999999 MB, a limit inherent to helm's number conversion system.
   CacheSize: 10000
-  # The directory on the host where the Squid disk cache will write files
-  # HostCacheDir: /var/cache/squid
+  # If True, the application will expect a hostPath to be present and writeable
+  # at /var/cache/squid on the host. 
+  # CacheDirOnHost: False
   # This is the total storage (in MiB) beyound the CacheSize. If logging is disabled or if
   # Pod.UseHostpathLogDir set to true(see below), 1024 and 5120 would be reasonable values
   # for request and limit respectively. With logging enabled and Pod.UseHostpathLogDir set

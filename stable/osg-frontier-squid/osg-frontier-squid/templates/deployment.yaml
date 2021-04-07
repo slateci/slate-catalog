@@ -71,7 +71,7 @@ spec:
 #        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
 #          mountPath: /etc/osg/image-config.d/60-image-post-init.sh
 #          subPath: 60-image-post-init.sh 
-        {{ if .Values.SquidConf.HostCacheDir }}
+        {{ if .Values.SquidConf.CacheDirOnHost }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-cachedir
           mountPath: /var/cache/squid 
         {{ end }}
@@ -102,11 +102,11 @@ spec:
           mountPath: /var/log/squid
         {{ end }}
       volumes:
-        {{ if .Values.SquidConf.HostCacheDir }}
+        {{ if .Values.SquidConf.CacheDirOnHost }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-cachedir
           hostPath:
-            path: {{ .Values.SquidConf.HostCacheDir }} 
-            type: directory
+            path: /var/cache/squid
+            type: Directory
         {{ end }} 
         - name: osg-frontier-squid-{{ .Values.Instance }}-awk
           configMap:
