@@ -9,7 +9,7 @@ NodeSelection:
   # the hostname of the node on which you want pod to run. (optional)
   # Default: null - the K8s scheduler will select a host for you  
   Hostname: null
-# An optional feature that allows you to view full output of all tests
+# An optional feature that allows you to view full output of all tests.
 # Default: Not Enabled
 HTTPLogger: 
   Enabled: false
