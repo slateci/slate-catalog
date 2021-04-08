@@ -1,5 +1,5 @@
 apiVersion: v1
 appVersion: "4.3.4"
-description: Perfsonar Checker
+description: PerfSONAR checker app for running predefined network performance tests
 name: perfsonar-checker
 version: 1.0.5
