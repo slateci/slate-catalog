@@ -1,7 +1,8 @@
 # Telegraf SNMP Monitoring
 
-**Application Name (in catalog): `telegraf`**
-**Application Version: `0.5.0`**
+Application Name (in catalog): `telegraf`
+
+Application Version: `0.5.0`
 
 
 ## Description
@@ -28,7 +29,7 @@ Use a command that looks something like this:
 slate app install telegraf --group <group_name> --cluster <cluster> --conf telegraf.yaml
 ```
 
-Note that this application does not make sense to deploy without SNMP-enabled hosts to monitor, and a database endpoint to send metrics to.
+*Note that this application does not make sense to deploy without SNMP-enabled hosts to monitor, and a database endpoint to send metrics to.*
 
 
 ## System Requirements
@@ -82,7 +83,7 @@ The following table lists the configurable parameters of the Telegraf monitoring
 
 |           Parameter           |           Description           |           Default           |
 |-------------------------------|---------------------------------|-----------------------------|
-|`Instance`| Optional string to differentiate SLATE experiment instances |""|
+|`Instance`| Optional string to differentiate SLATE experiment instances |`""`|
 |`writeToStdout`| Optionally write to stdout in container |`true`|
 |`collectionInterval`| Data collection interval |`5s`|
 |`collectionJitter`| Data jitter interval |`10s`|
