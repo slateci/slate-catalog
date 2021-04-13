@@ -20,6 +20,9 @@ data:
     {{- if .Values.SquidConf.Logfile_Rotate }}
     setoption("logfile_rotate", "{{ .Values.SquidConf.Logfile_Rotate }}")
     {{- end }}
+    {{- if .Values.SquidConf.MaximumObjectSizeInMemory }}
+    setoption("maximum_object_size_in_memory", "{{ .Values.SquidConf.MaximumObjectSizeInMemory }} KB")
+    {{ end }}
     {{- if .Values.SquidConf.Workers }}
     setoption("workers", {{ .Values.SquidConf.Workers }} )
     setoption("cache_dir", "ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256")
