@@ -57,26 +57,23 @@ This application operates without any state, and is not dependent on any other s
 
 ## Privilege Requirements
 
-Description of service privilege requirements, i.e. secrets
-
-
-## Labels and Annotations
-
-????
+No special privilege requirements are necessary.
 
 
 ## Monitoring and Logging
 
-Description of monitoring and alerting requirements
+There are no special monitoring considerations.
 
 
 ## Multiple Versions
 
+It is not necessary to support multiple versions.
 
 
 ## Testing
 
-Description of service testing and basic functionality validation
+No testing package is included.
+However, [this post](https://slateci.io/blog/telegraf-monitoring.html) contains more information about ways to test the Telegraf application.
 
 
 ## Configurable Parameters
