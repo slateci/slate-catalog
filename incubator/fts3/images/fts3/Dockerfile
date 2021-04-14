@@ -9,7 +9,7 @@ ADD "https://dmc-repo.web.cern.ch/dmc-repo/dmc-rc-el7.repo" "/etc/yum.repos.d/"
 # Install OSG certificates
 RUN yum install -y osg-ca-certs
 # Install FTS + GFAL
-RUN yum install --disablerepo=osg -y gfal2-all gfal2-util fts-server fts-client fts-rest fts-monitoring fts-mysql fts-server-selinux fts-rest-selinux fts-monitoring-selinux fts-msg fts-infosys
+RUN yum install --disablerepo=osg --disablerepo=osg-testing -y gfal2-all gfal2-util fts-server fts-client fts-rest fts-monitoring fts-mysql fts-server-selinux fts-rest-selinux fts-monitoring-selinux fts-msg fts-infosys
 
 ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl
