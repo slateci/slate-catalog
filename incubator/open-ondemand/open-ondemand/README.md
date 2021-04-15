@@ -1,26 +1,83 @@
 # Open OnDemand
 
-Sets up an instance of Open OnDemand.
-Authentication is handled through Keycloak.
-This application additionally requires a SLATE volume to persist authentication data/configuration.
+Application Name (in catalog): `open-ondemand`
 
-## Installation:
-
-`slate app get-conf open-ondemand > ood.yaml`
-
-`slate app install open-ondemand --group <group_name> --cluster <cluster> --conf ood.yaml`
+Application Version: `0.6.0`
 
 
-## Usage:
+## Description
 
-* Retrieve default configuration file. (see first command above)
-* Modify configuration file to ensure appropriate setup.
-	* Set `volume.storageClass` to a value that is supported by your cluster.
-	* List backend cluster names and host names.
-* Install app with custom configuration onto a SLATE cluster. (see last command above)
+This application launches an instance of the [Open OnDemand](https://openondemand.org) web portal, as well as [Keycloak](https://www.keycloak.org) for user management.
 
 
-## Configuration
+## Installation
+
+To install, first retrieve and locally store the default configuration file with this command: 
+
+```bash
+slate app get-conf open-ondemand > ood.yaml
+```
+
+Next, modify the configuration file with your preferred editor to configure the application for your site.
+A guide to this can be found [here](https://slateci.io/blog/slate-open-ondemand.html).
+
+Then, install the app with your configuration onto a SLATE cluster.
+Use a command that looks something like this: 
+
+```bash
+slate app install open-ondemand --group <group_name> --cluster <cluster> --conf ood.yaml
+```
+
+
+## System Requirements
+
+No special compute resources are required for this application.
+
+
+## Network Requirements
+
+This application serves two secure HTTPS web portals (port 443).
+It does not require its own IP, but it does require that the SLATE ingress controller be installed.
+
+
+## Storage Requirements
+
+Open OnDemand on SLATE requires one volume to persist authentication data.
+The storage class of this volume must be declared in the `values.yaml` file, under `volume.storageClass`.
+Thus, the SLATE cluster Open OnDemand is installed on must also support volumes of this storage class.
+Supported storage classes on a cluster can be viewed by running `slate cluster info <cluster_name>`.
+Volume size is also configured through the `values.yaml`, under `volume.size`.
+
+
+## Statefulness
+
+This application operates two containers in one pod that are dependent on each other.
+The main OnDemand container serves the Open OnDemand portal, and connects to a Keycloak container for identity and authentication management.
+This Keycloak container has state, as it stores its data on a persistent volume.
+
+
+## Privilege Requirements
+
+This application obtains certificates from Let's Encrypt, using Kubernetes `cert-manager`.
+Thus, `cert-manager` must be installed and configured on the cluster that Open OnDemand is running on.
+
+
+## Monitoring and Logging
+
+There are no special monitoring considerations.
+
+
+## Multiple Versions
+
+It is not necessary to support multiple versions.
+
+
+## Testing
+
+More information about testing can be found in [this post](https://slateci.io/blog/slate-open-ondemand.html).
+
+
+## Configurable Parameters
 
 The following table lists the configurable parameters of the Open OnDemand application and their default values.
 
