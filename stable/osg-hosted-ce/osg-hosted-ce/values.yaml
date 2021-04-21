@@ -103,6 +103,10 @@ VoRemoteUserMapping:
 #DnRemoteUserMapping:
 #  - "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName": osg01
 
+# SCITOKENS url to user mapping
+# SciTokenRemoteUserMapping:
+#   - "https://scitokens.org/osg-connect": osg01
+
 # Specify additional HTCondor-CE configuration
 # HTCondorCeConfig: |+
 #   ALL_DEBUG = D_ALWAYS:2 D_CAT
