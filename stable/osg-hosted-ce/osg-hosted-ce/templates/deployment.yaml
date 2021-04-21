@@ -48,6 +48,11 @@ spec:
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
       {{ end }}
+      {{ if .Values.SciTokenRemoteUserMapping }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+      {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
           secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
@@ -203,6 +208,11 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
+        {{ end }}
+        {{ if .Values.SciTokenRemoteUserMapping }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+          mountPath: /etc/condor-ce/mapfiles.d/50-slate-scitokens.conf
+          subPath: 50-slate-scitokens.conf
         {{ end }}
         ports:
         - name: htcondor-ce
