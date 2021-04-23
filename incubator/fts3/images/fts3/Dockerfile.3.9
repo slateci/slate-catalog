@@ -11,6 +11,9 @@ RUN yum install -y osg-ca-certs
 # Install FTS + GFAL
 RUN yum install -y gfal2-all gfal2-util fts-server-3.9.5 fts-client-3.9.5 fts-rest-3.9.4 fts-monitoring-3.9.1 fts-mysql-3.9.5 fts-server-selinux-3.9.5 fts-rest-selinux-3.9.4 fts-monitoring-selinux-3.9.1 fts-msg-3.9.5 fts-infosys-3.9.5
 
+# Install the VO Client
+RUN yum install -y vo-client
+
 ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl
 
