@@ -1,4 +1,4 @@
-{{ if .HostCredentials.CertManager.Enabled }}
+{{ if .Values.HostCredentials.CertManager.Enabled }}
 kind: Certificate
 metadata:
   name: osg-hosted-ce-{{ .Values.Instance }}-certificate
