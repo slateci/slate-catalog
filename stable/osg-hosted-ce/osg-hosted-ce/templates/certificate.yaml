@@ -1,0 +1,14 @@
+{{ if .Values.HostCredentials.CertManager.Enabled }}
+kind: Certificate
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-certificate
+spec:
+  secretName: {{ .Values.HostCredentials.HostCertKeySecret }}
+  issuerRef: 
+    name: {{ .Values.HostCredentials.CertManager.IssuerName }}
+    {{ if .HostCredentials.CertManager.ClusterIssuer }}
+    kind: ClusterIssuer
+    {{ end }}
+  dnsNames:
+    - {{ .Values.Networking.Hostname }}
+{{ end }}
