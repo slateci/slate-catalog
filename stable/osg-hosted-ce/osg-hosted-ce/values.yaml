@@ -105,7 +105,14 @@ VoRemoteUserMapping:
 
 # SCITOKENS url to user mapping
 # SciTokenRemoteUserMapping:
-#   - "https://scitokens.org/osg-connect": osg01
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+    # - "https://scitokens.org/osg-connect": osg01
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+    # - "https://chtc.cs.wisc.edu": osg02
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
+    # - "https://cms-auth.web.cern.ch/": osg04
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
+    # - "https://atlas-auth.web.cern.ch/": osg09
 
 # Specify additional HTCondor-CE configuration
 # HTCondorCeConfig: |+
