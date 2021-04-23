@@ -211,7 +211,8 @@ spec:
         {{ end }}
         {{ if .Values.SciTokenRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
-          mountPath: /etc/condor-ce/mapfiles.d
+          mountPath: /etc/condor-ce/mapfiles.d/50-slate-scitokens.conf
+          subPath: 50-slate-scitokens.conf
         {{ end }}
         ports:
         - name: htcondor-ce
