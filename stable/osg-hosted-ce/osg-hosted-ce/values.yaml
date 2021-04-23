@@ -146,6 +146,11 @@ HostCredentials:
   # "tls.key" and "tls.crt", respectively. If defined, values of
   # HostCertSecret and HostKeySecret are ignored.
   HostCertKeySecret: null
+  # Create a secret via CertManager. Above must be set if using CertManager
+  CertManager:
+    Enabled: false
+    IssuerName: null
+    ClusterIssuer: false # If true, add "kind: ClusterIssuer to secret" otherwise assume Issuer
   # Use a pre-existing host key to request a new Let's Encrypt
   # certificate If HostCertSecret is also specified, the Let's Encrypt
   # request is skipped.  Secret must contain a "host.key" key
