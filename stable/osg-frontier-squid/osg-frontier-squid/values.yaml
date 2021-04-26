@@ -102,7 +102,7 @@ SquidConf:
   # This configuration has no effect when NodeSelection.Hostname is not set below.
   UseHostpathLogDir: False
   # Set the minimum object size on disk (e.g. 1MB)
-  # DiskCacheMinObjSize: 1000000
+  #DiskCacheMinObjSize: "1000000"
   # Disable the disk cache entirely
   DisableDiskCache: False
 
