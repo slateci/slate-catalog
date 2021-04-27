@@ -4,7 +4,6 @@ metadata:
   name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
     app: {{ template "osg-hosted-ce.name" . }}
-    chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
     instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
@@ -13,14 +12,14 @@ spec:
   selector:
     matchLabels:
       app: {{ template "osg-hosted-ce.name" . }}
-      chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels: 
         app: {{ template "osg-hosted-ce.name" . }}
-        chart: {{ template "osg-hosted-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
@@ -253,7 +252,7 @@ spec:
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR
           value: {{ .Values.RemoteCluster.BoscoDir | default "bosco" }}
-        {{ if .Values.BoscoOverrides.URL }}
+        {{ if .Values.BoscoOverrides.TarballURL }}
         - name: BOSCO_TARBALL_URL
           value: {{ .Values.BoscoOverrides.TarballURL }}
         {{ end }}
