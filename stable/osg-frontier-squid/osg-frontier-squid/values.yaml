@@ -100,7 +100,11 @@ SquidConf:
   # The directory "/var/log/slate/hostPath/osg-frontier-squid" must exist with rwx
   # permissions for uid:10941 on the target node.
   # This configuration has no effect when NodeSelection.Hostname is not set below.
-  UseHostpathLogDir: false
+  UseHostpathLogDir: False
+  # Set the minimum object size on disk (e.g. 1MB)
+  #DiskCacheMinObjSize: "1000000"
+  # Disable the disk cache entirely
+  DisableDiskCache: False
 
 NodeSelection:  
   # Hostname (FQDN) for the cluster node you want this instance to schedule on.
