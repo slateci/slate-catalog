@@ -26,6 +26,8 @@ NodeSelection:
 ```
 where `workernode3.slateci.io` is the node's DNS name, in this case.
 
+###### Note: Please note that the node on which your instance will run must have no other perfSONAR instances running on it because perfSONAR uses host network mode. Running multiple perfSONAR applications on the same node will lead to unexpected app behavior.
+
 If you would like to be able to see the full details of all the tests the Checker runs, you can enable the HTTPLogger in the configuration file like:
 
 ```
