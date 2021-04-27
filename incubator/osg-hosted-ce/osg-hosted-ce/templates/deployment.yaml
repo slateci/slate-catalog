@@ -16,6 +16,8 @@ spec:
       chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels: 
@@ -253,7 +255,7 @@ spec:
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR
           value: {{ .Values.RemoteCluster.BoscoDir | default "bosco" }}
-        {{ if .Values.BoscoOverrides.URL }}
+        {{ if .Values.BoscoOverrides.TarballURL }}
         - name: BOSCO_TARBALL_URL
           value: {{ .Values.BoscoOverrides.TarballURL }}
         {{ end }}
