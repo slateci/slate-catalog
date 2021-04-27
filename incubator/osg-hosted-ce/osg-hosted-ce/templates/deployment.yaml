@@ -4,7 +4,6 @@ metadata:
   name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
     app: {{ template "osg-hosted-ce.name" . }}
-    chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
     instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
@@ -13,7 +12,6 @@ spec:
   selector:
     matchLabels:
       app: {{ template "osg-hosted-ce.name" . }}
-      chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
   strategy:
@@ -22,7 +20,6 @@ spec:
     metadata:
       labels: 
         app: {{ template "osg-hosted-ce.name" . }}
-        chart: {{ template "osg-hosted-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
