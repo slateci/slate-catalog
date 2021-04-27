@@ -5,7 +5,6 @@ metadata:
   name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
     app: {{ template "osg-hosted-ce.name" . }}
-    chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
   annotations:
