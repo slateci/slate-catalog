@@ -78,6 +78,9 @@ data:
     eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ",
                                    Owner, "@", "{{ regexReplaceAllLiteral ":[0-9]*$" .Values.RemoteCluster.LoginHost "" }} ",
                                    "--rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite"
+                                   {{ if .Values.BoscoOverrides.TarballURL | default "" | contains "bosco-1.3"  }}
+                                   , "--rgahp-script batch_gahp"
+                                   {{ end }}
                                    {{ if not .Values.RemoteCluster.SSHBatchMode }}
                                    , " --rgahp-nobatchmode"
                                    {{ end }}
