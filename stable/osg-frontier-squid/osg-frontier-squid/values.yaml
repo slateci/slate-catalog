@@ -12,6 +12,11 @@ SLATE:
   LocalStorage: false
 ### SLATE-END ###
 
+# Supported values are e.g. 'release' or 'testing' or 'development'. Default is
+# 'release'. Consult the opensciencegrid/frontier-squid docker image for other
+# tags.
+#ImageTag: release
+
 Service:
   # Port that the service will utilize.
   Port: 3128
