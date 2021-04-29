@@ -138,7 +138,7 @@ data:
   50-slate-scitokens.conf: |+
     {{- range $index, $map := .Values.SciTokenRemoteUserMapping }}
     {{- range $url, $user := $map }}
-    SCITOKENS /^{{ $url | replace "/" "\\/" }},/ {{ $user }}
+    SCITOKENS /^{{ $url | replace "/" "\\/" | replace "." "\\." }},/ {{ $user }}
     {{- end }}
     {{- end }}
 {{ end }}
