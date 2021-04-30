@@ -3,7 +3,7 @@ kind: Certificate
 metadata:
   name: osg-hosted-ce-{{ .Values.Instance }}-certificate
 spec:
-  secretName: {{ .Values.HostCredentials.HostCertKeySecret }}
+  secretName: osg-hosted-ce-{{ .Values.Instance }}-tls
   issuerRef: 
     name: {{ .Values.HostCredentials.CertManager.IssuerName }}
     {{ if .HostCredentials.CertManager.ClusterIssuer }}

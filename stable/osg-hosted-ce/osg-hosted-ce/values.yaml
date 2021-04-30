@@ -142,30 +142,23 @@ HTTPLogger:
 NodeSelection: null
 
 HostCredentials:
-  # Name of the secret containing a host key and certificate in
-  # "tls.key" and "tls.crt", respectively. If defined, values of
-  # HostCertSecret and HostKeySecret are ignored.
-  HostCertKeySecret: null
-  # Create a secret via CertManager. Above must be set if using CertManager
-  CertManager:
-    Enabled: false
-    IssuerName: null
-    ClusterIssuer: false # If true, add "kind: ClusterIssuer to secret" otherwise assume Issuer
-  # Use a pre-existing host key to request a new Let's Encrypt
-  # certificate If HostCertSecret is also specified, the Let's Encrypt
-  # request is skipped.  Secret must contain a "host.key" key
-  # containing the encoded host key.
-  HostKeySecret: null
-  # Use a pre-existing host certificate instead of requesting a new
-  # Let'S Encrypt certificate. If HostKeySecret is not specified, a
-  # new Let's Encrypt certificate and key are requested anyway.
-  # Secret must contain a "host.cert" containing the encoded host
-  # certificate.
-  HostCertSecret: null
+  # Suitable values are "certmanager", "external", and "http"
+  #  CertManager -> Create a CertManager certificate object. See also LetsEncryptStaging option.
+  #  External -> K8S cluster operator will provide a HostCertSecret and
+  #              HostKeySecret corresponding to an IGTF certificate
+  #  HTTP     -> Pod will start an nginx service and attempt to issue a Let's Encrypt cert
+  Provider: HTTP
   # If set to 'true', use the Let's Encrypt staging server. This is
   # useful for avoiding Let's Encrypt rate limits when first setting
   # up a CE. NOT SUITABLE FOR PRODUCTION USE.
-  LetsEncryptStaging: false
+  LetsEncryptStaging: true
+  # Create a secret via CertManager. Only applies if Provider is set to certmanager
+  CertManager:
+    ClusterIssuer: false # If true, add "kind: ClusterIssuer to secret" otherwise assume Issuer
+  # Create a secret external to SLATE and reference it here
+  External:
+    HostCertSecret: null
+    HostKeySecret: null
 
 # Choose which tag to use for the specified containers
 ContainerTags:

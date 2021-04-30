@@ -55,10 +55,10 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
-      {{ if .Values.HostCredentials.HostCertKeySecret }}
+      {{ if eq .Values.HostCredentials.Provider "CertManager" }}
       - name: osg-hosted-ce-hostcertkey-volume
         secret:
-          secretName: {{ .Values.HostCredentials.HostCertKeySecret }}
+          secretName: osg-hosted-ce-{{ .Values.Instance }}-tls
           items:
           - key: tls.crt
             path: hostcert.pem
@@ -66,8 +66,7 @@ spec:
           - key: tls.key
             path: hostkey.pem
             mode: 256
-      {{ else }}
-      {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
+      {{ else if eq .Values.HostCredentials.Provider "External" }}
       - name: osg-hosted-ce-hostcert-volume
         secret:
           secretName: {{ .Values.HostCredentials.HostCertSecret }}
@@ -75,8 +74,6 @@ spec:
             - key: host.cert
               path: hostcert.pem
               mode: 256
-      {{ end }}
-      {{ if .Values.HostCredentials.HostKeySecret }}
       - name: osg-hosted-ce-hostkey-volume
         secret:
           secretName: {{ .Values.HostCredentials.HostKeySecret }}
@@ -85,7 +82,8 @@ spec:
               path: hostkey.pem
               mode: 256
       {{ end }}
-      {{ end }}
+
+
       {{ if .Values.BoscoOverrides.Enabled }}
       {{ if .Values.BoscoOverrides.GitKeySecret }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
@@ -174,12 +172,12 @@ spec:
           mountPath: /etc/grid-security/hostkey.pem
           subPath: hostkey.pem
         {{ else }}
-        {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
+        {{ if eq .Values.HostCredentials.Provider (or "CertManager" "External") }}
         - name: osg-hosted-ce-hostcert-volume
           mountPath: /etc/grid-security/hostcert.pem
           subPath: hostcert.pem
         {{ end }}
-        {{ if .Values.HostCredentials.HostKeySecret }}
+        {{ if eq .Values.HostCredentials.Provider (or "CertManager" "External") }}
         - name: osg-hosted-ce-hostkey-volume
           mountPath: /etc/grid-security/hostkey.pem
           subPath: hostkey.pem
@@ -208,9 +206,11 @@ spec:
         - name: htcondor-ce
           containerPort: 9619
           protocol: TCP
+        {{ if eq .Values.HostCredentials.Provider "http" }}
         - name: http # needed to get a cert issued from Let's Encrypt
           containerPort: 80
           protocol: TCP
+        {{ end }}
         env:
         {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
         - name: _CONDOR_NETWORK_HOSTNAME
