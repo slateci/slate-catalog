@@ -12,6 +12,11 @@ SLATE:
   LocalStorage: false
 ### SLATE-END ###
 
+# Supported values are e.g. 'release' or 'testing' or 'development'. Default is
+# 'release'. Consult the opensciencegrid/frontier-squid docker image for other
+# tags.
+#ImageTag: release
+
 Service:
   # Port that the service will utilize.
   Port: 3128
@@ -47,10 +52,16 @@ SquidConf:
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
   # Per Frontier Squid, do not consume more than 1/8 of system memory with Frontier Squid
   CacheMem: 4096
+  # The maximum size (in KB) for an in-memory object
+  # Default: 512
+  #MaximumObjectSizeInMemory: 512
   # The amount of disk space (in MB) that Frontier Squid may use on the machine.
   # The default is 10000 MB (10 GB), but more is advisable if the system supports it.
   # Current limit is 999999 MB, a limit inherent to helm's number conversion system.
   CacheSize: 10000
+  # If True, the application will expect a hostPath to be present and writeable
+  # at /var/cache/squid on the host. 
+  # CacheDirOnHost: False
   # This is the total storage (in MiB) beyound the CacheSize. If logging is disabled or if
   # Pod.UseHostpathLogDir set to true(see below), 1024 and 5120 would be reasonable values
   # for request and limit respectively. With logging enabled and Pod.UseHostpathLogDir set
@@ -73,13 +84,12 @@ SquidConf:
   # Multiple ranges can be provided, each seperated by a space.
   # Example: 128.142.0.0/16 188.185.0.0/17
   MonitoringIPRange: 127.0.0.1/32
+
   # Write all access_log messages to standard output where they can be viewed with the 
   # Docker/Kubernetes/SLATE log mechanisms, instead of to a file inside the container. 
   LogToStdout: True
-
   # To disable logging, set the below flag to true
   #DisableLogging: False
-
   # truncates log file every 2 minutes.
   CleanLog: False
   # Set this if you want to run more than one cache process concurrently.
@@ -95,7 +105,11 @@ SquidConf:
   # The directory "/var/log/slate/hostPath/osg-frontier-squid" must exist with rwx
   # permissions for uid:10941 on the target node.
   # This configuration has no effect when NodeSelection.Hostname is not set below.
-  UseHostpathLogDir: false
+  UseHostpathLogDir: False
+  # Set the minimum object size on disk (e.g. 1MB)
+  #DiskCacheMinObjSize: "1000000"
+  # Disable the disk cache entirely
+  DisableDiskCache: False
 
 NodeSelection:  
   # Hostname (FQDN) for the cluster node you want this instance to schedule on.

@@ -234,12 +234,13 @@ You can use a private git repo and provide the key to the application as a SLATE
 This allows you to turn toggle HTTP logging side car. When it is enabled, it will allow you to view the CE logs from your browser. 
 
 You may provide a SLATE secret with an `HTPASSWD` key containing password instead of having the container randomly
-generate a password.
+generate a password. If you do, the username would be `logger`.
 
-**TIP** You can create a SLATE secret containing a predefined password for the logger using a command like this:
+**TIP** You can create a SLATE secret containing a predefined password for the logger using commands like:
 
 ```
-slate secret create <name-of-your-secret> --group <your-group> --cluster <your-cluster> --from-literal HTPASSWD=<your-desired-password>
+openssl passwd -apr1 > HTPASSWD
+slate secret create <name-of-your-secret> --group <your-group> --cluster <your-cluster> --from-file=HTPASSWD
 ```
 
 To disable this, comment out the `Secret` line (default).
@@ -389,13 +390,13 @@ Create a cert and download it. You'll need to remember the password you set.
 
 Next you will need to convert it to PKCS12 format for voms. These commands will prompt for your password.
 
-`openssl pkcs12 -in usercred.p12 -nocerts  -out hostkey.pem`
+`openssl pkcs12 -in usercred.p12 -nocerts  -out userkey.pem`
 
-`openssl pkcs12 -in usercred.p12 -nocerts -nodes -out hostkey.pem`
+`openssl pkcs12 -in usercred.p12 -nocerts -nodes -out usercert.pem`
 
 Be sure that both files have the correct file permissions
 
-`chmod 600 hostkey.pem && chmod 600 hostcert.pem`
+`chmod 600 userkey.pem && chmod 600 usercert.pem`
 
 ### Install HTCondorCE Client 
 
@@ -413,7 +414,7 @@ Then install the tools
 
 You should be able to use your cert to initialize your grid proxy
 
-`voms-proxy-init -cert hostcert.pem -key hostkey.pem --debug`
+`voms-proxy-init -cert usercert.pem -key userkey.pem --debug`
 
 Here I use the `--debug` flag because `voms-proxy-init` won't give us very helpful output, if it fails.
 
