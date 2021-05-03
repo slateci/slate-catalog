@@ -151,6 +151,8 @@ spec:
             value: {{ .Values.Instance | quote }}
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
+          - name: XC_MONITOR
+            value: "{{ .Values.Monitoring.GStreamCollector }}"
           volumeMounts:
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
           - name: xcache-data-{{ $nindex }}
