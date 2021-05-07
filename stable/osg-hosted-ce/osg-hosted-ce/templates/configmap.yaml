@@ -4,7 +4,6 @@ metadata:
   name: osg-hosted-ce-{{ .Values.Instance }}-configuration
   labels:
     app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
@@ -57,7 +56,6 @@ metadata:
   name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
   labels:
     app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
@@ -99,7 +97,6 @@ metadata:
   name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
   labels:
     app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
@@ -117,7 +114,6 @@ metadata:
   name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
   labels:
     app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:
@@ -128,6 +124,24 @@ data:
     {{- end}}
     {{- end }}
 {{ end }}
+{{ if .Values.SciTokenRemoteUserMapping }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+  labels:
+    app: osg-hosted-ce
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  50-slate-scitokens.conf: |+
+    {{- range $index, $map := .Values.SciTokenRemoteUserMapping }}
+    {{- range $url, $user := $map }}
+    SCITOKENS /^{{ $url | replace "/" "\\/" | replace "." "\\." }},/ {{ $user }}
+    {{- end }}
+    {{- end }}
+{{ end }}
 {{ if .Values.HTTPLogger.Enabled }}
 ---
 apiVersion: v1
@@ -136,7 +150,6 @@ metadata:
   name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
   labels:
     app: osg-hosted-ce
-    chart: {{ template "osg-hosted-ce.chart" . }}
     instance: {{ .Values.Instance }}
     release: {{ .Release.Name }}
 data:

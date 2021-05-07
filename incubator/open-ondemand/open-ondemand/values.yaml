@@ -36,6 +36,7 @@ clusters:
   - cluster:
       name: "frisco1"
       host: "frisco1.chpc.utah.edu"
+      desktopEnable: false
       job:
         ssh_hosts: "[ 'frisco1.chpc.utah.edu' ]"
         singularity_bin: /uufs/chpc.utah.edu/sys/installdir/singularity3/std/bin/singularity
@@ -56,9 +57,10 @@ clusters:
         - "export WEBSOCKIFY_CMD='/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify'"
         - "export XDG_RUNTIME_DIR=$(mktemp -d)"
         - "%s"
-#  - cluster:
-#      name: "Notchpeak"
-#      host: "notchpeak.chpc.utah.edu"
+  - cluster:
+      name: "Notchpeak"
+      host: "notchpeak.chpc.utah.edu"
+      desktopEnable: false
 
 # Configure additional test users to be added to Keycloak.
 testUsers:

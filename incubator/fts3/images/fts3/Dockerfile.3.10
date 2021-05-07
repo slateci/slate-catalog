@@ -10,6 +10,8 @@ ADD "https://dmc-repo.web.cern.ch/dmc-repo/dmc-rc-el7.repo" "/etc/yum.repos.d/"
 RUN yum install --disablerepo=dmc-rc-el7 -y osg-ca-certs
 # Install FTS + GFAL
 RUN yum install --disablerepo=osg -y gfal2-all gfal2-util fts-server fts-client fts-rest fts-monitoring fts-mysql fts-server-selinux fts-rest-selinux fts-monitoring-selinux fts-msg fts-infosys
+# Install VO Client
+RUN yum install vo-client -y
 
 ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl

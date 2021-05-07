@@ -4,7 +4,6 @@ metadata:
   name: {{ template "osg-frontier-squid.fullname" . }}
   labels:
     app: {{ template "osg-frontier-squid.name" . }}
-    chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 
@@ -13,7 +12,6 @@ spec:
   selector:
     matchLabels:
       app: {{ template "osg-frontier-squid.name" . }}
-      chart: {{ template "osg-frontier-squid.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance | quote }}
 
@@ -21,7 +19,6 @@ spec:
     metadata:
       labels:
         app: {{ template "osg-frontier-squid.name" . }}
-        chart: {{ template "osg-frontier-squid.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
@@ -37,28 +34,83 @@ spec:
       containers:
       # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid
-        image: opensciencegrid/frontier-squid:stable
+        image: "opensciencegrid/frontier-squid:{{ .Values.ImageTag | default "release" }}"
         imagePullPolicy: Always
+        env:
+        - name: SQUID_IPRANGE
+          value: {{ .Values.SquidConf.IPRange }}
+        - name: SQUID_CACHE_MEM
+          value: '{{ .Values.SquidConf.CacheMem }} MB'  
+        {{ if .Values.SquidConf.MaxAccessLog }}
+        - name: SQUID_MAX_ACCESS_LOG
+          value: {{ .Values.SquidConf.MaxAccessLog }}
+        {{ end }} 
+        resources:
+          requests:
+            cpu: {{ .Values.SquidConf.CPU }}
+# converting CacheSize to MiB and adding it to total request
+            ephemeral-storage: {{ add .Values.SquidConf.RequestEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
+          limits:
+# converting CacheSize to MiB and adding it to total limit
+            ephemeral-storage: {{ add .Values.SquidConf.LimitEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
         ports:
         - containerPort: 3128
           name: squid
         - containerPort: 3401
           name: monitoring
           protocol: UDP
+          {{ if and .Values.NodeSelection.Hostname .Values.NodeSelection.OpenDefaultMonPort }}
+          hostPort: 3401
+          {{ end }}
         volumeMounts:
-        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
-          mountPath: /etc/osg/image-config.d/60-image-post-init.sh
-          subPath: 60-image-post-init.sh 
+# Commented out and will probably not be needed. We're using the default 60-image-post-init.sh script 
+# that comes with upstream image. Our custom config has been moved to the .awk file added through configmap
+#        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
+#          mountPath: /etc/osg/image-config.d/60-image-post-init.sh
+#          subPath: 60-image-post-init.sh 
+        {{ if .Values.SquidConf.CacheDirOnHost }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-cachedir
+          mountPath: /var/cache/squid 
+        {{ else if .Values.SLATE.LocalStorage }}
+        - mountPath: /var/cache/squid
+          name: osg-frontier-squid-{{ .Values.Instance }}-data
+        {{ end }} 
         {{ if .Values.SquidConf.LogToStdout }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /etc/supervisord.d/50-squid-log-dump.conf
           subPath: 50-squid-log-dump.conf 
         {{ end }}
-        # Storage location of the cache data
-        - mountPath: /var/cache/squid/osg-frontier-squid-{{ .Values.Instance }}-cache
-          subPath: osg-frontier-squid-{{ .Values.Instance }}-cache
-          name: osg-frontier-squid-{{ .Values.Instance }}-data
+        {{ if .Values.SquidConf.CleanLog }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
+          mountPath: /etc/supervisord.d/55-squid-log-clean.conf
+          subPath: 55-squid-log-clean.conf 
+        {{ end }}
+        - mountPath: /etc/squid/customize.d/60-customization.awk
+          subPath: 60-customization.awk
+          name: osg-frontier-squid-{{ .Values.Instance }}-awk
+        {{ if .Values.Pod.UseHostTimezone }}
+        - name: tz
+          mountPath: /etc/localtime
+          readOnly: true
+        {{ end }}
+        {{ if and .Values.SquidConf.UseHostpathLogDir .Values.NodeSelection.Hostname }}
+        - name: squid-log-dir
+          mountPath: /var/log/squid
+        {{ end }}
       volumes:
+        {{ if .Values.SquidConf.CacheDirOnHost }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-cachedir
+          hostPath:
+            path: /var/cache/squid
+            type: Directory
+        {{ end }} 
+        - name: osg-frontier-squid-{{ .Values.Instance }}-awk
+          configMap:
+            name: {{ template "osg-frontier-squid.fullname" . }}
+            items:
+            - key: 60-customization.awk
+              path: 60-customization.awk
+              mode: 420
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           configMap:
             name: {{ template "osg-frontier-squid.fullname" . }}
@@ -70,10 +122,25 @@ spec:
             - key: 50-squid-log-dump.conf
               path: 50-squid-log-dump.conf
             {{ end }}
+            {{ if .Values.SquidConf.CleanLog }}
+            - key: 55-squid-log-clean.conf
+              path: 55-squid-log-clean.conf
+            {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
         {{ if .Values.SLATE.LocalStorage }}
           persistentVolumeClaim:
             claimName: osg-frontier-squid-{{ .Values.Instance }}-pvc
         {{ else }}
           emptyDir: {}
+        {{ end }}
+        {{ if .Values.Pod.UseHostTimezone }}
+        - name: tz
+          hostPath:
+            path: /etc/localtime
+        {{ end }}
+        {{ if and .Values.SquidConf.UseHostpathLogDir .Values.NodeSelection.Hostname }}
+        - name: squid-log-dir
+          hostPath:
+            path: /var/log/slate/hostPath/osg-frontier-squid
+            type: Directory
         {{ end }}
