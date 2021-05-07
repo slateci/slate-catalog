@@ -4,7 +4,7 @@ LABEL maintainer "Lincoln Bryant <lincolnb@uchicago.edu>"
 RUN yum update -y && yum install -y epel-release
 
 # upcoming for tokens
-RUN yum install -y --enablerepo=osg-upcoming \
+RUN yum install -y --enablerepo=osg-upcoming --enablerepo=osg-empty \
   condor \
   openssh-server \
   authconfig \

@@ -4,7 +4,6 @@ metadata:
   name: {{ template "osg-frontier-squid.fullname" . }}
   labels:
     app: {{ template "osg-frontier-squid.name" . }}
-    chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 spec:
@@ -14,7 +13,6 @@ spec:
   {{ end }}
   selector:
     app: {{ template "osg-frontier-squid.name" . }}
-    chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
   ports:

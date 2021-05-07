@@ -24,6 +24,8 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
     spec:
+      
+      hostNetwork: true
 
       nodeSelector:
         xcache: {{ .Values.Instance | quote }}
@@ -92,7 +94,7 @@ spec:
           livenessProbe:
             tcpSocket:
               port: {{ .Values.Service.Port }}
-            initialDelaySeconds: 180
+            initialDelaySeconds: 600
             periodSeconds: 60
           readinessProbe:
             exec:
@@ -150,6 +152,8 @@ spec:
             value: {{ .Values.Instance | quote }}
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
+          - name: XC_MONITOR
+            value: "{{ .Values.Monitoring.GStreamCollector }}"
           volumeMounts:
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
           - name: xcache-data-{{ $nindex }}

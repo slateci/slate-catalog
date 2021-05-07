@@ -4,22 +4,22 @@ metadata:
   name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
     app: {{ template "osg-hosted-ce.name" . }}
-    chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ template "osg-hosted-ce.name" . }}
-      chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels: 
         app: {{ template "osg-hosted-ce.name" . }}
-        chart: {{ template "osg-hosted-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
@@ -46,6 +46,11 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
+      {{ end }}
+      {{ if .Values.SciTokenRemoteUserMapping }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
       {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
@@ -203,6 +208,11 @@ spec:
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
         {{ end }}
+        {{ if .Values.SciTokenRemoteUserMapping }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+          mountPath: /etc/condor-ce/mapfiles.d/50-slate-scitokens.conf
+          subPath: 50-slate-scitokens.conf
+        {{ end }}
         ports:
         - name: htcondor-ce
           containerPort: 9619
@@ -242,6 +252,10 @@ spec:
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR
           value: {{ .Values.RemoteCluster.BoscoDir | default "bosco" }}
+        {{ if .Values.BoscoOverrides.TarballURL }}
+        - name: BOSCO_TARBALL_URL
+          value: {{ .Values.BoscoOverrides.TarballURL }}
+        {{ end }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"

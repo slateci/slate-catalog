@@ -19,7 +19,7 @@ SiteConfig:
 
 Monitoring:
   Collector: http://xcache.atlas-ml.org:80
-  GStreamCollector: xcache.atlas-ml.org:9000 
+  GStreamCollector: collector.atlas-ml.org:9000 
   VPheartbeat: https://vps.cern.ch/liveness
 
 XCacheConfig:

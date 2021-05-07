@@ -5,6 +5,7 @@ metadata:
 data:
 
   {{ range .Values.clusters }}
+  {{ if eq .cluster.desktopEnable true }}
   desktop-{{ .cluster.name | lower | nospace }}.yml: |
     ---
     title: {{ .cluster.name | lower | nospace }}-desktop
@@ -18,4 +19,5 @@ data:
       bc_account: null
       bc_num_slots: 1
       num_cores: none
+  {{ end }}
   {{ end }}

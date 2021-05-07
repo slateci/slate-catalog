@@ -9,6 +9,7 @@ metadata:
     chart: {{ template "telegraf.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote }}
 spec:
   replicas: 1
   selector:
@@ -26,10 +27,10 @@ spec:
     spec:
       containers:
         - name: telegraf
-          image: karlnewell/grnoc-telegraf-docker:latest
+          image: karlnewell/tsds-telegraf
           imagePullPolicy: Always
           volumeMounts:
-            - mountPath: /etc/telegraf/grnoc/conf.d
+            - mountPath: /etc/telegraf/conf.d
               name: telegraf-volume 
       volumes:
         - name: telegraf-volume
