@@ -27,16 +27,16 @@ spec:
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-        - name: shell-app-setup
+        - name: cluster-config-files
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-shell-setup
-            items:
-            - key: clusters.yaml
-              path: clusters.yaml
+        - name: desktop-config-files
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-desktop-host
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
-            claimName: {{ .Values.claimName }}
+            claimName: keycloak-persistent-volume-{{ .Values.Instance }}
       containers:
         - name: open-ondemand
           image: slateci/open-ondemand:1.8.1
@@ -47,9 +47,12 @@ spec:
             - name: ood-portal-config
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
-            - name: shell-app-setup
-              mountPath: /etc/ood/config/clusters.d/clusters.yaml
-              subPath: clusters.yaml
+            # Shell app
+            - name: cluster-config-files
+              mountPath: /etc/ood/config/clusters.d
+            # Desktop app
+            - name: desktop-config-files
+              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
           ports:
             - name: http
               containerPort: 80

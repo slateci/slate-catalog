@@ -4,22 +4,22 @@ metadata:
   name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
     app: {{ template "osg-hosted-ce.name" . }}
-    chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ template "osg-hosted-ce.name" . }}
-      chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels: 
         app: {{ template "osg-hosted-ce.name" . }}
-        chart: {{ template "osg-hosted-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
@@ -28,6 +28,11 @@ spec:
         kubernetes.io/hostname: {{ .Values.NodeSelection }}
       {{ end }}
       volumes:
+      {{ if .Values.Persistence.LibCondorCeVolume }}
+      - name: lib-condor-ce
+        persistentVolumeClaim:
+          claimName: {{ .Values.Persistence.LibCondorCeVolume }}
+      {{ end }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-configuration
@@ -41,6 +46,11 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
+      {{ end }}
+      {{ if .Values.SciTokenRemoteUserMapping }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
       {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
@@ -92,8 +102,14 @@ spec:
       {{ end }}
       {{ end }}
       {{ if .Values.HTTPLogger.Enabled }}
+      {{ if .Values.Persistence.LogVolume }}
+      - name: log-volume
+        persistentVolumeClaim:
+          claimName: {{ .Values.Persistence.LogVolume }}
+      {{ else }}
       - name: log-volume
         emptyDir: {} 
+      {{ end }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
@@ -150,6 +166,10 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
+        {{ if .Values.Persistence.LibCondorCeVolume }}
+        - name: lib-condor-ce
+          mountPath: /var/lib/condor-ce
+        {{ end }}
         {{ if .Values.HostCredentials.HostCertKeySecret }}
         - name: osg-hosted-ce-hostcertkey-volume
           mountPath: /etc/grid-security/hostcert.pem
@@ -187,6 +207,11 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
+        {{ end }}
+        {{ if .Values.SciTokenRemoteUserMapping }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+          mountPath: /etc/condor-ce/mapfiles.d/50-slate-scitokens.conf
+          subPath: 50-slate-scitokens.conf
         {{ end }}
         ports:
         - name: htcondor-ce
@@ -227,6 +252,10 @@ spec:
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR
           value: {{ .Values.RemoteCluster.BoscoDir | default "bosco" }}
+        {{ if .Values.BoscoOverrides.TarballURL }}
+        - name: BOSCO_TARBALL_URL
+          value: {{ .Values.BoscoOverrides.TarballURL }}
+        {{ end }}
         - name: DEVELOPER
           {{ if .Values.Developer.Enabled }}  # https://github.com/helm/helm/issues/2848
           value: "true"
@@ -239,7 +268,9 @@ spec:
         - name: BOSCO_DIRECTORY
           value: {{ .Values.Topology.Resource }}
         {{ end }}
+        {{  if not .Values.Persistence.LibCondorCeVolume }}
         lifecycle:
           preStop:
             exec:
               command: ["/usr/local/bin/drain-ce.sh"]
+        {{ end }}

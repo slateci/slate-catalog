@@ -7,6 +7,7 @@ metadata:
     chart: {{ template "xcache.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 spec:
   replicas: 1
   selector:
@@ -25,8 +26,10 @@ spec:
         instance: {{ .Values.Instance | quote }}
     spec:
 
+      hostNetwork: true
+      
       nodeSelector:
-        xcache-capable: "true"
+        xcache: {{ .Values.Instance | quote }}
       
       tolerations:
       - key: "xcache"
@@ -92,7 +95,7 @@ spec:
           livenessProbe:
             tcpSocket:
               port: {{ .Values.Service.Port }}
-            initialDelaySeconds: 180
+            initialDelaySeconds: 600
             periodSeconds: 60
           readinessProbe:
             exec:
@@ -100,7 +103,7 @@ spec:
               - "/usr/local/sbin/heartbeat.sh"
               - "{{.Values.Monitoring.VPheartbeat}}"
               - "{{.Values.SiteConfig.Name}}"
-              - "{{.Values.SiteConfig.InstanceID}}"
+              - "{{.Values.Instance}}"
               - "{{.Values.Service.ExternalIP}}:{{.Values.Service.Port}}"
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -144,8 +147,12 @@ spec:
           env:
           - name: XC_RESOURCENAME
             value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_INSTANCE
+            value: {{ .Values.Instance | quote }}
           - name: XC_REPORT_COLLECTOR
             value: "{{ .Values.Monitoring.Collector }}"
+          - name: XC_MONITOR
+            value: "{{ .Values.Monitoring.GStreamCollector }}"
           volumeMounts:
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
           - name: xcache-data-{{ $nindex }}

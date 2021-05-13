@@ -234,12 +234,13 @@ You can use a private git repo and provide the key to the application as a SLATE
 This allows you to turn toggle HTTP logging side car. When it is enabled, it will allow you to view the CE logs from your browser. 
 
 You may provide a SLATE secret with an `HTPASSWD` key containing password instead of having the container randomly
-generate a password.
+generate a password. If you do, the username would be `logger`.
 
-**TIP** You can create a SLATE secret containing a predefined password for the logger using a command like this:
+**TIP** You can create a SLATE secret containing a predefined password for the logger using commands like:
 
 ```
-slate secret create <name-of-your-secret> --group <your-group> --cluster <your-cluster> --from-literal HTPASSWD=<your-desired-password>
+openssl passwd -apr1 > HTPASSWD
+slate secret create <name-of-your-secret> --group <your-group> --cluster <your-cluster> --from-file=HTPASSWD
 ```
 
 To disable this, comment out the `Secret` line (default).

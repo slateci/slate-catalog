@@ -103,9 +103,29 @@ VoRemoteUserMapping:
 #DnRemoteUserMapping:
 #  - "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName": osg01
 
+# SCITOKENS url to user mapping
+# SciTokenRemoteUserMapping:
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+    # - "https://scitokens.org/osg-connect": osg01
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+    # - "https://chtc.cs.wisc.edu": osg02
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
+    # - "https://cms-auth.web.cern.ch/": osg04
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
+    # - "https://atlas-auth.web.cern.ch/": osg09
+
 # Specify additional HTCondor-CE configuration
 # HTCondorCeConfig: |+
 #   ALL_DEBUG = D_ALWAYS:2 D_CAT
+
+# Enable persistence to HostedCE files by creating corresponding SLATE Volumes
+# SLATE Creates a PVC in Kubernetes which can be reclaimed on restart
+# The value for each volume should correspond to the volume name within SLATE
+Persistence:
+  # /var/log/condor-ce
+  LogVolume: null 
+  # /var/lib/condor-ce
+  LibCondorCeVolume: null
 
 # Options to allow override of the bosco directory from arbitrary git repos
 # Bosco override dirs are expected in the following location in the git repo:
@@ -117,6 +137,9 @@ BoscoOverrides:
   # 'git.key' containing the private SSH key that can access
   # it. Specify the name of the secret in GitKeySecret:
   GitKeySecret: null
+  # Bosco tarball URL to use for installation on the remote login host
+  # instead of the default determined by the Hosted CE
+  TarballURL: null
 
 # Enable a logging sidecar
 HTTPLogger:
@@ -160,3 +183,9 @@ ContainerTags:
 # - Generates a test CA and self-signed host cert/key pair
 Developer:
   Enabled: false
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###

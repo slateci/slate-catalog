@@ -12,11 +12,15 @@ writeToStdout: true
 # Specifies the default data collection interval.
 # Time values can be specified by combining an integer value with a time unit.
 # Valid time units include "ns", "us", "ms", "s", "m" and "h".
-interval: "5s"
+collectionInterval: "5s"
+# Specifies the random offset added to collection times
+collectionJitter: "10s"
 
 # Specifies time between output flushes.
 # Uses the same syntax as the interval parameter.
-flushInterval: "300s"
+flushInterval: "15s"
+# Specifies the random offset added to flush times
+flushJitter: "10s"
 
 
 # Configuration for GlobalNOC database output
@@ -48,7 +52,7 @@ targets:
   - hostGroup:
       community: "public"
       hosts:
-        - "127.0.0.1:161"
+        - "127.0.0.1"
       counter64Bit: false
       oids: |-
         [[inputs.snmp.field]]
@@ -57,8 +61,8 @@ targets:
   - hostGroup:
       community: "public"
       hosts:
-        - "127.0.0.1:161"
-        - "localhost:161"
+        - "127.0.0.1"
+        - "localhost"
       counter64Bit: true
       oids: |-
         [[inputs.snmp.field]]
@@ -78,3 +82,9 @@ influxOutput:
     enabled: false
     username: "telegraf"
     password: "metrics"
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "default-id"
+### SLATE-END ###

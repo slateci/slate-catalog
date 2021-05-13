@@ -40,16 +40,6 @@ RUN yum install -y httpd24-mod_auth_openidc
 # Remove auth_openidc.conf
 RUN rm -f /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 
-# Set up incron
-RUN yum install incron -y
-COPY mk-homedir.sh /usr/bin/mk-homedir.sh
-RUN chmod 0711 /usr/bin/mk-homedir.sh
-COPY incron-mkdir /etc/incron.d/incron-mkdir
-COPY incron.allow /etc/incron.allow
-RUN chmod 0700 /etc/incron.d
-RUN useradd incronuser && chown incronuser /usr/bin/mk-homedir.sh && \
-    chmod 0740 /var/log/ondemand-nginx
-
 # Install Singularity
 WORKDIR /usr/local
 RUN sudo yum groupinstall -y 'Development Tools'
@@ -82,6 +72,10 @@ RUN mkdir /etc/ood/config/apps && mkdir /etc/ood/config/apps/shell
 COPY env /etc/ood/config/apps/shell/env
 COPY startup.sh /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh
 WORKDIR /root
+
+# Configure Desktop application
+RUN mkdir /etc/ood/config/apps/bc_desktop
+RUN mkdir /etc/ood/config/apps/bc_desktop/single_cluster
 
 # Some security precautions
 RUN chmod 0700 /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh

@@ -1,7 +1,6 @@
-# Instance to label use case of XCache deployment
 # Generates app name as "xcache-[Instance]"
 # Enables unique instances of XCache in one namespace
-Instance: global
+Instance: slate01
 
 Service:
   # Port that the service will utilize.
@@ -13,14 +12,13 @@ Service:
 
 SiteConfig:
   Name: Home
-  InstanceID: xc_xps
   # CRIC protocol ID. 433 is a dummy value. 
   # can be looked up in this URL: https://atlas-cric.cern.ch/api/core/service/query/?json
   # Endpoints can be created here: https://atlas-cric.cern.ch/core/service/create/
   CRICprotocolID: 433
 
 Monitoring:
-  Collector: http://collector.atlas-ml.org:80
+  Collector: http://xcache.atlas-ml.org:80
   GStreamCollector: collector.atlas-ml.org:9000 
   VPheartbeat: https://vps.cern.ch/liveness
 
@@ -54,3 +52,9 @@ image:
   repository: slateci/xcache
   tag: testing
   pullPolicy: Always
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###

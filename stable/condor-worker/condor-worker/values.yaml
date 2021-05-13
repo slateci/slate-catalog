@@ -55,3 +55,8 @@ CondorConfigFile: |-
   NUM_SLOTS_TYPE_1                      = 1
   SLOT_TYPE_1                           = cpus=100%
   SLOT_TYPE_1_PARTITIONABLE             = TRUE
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###
