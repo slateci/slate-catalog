@@ -26,3 +26,8 @@ GridFTPConfig:
 # backing filesystem. It may be desirable to turn this off when using a PVC as
 # backing storage, since this tends not to tie to a specific node. 
 #NodeName: 
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###
