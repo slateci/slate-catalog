@@ -6,7 +6,7 @@ metadata:
     app: {{ template "osg-frontier-squid.name" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
-
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 spec:
   replicas: 1
   selector:

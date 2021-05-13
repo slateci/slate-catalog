@@ -10,6 +10,8 @@ SLATE:
   Cluster:
     Name: mini-SLATE
   LocalStorage: false
+  Instance:
+    ID: "untagged"
 ### SLATE-END ###
 
 # Supported values are e.g. 'release' or 'testing' or 'development'. Default is
