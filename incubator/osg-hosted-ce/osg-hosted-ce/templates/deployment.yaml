@@ -273,4 +273,5 @@ spec:
           preStop:
             exec:
               command: ["/usr/local/bin/drain-ce.sh"]
+      terminationGracePeriodSeconds: 120
         {{ end }}
