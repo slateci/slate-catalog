@@ -168,11 +168,7 @@ spec:
         {{ end }}
         {{ if .Values.HostCredentials.HostCertKeySecret }}
         - name: osg-hosted-ce-hostcertkey-volume
-          mountPath: /etc/grid-security/hostcert.pem
-          subPath: hostcert.pem
-        - name: osg-hosted-ce-hostcertkey-volume
-          mountPath: /etc/grid-security/hostkey.pem
-          subPath: hostkey.pem
+          mountPath: /etc/grid-security-orig.d
         {{ else }}
         {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
         - name: osg-hosted-ce-hostcert-volume
