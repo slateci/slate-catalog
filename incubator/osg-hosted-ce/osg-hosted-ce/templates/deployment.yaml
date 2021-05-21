@@ -65,7 +65,7 @@ spec:
           secretName: {{ .Values.HostCredentials.HostCertKeySecret }}
           items:
           - key: tls.crt
-            mode: 256
+            mode: 420
           - key: tls.key
             mode: 256
       {{ else }}
