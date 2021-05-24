@@ -65,8 +65,10 @@ spec:
           secretName: {{ .Values.HostCredentials.HostCertKeySecret }}
           items:
           - key: tls.crt
+            path: hostcert.pem
             mode: 420
           - key: tls.key
+            path: hostkey.pem
             mode: 256
       {{ else }}
       {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
