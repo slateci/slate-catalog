@@ -189,10 +189,8 @@ spec:
           subPath: hostkey.pem
         {{ end }}
         {{ end }}
-        {{ if .Values.HTTPLogger.Enabled }}
         - name: log-volume
           mountPath: /var/log/condor-ce
-        {{ end }}
         {{ if .Values.BoscoOverrides.Enabled }}
         {{ if .Values.BoscoOverrides.GitKeySecret }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
