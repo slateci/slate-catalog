@@ -66,10 +66,10 @@ spec:
           items:
           - key: tls.crt
             path: hostcert.pem
-            mode: 420
+            mode: 0o644
           - key: tls.key
             path: hostkey.pem
-            mode: 256
+            mode: 0o400
       {{ else }}
       {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
       - name: osg-hosted-ce-hostcert-volume
