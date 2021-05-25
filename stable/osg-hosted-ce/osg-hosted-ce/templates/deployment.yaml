@@ -101,20 +101,17 @@ spec:
             mode: 256 
       {{ end }}
       {{ end }}
-      {{ if .Values.HTTPLogger.Enabled }}
       {{ if .Values.Persistence.LogVolume }}
       - name: log-volume
         persistentVolumeClaim:
           claimName: {{ .Values.Persistence.LogVolume }}
-      {{ else }}
-      - name: log-volume
-        emptyDir: {} 
       {{ end }}
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {}
       - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
-      {{ end }}
-      {{ if .Values.HTTPLogger.Enabled }}
       initContainers:
       - name: logging-sidecar-init
         image: opensciencegrid/hosted-ce:{{ .Values.ContainerTags.HostedCE }}
@@ -189,8 +186,10 @@ spec:
           subPath: hostkey.pem
         {{ end }}
         {{ end }}
+        {{ if or .Values.Persistence.LogVolume .Values.HTTPLogger.Enabled }}
         - name: log-volume
           mountPath: /var/log/condor-ce
+        {{ end }}
         {{ if .Values.BoscoOverrides.Enabled }}
         {{ if .Values.BoscoOverrides.GitKeySecret }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-gitkey
