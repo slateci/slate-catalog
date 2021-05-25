@@ -36,8 +36,13 @@ grnocOutput:
 
 
 # Specify hosts to monitor here. Hosts can be IP addresses or DNS names.
-# A hostGroup is a group of hosts that share settings. (e.g. community string, oids)
-# Port must also be specififed with a colon after hostname or address. (default is 161)
+# A hostGroup is a group of hosts that share settings. (e.g. community string, oids, retries, and timeout)
+# The "timeout" parameter adjusts how long it takes before an SNMP request is considered failed.
+# Set this by specifying an integer and "s" afterwards, for seconds.
+# The "retries" parameter specifies how many retries to attempt in the case of a failed SNMP request.
+# Simply use an integer here.
+#
+# A port must also be specififed with a colon after hostname or address. (default is 161, and should probably not be changed)
 # Specify OIDs according to the Telegraf SNMP plugin format.
 # Documentation can be found at: https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp.
 # The counter64Bit parameter is only relevant if GRNOC output has been enabled.
@@ -51,6 +56,9 @@ grnocOutput:
 targets:
   - hostGroup:
       community: "public"
+      timeout: "15s"
+      retries: 2
+      community: "public"
       hosts:
         - "127.0.0.1"
       counter64Bit: false
@@ -60,6 +68,8 @@ targets:
           name = "uptime"
   - hostGroup:
       community: "public"
+      timeout: "15s"
+      retries: 2
       hosts:
         - "127.0.0.1"
         - "localhost"

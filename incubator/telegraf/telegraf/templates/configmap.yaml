@@ -23,7 +23,7 @@ data:
     data:
       - tsds_name: interface
         telegraf_name: interface
-        interval: {{ .Values.flushInterval }}
+        interval: 60 # possibly make this configurable later if it's something that is necessary
         metadata:
           - from: agent_host
             to: "node"
@@ -167,11 +167,13 @@ data:
       "{{ $value }}",
       {{ end -}}]
 
-      timeout = "15s"
+      timeout = {{ .hostGroup.timeout | quote }}
       version = 2
+
       # SNMP community string.
       community = {{ .hostGroup.community | quote }}
-      retries = 2
+      # Number of retries to attempt.
+      retries = {{ .hostGroup.retries }}
       max_repetitions = 15
 
       # Poll custom OIDs if grnoc output is disabled.

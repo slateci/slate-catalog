@@ -94,6 +94,8 @@ The following table lists the configurable parameters of the Telegraf monitoring
 |`grnocOutput.username`| Database username |`tsds username`|
 |`grnocOutput.password`| Database password |`tsds password`|
 |`targets.hostGroup.community`| Community string of `hostGroup` |`public`|
+|`targets.hostGroup.timeout`| SNMP timeout length of `hostGroup` |`15s`|
+|`targets.hostGroup.retries`| Number of retries to attempt for `hostGroup` |`2`|
 |`targets.hostGroup.hosts`| Hosts to monitor |`127.0.0.1:161`|
 |`targets.hostGroup.counter64bit`| Type of SNMP counter on host machine |`false`|
 |`targets.hostGroup.oids`| SNMP OIDs to poll |*telegraf configuration monitoring system uptime*|
