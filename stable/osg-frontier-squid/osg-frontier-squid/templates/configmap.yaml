@@ -4,37 +4,58 @@ metadata:
   name: {{ template "osg-frontier-squid.fullname" . }}
   labels:
     app: {{ template "osg-frontier-squid.name" . }}
-    chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
 data:
   60-customization.awk: |
+    # Always set the monitoring IP range
     setoption("acl HOST_MONITOR src", "{{ .Values.SquidConf.MonitoringIPRange }}")
+    # Always set the visible hostname
+    setoption("visible_hostname", "'`uname -n`'/${process_number}")
     {{- if .Values.SquidConf.RESTRICT_DEST }}
+    # Restrict destination addresses
     setoptionparameter("acl RESTRICT_DEST", 3, "{{ .Values.SquidConf.RESTRICT_DEST }}")
     uncomment("http_access deny !RESTRICT_DEST")
     {{- end }}
     {{- if .Values.SquidConf.Cpu_Affinity_Map }}
+    # Set the CPU affinity map
     setoption("cpu_affinity_map", "{{ .Values.SquidConf.Cpu_Affinity_Map }}")
     {{- end }}
     {{- if .Values.SquidConf.Logfile_Rotate }}
+    # Whether to rotate logs or not
     setoption("logfile_rotate", "{{ .Values.SquidConf.Logfile_Rotate }}")
     {{- end }}
     {{- if .Values.SquidConf.MaximumObjectSizeInMemory }}
+    # Allow the user to set the maximum object size in memory
     setoption("maximum_object_size_in_memory", "{{ .Values.SquidConf.MaximumObjectSizeInMemory }} KB")
     {{ end }}
     {{- if .Values.SquidConf.Workers }}
-    setoption("workers", {{ .Values.SquidConf.Workers }} )
-    setoption("cache_dir", "ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256")
+    # If multiple workers are requested
     {{- if .Values.SquidConf.DisableLogging }}
+    # If multiple workers are used, and logging is disabled:
     setoption("access_log", "none")
     {{- else -}}
+    # Otherwise, create a log for each child process:
     setoptionparameter("logformat awstats", 3, "kid${process_number}")
     {{ end }}
-    setoption("visible_hostname", "'`uname -n`'/${process_number}")
-    {{ else }} # single worker case
+    # Set the number of workers and create a cache for each unique worker
+    setoption("workers", {{ .Values.SquidConf.Workers }} )
+    setoption("cache_dir", "ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256")
+    {{ else }}
+    # If multiple workers are NOT requested, set a single cache dir with one of
+    # three options: 
+    #  1. Cache with a minimum object size OR
+    #  2. Cache with the disk cache disabled entirely OR
+    #  3. Cache with no special parameters (default).
+    {{ if .Values.SquidConf.DiskCacheMinObjSize }}
+    setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256 min_size={{ .Values.SquidConf.DiskCacheMinObjSize }}")
+    {{ else if .Values.SquidConf.DisableDiskCache }}
+    setoption("cache_dir", "none /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
+    {{ else }}
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
+    {{ end }} 
     {{- if .Values.SquidConf.DisableLogging }}
+    # Let the user enable/disable logging for a single worker case
     setoption("access_log", "none")
     {{- end }}
     {{ end }}

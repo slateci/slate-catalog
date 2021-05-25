@@ -4,7 +4,6 @@ metadata:
   name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
     app: {{ template "osg-hosted-ce.name" . }}
-    chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
     instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
@@ -13,14 +12,14 @@ spec:
   selector:
     matchLabels:
       app: {{ template "osg-hosted-ce.name" . }}
-      chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels: 
         app: {{ template "osg-hosted-ce.name" . }}
-        chart: {{ template "osg-hosted-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
@@ -67,10 +66,10 @@ spec:
           items:
           - key: tls.crt
             path: hostcert.pem
-            mode: 256
+            mode: 0o644
           - key: tls.key
             path: hostkey.pem
-            mode: 256
+            mode: 0o400
       {{ else }}
       {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
       - name: osg-hosted-ce-hostcert-volume
@@ -173,11 +172,7 @@ spec:
         {{ end }}
         {{ if .Values.HostCredentials.HostCertKeySecret }}
         - name: osg-hosted-ce-hostcertkey-volume
-          mountPath: /etc/grid-security/hostcert.pem
-          subPath: hostcert.pem
-        - name: osg-hosted-ce-hostcertkey-volume
-          mountPath: /etc/grid-security/hostkey.pem
-          subPath: hostkey.pem
+          mountPath: /etc/grid-security-orig.d
         {{ else }}
         {{ if and .Values.HostCredentials.HostCertSecret .Values.HostCredentials.HostKeySecret }}
         - name: osg-hosted-ce-hostcert-volume
@@ -211,7 +206,8 @@ spec:
         {{ end }}
         {{ if .Values.SciTokenRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
-          mountPath: /etc/condor-ce/mapfiles.d
+          mountPath: /etc/condor-ce/mapfiles.d/50-slate-scitokens.conf
+          subPath: 50-slate-scitokens.conf
         {{ end }}
         ports:
         - name: htcondor-ce
@@ -252,7 +248,7 @@ spec:
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR
           value: {{ .Values.RemoteCluster.BoscoDir | default "bosco" }}
-        {{ if .Values.BoscoOverrides.URL }}
+        {{ if .Values.BoscoOverrides.TarballURL }}
         - name: BOSCO_TARBALL_URL
           value: {{ .Values.BoscoOverrides.TarballURL }}
         {{ end }}
@@ -273,4 +269,5 @@ spec:
           preStop:
             exec:
               command: ["/usr/local/bin/drain-ce.sh"]
+      terminationGracePeriodSeconds: 120
         {{ end }}

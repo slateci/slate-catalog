@@ -4,7 +4,6 @@ metadata:
   name: {{ template "osg-hosted-ce.fullname" . }}
   labels:
     app: {{ template "osg-hosted-ce.name" . }}
-    chart: {{ template "osg-hosted-ce.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
     instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
@@ -13,14 +12,14 @@ spec:
   selector:
     matchLabels:
       app: {{ template "osg-hosted-ce.name" . }}
-      chart: {{ template "osg-hosted-ce.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels: 
         app: {{ template "osg-hosted-ce.name" . }}
-        chart: {{ template "osg-hosted-ce.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
@@ -47,6 +46,11 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
+      {{ end }}
+      {{ if .Values.SciTokenRemoteUserMapping }}
+      - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
       {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
@@ -97,20 +101,17 @@ spec:
             mode: 256 
       {{ end }}
       {{ end }}
-      {{ if .Values.HTTPLogger.Enabled }}
       {{ if .Values.Persistence.LogVolume }}
       - name: log-volume
         persistentVolumeClaim:
           claimName: {{ .Values.Persistence.LogVolume }}
-      {{ else }}
-      - name: log-volume
-        emptyDir: {} 
       {{ end }}
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {}
       - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
-      {{ end }}
-      {{ if .Values.HTTPLogger.Enabled }}
       initContainers:
       - name: logging-sidecar-init
         image: opensciencegrid/hosted-ce:{{ .Values.ContainerTags.HostedCE }}
@@ -181,7 +182,7 @@ spec:
           subPath: hostkey.pem
         {{ end }}
         {{ end }}
-        {{ if .Values.HTTPLogger.Enabled }}
+        {{ if or .Values.Persistence.LogVolume .Values.HTTPLogger.Enabled }}
         - name: log-volume
           mountPath: /var/log/condor-ce
         {{ end }}
@@ -199,6 +200,11 @@ spec:
         - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
           mountPath: /etc/grid-security/grid-mapfile
           subPath: grid-mapfile
+        {{ end }}
+        {{ if .Values.SciTokenRemoteUserMapping }}
+        - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+          mountPath: /etc/condor-ce/mapfiles.d/50-slate-scitokens.conf
+          subPath: 50-slate-scitokens.conf
         {{ end }}
         ports:
         - name: htcondor-ce
