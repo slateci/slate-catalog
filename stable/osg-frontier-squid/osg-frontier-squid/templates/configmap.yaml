@@ -50,7 +50,7 @@ data:
     {{ if .Values.SquidConf.DiskCacheMinObjSize }}
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256 min_size={{ .Values.SquidConf.DiskCacheMinObjSize }}")
     {{ else if .Values.SquidConf.DisableDiskCache }}
-    setoption("cache_dir", "none /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
+    setoption("cache_dir", "null")
     {{ else }}
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
     {{ end }} 
