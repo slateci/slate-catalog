@@ -32,7 +32,7 @@ grnocOutput:
   enabled: true
   hostname: "tsds.hostname.net"
   username: "tsds username"
-  password: "tsds password"
+  passwordSecretName: "tsds-password-secret"
 
 
 # Specify hosts to monitor here. Hosts can be IP addresses or DNS names.

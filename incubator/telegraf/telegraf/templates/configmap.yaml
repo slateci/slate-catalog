@@ -12,13 +12,29 @@ metadata:
 
 # store Telegraf configuration file
 data:
+  "setup.sh": |-
+
+    #! /bin/bash 
+
+    # Copy configuration file to proper location
+    cp /etc/setup/telegraf.conf  /etc/telegraf/conf.d/telegraf.conf
+
+    {{ if eq .Values.grnocOutput.enabled true }}
+    # Create edited configuration file
+    sed -e "s/passwordPlaceholder/$GRNOC_DATABASE_PASSWORD/" /etc/setup/config.yaml > /etc/telegraf/conf.d/config.yaml
+    {{ end }}
+
+    # Restart telegraf? TODO
+
+
   {{ if eq .Values.grnocOutput.enabled true }}
+
   "config.yaml": |-
 
     credentials:
       url: {{ .Values.grnocOutput.hostname | quote }}
-      username: {{ .Values.grnocOutput.username | quote }}
-      password: {{ .Values.grnocOutput.password | quote }}
+      username: {{ .Values.grnocOutput.username }}
+      password: passwordPlaceholder
 
     data:
       - tsds_name: interface
