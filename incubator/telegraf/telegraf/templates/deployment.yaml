@@ -36,7 +36,7 @@ spec:
             postStart:
               exec:
                 # This script will create the appropriate "config.yaml" file for the grnoc output plugin
-                command: ["/bin/bash", "/etc/setup/grnoc-plugin-setup.sh"]
+                command: ["/bin/bash", "/etc/setup/setup.sh"]
           env:
             - name: GRNOC_DATABASE_PASSWORD
               valueFrom:
