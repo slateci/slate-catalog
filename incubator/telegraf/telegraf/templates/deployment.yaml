@@ -42,7 +42,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.grnocOutput.passwordSecretName }}
-                  key: username
+                  key: password
       volumes:
         - name: telegraf-volume
           # populate volume with config map data
