@@ -16,6 +16,8 @@ data:
 
     #! /bin/bash 
 
+    mkdir -p /etc/telegraf/conf.d/
+
     # Copy configuration file to proper location
     cp /etc/setup/telegraf.conf  /etc/telegraf/conf.d/telegraf.conf
 
