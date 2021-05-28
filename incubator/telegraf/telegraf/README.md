@@ -22,6 +22,12 @@ slate app get-conf telegraf > telegraf.yaml
 
 Next, modify the configuration file with your preferred editor to ensure appropriate configuration. A guide to this can be found [here](https://slateci.io/blog/telegraf-monitoring.html).
 
+Then, if you are writing to GlobalNOC's database, create a SLATE secret containing your database password.
+This is done with the following command:
+```bash
+slate secret create --from-literal password=<your_password> <secret_name>
+```
+
 Finally, install the app with your custom configuration onto a SLATE cluster.
 Use a command that looks something like this: 
 
@@ -92,7 +98,7 @@ The following table lists the configurable parameters of the Telegraf monitoring
 |`grnocOutput.enabled`| Whether to write to GlobalNOC database |`true`|
 |`grnocOutput.hostname`| Database endpoint |`tsds.hostname.net`|
 |`grnocOutput.username`| Database username |`tsds username`|
-|`grnocOutput.password`| Database password |`tsds password`|
+|`grnocOutput.passwordSecretName`| GlobalNOC database password secret name |`tsds-password-secret`|
 |`targets.hostGroup.community`| Community string of `hostGroup` |`public`|
 |`targets.hostGroup.timeout`| SNMP timeout length of `hostGroup` |`15s`|
 |`targets.hostGroup.retries`| Number of retries to attempt for `hostGroup` |`2`|

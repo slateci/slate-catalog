@@ -25,7 +25,8 @@ flushJitter: "10s"
 
 # Configuration for GlobalNOC database output
 # Set enabled flag to true to enable GlobalNOC output.
-# Set hostname, username, and password accordingly.
+# Set hostname, and username accordingly.
+# Set passwordSecretName to the name of a previously created SLATE secret. (see README)
 # Note that enabling GRNOC output results in a pre-defined set of
 # OIDs being polled, and will override user-specified OIDs.
 grnocOutput:
