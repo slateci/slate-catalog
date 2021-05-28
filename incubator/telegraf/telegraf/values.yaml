@@ -59,7 +59,6 @@ targets:
       community: "public"
       timeout: "15s"
       retries: 2
-      community: "public"
       hosts:
         - "127.0.0.1"
       counter64Bit: false
