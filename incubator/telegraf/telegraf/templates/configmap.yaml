@@ -26,8 +26,6 @@ data:
     sed -e "s/passwordPlaceholder/$GRNOC_DATABASE_PASSWORD/" /etc/setup/config.yaml > /etc/telegraf/conf.d/config.yaml
     {{ end }}
 
-    # Restart telegraf? TODO
-
 
   {{ if eq .Values.grnocOutput.enabled true }}
 
