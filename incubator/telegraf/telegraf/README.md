@@ -25,7 +25,7 @@ Next, modify the configuration file with your preferred editor to ensure appropr
 Then, if you are writing to GlobalNOC's database, create a SLATE secret containing your database password.
 This is done with the following command:
 ```bash
-slate secret create --from-literal password=<your_password> <secret_name>
+slate secret create --group <slate_group> --cluster <slate_cluster> --from-literal password=<your_password> <secret_name>
 ```
 
 Finally, install the app with your custom configuration onto a SLATE cluster.
