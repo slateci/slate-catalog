@@ -12,18 +12,34 @@ metadata:
 
 # store Telegraf configuration file
 data:
+  "setup.sh": |-
+
+    #! /bin/bash 
+
+    mkdir -p /etc/telegraf/conf.d/
+
+    # Copy configuration file to proper location
+    cp /etc/setup/telegraf.conf  /etc/telegraf/conf.d/telegraf.conf
+
+    {{ if eq .Values.grnocOutput.enabled true }}
+    # Create edited configuration file
+    sed -e "s/passwordPlaceholder/$GRNOC_DATABASE_PASSWORD/" /etc/setup/config.yaml > /etc/telegraf/conf.d/config.yaml
+    {{ end }}
+
+
   {{ if eq .Values.grnocOutput.enabled true }}
+
   "config.yaml": |-
 
     credentials:
       url: {{ .Values.grnocOutput.hostname | quote }}
-      username: {{ .Values.grnocOutput.username | quote }}
-      password: {{ .Values.grnocOutput.password | quote }}
+      username: {{ .Values.grnocOutput.username }}
+      password: passwordPlaceholder
 
     data:
       - tsds_name: interface
         telegraf_name: interface
-        interval: {{ .Values.flushInterval }}
+        interval: 60 # possibly make this configurable later if it's something that is necessary
         metadata:
           - from: agent_host
             to: "node"
@@ -167,11 +183,13 @@ data:
       "{{ $value }}",
       {{ end -}}]
 
-      timeout = "15s"
+      timeout = {{ .hostGroup.timeout | quote }}
       version = 2
+
       # SNMP community string.
       community = {{ .hostGroup.community | quote }}
-      retries = 2
+      # Number of retries to attempt.
+      retries = {{ .hostGroup.retries }}
       max_repetitions = 15
 
       # Poll custom OIDs if grnoc output is disabled.
