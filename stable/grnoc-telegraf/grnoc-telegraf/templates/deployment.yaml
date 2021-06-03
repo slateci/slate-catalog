@@ -1,0 +1,53 @@
+# Describes a Kubernetes deployment of a container running Telegraf.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "telegraf.fullname" . }}
+  labels:
+    app: {{ template "telegraf.name" . }}
+    chart: {{ template "telegraf.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "telegraf.name" . }}
+      instance: {{ .Values.Instance | quote }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "telegraf.name" . }}
+        chart: {{ template "telegraf.chart" . }}
+        instance: {{ .Values.Instance | quote }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: telegraf
+          image: karlnewell/tsds-telegraf
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /etc/setup/
+              name: telegraf-volume 
+          lifecycle:
+            postStart:
+              exec:
+                # This script will create the appropriate "config.yaml" file for the grnoc output plugin
+                command: ["/bin/bash", "/etc/setup/setup.sh"]
+          {{ if eq .Values.grnocOutput.enabled true }}
+          env:
+            - name: GRNOC_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.grnocOutput.passwordSecretName }}
+                  key: password
+          {{ end }}
+      volumes:
+        - name: telegraf-volume
+          # populate volume with config map data
+          configMap:
+            name: telegraf-{{ .Values.Instance }}-configuration
+
