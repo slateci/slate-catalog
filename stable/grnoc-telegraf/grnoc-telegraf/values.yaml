@@ -1,0 +1,91 @@
+# SLATE Telegraf Monitoring Configuration
+# More information about configuring and running this application can be found here:
+# https://slateci.io/blog/telegraf-monitoring.html
+
+
+# The slate instance value.
+Instance: ""
+
+# Optionally write metrics to stdout and local file in container.
+writeToStdout: true
+
+# Specifies the default data collection interval.
+# Time values can be specified by combining an integer value with a time unit.
+# Valid time units include "ns", "us", "ms", "s", "m" and "h".
+collectionInterval: "5s"
+# Specifies the random offset added to collection times
+collectionJitter: "10s"
+
+# Specifies time between output flushes.
+# Uses the same syntax as the interval parameter.
+flushInterval: "15s"
+# Specifies the random offset added to flush times
+flushJitter: "10s"
+
+
+# Configuration for GlobalNOC database output
+# Set enabled flag to true to enable GlobalNOC output.
+# Set hostname, and username accordingly.
+# Set passwordSecretName to the name of a previously created SLATE secret. (see README)
+# Note that enabling GRNOC output results in a pre-defined set of
+# OIDs being polled, and will override user-specified OIDs.
+grnocOutput:
+  hostname: "tsds.hostname.net"
+  username: "tsds username"
+  passwordSecretName: "tsds-password-secret"
+
+
+# Specify hosts to monitor here. Hosts can be IP addresses or DNS names.
+# A hostGroup is a group of hosts that share settings. (e.g. community string, oids, retries, and timeout)
+# The "timeout" parameter adjusts how long it takes before an SNMP request is considered failed.
+# Set this by specifying an integer and "s" afterwards, for seconds.
+# The "retries" parameter specifies how many retries to attempt in the case of a failed SNMP request.
+# Simply use an integer here.
+#
+# A port must also be specififed with a colon after hostname or address. (default is 161, and should probably not be changed)
+# Specify OIDs according to the Telegraf SNMP plugin format.
+# Documentation can be found at: https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp.
+# The counter64Bit parameter is only relevant if GRNOC output has been enabled.
+# The specified OIDs should take into account the counter type of the hosts to be monitored.
+#
+# GRNOC-specific configuration:
+# Enabling GRNOC database output results in a pre-configured set of OIDs being polled.
+# This means that the OIDs section will be ignored.
+# To poll from devices with 64-bit SNMP counters, set the counter64Bit paramter to true.
+# To poll from devices with 32-bit SNMP counters, set this parameter to false.
+targets:
+  - hostGroup:
+      community: "public"
+      timeout: "15s"
+      retries: 2
+      hosts:
+        - "127.0.0.1"
+      counter64Bit: false
+  - hostGroup:
+      community: "public"
+      timeout: "15s"
+      retries: 2
+      hosts:
+        - "127.0.0.1"
+        - "localhost"
+      counter64Bit: true
+
+
+# Configuration for InfluxDB (v1) output.
+# Set enabled flag to true to enable InfluxDB output.
+# Endpoint parameter must specify a protocol (udp or http) and a port.
+# Database parameter should be set to the database name.
+influxOutput:
+  enabled: false
+  endpoint: "http://127.0.0.1:9999"
+  database: "telegraf"
+  httpBasicAuth:
+    enabled: false
+    username: "telegraf"
+    password: "metrics"
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "default-id"
+### SLATE-END ###
