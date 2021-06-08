@@ -33,6 +33,9 @@ spec:
         - name: desktop-config-files
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-host
+        - name: desktop-form
+          configMap:
+            {{ include "open-ondemand.fullname" . }}-desktop-form
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
@@ -53,6 +56,9 @@ spec:
             # Desktop app
             - name: desktop-config-files
               mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
+            # Form.yml
+            - name: desktop-form
+              mountPath: /var/www/ood/apps/sys/bc_desktop
           ports:
             - name: http
               containerPort: 80
