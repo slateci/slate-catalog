@@ -66,7 +66,7 @@ RUN mkdir /etc/ood/config/clusters.d
 RUN mkdir /opt/ood/linuxhost_adapter
 WORKDIR /opt/ood/linuxhost_adapter
 RUN singularity pull docker://centos:7.6.1810
-RUN mv centos_7.6.1810.sif centos_7.6.sif
+RUN mv centos_7.6.1810.sif centos7.sif
 RUN yum update -y
 RUN mkdir /etc/ood/config/apps && mkdir /etc/ood/config/apps/shell
 COPY env /etc/ood/config/apps/shell/env
@@ -78,6 +78,11 @@ RUN mkdir /etc/ood/config/apps/bc_desktop
 RUN mkdir /etc/ood/config/apps/bc_desktop/single_cluster
 RUN mv /var/www/ood/apps/sys/bc_desktop/form.yml /var/www/ood/apps/sys/bc_desktop/form.yml.org
 RUN mv /var/www/ood/apps/sys/bc_desktop/submit.form.yml.erb /var/www/ood/apps/sys/bc_desktop/submit.form.yml.erb.org
+
+# Configure SSH
+RUN sed -i 's/#   HostbasedAuthentication no/   HostBasedAuthentication yes\n   EnableSSHKeysign yes/g' /etc/ssh/ssh_config
+RUN chgrp ssh_keys /etc/ssh/*_key
+RUN chmod g+r /etc/ssh/*_key
 
 # Some security precautions
 RUN chmod 0700 /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh
