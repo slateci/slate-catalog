@@ -55,6 +55,7 @@ RUN mkdir /etc/ood/config/apps/bc_desktop
 RUN mkdir /etc/ood/config/apps/bc_desktop/single_cluster
 RUN mv /var/www/ood/apps/sys/bc_desktop/form.yml /var/www/ood/apps/sys/bc_desktop/form.yml.org
 RUN mv /var/www/ood/apps/sys/bc_desktop/submit.yml.erb /var/www/ood/apps/sys/bc_desktop/submit.yml.erb.org
+RUN mv /var/www/ood/apps/sys/form.yml /var/www/ood/apps/sys/bc_desktop/form.yml
 
 # Configure SSH
 RUN sed -i 's/#   HostbasedAuthentication no/   HostBasedAuthentication yes\n   EnableSSHKeysign yes/g' /etc/ssh/ssh_config
