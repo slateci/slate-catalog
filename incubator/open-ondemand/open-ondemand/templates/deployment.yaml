@@ -39,7 +39,7 @@ spec:
             claimName: keycloak-persistent-volume-{{ .Values.Instance }}
       containers:
         - name: open-ondemand
-          image: SkoUtes/open-ondemand:latest
+          image: dockerbox88/open-ondemand:latest
           imagePullPolicy: Always
           volumeMounts:
             - name: shared-data
