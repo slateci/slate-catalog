@@ -40,33 +40,10 @@ RUN yum install -y httpd24-mod_auth_openidc
 # Remove auth_openidc.conf
 RUN rm -f /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 
-# Install Singularity
-WORKDIR /usr/local
-RUN sudo yum groupinstall -y 'Development Tools'
-RUN sudo yum install -y openssl-devel libuuid-devel libseccomp-devel wget squashfs-tools cryptsetup
-RUN wget https://dl.google.com/go/go1.14.7.linux-amd64.tar.gz
-RUN tar -C /usr/local -xzf go1.14.7.linux-amd64.tar.gz
-RUN rm go1.14.7.linux-amd64.tar.gz
-RUN yum install golang -y
-RUN export GOPATH=${HOME}/go&& \
-    export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin && \
-    source ~/.bashrc
-RUN export VERSION=3.6.0 && \
-    wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-${VERSION}.tar.gz && \
-    tar -xzf singularity-${VERSION}.tar.gz
-WORKDIR /usr/local/singularity
-RUN yum update -y && yum clean all
-RUN ./mconfig && \
-    make -C ./builddir && \
-    sudo make -C ./builddir install
-RUN yum install -y singularity
-
 # Configure shel application
 RUN mkdir /etc/ood/config/clusters.d
 RUN mkdir /opt/ood/linuxhost_adapter
 WORKDIR /opt/ood/linuxhost_adapter
-RUN singularity pull docker://centos:7.6.1810
-RUN mv centos_7.6.1810.sif centos7.sif
 RUN yum update -y
 RUN mkdir /etc/ood/config/apps && mkdir /etc/ood/config/apps/shell
 COPY env /etc/ood/config/apps/shell/env
