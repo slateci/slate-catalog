@@ -72,8 +72,8 @@ spec:
             - name: desktop-form
               mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
               subPath: form.yml
-            - name: desktop-host-submit
-              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
+          #  - name: desktop-host-submit
+          #    mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
             - name: desktop-submit
               mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
               subPath: submit.yml.erb
