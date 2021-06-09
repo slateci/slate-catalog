@@ -36,6 +36,9 @@ spec:
         - name: desktop-form
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-form
+            items:
+            - key: form.yml
+              path: form.yml
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
@@ -59,6 +62,7 @@ spec:
             # Form.yml
             - name: desktop-form
               mountPath: /var/www/ood/apps/sys
+              subPath: form.yml
           ports:
             - name: http
               containerPort: 80
