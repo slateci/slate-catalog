@@ -37,8 +37,12 @@ spec:
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-host
             items:
-            - key: desktop-{{ .cluster.name | lower | nospace }}.yml
-              path: desktop-{{ .cluster.name | lower | nospace }}.yml
+              {{ range .Values.clusters }}
+              {{ if eq .cluster.desktopEnable true }}
+            - key: {{ .cluster.name | lower | nospace }}.yml
+              path: {{ .cluster.name | lower | nospace }}.yml
+              {{ end }}
+              {{ end }}
         - name: desktop-form
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-form
