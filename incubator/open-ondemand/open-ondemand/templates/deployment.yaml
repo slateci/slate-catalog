@@ -76,7 +76,7 @@ spec:
             - name: desktop-config-files
             {{ range .Values.clusters }}
             {{ if eq .cluster.desktopEnable true }}
-              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster/{{ .cluster.name | lower | nospace }}.yml
+              mountPath: /etc/ood/config/apps/bc_desktop/{{ .cluster.name | lower | nospace }}.yml
               subPath: {{ .cluster.name | lower | nospace }}.yml
             {{ end }}
             {{ end }}
@@ -84,8 +84,8 @@ spec:
             - name: desktop-form
               mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
               subPath: form.yml
-          #  - name: desktop-host-submit
-          #    mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
+            - name: desktop-host-submit
+              mountPath: /etc/ood/config/apps/bc_desktop/submit
             - name: desktop-submit
               mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
               subPath: submit.yml.erb
