@@ -33,7 +33,6 @@ chgrp apache /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 chmod 640 /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
 supervisorctl restart apache
-mv /var/www/ood/apps/sys/form.yml /var/www/ood/apps/sys/bc_desktop/form.yml
 # Set up SSSD
 #chown root:root /etc/sssd/sssd.conf
 #chmod 0600 /etc/sssd/sssd.conf
