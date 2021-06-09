@@ -41,6 +41,10 @@ spec:
           value: {{ .Values.SquidConf.IPRange }}
         - name: SQUID_CACHE_MEM
           value: '{{ .Values.SquidConf.CacheMem }} MB'  
+        {{ if .Values.SquidConf.CacheSize }}
+        - name: SQUID_CACHE_DISK
+          value: '{{ .Values.SquidConf.CacheSize }}'
+        {{ end }}
         {{ if .Values.SquidConf.MaxAccessLog }}
         - name: SQUID_MAX_ACCESS_LOG
           value: {{ .Values.SquidConf.MaxAccessLog }}
