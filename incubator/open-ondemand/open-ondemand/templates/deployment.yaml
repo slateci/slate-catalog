@@ -76,7 +76,7 @@ spec:
             - name: desktop-config-files
             {{ range .Values.clusters }}
             {{ if eq .cluster.desktopEnable true }}
-              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster/{{ .cluster.name | lower | nospace }}.yml
+              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
               subPath: /etc/ood/config/apps/bc_desktop/single_cluster/{{ .cluster.name | lower | nospace }}.yml
             {{ end }}
             {{ end }}
