@@ -27,9 +27,6 @@ spec:
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-        - name: cluster-config-files
-          configMap:
-            name: {{ include "open-ondemand.fullname" . }}-shell-setup
         - name: desktop-config-files
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-host
