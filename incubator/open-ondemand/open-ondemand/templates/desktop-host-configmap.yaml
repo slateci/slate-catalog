@@ -12,6 +12,7 @@ data:
     cluster: cluster-{{ .cluster.name | lower | nospace }}
     submit: "submit/linuxhost_submit.yml.erb"
     form:
+      - cluster
       - desktop
       - bc_num_hours
     attributes:
