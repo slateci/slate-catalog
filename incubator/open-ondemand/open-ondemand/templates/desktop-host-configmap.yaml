@@ -9,7 +9,7 @@ data:
   {{ .cluster.name | lower | nospace }}.yml: |
     ---
     title: {{ .cluster.name | lower | nospace }}-desktop
-    cluster: cluster-{{ .cluster.name | lower | nospace }}
+    cluster: {{ .cluster.name | lower | nospace }}
     submit: "submit/linuxhost_submit.yml.erb"
     form:
       - cluster
