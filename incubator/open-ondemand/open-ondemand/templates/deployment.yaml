@@ -39,6 +39,12 @@ spec:
             items:
             - key: form.yml
               path: form.yml
+        - name: desktop-submit
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-desktop-submit
+            items:
+            - key: submit.yml.erb
+              path: submit.yml.erb
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
@@ -63,6 +69,9 @@ spec:
             - name: desktop-form
               mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
               subPath: form.yml
+            - name: desktop-submit
+              mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
+              subPath: submit.yml.erb
           ports:
             - name: http
               containerPort: 80
