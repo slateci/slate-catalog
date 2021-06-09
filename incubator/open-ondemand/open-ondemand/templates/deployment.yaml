@@ -30,9 +30,15 @@ spec:
         - name: cluster-config-files
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-host-adapter
+        - name: desktop-host-submit
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-desktop-host-submit
         - name: desktop-config-files
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-host
+            items:
+            - key: desktop-{{ .cluster.name | lower | nospace }}.yml
+              path: desktop-{{ .cluster.name | lower | nospace }}.yml
         - name: desktop-form
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-form
@@ -62,13 +68,15 @@ spec:
             # Shell app
             - name: cluster-config-files
               mountPath: /etc/ood/config/clusters.d
-            # Desktop app
+            # Host Adapter
             - name: desktop-config-files
               mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
-            # Form.yml
+            # Desktop app
             - name: desktop-form
               mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
               subPath: form.yml
+            - name: desktop-host-submit
+              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
             - name: desktop-submit
               mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
               subPath: submit.yml.erb
