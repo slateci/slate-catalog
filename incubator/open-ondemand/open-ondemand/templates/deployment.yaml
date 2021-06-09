@@ -36,6 +36,13 @@ spec:
         - name: desktop-config-files
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-host
+            {{ range .Values.clusters }}
+            {{ if eq .cluster.desktopEnable true }}
+            items:
+              - key: {{ .cluster.name | lower | nospace }}.yml
+                path: {{ .cluster.name | lower | nospace }}.yml
+            {{ end }}
+            {{ end }}
         - name: desktop-form
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-form
@@ -64,7 +71,12 @@ spec:
               subPath: ood_portal.yml
             # Shell app
             - name: cluster-config-files
-              mountPath: /etc/ood/config/clusters.d
+            {{ range .Values.clusters }}
+            {{ if eq .cluster.desktopEnable true }}
+              mountPath: /etc/ood/config/clusters.d/{{ .cluster.name | lower | nospace }}.yml
+              subPath: /etc/ood/config/clusters.d/{{ .cluster.name | lower | nospace }}.yml
+            {{ end }}
+            {{ end }}
             # Host Adapter
             - name: desktop-config-files
               mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
