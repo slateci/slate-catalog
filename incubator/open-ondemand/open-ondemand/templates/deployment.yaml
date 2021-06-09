@@ -61,7 +61,7 @@ spec:
               mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
             # Form.yml
             - name: desktop-form
-              mountPath: /var/www/ood/apps/sys
+              mountPath: /var/www/ood/apps/sys/form.yml
               subPath: form.yml
           ports:
             - name: http
