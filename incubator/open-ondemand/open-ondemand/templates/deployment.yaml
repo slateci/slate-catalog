@@ -29,7 +29,7 @@ spec:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
         - name: cluster-config-files
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-shell-setup
+            name: {{ include "open-ondemand.fullname" . }}-host-adapter
         - name: desktop-config-files
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-host
