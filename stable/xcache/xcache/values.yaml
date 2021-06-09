@@ -8,18 +8,14 @@ Service:
   # External IP that may access the service
   # 192.170.227.151 - localhost
   # 192.170.227.231 - ml node - root://xcache.mwt2.org:1094
-  ExternalIP: 192.170.227.151 
+  ExternalIP: 192.170.227.151
 
 SiteConfig:
   Name: Home
-  # CRIC protocol ID. 433 is a dummy value. 
-  # can be looked up in this URL: https://atlas-cric.cern.ch/api/core/service/query/?json
-  # Endpoints can be created here: https://atlas-cric.cern.ch/core/service/create/
-  CRICprotocolID: 433
 
 Monitoring:
   Collector: http://xcache.atlas-ml.org:80
-  GStreamCollector: collector.atlas-ml.org:9000 
+  GStreamCollector: collector.atlas-ml.org:9000
   VPheartbeat: https://vps.cern.ch/liveness
 
 XCacheConfig:
@@ -30,11 +26,11 @@ XCacheConfig:
   # Space usage
   HighWaterMark: 0.95
   LowWaterMark: 0.90
-  
+
   # The amount of memory XCache is allowed to use (in GB)
   RamSize: 16g
   # Minimal chunk size that will be prefetched/cached.
-  BlockSize: 1M
+  BlockSize: 256k
   # to prefetch even chunks that were not requested
   Prefetch: 0
   # Write queue parameters
@@ -43,7 +39,6 @@ XCacheConfig:
   # The name of the secret that was created for your XCache certificate
   # This must be created BEFORE deploying XCache
   CertSecret: xcache-cert-secret
-
 
 image:
   # repository: opensciencegrid/atlas-xcache
