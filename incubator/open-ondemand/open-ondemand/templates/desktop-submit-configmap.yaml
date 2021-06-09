@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "open-ondemand.fullname" . }}-desktop-submit
 data:
-  form.yml: |
+  submit.yml.erb: |
     ---
     attributes:
       desktop: "mate"
