@@ -122,6 +122,13 @@ NodeSelection:
   # Open default monitoring port (3401) -- This flag has no effect if Hostname is not set above in this conf file.
   OpenDefaultMonPort: False
 
+#Allow the frontier-squid instance to send an alert before container stops.
+#The alert will be sent to  https://aaas.atlas-ml.org/ and those who subscribed to the alert category will get notified. 
+#To enable the alarm feature, set the proper value for 'Site' below. 
+#Prerequists: The above Instance and NodeSelection.Hostname config variables need to be set to some proper values.
+Alarm:
+  Site: null
+
 Pod:
   # Set to true if you want to use the host's timezone settings. This would affect the timestamps of log messages.
   # Default timezone is UTC.
