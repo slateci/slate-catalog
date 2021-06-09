@@ -35,7 +35,7 @@ spec:
             name: {{ include "open-ondemand.fullname" . }}-desktop-host
         - name: desktop-form
           configMap:
-            {{ include "open-ondemand.fullname" . }}-desktop-form
+            name: {{ include "open-ondemand.fullname" . }}-desktop-form
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
