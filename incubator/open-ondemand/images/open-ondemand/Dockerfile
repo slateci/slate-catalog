@@ -44,6 +44,7 @@ RUN rm -f /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 RUN mkdir /etc/ood/config/clusters.d
 RUN mkdir /opt/ood/linuxhost_adapter
 WORKDIR /opt/ood/linuxhost_adapter
+RUN yum groupinstall 'Development Tools' -y
 RUN yum update -y
 RUN mkdir /etc/ood/config/apps && mkdir /etc/ood/config/apps/shell
 COPY env /etc/ood/config/apps/shell/env
