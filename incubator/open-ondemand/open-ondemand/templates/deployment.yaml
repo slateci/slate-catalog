@@ -18,6 +18,9 @@ spec:
       volumes:
         - name: shared-data
           emptyDir: {}
+        - name: ssh-dir
+          hostPath:
+            path: /etc/ssh
         - name: ood-portal-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-ood-portal
@@ -64,8 +67,13 @@ spec:
           image: dockerbox88/open-ondemand:latest
           imagePullPolicy: Always
           volumeMounts:
+            # Shared Volume
             - name: shared-data
               mountPath: /shared
+            # Host /etc/ssh directory
+            - name: ssh-dir
+              mountPath: /etc/ssh
+            # OOD Config
             - name: ood-portal-config
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
