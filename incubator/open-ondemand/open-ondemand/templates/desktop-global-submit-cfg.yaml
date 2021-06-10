@@ -13,7 +13,6 @@ data:
       node_type: null
     
     form:
-      - cluster
       - bc_vnc_idle
       - desktop
       - bc_account
