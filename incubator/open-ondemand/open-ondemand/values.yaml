@@ -57,6 +57,7 @@ clusters:
         - "export WEBSOCKIFY_CMD='/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify'"
         - "export XDG_RUNTIME_DIR=$(mktemp -d)"
         - "%s"
+      set_host: "host=$(hostname -s).chpc.utah.edu"
   - cluster:
       name: "Notchpeak"
       host: "notchpeak.chpc.utah.edu"
