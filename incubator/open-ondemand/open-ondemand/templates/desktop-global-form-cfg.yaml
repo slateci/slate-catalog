@@ -6,7 +6,7 @@ data:
   form.yml: |
     ---
     attributes:
-      desktop: "mate"
+      desktop: {{ .Values.desktop | quote }}
       bc_vnc_idle: 0
       bc_vnc_resolution:
         required: true

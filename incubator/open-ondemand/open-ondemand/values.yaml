@@ -63,6 +63,9 @@ clusters:
       host: "notchpeak.chpc.utah.edu"
       desktopEnable: false
 
+# Choose a desktop installed on the remote host (mate 1+, xfce 4+, Gnome 2)
+desktop: "mate"
+
 # Configure additional test users to be added to Keycloak.
 testUsers:
   - user:
