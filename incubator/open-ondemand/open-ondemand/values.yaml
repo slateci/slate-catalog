@@ -69,6 +69,9 @@ desktop: "mate"
 # Choose a regular expression that catches all accessible clusters
 host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 
+# Name the host key that is being used for authentication
+host_key: "ssh_host_ecdsa_key"
+
 # Configure additional test users to be added to Keycloak.
 testUsers:
   - user:

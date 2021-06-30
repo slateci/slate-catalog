@@ -38,6 +38,11 @@ spec:
         - name: secret-volume
           secret:
             secretName: ssh-key-secret
+            items:
+            - key: {{ .Values.host_key | lower | nospace}}
+              path: {{ .Values.host_key | lower | nospace}}
+            - key: {{ .Values.host_key | lower | nospace}}.pub
+              path: {{ .Values.host_key | lower | nospace}}.pub
         # Desktop Application Files
         - name: desktop-options
           configMap:
@@ -86,7 +91,12 @@ spec:
             # Secret Volume
             - name: secret-volume
               readOnly: true
-              mountPath: "/etc/ssh"
+              mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}"
+              subPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}"
+            - name: secret-volume
+              readOnly: true
+              mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}.pub"
+              subPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}.pub"
             # Desktop Application Files
             - name: desktop-options
             {{ range .Values.clusters }}
