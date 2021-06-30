@@ -14,11 +14,9 @@ spec:
     metadata:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
-    spec:      
+    spec:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: {{ .Values.ssh_keys_GID }}
-        fsGroup: 1000
+        fsGroup: {{ .Values.ssh_keys_GID }}
       volumes:
         # Shared Volume
         - name: shared-data
