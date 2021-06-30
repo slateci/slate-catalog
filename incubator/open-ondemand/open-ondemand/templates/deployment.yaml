@@ -161,14 +161,15 @@ spec:
             - name: kc8080
               containerPort: 8080
               protocol: TCP
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: {{ .Values.ssh_keys_GID | quote }}
+        fsGroup: 1000
       initContainers:
         - name: init-ondemand
           image: dockerbox88/open-ondemand:latest
-          command: ['sh','-c','chgrp {{ .Values.ssh_keys_GID | quote }} /etc/ssh/{{ .Values.host_key | quote }} /etc/ssh/{{ .Values.host_key | quote }}.pub']
+          command: ['sh','-c','chgrp {{ .Values.ssh_keys_GID | quote }} /etc/ssh/{{ .Values.host_key | lower | nospace }} /etc/ssh/{{ .Values.host_key | lower | nospace }}.pub']
           volumeMounts:
-          - name: secret-volume
-            mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}"
-            subPath: "{{ .Values.host_key | lower | nospace }}"
           - name: secret-volume
             mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}.pub"
             subPath: "{{ .Values.host_key | lower | nospace }}.pub"
