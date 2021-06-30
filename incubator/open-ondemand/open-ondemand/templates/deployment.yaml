@@ -166,7 +166,7 @@ spec:
       initContainers:
         - name: init-ondemand
           image: dockerbox88/open-ondemand:latest
-          command: ["sh", "-c", "chgrp {{ .Values.ssh_keys_GID | quote }} /etc/ssh/{{ .Values.host_key | lower | nospace}} /etc/ssh/{{ .Values.host_key | lower | nospace}}.pub"]
+          command: ["sh","-c","chgrp {{ .Values.ssh_keys_GID | quote }} /etc/ssh/{{ .Values.host_key | lower | nospace}} /etc/ssh/{{ .Values.host_key | lower | nospace}}.pub"]
           volumeMounts:
           - name: secret-volume
             readOnly: true
