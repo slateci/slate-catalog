@@ -165,12 +165,12 @@ spec:
         runAsUser: 1000
         runAsGroup: {{ .Values.ssh_keys_GID }}
         fsGroup: 1000
-      initContainers:
-        - name: init-ondemand
-          image: dockerbox88/open-ondemand:latest
-          command: ['sh','-c','chgrp {{ .Values.ssh_keys_GID | quote }} /etc/ssh/{{ .Values.host_key | lower | nospace }} /etc/ssh/{{ .Values.host_key | lower | nospace }}.pub']
-          volumeMounts:
-          - name: secret-volume
-            mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}.pub"
-            subPath: "{{ .Values.host_key | lower | nospace }}.pub"
+#      initContainers:
+#        - name: init-ondemand
+#          image: dockerbox88/open-ondemand:latest
+#          command: ['sh','-c','chgrp {{ .Values.ssh_keys_GID | quote }} /etc/ssh/{{ .Values.host_key | lower | nospace }} /etc/ssh/{{ .Values.host_key | lower | nospace }}.pub']
+#          volumeMounts:
+#          - name: secret-volume
+#            mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}.pub"
+#            subPath: "{{ .Values.host_key | lower | nospace }}.pub"
 ---
