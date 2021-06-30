@@ -35,8 +35,6 @@ spec:
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-host-adapter
         # Secret Volume
-        {{ range .Values.clusters }}
-        {{ if eq .cluster.desktopEnable true }}
         - name: secret-volume
           secret:
             secretName: ssh-key-secret
@@ -44,11 +42,13 @@ spec:
         - name: desktop-options
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-options
-            items:
+            items:        
+            {{ range .Values.clusters }}
+            {{ if eq .cluster.desktopEnable true }}
               - key: {{ .cluster.name | lower | nospace }}.yml
                 path: {{ .cluster.name | lower | nospace }}.yml
-        {{ end }}
-        {{ end }}
+            {{ end }}
+            {{ end }}
         - name: desktop-global-form
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-form
