@@ -72,6 +72,9 @@ host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 # Name the host key that is being used for authentication
 host_key: "ssh_host_ecdsa_key"
 
+# Name the group ID for the ssh_keys group on your host system
+ssh_keys_GID: "993"
+
 # Configure additional test users to be added to Keycloak.
 testUsers:
   - user:
