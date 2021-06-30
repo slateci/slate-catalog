@@ -66,6 +66,9 @@ clusters:
 # Choose a desktop installed on the remote host (mate 1+, xfce 4+, Gnome 2)
 desktop: "mate"
 
+# Choose a regular expression that catches all accessible clusters
+host_regex: "[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)"
+
 # Configure additional test users to be added to Keycloak.
 testUsers:
   - user:
