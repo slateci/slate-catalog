@@ -163,7 +163,7 @@ spec:
               protocol: TCP
       securityContext:
         runAsUser: 1000
-        runAsGroup: {{ .Values.ssh_keys_GID | quote }}
+        runAsGroup: {{ .Values.ssh_keys_GID }}
         fsGroup: 1000
       initContainers:
         - name: init-ondemand
