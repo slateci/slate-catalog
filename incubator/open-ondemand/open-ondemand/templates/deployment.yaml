@@ -14,7 +14,11 @@ spec:
     metadata:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
-    spec:
+    spec:      
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: {{ .Values.ssh_keys_GID }}
+        fsGroup: 1000
       volumes:
         # Shared Volume
         - name: shared-data
@@ -161,10 +165,6 @@ spec:
             - name: kc8080
               containerPort: 8080
               protocol: TCP
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: {{ .Values.ssh_keys_GID }}
-        fsGroup: 1000
 #      initContainers:
 #        - name: init-ondemand
 #          image: dockerbox88/open-ondemand:latest
