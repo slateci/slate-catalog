@@ -34,17 +34,21 @@ spec:
         - name: linuxhost-adapter
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-host-adapter
+        # Secret Volume
+        {{ range .Values.clusters }}
+        {{ if eq .cluster.desktopEnable true }}
+        - name: secret-volume
+          secret:
+            secretName: ssh-key-secret
         # Desktop Application Files
         - name: desktop-options
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-options
-            {{ range .Values.clusters }}
-            {{ if eq .cluster.desktopEnable true }}
             items:
               - key: {{ .cluster.name | lower | nospace }}.yml
                 path: {{ .cluster.name | lower | nospace }}.yml
-            {{ end }}
-            {{ end }}
+        {{ end }}
+        {{ end }}
         - name: desktop-global-form
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-form
@@ -79,6 +83,10 @@ spec:
             # LinuxHost Adapter
             - name: linuxhost-adapter
               mountPath: /etc/ood/config/clusters.d
+            # Secret Volume
+            - name: secret-volume
+              readOnly: true
+              mountPath: "/etc/ssh"
             # Desktop Application Files
             - name: desktop-options
             {{ range .Values.clusters }}
