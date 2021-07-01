@@ -101,7 +101,7 @@ spec:
             # HostBased Authentication Config
             - name: hostbased-config
               mountPath: /root/hostbased.sh
-              subPath: /root/hostbased.sh
+              subPath: hostbased.sh
             # Secret Volume
             - name: secret-volume
               mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}"
