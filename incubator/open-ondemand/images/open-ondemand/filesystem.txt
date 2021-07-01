@@ -1,16 +1,16 @@
 #################### Ondemand #########################
-# OnDemand Config
+# OpenIDC Apache Config File
 /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 
-# ood_config
-/etc/ood/config
+# OnDemand Config File
+/etc/ood/config/ood_portal.yml
 
-# OnDemand Applications
+# OnDemand Apps Directory
 /var/www/ood/apps/sys
 
-# Rebuild ood-portal
-sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
+# Rebuild ood-portal script
+sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal -f
 
-# OnDemand Files
+# OnDemand Filesystem
 /opt/ood
 #####################################################

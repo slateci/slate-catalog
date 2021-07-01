@@ -34,6 +34,14 @@ spec:
         - name: linuxhost-adapter
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-host-adapter
+        # HostBased Authentication setup script
+        - name: hostbased-config
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-hostbased-auth
+            items:
+            - key: hostbased.sh
+              path: hostbased.sh
+              mode: 0700
         # Secret Volume
         - name: secret-volume
           secret:
@@ -44,7 +52,7 @@ spec:
               mode: 0600
             - key: {{ .Values.host_key | lower | nospace}}.pub
               path: {{ .Values.host_key | lower | nospace}}.pub
-              mode: 0640
+              mode: 0600
         # Desktop Application Files
         - name: desktop-options
           configMap:
@@ -90,6 +98,10 @@ spec:
             # LinuxHost Adapter
             - name: linuxhost-adapter
               mountPath: /etc/ood/config/clusters.d
+            # HostBased Authentication Config
+            - name: hostbased-config
+              mountPath: /root/hostbased.sh
+              subPath: /root/hostbased.sh
             # Secret Volume
             - name: secret-volume
               mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}"
