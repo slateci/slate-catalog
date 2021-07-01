@@ -15,8 +15,6 @@ spec:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
     spec:
-      securityContext:
-        fsGroup: {{ .Values.ssh_keys_GID }}
       volumes:
         # Shared Volume
         - name: shared-data
