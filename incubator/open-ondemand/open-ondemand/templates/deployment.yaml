@@ -105,12 +105,12 @@ spec:
               mountPath: /root/hostbased.sh
               subPath: hostbased.sh
             # Secret Volume
-            {{ range .host_keys }}
-#              mountPath: "/etc/ssh/{{ .host_key.name | lower | nospace }}"
-#              subPath: "{{ .host_key.name | lower | nospace }}"
             - name: secret-volume
-              mountPath: "/root/{{ .host_key.name | lower | nospace }}.pub"
-              subPath: "{{ .host_key.name | lower | nospace }}.pub"
+            {{ range .host_keys }}
+              mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
+              subPath: {{ .host_key.name | lower | nospace }}
+              mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
+              subPath: {{ .host_key.name | lower | nospace }}.pub
             {{ end }}
             # Desktop Application Files
             - name: desktop-options
