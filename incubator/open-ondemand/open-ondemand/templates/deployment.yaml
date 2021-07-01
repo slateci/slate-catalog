@@ -43,24 +43,28 @@ spec:
               path: hostbased.sh
               mode: 0700
         # HostKey Volumes
-        - name: key-volume
-          secret:
-            secretName: ssh-key-secret
-            items:
-            {{ range .Values.host_keys }}
-              - key: {{ .host_key.name | lower | nospace}}
-                path: {{ .host_key.name | lower | nospace}}
-                mode: 0600
-            {{ end }}
-        - name: pubkey-volume
-          secret:
-            secretName: ssh-key-secret
-            items:
-            {{ range .Values.host_keys }}
-              - key: {{ .host_key.name | lower | nospace }}.pub
-                path: {{ .host_key.name | lower | nospace }}.pub
-                mode: 0640
-            {{ end }}
+        - name: etc-ssh
+          hostPath: 
+            path: /etc/ssh
+            type: Directory
+#        - name: key-volume
+#          secret:
+#            secretName: ssh-key-secret
+#            items:
+#            {{ range .Values.host_keys }}
+#              - key: {{ .host_key.name | lower | nospace}}
+#                path: {{ .host_key.name | lower | nospace}}
+#                mode: 0600
+#            {{ end }}
+#        - name: pubkey-volume
+#          secret:
+#            secretName: ssh-key-secret
+#            items:
+#            {{ range .Values.host_keys }}
+#              - key: {{ .host_key.name | lower | nospace }}.pub
+#                path: {{ .host_key.name | lower | nospace }}.pub
+#                mode: 0640
+#            {{ end }}
         # Desktop Application Files
         - name: desktop-options
           configMap:
@@ -111,16 +115,18 @@ spec:
               mountPath: /root/hostbased.sh
               subPath: hostbased.sh
             # Secret Volume
-            {{ range .host_keys }}
-            - name: key-volume
-              mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
-              subPath: {{ .host_key.name | lower | nospace }}
-            {{ end }}
-            {{ range .host_keys }}
-            - name: pubkey-volume
-              mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
-              subPath: {{ .host_key.name | lower | nospace }}.pub
-            {{ end }}
+            - name: etc-ssh
+              mountPath: /etc/ssh
+#            {{ range .host_keys }}
+#            - name: key-volume
+#              mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
+#              subPath: {{ .host_key.name | lower | nospace }}
+#            {{ end }}
+#            {{ range .host_keys }}
+#            - name: pubkey-volume
+#              mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
+#              subPath: {{ .host_key.name | lower | nospace }}.pub
+#            {{ end }}
             # Desktop Application Files
             - name: desktop-options
             {{ range .Values.clusters }}
