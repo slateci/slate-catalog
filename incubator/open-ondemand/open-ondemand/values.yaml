@@ -71,9 +71,12 @@ host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 
 # Name the host keys stored on your host system
 host_keys:
-  - host_key: "ssh_host_ecdsa_key"
-  - host_key: "ssh_host_ed25119_key"
-  - host_key: "ssh_host_rsa_key"
+  - host_key: 
+      name: "ssh_host_ecdsa_key"
+  - host_key: 
+      name: "ssh_host_ed25119_key"
+  - host_key: 
+      name: "ssh_host_rsa_key"
 
 # Name the group ID for the ssh_keys group on your host system
 ssh_keys_GID: 993
