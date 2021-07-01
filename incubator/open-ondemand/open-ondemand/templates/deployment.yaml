@@ -48,8 +48,8 @@ spec:
             secretName: ssh-key-secret
             items:
             {{ range .Values.host_keys }}
-              - key: {{ .host_key.name | lower | nospace}}
-                path: {{ .host_key.name | lower | nospace}}
+              - key: {{ .host_key.name | lower | nospace }}
+                path: {{ .host_key.name | lower | nospace }}
                 mode: 0600
             {{ end }}
         - name: pubkey-volume
