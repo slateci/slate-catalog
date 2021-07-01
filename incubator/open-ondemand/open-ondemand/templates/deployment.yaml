@@ -95,7 +95,7 @@ spec:
               mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}"
               subPath: "{{ .Values.host_key | lower | nospace }}"
             - name: secret-volume
-              mountPath: "/etc/ssh/{{ .Values.host_key | lower | nospace }}.pub"
+              mountPath: "/root/{{ .Values.host_key | lower | nospace }}.pub"
               subPath: "{{ .Values.host_key | lower | nospace }}.pub"
             # Desktop Application Files
             - name: desktop-options
