@@ -111,13 +111,13 @@ spec:
               mountPath: /root/hostbased.sh
               subPath: hostbased.sh
             # Secret Volume
-            - name: key-volume
             {{ range .host_keys }}
+            - name: key-volume
               mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
               subPath: {{ .host_key.name | lower | nospace }}
             {{ end }}
-            - name: pubkey-volume
             {{ range .host_keys }}
+            - name: pubkey-volume
               mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
               subPath: {{ .host_key.name | lower | nospace }}.pub
             {{ end }}
