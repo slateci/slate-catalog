@@ -110,7 +110,6 @@ spec:
               mountPath: "/etc/ssh/{{ .host_key.name | lower | nospace }}"
               subPath: "{{ .host_key.name | lower | nospace }}"
             {{ end }}
-            - name: secret-volume
             {{ range .host_keys }}
               mountPath: "/root/{{ .host_key.name | lower | nospace }}.pub"
               subPath: "{{ .host_key.name | lower | nospace }}.pub"
