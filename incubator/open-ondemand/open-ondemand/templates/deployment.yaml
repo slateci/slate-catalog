@@ -109,9 +109,9 @@ spec:
             - name: secret-volume
               mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
               subPath: {{ .host_key.name | lower | nospace }}.pub
-            - name: secret-volume
-              mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
-              subPath: {{ .host_key.name | lower | nospace }}
+#            - name: secret-volume
+#              mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
+#              subPath: {{ .host_key.name | lower | nospace }}
             {{ end }}
             # Desktop Application Files
             - name: desktop-options
