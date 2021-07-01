@@ -5,8 +5,13 @@ metadata:
 data:
   hostbased.sh: |
     #!/bin/bash
-    cat /root/{{ .Values.host_key | lower | nospace}}.pub >> \
-    /etc/ssh/{{ .Values.host_key | lower | nospace}}.pub && \
-    chmod 0640 /etc/ssh/{{ .Values.host_key | lower | nospace}}.pub
+    array=()
     groupmod -g {{ .Values.ssh_keys_GID }} ssh_keys
-    chgrp ssh_keys /etc/ssh/{{ .Values.host_key | lower | nospace}}.pub
+    for i in `ls /root | grep .pub`; do
+      array+=("$i")
+    done
+    for i in ${array[@]}; do
+      cat /root/$i > /etc/ssh/$i && chmod 0640 /etc/ssh/$i
+    done
+    chmod 0640 /etc/ssh/*.pub
+    chgrp ssh_keys /etc/ssh/*.pub
