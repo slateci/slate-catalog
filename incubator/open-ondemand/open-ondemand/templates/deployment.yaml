@@ -42,8 +42,8 @@ spec:
             - key: hostbased.sh
               path: hostbased.sh
               mode: 0700
-        # Secret Volume
-        - name: secret-volume
+        # HostKey Volumes
+        - name: key-volume
           secret:
             secretName: ssh-key-secret
             items:
@@ -51,6 +51,12 @@ spec:
               - key: {{ .host_key.name | lower | nospace}}
                 path: {{ .host_key.name | lower | nospace}}
                 mode: 0600
+            {{ end }}
+        - name: pubkey-volume
+          secret:
+            secretName: ssh-key-secret
+            items:
+            {{ range .Values.host_keys }}
               - key: {{ .host_key.name | lower | nospace }}.pub
                 path: {{ .host_key.name | lower | nospace }}.pub
                 mode: 0640
@@ -106,12 +112,12 @@ spec:
               subPath: hostbased.sh
             # Secret Volume
             {{ range .host_keys }}
-            - name: secret-volume
+            - name: key-volume
+              mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
+              subPath: {{ .host_key.name | lower | nospace }}
+            - name: pubkey-volume
               mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
               subPath: {{ .host_key.name | lower | nospace }}.pub
-#            - name: secret-volume
-#              mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
-#              subPath: {{ .host_key.name | lower | nospace }}
             {{ end }}
             # Desktop Application Files
             - name: desktop-options
