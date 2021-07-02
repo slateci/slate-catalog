@@ -33,8 +33,6 @@ chgrp apache /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 chmod 640 /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
 supervisorctl restart apache
-# Copy SSH pubkey into /etc/ssh
-cat /root/ssh_host_ecdsa_key.pub >> /etc/ssh/ssh_host_ecdsa_key.pub
 # Add users from Keycloak API
 while [ ! -f /shared/newusers.txt ]
 do
