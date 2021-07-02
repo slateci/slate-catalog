@@ -76,9 +76,9 @@ host_keys:
   - host_key:
       name: "ssh_host_ecdsa_key.pub"
   - host_key: 
-      name: "ssh_host_ed25119_key"
+      name: "ssh_host_ed25519_key"
   - host_key:
-      name: "ssh_host_ed25119_key.pub"
+      name: "ssh_host_ed25519_key.pub"
   - host_key: 
       name: "ssh_host_rsa_key"
   - host_key:
