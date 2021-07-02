@@ -107,11 +107,6 @@ spec:
               mountPath: /root/{{ .host_key.name | lower | nospace }}
               subPath: {{ .host_key.name | lower | nospace }}
             {{- end }}
-#            - name: key-volume
-#            {{ range .Values.host_keys }}
-#              mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
-#              subPath: {{ .host_key.name | lower | nospace }}.pub
-#            {{ end }}
             # Desktop Application Files
             {{- range .Values.clusters }}
             {{ if eq .cluster.desktopEnable true }}
