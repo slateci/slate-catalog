@@ -48,12 +48,9 @@ spec:
             secretName: ssh-key-secret
             items:
             {{ range .Values.host_keys }}
-              - key: {{ .host_key.name | lower | nospace }}
-                path: {{ .host_key.name | lower | nospace }}
+              - key: *
+                path: *
                 mode: 0600
-              - key: {{ .host_key.name | lower | nospace }}.pub
-                path: {{ .host_key.name | lower | nospace }}.pub
-                mode: 0640
             {{ end }}
         # Desktop Application Files
         - name: desktop-options
