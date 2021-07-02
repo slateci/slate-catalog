@@ -48,8 +48,8 @@ spec:
             secretName: ssh-key-secret
             items:
             {{ range .Values.host_keys }}
-              - key: *
-                path: *
+              - key: {{ .host_key.name | lower | nospace }}
+                path: {{ .host_key.name | lower | nospace }}
                 mode: 0600
             {{ end }}
         # Desktop Application Files
@@ -107,11 +107,11 @@ spec:
               mountPath: /etc/ssh/{{ .host_key.name | lower | nospace }}
               subPath: {{ .host_key.name | lower | nospace }}
             {{ end }}
-            - name: key-volume
-            {{ range .Values.host_keys }}
-              mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
-              subPath: {{ .host_key.name | lower | nospace }}.pub
-            {{ end }}
+#            - name: key-volume
+#            {{ range .Values.host_keys }}
+#              mountPath: /root/{{ .host_key.name | lower | nospace }}.pub
+#              subPath: {{ .host_key.name | lower | nospace }}.pub
+#            {{ end }}
             # Desktop Application Files
             - name: desktop-options
             {{ range .Values.clusters }}
