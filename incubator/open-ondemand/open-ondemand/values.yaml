@@ -69,7 +69,7 @@ desktop: "mate"
 # Choose a regular expression that catches all accessible clusters
 host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 
-# Name the host keys stored on your host system
+# Name the host keys stored in your ssh-key-secret
 host_keys:
   - host_key: 
       name: "ssh_host_ecdsa_key"
