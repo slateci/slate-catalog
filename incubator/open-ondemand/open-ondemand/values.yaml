@@ -69,7 +69,7 @@ desktop: "mate"
 # Choose a regular expression that catches all accessible clusters
 host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 
-# Name the host keys stored in your ssh-key-secret
+# Name the host_keys stored in your ssh-key-secret
 host_keys:
   - host_key: 
       name: "ssh_host_ecdsa_key"
@@ -83,6 +83,9 @@ host_keys:
       name: "ssh_host_rsa_key"
   - host_key:
       name: "ssh_host_rsa_key.pub"
+
+# Specify the node you'd like to deploy on (You must have ssh_keys from this host stored in a secret)
+node_name: "utah-dev1.chpc.utah.edu"
 
 # Name the group ID for the ssh_keys group on your host system
 ssh_keys_GID: 993
