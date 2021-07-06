@@ -15,8 +15,8 @@ spec:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
     spec:
-      nodeSelector:
-        disktype: ssd
+#      nodeSelector:
+#        disktype: ssd
 #      affinity:
 #        nodeAffinity:
 #          requiredDuringSchedulingIgnoredDuringExecution:
