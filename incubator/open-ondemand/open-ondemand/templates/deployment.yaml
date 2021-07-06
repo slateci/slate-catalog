@@ -17,15 +17,15 @@ spec:
     spec:
       nodeSelector:
         disktype: ssd
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: {{ .Values.node_label | quote }}
-                operator: In
-                values:
-                - {{ .Values.node_name | quote}}
+#      affinity:
+#        nodeAffinity:
+#          requiredDuringSchedulingIgnoredDuringExecution:
+#            nodeSelectorTerms:
+#            - matchExpressions:
+#              - key: {{ .Values.node_label | quote }}
+#                operator: In
+#                values:
+#                - {{ .Values.node_name | quote}}
       volumes:
         # Shared Volume
         - name: shared-data
