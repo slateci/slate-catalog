@@ -85,7 +85,7 @@ host_keys:
       name: "ssh_host_rsa_key.pub"
 
 # Name the group ID for the ssh_keys group on your host system
-ssh_keys_GID: 993
+ssh_keys_GID: 998
 
 # Configure additional test users to be added to Keycloak.
 testUsers:
