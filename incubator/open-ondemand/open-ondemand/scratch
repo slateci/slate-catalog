@@ -1,1 +1,0 @@
-groupmod -g {{ .Values.ssh_keys_GID }} ssh_keys
