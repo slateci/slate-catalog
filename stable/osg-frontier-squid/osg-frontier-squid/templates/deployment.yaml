@@ -52,11 +52,17 @@ spec:
         resources:
           requests:
             cpu: {{ .Values.SquidConf.CPU }}
+        {{ if not  .Values.SquidConf.CacheDirOnHost }}
 # converting CacheSize to MiB and adding it to total request
             ephemeral-storage: {{ add .Values.SquidConf.RequestEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
           limits:
 # converting CacheSize to MiB and adding it to total limit
             ephemeral-storage: {{ add .Values.SquidConf.LimitEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
+        {{ else }}
+            ephemeral-storage: {{ .Values.SquidConf.RequestEphemeralSize  }}Mi
+          limits:
+            ephemeral-storage: {{ .Values.SquidConf.LimitEphemeralSize  }}Mi
+        {{ end }}
         ports:
         - containerPort: 3128
           name: squid
