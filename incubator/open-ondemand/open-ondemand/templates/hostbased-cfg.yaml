@@ -6,7 +6,6 @@ metadata:
 data:
   hostbased.sh: |
     #!/bin/bash
-    yum install -y openssh-sever openssh-clients
     array=()
     for i in `ls /root | grep .pub`; do
       array+=("$i")
