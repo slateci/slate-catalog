@@ -22,7 +22,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: nodes
+              - key: {{ .Values.node_label | quote }}
                 operator: In
                 values:
                 - {{ .Values.node_name | quote}}
