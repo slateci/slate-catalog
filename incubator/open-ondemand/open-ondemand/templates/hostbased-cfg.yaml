@@ -11,13 +11,15 @@ data:
       array+=("$i")
     done
     for i in ${array[@]}; do
-      cat /root/$i > /etc/ssh/$i && chmod 0644 /etc/ssh/$i
+      cat /root/$i > /etc/ssh/$i
     done
+    chmod 0644 /etc/ssh/*.pub
     array=()
     for i in `ls /root/*_key | sed 's/\/root\///g'`; do
       array+=("$i")
     done
     for i in ${array[@]}; do
-      cat /root/$i > /etc/ssh/$i && chmod 0640 /etc/ssh/$i
+      cat /root/$i > /etc/ssh/$i
     done
+    chmod 0640 /etc/ssh/*_key
     chgrp ssh_keys /etc/ssh/*_key
