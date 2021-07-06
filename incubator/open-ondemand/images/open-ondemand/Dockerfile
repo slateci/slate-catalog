@@ -1,7 +1,7 @@
 FROM centos:7
 RUN yum update -y && \
     yum install -y epel-release && \
-    yum install -y supervisor centos-release-scl subscription-manager openssh-server openssh-clients && \
+    yum install -y supervisor centos-release-scl subscription-manager && \
     yum install -y wget 
 
 # Install Ruby 2.5 and Node.js 10
