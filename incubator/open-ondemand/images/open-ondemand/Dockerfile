@@ -36,6 +36,7 @@ COPY startup.sh /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh
 COPY env /etc/ood/config/apps/shell/env
 
 # Configure Desktop application
+RUN yum install -y autofs
 RUN mkdir -p /etc/ood/config/apps/bc_desktop/single_cluster
 RUN mkdir /etc/ood/config/apps/bc_desktop/submit
 RUN mv /var/www/ood/apps/sys/bc_desktop/form.yml /var/www/ood/apps/sys/bc_desktop/form.yml.org
