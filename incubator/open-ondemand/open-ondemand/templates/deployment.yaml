@@ -92,6 +92,7 @@ spec:
             capabilities:
               add:
                 - NET_ADMIN
+                - SYS_ADMIN
           volumeMounts:
             # Shared Volume
             - name: shared-data
