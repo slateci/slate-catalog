@@ -4,11 +4,12 @@ RUN yum update -y && \
     yum install -y supervisor centos-release-scl subscription-manager && \
     yum install -y wget openssh-server openssh-clients
 
-# Install Ruby 2.5 and Node.js 10
+# Install Ruby 2.5, Node.js 10, and Development Tools
 RUN yum install -y centos-release-scl-rh
 RUN yum-config-manager --enable rhel-server-rhscl-7-rpms
 RUN yum install -y rh-ruby25
 RUN yum install -y rh-nodejs10
+RUN yum groupinstall 'Development Tools'
 
 # Copy in the filesystem-map
 COPY filesystem.txt /root
