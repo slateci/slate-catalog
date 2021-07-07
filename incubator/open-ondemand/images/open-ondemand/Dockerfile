@@ -9,7 +9,7 @@ RUN yum install -y centos-release-scl-rh
 RUN yum-config-manager --enable rhel-server-rhscl-7-rpms
 RUN yum install -y rh-ruby25
 RUN yum install -y rh-nodejs10
-RUN yum groupinstall 'Development Tools'
+RUN yum groupinstall -y 'Development Tools'
 
 # Copy in the filesystem-map
 COPY filesystem.txt /root
