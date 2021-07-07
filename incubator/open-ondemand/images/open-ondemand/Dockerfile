@@ -42,8 +42,6 @@ RUN mkdir /etc/ood/config/apps/bc_desktop/submit
 RUN mv /var/www/ood/apps/sys/bc_desktop/form.yml /var/www/ood/apps/sys/bc_desktop/form.yml.org
 RUN mv /var/www/ood/apps/sys/bc_desktop/submit.yml.erb /var/www/ood/apps/sys/bc_desktop/submit.yml.erb.org
 
-# Configure SSH
-RUN sed -i 's/#   HostbasedAuthentication no/   HostBasedAuthentication yes\n   EnableSSHKeysign yes/g' /etc/ssh/ssh_config
 # Some security precautions
 RUN chmod 0700 /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh
 
