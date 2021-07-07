@@ -2,7 +2,7 @@ FROM centos:7
 RUN yum update -y && \
     yum install -y epel-release && \
     yum install -y supervisor centos-release-scl subscription-manager && \
-    yum install -y wget openssh-server openssh-clients
+    yum install -y wget openssh-server openssh-clients nfs-utils
 
 # Install Ruby 2.5, Node.js 10, and Development Tools
 RUN yum install -y centos-release-scl-rh
