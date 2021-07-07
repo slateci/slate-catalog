@@ -34,7 +34,7 @@ kerberos:
 # Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
-      name: "remoteTesting"
+      name: "slate-node1.chpc.utah.edu"
       host: "slate-node1.chpc.utah.edu"
       desktopEnable: true
       job:
