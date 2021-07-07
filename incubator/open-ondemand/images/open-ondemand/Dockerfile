@@ -34,7 +34,6 @@ RUN yum update -y
 RUN mkdir /etc/ood/config/apps && mkdir /etc/ood/config/apps/shell
 COPY env /etc/ood/config/apps/shell/env
 COPY startup.sh /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh
-WORKDIR /root
 
 # Configure Desktop application
 RUN mkdir -p /etc/ood/config/apps/bc_desktop/single_cluster
