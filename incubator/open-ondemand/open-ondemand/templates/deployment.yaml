@@ -88,6 +88,10 @@ spec:
         - name: open-ondemand
           image: dockerbox88/open-ondemand:latest
           imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
           volumeMounts:
             # Shared Volume
             - name: shared-data
