@@ -94,7 +94,7 @@ spec:
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
             # LinuxHost Adapter
-            - name: linuxhost-adapter
+            - name: linuxhost-adapter-config
               mountPath: /etc/ood/config/clusters.d
             # HostBased Authentication Config
             - name: hostbased-config
