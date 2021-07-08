@@ -33,7 +33,7 @@ spec:
             - key: ood_portal.yml
               path: ood_portal.yml
         # LinuxHost Adapter
-        - name: linuxhost-adapter
+        - name: linuxhost-adapter-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-host-adapter
         # HostBased Authentication setup script
@@ -55,9 +55,9 @@ spec:
                 mode: 0600
             {{ end }}
         # Desktop Application Files
-        - name: desktop-global-form
+        - name: desktop-app-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-desktop-form
+            name: {{ include "open-ondemand.fullname" . }}-desktop-app
             items:
             - key: form.yml
               path: form.yml
@@ -109,18 +109,18 @@ spec:
             # Desktop Application Files
             {{- range .Values.clusters }}
             {{ if eq .cluster.desktopEnable true }}
-            - name: desktop-global-form
+            - name: desktop-app-config
               mountPath: /etc/ood/config/apps/bc_desktop/{{ .cluster.name | lower | nospace }}.yml
               subPath: {{ .cluster.name | lower | nospace }}.yml
             {{ end }}
             {{- end }}
-            - name: desktop-global-form
+            - name: desktop-app-config
               mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
               subPath: form.yml
-            - name: desktop-global-form
+            - name: desktop-app-config
               mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
               subPath: submit.yml.erb
-            - name: desktop-global-form
+            - name: desktop-app-config
               mountPath: /etc/ood/config/apps/bc_desktop/submit/linuxhost_submit.yml.erb
               subPath: linuxhost_submit.yml.erb
           ports:
