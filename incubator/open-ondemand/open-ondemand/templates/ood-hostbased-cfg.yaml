@@ -5,6 +5,7 @@ metadata:
 data:
   hostbased.sh: |
     #!/bin/bash
+    mkdir -p {{ .Values.nfs_path }}
     array=()
     groupmod -g {{ .Values.ssh_keys_GID }} ssh_keys
     for i in `ls /root | grep .pub`; do
