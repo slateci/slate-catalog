@@ -84,7 +84,6 @@ spec:
           image: dockerbox88/open-ondemand:latest
           imagePullPolicy: Always
           securityContext:
-            privileged: true
             capabilities:
               add:
                 - NET_ADMIN
