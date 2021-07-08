@@ -82,12 +82,15 @@ host_keys:
   - host_key:
       name: "ssh_host_rsa_key.pub"
 
-# Specify the node you'd like to deploy on (You must have ssh_keys from this host stored in a secret)
-#node_name: "utah-dev1.chpc.utah.edu"
-#node_label: "kubernetes.io/utah-dev1.chpc.utah.edu"
+# Specify a label for the nodeSelector, this will assign OnDemand to a node with a matching label
+node_selector_label: "ssd"
 
 # Name the group ID for the ssh_keys group on your host system
 ssh_keys_GID: 993
+
+# Enable NFS sharing in the container
+ip_addr: 155.101.6.140
+nfs_path: "/uufs/chpc.utah.edu/common/home"
 
 # Configure additional test users to be added to Keycloak.
 testUsers:
