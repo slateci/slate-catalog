@@ -67,8 +67,8 @@ spec:
               path: linuxhost_submit.yml.erb
             {{ range .Values.clusters }}
             {{ if eq .cluster.desktopEnable true }}
-              - key: {{ .cluster.name | lower | nospace }}.yml
-                path: {{ .cluster.name | lower | nospace }}.yml
+            - key: {{ .cluster.name | lower | nospace }}.yml
+              path: {{ .cluster.name | lower | nospace }}.yml
             {{ end }}
             {{ end }}
         # Claim SLATE volume to persist Keycloak data.
