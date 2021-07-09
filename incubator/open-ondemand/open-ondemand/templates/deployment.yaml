@@ -22,9 +22,9 @@ spec:
         - name: shared-data
           emptyDir: {}
         # NFS Volume
-        - name: nfs
-          persistentVolumeClaim:
-            claimName: ood-nfs-pvc
+        # - name: nfs
+        #   persistentVolumeClaim:
+        #     claimName: ood-nfs-pvc
         # Keycloak Startup Script
         - name: keycloak-setup
           configMap:
@@ -99,8 +99,8 @@ spec:
               mountPath: /root/hostbased.sh
               subPath: hostbased.sh
             # NFS Volume
-            - name: nfs
-              mountPath: {{ .Values.nfs_path }}
+            # - name: nfs
+            #   mountPath: {{ .Values.nfs_path }}
             # Secret Volume
             {{- range .Values.host_keys }}
             - name: key-volume
