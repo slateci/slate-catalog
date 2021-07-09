@@ -15,8 +15,8 @@ spec:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
     spec:
-      # nodeSelector:
-      #   disktype: {{ .Values.node_selector_label }}
+      nodeSelector:
+        disktype: {{ .Values.node_selector_label }}
       volumes:
         # Shared Volume
         - name: shared-data
