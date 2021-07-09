@@ -83,7 +83,7 @@ host_keys:
       name: "ssh_host_rsa_key.pub"
 
 # Specify a label for the nodeSelector, this will assign OnDemand to a node with a matching label
-node_selector_label: "ssd"
+# node_selector_label: "ssd"
 
 # Name the group ID for the ssh_keys group on your host system
 ssh_keys_GID: 993

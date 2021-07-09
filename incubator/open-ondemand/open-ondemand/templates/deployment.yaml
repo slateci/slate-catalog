@@ -15,16 +15,16 @@ spec:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
     spec:
-      nodeSelector:
-        disktype: {{ .Values.node_selector_label }}
+      # nodeSelector:
+      #   disktype: {{ .Values.node_selector_label }}
       volumes:
         # Shared Volume
         - name: shared-data
           emptyDir: {}
         # NFS Volume
-        # - name: nfs
-        #   persistentVolumeClaim:
-        #     claimName: ood-nfs-pvc
+        - name: nfs
+          persistentVolumeClaim:
+            claimName: ood-nfs-pvc
         # Keycloak Startup Script
         - name: keycloak-setup
           configMap:
