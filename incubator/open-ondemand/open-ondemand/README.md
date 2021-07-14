@@ -1,7 +1,6 @@
 
 # Using SLATE to Deploy Open OnDemand
-### A guide to using SLATE to run an Open OnDemand instance.
-#### -- The SLATE Team
+### A guide to using SLATE to run an Open OnDemand instance  --  The SLATE Team
 
 
 [Open OnDemand](https://openondemand.org/) is a web application enabling easy access to high-performance computing resources.
