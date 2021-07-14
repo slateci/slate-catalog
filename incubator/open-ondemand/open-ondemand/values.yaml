@@ -95,8 +95,8 @@ nfs_path: "/home/ood_test_user"
 # Configure additional test users to be added to Keycloak.
 testUsers:
   - user:
-      name: "test"
-      tempPassword: "test"
+      name: "ood_test_user"
+      tempPassword: "ood_test_user"
 
 ### SLATE-START ###
 SLATE:
