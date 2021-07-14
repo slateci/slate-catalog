@@ -12,7 +12,6 @@ spec:
       chart: {{ template "globus-connect.chart" . }}
       release: {{ .Release.Name }}
       instance: {{ .Values.Instance | quote }}
-      #instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
   replicas: 1
   template:
     metadata:
@@ -21,6 +20,7 @@ spec:
         chart: {{ template "globus-connect.chart" . }}
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance | quote }}
+        instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
     spec:
       volumes:
       - name: {{ template "globus-connect.fullname" . }}-config
