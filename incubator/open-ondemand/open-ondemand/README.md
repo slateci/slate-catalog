@@ -1,7 +1,7 @@
 
 # Using SLATE to deploy Open OnDemand
-### The SLATE Team
 
+## About Open OnDemand
 
 [Open OnDemand](https://openondemand.org/) is a web application enabling easy access to high-performance computing resources.
 Open OnDemand, through a plugin system, provides many different ways to interact with these resources.
