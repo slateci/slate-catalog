@@ -88,15 +88,15 @@ node_selector_label: "ssd"
 # Name the group ID for the ssh_keys group on your host system
 ssh_keys_GID: 993
 
-# Enable NFS sharing in the container
+# Enable NFS sharing to the container
 ip_addr: 155.101.6.140
-nfs_path: "/home/test"
+nfs_path: "/home"
 
 # Configure additional test users to be added to Keycloak.
 testUsers:
   - user:
-      name: "ood"
-      tempPassword: "ood"
+      name: "test"
+      tempPassword: "test"
 
 ### SLATE-START ###
 SLATE:
