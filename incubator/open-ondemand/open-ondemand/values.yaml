@@ -90,7 +90,7 @@ ssh_keys_GID: 993
 
 # Enable NFS sharing in the container
 ip_addr: 155.101.6.140
-nfs_path: "/home/ood_test_user"
+nfs_path: "/home/test"
 
 # Configure additional test users to be added to Keycloak.
 testUsers:
