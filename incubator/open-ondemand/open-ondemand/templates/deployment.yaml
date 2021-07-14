@@ -18,8 +18,7 @@ spec:
       nodeSelector:
         disktype: {{ .Values.node_selector_label }}
       securityContext:
-        runAsUser: 2000
-        fsGroup: 2000
+        fsGroup: 1000
       volumes:
         # Shared Volume
         - name: shared-data
