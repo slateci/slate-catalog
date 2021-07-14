@@ -1,7 +1,7 @@
 
 # Using SLATE to deploy Open OnDemand
 
-## About Open OnDemand
+## About
 
 [Open OnDemand](https://openondemand.org/) is a web application enabling easy access to high-performance computing resources.
 Open OnDemand, through a plugin system, provides many different ways to interact with these resources.
@@ -170,4 +170,14 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`kerberos.debug`| Writes additional debug logs if enabled. |`true`|
 |`clusters.cluster.name`| Name of cluster to connect to. |`Kingspeak`|
 |`clusters.cluster.host`| Hostname of cluster to connect to. |`kingspeak.chpc.utah.edu`|
-
+|`desktopEnable` | Configure remote desktop functionality |`true`|
+|`ssh_hosts` | Full hostname of the login node |`kingspeak.chpc.utah.edu`|
+|`singularity_bin` | Location of singularity binary |`/bin/singularity`|
+|`singularity_bindpath` | Directories to be accessible |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
+|`singularity_image` | Location of singularity image |`/opt/centos7.sif`|
+|`tmux_bin` | Location of tmux binary |`/bin/tmux`|
+|`basic_script` | Basic desktop startup script |`#!/bin/bash \ ... \ %s`|
+|`vnc_script` | VNC session startup script |`#!/bin/bash \ ... \ %s`|
+|`set_host` | Hostname passed from the remote node to OnDemand |`$(hostname -A)`|
+|`desktop` | Desktop application [mate,xfce,gnome] |`mate`|
+|`k` |  |`k`|
