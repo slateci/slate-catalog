@@ -68,6 +68,7 @@ desktop: "mate"
 host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 
 # Name the host_keys stored in your ssh-key-secret
+secret_name: "ssh-key-secret"
 host_keys:
   - host_key: 
       name: "ssh_host_ecdsa_key"
@@ -93,6 +94,7 @@ ip_addr: 155.101.6.140
 nfs_path: "/home"
 
 # Configure additional test users to be added to Keycloak.
+# Ensure that these users do not have 
 testUsers:
   - user:
       name: "test"

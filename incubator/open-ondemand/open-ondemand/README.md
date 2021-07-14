@@ -170,14 +170,21 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`kerberos.debug`| Writes additional debug logs if enabled. |`true`|
 |`clusters.cluster.name`| Name of cluster to connect to. |`Kingspeak`|
 |`clusters.cluster.host`| Hostname of cluster to connect to. |`kingspeak.chpc.utah.edu`|
-|`desktopEnable` | Configure remote desktop functionality |`true`|
-|`ssh_hosts` | Full hostname of the login node |`kingspeak.chpc.utah.edu`|
-|`singularity_bin` | Location of singularity binary |`/bin/singularity`|
-|`singularity_bindpath` | Directories to be accessible |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
-|`singularity_image` | Location of singularity image |`/opt/centos7.sif`|
-|`tmux_bin` | Location of tmux binary |`/bin/tmux`|
-|`basic_script` | Basic desktop startup script |`#!/bin/bash \ ... \ %s`|
-|`vnc_script` | VNC session startup script |`#!/bin/bash \ ... \ %s`|
-|`set_host` | Hostname passed from the remote node to OnDemand |`$(hostname -A)`|
-|`desktop` | Desktop application [mate,xfce,gnome] |`mate`|
-|`k` |  |`k`|
+|`desktopEnable` | Configure remote desktop functionality. |`true`|
+|`ssh_hosts` | Full hostname of the login node. |`kingspeak.chpc.utah.edu`|
+|`singularity_bin` | Location of singularity binary. |`/bin/singularity`|
+|`singularity_bindpath` | Directories to be accessible. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
+|`singularity_image` | Location of singularity image. |`/opt/centos7.sif`|
+|`tmux_bin` | Location of tmux binary. |`/bin/tmux`|
+|`basic_script` | Basic desktop startup script. |`#!/bin/bash \ ... \ %s`|
+|`vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
+|`set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
+|`desktop` | Desktop application (mate,xfce,gnome) |`mate`|
+|`host_regex` | Regular expression that captures all remote nodes |`[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)`|
+|`secret_name` | Name of secret holding host_keys |`ssh-key-secret`|
+|`host_keys` | Names of stored keys |`ssh_host_ecdsa_key`|
+|`node_selector_label` | Label to assign a preferred node for OnDemand |`ssd`|
+|`ssh_keys_GID` | Group ID value of ssh_keys group |`993`|
+|`ip_addr` | Public IP address of the preferred node |`127.0.0.1`|
+|`nfs_path` |  |`/home`|
+|`testUsers` | Unprivileged users for testing login to OnDemand |`test`|
