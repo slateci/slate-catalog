@@ -90,7 +90,7 @@ ssh_keys_GID: 993
 
 # Enable NFS sharing in the container
 ip_addr: 155.101.6.140
-nfs_path: "/uufs/chpc.utah.edu/common/home"
+nfs_path: "/home/ood_test_user"
 
 # Configure additional test users to be added to Keycloak.
 testUsers:
