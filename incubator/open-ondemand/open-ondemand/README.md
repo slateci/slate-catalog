@@ -1,5 +1,5 @@
 
-# Using SLATE to Deploy Open OnDemand
+# SLATE Open OnDemand
 ### A guide to using SLATE to run an Open OnDemand instance  --  The SLATE Team
 
 
