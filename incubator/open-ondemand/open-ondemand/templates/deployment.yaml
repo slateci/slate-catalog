@@ -55,7 +55,7 @@ spec:
           secret:
             secretName: {{ .Values.advanced.secret_name }}
             items:
-            {{ range .Values.host_keys }}
+            {{ range .Values.advanced.host_keys }}
               - key: {{ .host_key.name | lower | nospace }}
                 path: {{ .host_key.name | lower | nospace }}
                 mode: 0600
