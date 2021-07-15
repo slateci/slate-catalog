@@ -13,7 +13,7 @@ data:
         priority: 2
       login:
         host: {{ .cluster.host | quote }}
-      {{ if eq .cluster.desktopEnable true }}
+      {{ if eq .cluster.enableHostAdapter true }}
       job:
         adapter: "linux_host"
         submit_host: {{ .cluster.name | quote }}

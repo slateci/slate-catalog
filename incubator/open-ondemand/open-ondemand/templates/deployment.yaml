@@ -15,8 +15,10 @@ spec:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
     spec:
+      {{ if eq .Values.enableHostAdapter true }}
       nodeSelector:
-        disktype: {{ .Values.node_selector_label }}
+        disktype: {{ .Values.advanced.node_selector_label }}
+      {{ end }}
       volumes:
         # Shared Volume
         - name: shared-data
@@ -51,7 +53,7 @@ spec:
         # HostKey Volumes
         - name: key-volume
           secret:
-            secretName: ssh-key-secret
+            secretName: {{ .Values.advanced.secret_name }}
             items:
             {{ range .Values.host_keys }}
               - key: {{ .host_key.name | lower | nospace }}
@@ -70,7 +72,7 @@ spec:
             - key: linuxhost_submit.yml.erb
               path: linuxhost_submit.yml.erb
             {{ range .Values.clusters }}
-            {{ if eq .cluster.desktopEnable true }}
+            {{ if eq .cluster.enableHostAdapter true }}
             - key: {{ .cluster.name | lower | nospace }}.yml
               path: {{ .cluster.name | lower | nospace }}.yml
             {{ end }}
@@ -100,7 +102,7 @@ spec:
               subPath: hostbased.sh
             # NFS Volume
             - name: nfs
-              mountPath: {{ .Values.nfs_path }}
+              mountPath: {{ .Values.advanced.nfs_path }}
             # Secret Volume
             {{- range .Values.host_keys }}
             - name: key-volume
@@ -109,7 +111,7 @@ spec:
             {{- end }}
             # Desktop Application Files
             {{- range .Values.clusters }}
-            {{ if eq .cluster.desktopEnable true }}
+            {{ if eq .cluster.enableHostAdapter true }}
             - name: desktop-app-config
               mountPath: /etc/ood/config/apps/bc_desktop/{{ .cluster.name | lower | nospace }}.yml
               subPath: {{ .cluster.name | lower | nospace }}.yml

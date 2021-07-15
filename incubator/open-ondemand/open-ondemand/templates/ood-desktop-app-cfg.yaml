@@ -6,7 +6,7 @@ data:
   form.yml: |
     ---
     attributes:
-      desktop: {{ .Values.desktop | quote }}
+      desktop: {{ .Values.advanced.desktop | quote }}
       bc_vnc_idle: 0
       bc_vnc_resolution:
         required: true
@@ -42,7 +42,7 @@ data:
   submit.yml.erb: |
     ---
     attributes:
-      desktop: {{ .Values.desktop | quote }}
+      desktop: {{ .Values.advanced.desktop | quote }}
       bc_vnc_idle: 0
       bc_vnc_resolution:
         required: true
@@ -60,7 +60,7 @@ data:
       - bc_email_on_started
 
   {{ range .Values.clusters }}
-  {{ if eq .cluster.desktopEnable true }}
+  {{ if eq .cluster.enableHostAdapter true }}
   linuxhost_submit.yml.erb: |
     ---
     batch_connect:

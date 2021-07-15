@@ -11,5 +11,5 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: {{ .Values.ip_addr }}
-    path: {{ .Values.nfs_path | quote }}
+    server: {{ .Values.advanced.ip_addr }}
+    path: {{ .Values.advanced.nfs_path | quote }}

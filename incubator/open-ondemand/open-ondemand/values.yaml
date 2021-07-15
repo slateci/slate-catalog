@@ -30,13 +30,13 @@ kerberos:
   kerberosPasswordAuth: "true"
   debug: "true"
 
-# Configure shell access and/or LinuxHost Adapter
+# Resource management and cluster definition files
 # Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
       name: "slate-node1"
       host: "slate-node1.chpc.utah.edu"
-      desktopEnable: true
+      enableHostAdapter: true
       job:
         ssh_hosts: "slate-node1.chpc.utah.edu"
         singularity_bin: /bin/singularity
@@ -59,42 +59,38 @@ clusters:
   - cluster:
       name: "Notchpeak"
       host: "notchpeak.chpc.utah.edu"
-      desktopEnable: false
+      enableHostAdapter: false
 
-# Choose a desktop installed on the remote host (mate 1+, xfce 4+, Gnome 2)
-desktop: "mate"
-
-# Choose a regular expression that catches all accessible clusters
+# Host regex (Should capture hostnames of all backend clusters)
 host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 
-# Name the host_keys stored in your ssh-key-secret
-secret_name: "ssh-key-secret"
-host_keys:
-  - host_key: 
-      name: "ssh_host_ecdsa_key"
-  - host_key:
-      name: "ssh_host_ecdsa_key.pub"
-  - host_key: 
-      name: "ssh_host_ed25519_key"
-  - host_key:
-      name: "ssh_host_ed25519_key.pub"
-  - host_key: 
-      name: "ssh_host_rsa_key"
-  - host_key:
-      name: "ssh_host_rsa_key.pub"
+# Configure remote desktop and other applications (Requires LinuxHost Adapter)
+enableHostAdapter: true
+advanced:
+  desktop: "mate"
+  node_selector_label: "ssd"
+  ip_addr: 155.101.6.140
+  ssh_keys_GID: 993
+  nfs_path: "/uufs/chpc.utah.edu/common/home"
 
-# Specify a label for the nodeSelector, this will assign OnDemand to a node with a matching label
-node_selector_label: "ssd"
+  # Provide names for each host key stored in your secret
+  secret_name: "ssh-key-secret"
+  host_keys:
+    - host_key:
+        name: "ssh_host_ecdsa_key"
+    - host_key:
+        name: "ssh_host_ecdsa_key.pub"
+    - host_key:
+        name: "ssh_host_ed25519_key"
+    - host_key:
+        name: "ssh_host_ed25519_key.pub"
+    - host_key:
+        name: "ssh_host_rsa_key"
+    - host_key:
+        name: "ssh_host_rsa_key.pub"
 
-# Name the group ID for the ssh_keys group on your host system
-ssh_keys_GID: 993
-
-# Enable NFS sharing to the container
-ip_addr: 155.101.6.140
-nfs_path: "/uufs/chpc.utah.edu/common/home"
-
-# Configure additional test users to be added to Keycloak.
-# Ensure that these users do not have 
+# Configure additional test users to be added to the Keycloak user database
+# Ensure that these users do not exist on backend clusters
 testUsers:
   - user:
       name: "test"
