@@ -186,5 +186,5 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`node_selector_label` | Label to assign a preferred node for OnDemand |`ssd`|
 |`ssh_keys_GID` | Group ID value of ssh_keys group |`993`|
 |`ip_addr` | Public IP address of the preferred node |`127.0.0.1`|
-|`nfs_path` |  |`/home`|
+|`nfs_path` | Local user directories to be mounted |`/uufs/chpc.utah.edu/common/home`|
 |`testUsers` | Unprivileged users for testing login to OnDemand |`test`|
