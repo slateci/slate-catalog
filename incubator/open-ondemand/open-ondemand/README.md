@@ -68,7 +68,7 @@ Leave the `size` value at its default `50M`.
 Then, configure the LDAP and Kerberos sections according to your institution's setup.
 
 
-**Backend Cluster Setup**
+**Shell Access**
 
 To set up shell access to backend compute resources, edit the `clusters` section
 of the configuration file. Add a `cluster` element for each cluster you wish to
@@ -80,22 +80,23 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
   - cluster:
       name: "Notchpeak"
       host: "notchpeak.chpc.utah.edu"
-      desktopEnable: false
+      enableHostAdapter: false
 ```
 
-To set up remote desktop access, set the `desktopEnable` value to true and then
-configure the LinuxHost Adapter for the backend resource. The Host Adapter is a
-resource manager by OSC for Open OnDemand built from various components that
-must be installed both on the OnDemand node and the backend compute resource.
-These components are TurboVNC, nmap-ncat, and websockify on the OnDemand server, 
-and Singularity, tmux, pstree, and timeout on the backend cluster. To enable
-the Host Adapter first fill out these fields in the cluster definition section
+**Remote Desktop Access**
+
+To set up remote desktop access, first set the `enableHostAdapter` value to true
+and then configure the LinuxHost Adapter. This is a simplified resource manager
+for Open OnDemand built from various components installed both on the OnDemand 
+server and backend compute resources. These components are TurboVNC, nmap-ncat,
+and websockify on the OnDemand server, and Singularity, tmux, pstree, and timeout 
+on the backend cluster. 
 
 ```yaml
   - cluster:
       name: "node1"
       host: "example-node1.net"
-      desktopEnable: true
+      enableHostAdapter: true
       job:
         ssh_hosts: "example-node1.net"
         singularity_bin: /bin/singularity
@@ -117,8 +118,31 @@ the Host Adapter first fill out these fields in the cluster definition section
       set_host: "$(hostname -A)"
 ```
 
+**Authentication**
 
+Passwordless SSH is required for the LinuxHost Adapter to work properly, and the
+easiest way to configure this is by establishing host-level trust. To establish this
+trust between the container and remote resources, keys from the host system must 
+be passed into the container so that if any pods are replaced, the host keys will not
+change. To do this, first run the script below to generate a secret containing 
+host_keys located in the `/etc/hosts` directory.
 
+```bash
+#!/bin/bash
+echo "Please enter a name for your secret: "
+read secretName
+if [ "$secretName" != "" ]; then
+  :
+else
+  echo "Please enter a non-empty secret name"
+  exit
+fi
+command="kubectl create secret generic $secretName"
+for i in /etc/ssh/ssh_host_*; do
+  command = `echo "$command --from-file=$i"`
+done
+echo $command
+```
 
 **Test User Setup**
 
