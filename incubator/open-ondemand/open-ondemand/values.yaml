@@ -30,7 +30,7 @@ kerberos:
   kerberosPasswordAuth: "true"
   debug: "true"
 
-# Configure LinuxHost Adapter or Shell Application
+# Configure shell access and/or LinuxHost Adapter
 # Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
