@@ -173,18 +173,18 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`desktopEnable` | Configure remote desktop functionality. |`true`|
 |`ssh_hosts` | Full hostname of the login node. |`kingspeak.chpc.utah.edu`|
 |`singularity_bin` | Location of singularity binary. |`/bin/singularity`|
-|`singularity_bindpath` | Directories to be accessible in VNC sessions. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
+|`singularity_bindpath` | Directories accessible during VNC sessions. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
 |`singularity_image` | Location of singularity image. |`/opt/centos7.sif`|
 |`tmux_bin` | Location of tmux binary. |`/bin/tmux`|
 |`basic_script` | Basic desktop startup script. |`#!/bin/bash \ ... \ %s`|
 |`vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
 |`set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
-|`desktop` | Desktop application (mate,xfce,gnome) |`mate`|
-|`host_regex` | Regular expression to capture hostnames |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
-|`secret_name` | Name of secret holding host_keys |`ssh-key-secret`|
-|`host_keys` | Names of stored keys |`ssh_host_ecdsa_key`|
-|`node_selector_label` | Label to assign a preferred node for OnDemand |`ssd`|
-|`ssh_keys_GID` | Group ID value of ssh_keys group |`993`|
-|`ip_addr` | Public IP address of the preferred node |`127.0.0.1`|
-|`nfs_path` | Local user directories to be mounted |`/uufs/chpc.utah.edu/common/home`|
-|`testUsers` | Unprivileged users for testing login to OnDemand |`test`|
+|`desktop` | Desktop environment (mate,xfce,gnome) |`mate`|
+|`host_regex` | Regular expression to capture hostnames. |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
+|`secret_name` | Name of secret holding host_keys. |`ssh-key-secret`|
+|`host_keys` | Names of stored keys. |`ssh_host_ecdsa_key`|
+|`node_selector_label` | Label to assign a preferred node for OnDemand. |`ssd`|
+|`ssh_keys_GID` | Group ID value of ssh_keys group. |`993`|
+|`ip_addr` | Public IP address of the preferred node. |`127.0.0.1`|
+|`nfs_path` | Local user directories to be mounted. |`/uufs/chpc.utah.edu/common/home`|
+|`testUsers` | Unprivileged users for testing login to OnDemand. |`test`|
