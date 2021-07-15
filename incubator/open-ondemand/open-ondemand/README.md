@@ -180,7 +180,7 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
 |`set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
 |`desktop` | Desktop application (mate,xfce,gnome) |`mate`|
-|`host_regex` | Regex to capture remote node hostnames |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
+|`host_regex` | Regular expression to capture node hostnames |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
 |`secret_name` | Name of secret holding host_keys |`ssh-key-secret`|
 |`host_keys` | Names of stored keys |`ssh_host_ecdsa_key`|
 |`node_selector_label` | Label to assign a preferred node for OnDemand |`ssd`|
