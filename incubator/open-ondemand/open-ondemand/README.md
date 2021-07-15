@@ -129,7 +129,7 @@ host_keys located in the `/etc/hosts` directory.
 
 ```bash
 #!/bin/bash
-echo "Please enter a name for your secret: "
+echo -n "Please enter a name for your secret: "
 read secretName
 if [ "$secretName" != "" ]; then
   :
@@ -139,9 +139,10 @@ else
 fi
 command="kubectl create secret generic $secretName"
 for i in /etc/ssh/ssh_host_*; do
-  command = `echo "$command --from-file=$i"`
+  command=`echo "$command --from-file=$i"`
 done
-echo $command
+printf "Your keygen command is: \n\n"
+printf "$command\n\n"
 ```
 
 **Test User Setup**
