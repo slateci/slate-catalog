@@ -74,6 +74,40 @@ connect to, and fill out the `name` and `host` sections. The cluster name should
 be whatever you want the OnDemand web portal to display that cluster as, and the
 `host` value should be the DNS name of that cluster.
 
+To set up remote desktop access, set the `desktopEnable` value to true and then
+configure the LinuxHost Adapter for the backend resource. The Host Adapter is a
+resource manager by OSC for Open OnDemand built from various components that
+must be installed both on the OnDemand node and the backend compute resource.
+These components are TurboVNC, nmap-ncat, and websockify on the OnDemand server, 
+and Singularity, tmux, pstree, and timeout on the backend cluster. To enable
+the Host Adapter first fill out these fields in the cluster definition section
+
+```yaml
+  - cluster:
+      name: "node1"
+      host: "example-node1.net"
+      desktopEnable: true
+      job:
+        ssh_hosts: "example-node1.net"
+        singularity_bin: /bin/singularity
+        singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
+        singularity_image: /opt/centos7.sif 
+        tmux_bin: /bin/tmux
+      basic_script: 
+        - "#!/bin/bash"
+        - "module purge"
+        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
+        - "%s"
+      vnc_script: 
+        - "#!/bin/bash"
+        - "module purge"
+        - "export PATH='/opt/TurboVNC/bin:$PATH'"
+        - "export WEBSOCKIFY_CMD='/usr/bin/websockify'"
+        - export XDG_RUNTIME_DIR=$(mktemp -d)"
+        - "%s"
+      set_host: "$(hostname -A)"
+```
+
 
 **Test User Setup**
 
