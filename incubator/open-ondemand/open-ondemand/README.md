@@ -30,6 +30,7 @@ Additionally, this application requires that `cert-manager` and a volume provisi
 Contact your cluster administrator for more information about this.
 More information about `cert-manager` can be found [here](https://cert-manager.io/docs/installation/kubernetes/),
 and more information about persistent volume types can be found [here](https://kubernetes.io/docs/concepts/storage/storage-classes/).
+To enable more advanced features, NFS sharing and host-level trust must be allowed between compute resources.
 
 
 ## Configuration
@@ -81,8 +82,6 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
       desktopEnable: false
 ```
 
-**LinuxHost Adapter**
-
 To set up remote desktop access, set the `desktopEnable` value to true and then
 configure the LinuxHost Adapter for the backend resource. The Host Adapter is a
 resource manager by OSC for Open OnDemand built from various components that
@@ -116,6 +115,8 @@ the Host Adapter first fill out these fields in the cluster definition section
         - "%s"
       set_host: "$(hostname -A)"
 ```
+
+
 
 
 **Test User Setup**
