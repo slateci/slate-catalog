@@ -173,7 +173,7 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`desktopEnable` | Configure remote desktop functionality. |`true`|
 |`ssh_hosts` | Full hostname of the login node. |`kingspeak.chpc.utah.edu`|
 |`singularity_bin` | Location of singularity binary. |`/bin/singularity`|
-|`singularity_bindpath` | Directories to be accessible. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
+|`singularity_bindpath` | Directories to be accessible in VNC sessions. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
 |`singularity_image` | Location of singularity image. |`/opt/centos7.sif`|
 |`tmux_bin` | Location of tmux binary. |`/bin/tmux`|
 |`basic_script` | Basic desktop startup script. |`#!/bin/bash \ ... \ %s`|
