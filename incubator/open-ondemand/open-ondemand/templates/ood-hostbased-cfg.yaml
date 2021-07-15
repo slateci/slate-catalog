@@ -5,7 +5,7 @@ metadata:
 data:
   hostbased.sh: |
     #!/bin/bash
-    sed "/^Host */a \        HostBasedAuthentication yes\n        EnableSSHKeysign yes\n        PreferredAuthentications hostbased" /etc/ssh/ssh_config
+    sed -i "/^Host */a \        HostBasedAuthentication yes\n        EnableSSHKeysign yes\n        PreferredAuthentications hostbased" /etc/ssh/ssh_config
     mkdir -p {{ .Values.advanced.nfs_path }}
     array=()
     groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
