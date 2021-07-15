@@ -74,6 +74,15 @@ connect to, and fill out the `name` and `host` sections. The cluster name should
 be whatever you want the OnDemand web portal to display that cluster as, and the
 `host` value should be the DNS name of that cluster.
 
+```yaml
+  - cluster:
+      name: "Notchpeak"
+      host: "notchpeak.chpc.utah.edu"
+      desktopEnable: false
+```
+
+**LinuxHost Adapter**
+
 To set up remote desktop access, set the `desktopEnable` value to true and then
 configure the LinuxHost Adapter for the backend resource. The Host Adapter is a
 resource manager by OSC for Open OnDemand built from various components that
