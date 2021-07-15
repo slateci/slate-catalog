@@ -141,8 +141,8 @@ command="kubectl create secret generic $secretName"
 for i in /etc/ssh/ssh_host_*; do
   command=`echo "$command --from-file=$i"`
 done
-printf "Your keygen command is: \n\n"
-printf "$command\n\n"
+printf "$command\n"
+$command ; printf "\n"
 ```
 
 **Test User Setup**
