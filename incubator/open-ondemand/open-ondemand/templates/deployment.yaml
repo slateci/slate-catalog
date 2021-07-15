@@ -104,7 +104,7 @@ spec:
             - name: nfs
               mountPath: {{ .Values.advanced.nfs_path }}
             # Secret Volume
-            {{- range .Values.host_keys }}
+            {{- range .Values.advanced.host_keys }}
             - name: key-volume
               mountPath: /root/{{ .host_key.name | lower | nospace }}
               subPath: {{ .host_key.name | lower | nospace }}
