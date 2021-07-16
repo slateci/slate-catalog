@@ -97,6 +97,7 @@ spec:
             - name: linuxhost-adapter-config
               mountPath: /etc/ood/config/clusters.d
             # HostBased Authentication Config
+          {{ if eq .Values.enableHostAdapter true }}
             - name: hostbased-config
               mountPath: /root/hostbased.sh
               subPath: hostbased.sh
@@ -126,6 +127,7 @@ spec:
             - name: desktop-app-config
               mountPath: /etc/ood/config/apps/bc_desktop/submit/linuxhost_submit.yml.erb
               subPath: linuxhost_submit.yml.erb
+          {{ end }}
           ports:
             - name: http
               containerPort: 80
