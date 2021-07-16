@@ -163,7 +163,7 @@ section for each user you would like to add:
     tempPassword: <temporary_password_here>
 ```
 
-## Advanced (Interactive Apps and Remote Desktop)
+## Interactive Apps and Remote Desktop (Optional)
 
 ### Authentication
 
