@@ -76,6 +76,7 @@ connect to, and fill out the `name` and `host` sections. The cluster name should
 be whatever you want the OnDemand web portal to display that cluster as, and the
 `host` value should be the DNS name of that cluster.
 
+
 ```yaml
   - cluster:
       name: "Notchpeak"
@@ -90,6 +91,7 @@ then configure the LinuxHost Adapter. This is a simplified resource manager
 built from various components such as TurboVNC, Singularity and tmux. By
 enabling resource management, you can set up more interactive apps and 
 easily manage remote sessions from the OnDemand portal.
+
 
 ```yaml
   - cluster:
@@ -125,6 +127,7 @@ trust between the container and remote resources, keys from the host system must
 be passed into the container so that if any pods are replaced, the host keys will not
 change. To do this, first run the script below to generate a secret containing 
 host_keys located in the `/etc/hosts` directory.
+
 
 ```bash
 #!/bin/bash
