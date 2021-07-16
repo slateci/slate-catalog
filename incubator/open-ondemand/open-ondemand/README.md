@@ -243,7 +243,7 @@ other DFS protocol.
 To do this using NFS, first install `nfs-utils` and then modify the `/etc/exports`
 file with an entry for localhost, and then for any backend clutsers.
 
-```yaml
+```bash
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
 /uufs/chpc.utah.edu/common/home  155.0.0.1(rw,sync,no_subtree_check,root_squash)
 ...
