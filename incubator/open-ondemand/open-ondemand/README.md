@@ -249,10 +249,10 @@ you should be able to launch a remote desktop through the OnDemand portal.
 
 Now that Open OnDemand has been properly configured, and persistent storage set
 up, we can install the application. Run the following SLATE command:
+
 ```bash
 slate app install open-ondemand --group <group_name> --cluster <cluster_name> --conf /path/to/ood.yaml
 ```
-
 
 ## Testing
 
