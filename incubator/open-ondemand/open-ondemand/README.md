@@ -241,7 +241,7 @@ between front and backend resources. This can be set up using NFS, autoFS, or so
 other DFS protocol. 
 
 To do this using NFS, first install `nfs-utils` and then modify the `/etc/exports`
-file with an entry for localhost, and then for any backend clutsers.
+file with an entry for localhost, and then for any backend clusters.
 
 ```bash
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
