@@ -122,12 +122,28 @@ easily manage remote sessions from the OnDemand portal.
 The LinuxHost Adapter requires passwordless SSH for all users which is 
 most easily configured by establishing host-level trust.
 
-To enable hostBased Authentication, first go to the backend resources
+To enable hostBased Authentication, first go to each backend resources
 and add public host keys from the OnDemand server to a file called 
 `/etc/ssh/ssh_known_hosts` using the`ssh-keyscan` command.
 
 ```bash
 ssh-keyscan [IP_ADDR] >> /etc/ssh/ssh_known_hosts
+```
+
+Add an entry to `/etc/ssh/shosts.equiv` with the IP address of the
+OnDemand server. Then in the `/etc/ssh/sshd_config` file, change the
+following lines from:
+
+```bash
+HostbasedAuthentication no
+IgnoreRhosts yes
+```
+
+To:
+
+```bash
+HostbasedAuthentication yes
+IgnoreRhosts no
 ```
 
 
