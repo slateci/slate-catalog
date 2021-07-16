@@ -169,6 +169,7 @@ Since pods are ephemeral, keys from the host system should be passed
 into the container using a secret. This will ensure that trust is not broken
 when pods are replaced. This script will generate a secret containing host 
 keys on the OnDemand server.
+
 (Note: must be consistent with the values.yaml file)
 
 ```bash
