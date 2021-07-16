@@ -49,6 +49,39 @@ deploy Open OnDemand with this configuration.
 With your preferred text editor, open this configuration file and follow the
 instructions below.
 
+### Cert-Manager Setup
+
+If cert-manager is not already present, contact your cluster administrator. To install cert-manager, the administrator must either set up the SLATE cluster using Ansible and Kubespray, or have access to `kubectl` on the command line.
+
+When using the Ansible playbook the option for cert-manager must be changed from:
+```yaml
+cert_manager_enabled: false
+```
+to
+```yaml
+cert_manager_enabled: true
+```
+More information on using Ansible playbooks can be found [here](https://slateci.io/docs/cluster/install-kubernetes-with-kubespray.html).
+If the administrator has access to `kubectl` then cert-manager can be installed using a regular manifest or with helm. Instructions can be found at the official [cert-manager docs](https://cert-manager.io/docs/installation/kubernetes/).
+
+When all of the manifest components are installed, create an `Issuer` or `ClusterIssuer` .yaml file so that cert-manager can issue certificates on request by the OnDemand Helm chart. Here is a simple example of a `ClusterIssuer` .yaml configuration:
+```yaml
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: admin@example.com
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: lets-encrypt-key
+```
+Make sure that the name of the issuer is `letsencrypt-prod`.
+
+Note: The difference between a `ClusterIssuer` and an `Issuer` is that the latter is namespace specific.
+
 
 ### Modifying Default Values
 
@@ -214,41 +247,6 @@ By default, if `enableHostAdapter` is set to true, this chart will attempt to mo
 an NFS volume into the OnDemand container using the `nfs_path` value. If the OnDemand 
 filesystem is consistent with backend clusters, and everything else is correct, then 
 you should be able to launch a remote desktop through the OnDemand portal.
-
-### Cert-Manager Setup
-
-If cert-manager is not already present, contact your cluster administrator. To install cert-manager, the administrator must either set up the SLATE cluster using Ansible and Kubespray, or have access to `kubectl` on the command line.
-
-When using the Ansible playbook the option for cert-manager must be changed from:
-```yaml
-cert_manager_enabled: false
-```
-to
-```yaml
-cert_manager_enabled: true
-```
-More information on using Ansible playbooks can be found [here](https://slateci.io/docs/cluster/install-kubernetes-with-kubespray.html).
-If the administrator has access to `kubectl` then cert-manager can be installed using a regular manifest or with helm. Instructions can be found at the official [cert-manager docs](https://cert-manager.io/docs/installation/kubernetes/).
-
-When all of the manifest components are installed, create an `Issuer` or `ClusterIssuer` .yaml file so that cert-manager can issue certificates on request by the OnDemand Helm chart. Here is a simple example of a `ClusterIssuer` .yaml configuration:
-```yaml
-metadata:
-  name: letsencrypt-prod
-spec:
-  acme:
-    # The ACME server URL
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
-    # Email address used for ACME registration
-    email: admin@example.com
-    # Name of a secret used to store the ACME account private key
-    privateKeySecretRef:
-      name: lets-encrypt-key
-```
-Make sure that the name of the issuer is `letsencrypt-prod`.
-
-Note: The difference between a `ClusterIssuer` and an `Issuer` is that the latter is namespace specific.
-
-
 
 ## Installation
 
