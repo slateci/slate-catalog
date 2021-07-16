@@ -87,10 +87,9 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
 
 To set up remote desktop access, set the `enableHostAdapter` value to true,
 then configure the LinuxHost Adapter. This is a simplified resource manager
-for built from various components installed on the OnDemand server and 
-backend compute resources. These components are TurboVNC, nmap-ncat,
-and websockify on the OnDemand server, and Singularity, tmux, pstree, and timeout 
-on the backend cluster. 
+built from various components such as TurboVNC, Singularity and tmux. By
+enabling resource management, you can configure and manage more advanced
+features of Open OnDemand.
 
 ```yaml
   - cluster:
