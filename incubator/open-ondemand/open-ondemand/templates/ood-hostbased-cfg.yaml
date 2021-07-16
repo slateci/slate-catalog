@@ -12,6 +12,11 @@ data:
     done
     newusers /shared/newusers.txt
   {{ end }}
+  {{ if eq .Values.enableHostAdapter false}}
+    for i in `ls {{ .Values.advanced.nfs_path }}`; do
+      ln -s {{ .Values.advanced.nfs_path }}/$i /home/$i
+    done
+  {{ end }}
     mkdir -p {{ .Values.advanced.nfs_path }}
     array=()
     groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
