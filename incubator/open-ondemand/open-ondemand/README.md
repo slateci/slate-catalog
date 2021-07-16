@@ -163,16 +163,15 @@ section for each user you would like to add:
     tempPassword: <temporary_password_here>
 ```
 
-## Environmental Changes (Optional)
+## Advanced (Interactive Apps and Remote Desktop)
 
 ### Authentication
 
-The LinuxHost Adapter also requires passwordless SSH for all users which is 
-most easily configured by establishing host-level trust.
-
-To enable hostBased Authentication, first go to each backend resources
-and add public host keys from the OnDemand server to a file called 
-`/etc/ssh/ssh_known_hosts` using the`ssh-keyscan` command.
+The LinuxHost Adapter requires passwordless SSH for all users which is 
+most easily configured by establishing host-level trust. To enable hostBased 
+Authentication, first go to each backend resources and add public host keys 
+from the OnDemand server to a file called `/etc/ssh/ssh_known_hosts` using 
+the`ssh-keyscan` command.
 
 ```bash
 ssh-keyscan [IP_ADDR] >> /etc/ssh/ssh_known_hosts
