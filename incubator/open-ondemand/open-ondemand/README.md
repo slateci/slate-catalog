@@ -168,8 +168,7 @@ And for ssh-keysign at `/usr/libexec/openssh`     (Note: location varies with di
 Since pods are ephemeral, keys from the host system should be passed 
 into the container using a secret. This will ensure that trust is not broken
 when pods are replaced. This script will generate a secret containing host 
-keys on the OnDemand server. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- (Note: must be consistent with the values.yaml file)
+keys on the OnDemand server. &nbsp;<br/> (Note: must be consistent with the values.yaml file)
 
 ```bash
 #!/bin/bash
