@@ -119,11 +119,26 @@ easily manage remote sessions from the OnDemand portal.
 
 **Authentication**
 
-Passwordless SSH is required for the LinuxHost Adapter to work properly, and the
-easiest way to configure this is by establishing host-level trust. 
+The LinuxHost Adapter requires passwordless SSH for all users which is 
+most easily configured by establishing host-level trust.
+
+To enable hostBased Authentication, first go to the backend resources
+and add public host keys from the OnDemand server to a file called 
+`/etc/ssh/ssh_known_hosts` using the`ssh-keyscan` command.
+
+```bash
+ssh-keyscan [IP_ADDR] >> /etc/ssh/ssh_known_hosts
+```
+
+
 Since pods are ephemeral, keys from the host system should be passed 
 into the container using a secret. This will ensure that trust is not broken
 when pods are replaced.
+
+**Filesystem Distribution**
+
+Resource management for Open OnDemand also requires that the backend
+resources be 
 
 ```bash
 #!/bin/bash
