@@ -252,13 +252,20 @@ an NFS volume into the OnDemand container using the `nfs_path` value.
 ...
 ```
 
-Finally, if filesystem distribution is working and everything else is set up correctly, 
-then you should be able to launch a remote desktop through the OnDemand portal.
+### NodeSelector
+
+Finally, in order for these environmental changes to have effect, the chart must
+be installed on a properly configured node. On a multi-node system it is necessary
+to set a `nodeSelectorLabel` called disktype, and match that label in the
+`values.yaml` file.
+
+```bash
+kubectl label nodes <node-name> disktype=ssd
+```
 
 ## Installation
 
-Now that Open OnDemand has been properly configured, and persistent storage set
-up, we can install the application. Run the following SLATE command:
+Now that Open OnDemand has been properly configured, we can install the application with the following SLATE command:
 
 ```bash
 slate app install open-ondemand --group <group_name> --cluster <cluster_name> --conf /path/to/ood.yaml
@@ -310,12 +317,12 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`basic_script` | Basic desktop startup script. |`#!/bin/bash \ ... \ %s`|
 |`vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
 |`set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
-|`desktop` | Desktop environment (mate,xfce,gnome) |`mate`|
 |`host_regex` | Regular expression to capture hostnames. |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
+|`desktop` | Desktop environment (mate,xfce,gnome) |`mate`|
+|`node_selector_label` | Matching node label for a preferred node |`ssd`|
+|`ip_addr` | Public IP address of the preferred node. |`127.0.0.1`|
+|`ssh_keys_GID` | Group ID value of ssh_keys group. |`993`|
+|`nfs_path` | Path to distributed filesystem. |`/uufs/chpc.utah.edu/common/home`|
 |`secret_name` | Name of secret holding host_keys. |`ssh-key-secret`|
 |`host_keys` | Names of stored keys. |`ssh_host_ecdsa_key`|
-|`node_selector_label` | Matching node label for a preferred node |`ssd`|
-|`ssh_keys_GID` | Group ID value of ssh_keys group. |`993`|
-|`ip_addr` | Public IP address of the preferred node. |`127.0.0.1`|
-|`nfs_path` | Path to distributed filesystem. |`/uufs/chpc.utah.edu/common/home`|
 |`testUsers` | Unprivileged users for testing login to OnDemand. |`test`|
