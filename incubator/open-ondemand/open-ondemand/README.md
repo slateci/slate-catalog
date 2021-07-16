@@ -117,7 +117,7 @@ easily manage remote sessions from the OnDemand portal.
       set_host: "$(hostname -A)"
 ```
 
-### Environment Changes (Optional)
+## Environmental Changes (Optional)
 
 **Authentication**
 
