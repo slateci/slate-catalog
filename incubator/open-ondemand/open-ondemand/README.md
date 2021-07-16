@@ -145,7 +145,7 @@ easily manage remote sessions from the OnDemand portal.
         - "module purge"
         - "export PATH='/opt/TurboVNC/bin:$PATH'"
         - "export WEBSOCKIFY_CMD='/usr/bin/websockify'"
-        - export XDG_RUNTIME_DIR=$(mktemp -d)"
+        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
         - "%s"
       set_host: "$(hostname -A)"
 ```
