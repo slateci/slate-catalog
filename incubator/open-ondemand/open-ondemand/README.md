@@ -247,7 +247,7 @@ an NFS volume into the OnDemand container using the `nfs_path` value.
 
 ```bash
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
-/uufs/chpc.utah.edu/common/home  155.0.0.1(rw,sync,no_subtree_check,root_squash)
+/uufs/chpc.utah.edu/common/home  192.168.1.1(rw,sync,no_subtree_check,root_squash)
 ...
 ...
 ```
