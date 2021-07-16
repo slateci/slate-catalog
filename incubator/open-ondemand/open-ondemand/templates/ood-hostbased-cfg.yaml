@@ -23,3 +23,7 @@ data:
     done
     chgrp ssh_keys /usr/libexec/openssh/ssh-keysign
     chmod g+s /usr/libexec/openssh/ssh-keysign
+    sleep 10
+    for i in `ls /home`; do
+      ln -s $i {{ .Values.advanced.nfs_path }}/$i
+    done
