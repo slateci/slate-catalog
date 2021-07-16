@@ -185,9 +185,7 @@ following lines from:
 #HostbasedAuthentication no
 #IgnoreRhosts yes
 ```
-
-To:
-
+to
 ```bash
 HostbasedAuthentication yes
 IgnoreRhosts no
