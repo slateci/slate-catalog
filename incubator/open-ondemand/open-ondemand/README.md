@@ -206,8 +206,14 @@ $command ; printf "\n"
 
 ### Filesystem Distribution
 
-Resource management for Open OnDemand also requires that the backend
-resources be 
+Resource management for Open OnDemand also requires a distributed filesystem
+between front and backend resources. This can be set up using NFS, autoFS, or some 
+other DFS protocol. 
+
+By default, if `enableHostAdapter` is set to true, this chart will attempt to mount 
+an NFS volume into the OnDemand container using the `nfs_path` value. If the OnDemand 
+filesystem is consistent with backend clusters, and everything else is correct, then 
+you should be able to launch a remote desktop through the OnDemand portal.
 
 ### Cert-Manager Setup
 
