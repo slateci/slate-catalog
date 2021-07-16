@@ -122,8 +122,8 @@ easily manage remote sessions from the OnDemand portal.
 Passwordless SSH is required for the LinuxHost Adapter to work properly, and the
 easiest way to configure this is by establishing host-level trust. 
 Since pods are ephemeral, keys from the host system should be passed 
-into the container using a kubernetes secret. This will ensure that trust
-will not be broken if the pods are replaced.
+into the container using a secret. This will ensure that trust is not broken
+when pods are replaced.
 
 ```bash
 #!/bin/bash
