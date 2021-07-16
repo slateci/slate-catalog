@@ -117,9 +117,22 @@ easily manage remote sessions from the OnDemand portal.
       set_host: "$(hostname -A)"
 ```
 
+**Test User Setup**
+
+This Open OnDemand chart supports the creation of temporary test users, for
+validating application functionality without the complexity of connecting to
+external LDAP and Kerberos servers. To add a test user(s), navigate to the
+`testUsers` section of the configuration file. Add the following yaml to this
+section for each user you would like to add:
+```yaml
+- user:
+    name: <username_here>
+    tempPassword: <temporary_password_here>
+```
+
 ## Environmental Changes (Optional)
 
-**Authentication**
+### Authentication
 
 The LinuxHost Adapter also requires passwordless SSH for all users which is 
 most easily configured by establishing host-level trust.
@@ -191,24 +204,10 @@ printf "$command\n"
 $command ; printf "\n"
 ```
 
-**Filesystem Distribution**
+### Filesystem Distribution
 
 Resource management for Open OnDemand also requires that the backend
 resources be 
-
-**Test User Setup**
-
-This Open OnDemand chart supports the creation of temporary test users, for
-validating application functionality without the complexity of connecting to
-external LDAP and Kerberos servers. To add a test user(s), navigate to the
-`testUsers` section of the configuration file. Add the following yaml to this
-section for each user you would like to add:
-```yaml
-- user:
-    name: <username_here>
-    tempPassword: <temporary_password_here>
-```
-
 
 ### Cert-Manager Setup
 
