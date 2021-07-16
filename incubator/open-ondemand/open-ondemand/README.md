@@ -251,9 +251,10 @@ file with an entry for localhost, and then for any backend clusters.
 ```
 
 By default, if `enableHostAdapter` is set to true, this chart will attempt to mount 
-an NFS volume into the OnDemand container using the `nfs_path` value. If the OnDemand 
-filesystem is consistent with backend clusters, and everything else is correct, then 
-you should be able to launch a remote desktop through the OnDemand portal.
+an NFS volume into the OnDemand container using the `nfs_path` value. 
+
+If DFS is working, and everything else is set up correctly, then you should be able 
+to launch a remote desktop through the OnDemand portal.
 
 ## Installation
 
