@@ -242,6 +242,8 @@ other DFS protocol.
 
 To do this using NFS, first install `nfs-utils` and then modify the `/etc/exports`
 file with an entry for localhost, and then for any backend clusters.
+By default, if `enableHostAdapter` is set to true, this chart will attempt to mount 
+an NFS volume into the OnDemand container using the `nfs_path` value. 
 
 ```bash
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
@@ -249,9 +251,6 @@ file with an entry for localhost, and then for any backend clusters.
 ...
 ...
 ```
-
-By default, if `enableHostAdapter` is set to true, this chart will attempt to mount 
-an NFS volume into the OnDemand container using the `nfs_path` value. 
 
 Finally, if filesystem distribution is working and everything else is set up correctly, 
 then you should be able to launch a remote desktop through the OnDemand portal.
