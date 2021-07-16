@@ -25,5 +25,5 @@ data:
     chmod g+s /usr/libexec/openssh/ssh-keysign
     sleep 10
     for i in `ls /home`; do
-      ln -s $i {{ .Values.advanced.nfs_path }}/$i
+      ln -s /home/$i {{ .Values.advanced.nfs_path }}/$i
     done
