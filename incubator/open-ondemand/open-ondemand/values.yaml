@@ -69,7 +69,7 @@ enableHostAdapter: true
 advanced:
   desktop: "mate"
   node_selector_label: "ssd"
-  ip_addr: 155.101.6.140
+  ip_addr: 127.0.0.1
   ssh_keys_GID: 993
   nfs_path: "/uufs/chpc.utah.edu/common/home"
 
