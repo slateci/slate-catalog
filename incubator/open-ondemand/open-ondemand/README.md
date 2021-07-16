@@ -159,7 +159,7 @@ Next, ensure that you have the correct permissions for host keys at `/etc/ssh`
 -rw-r--r--.   1 root root          382 Jan 1 2000      ssh_host_rsa_key.pub
 ```
 
-And for ssh-keysign at `/usr/libexec/openssh` &nbsp;&nbsp; (Note: location varies with distro)
+And for ssh-keysign at `/usr/libexec/openssh` &nbsp;&nbsp;&nbsp; Note: location varies with distro
 
 ```bash
 ---x--s--x.  1 root ssh_keys      5760 Jan 1 2000      ssh-keysign
@@ -168,7 +168,9 @@ And for ssh-keysign at `/usr/libexec/openssh` &nbsp;&nbsp; (Note: location varie
 Since pods are ephemeral, keys from the host system should be passed 
 into the container using a secret. This will ensure that trust is not broken
 when pods are replaced. This script will generate a secret containing host 
-keys on the OnDemand server. <br/> (Note: must be consistent with the values.yaml file)
+keys on the OnDemand server.
+
+Note: must be consistent with the values.yaml file
 
 ```bash
 #!/bin/bash
