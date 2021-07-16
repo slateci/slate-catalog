@@ -31,8 +31,6 @@ Contact your cluster administrator for more information about this.
 More information about `cert-manager` can be found [here](https://cert-manager.io/docs/installation/kubernetes/),
 and more information about persistent volume types can be found [here](https://kubernetes.io/docs/concepts/storage/storage-classes/).
 
-To enable more advanced features, NFS sharing and host-level trust must be permitted between front and backend resources.
-
 
 ## Configuration
 
