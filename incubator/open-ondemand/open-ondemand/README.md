@@ -135,8 +135,8 @@ OnDemand server. Then in the `/etc/ssh/sshd_config` file, change the
 following lines from:
 
 ```bash
-HostbasedAuthentication no
-IgnoreRhosts yes
+#HostbasedAuthentication no
+#IgnoreRhosts yes
 ```
 
 To:
