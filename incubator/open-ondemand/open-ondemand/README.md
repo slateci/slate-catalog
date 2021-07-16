@@ -88,8 +88,8 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
 To set up remote desktop access, set the `enableHostAdapter` value to true,
 then configure the LinuxHost Adapter. This is a simplified resource manager
 built from various components such as TurboVNC, Singularity and tmux. By
-enabling resource management, you can configure and manage more advanced
-features of Open OnDemand.
+enabling resource management, you can set up more interactive applications
+and easily manage remote sessions from the OnDemand portal.
 
 ```yaml
   - cluster:
