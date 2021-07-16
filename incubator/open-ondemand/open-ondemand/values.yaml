@@ -73,7 +73,7 @@ advanced:
   ssh_keys_GID: 993
   nfs_path: "/uufs/chpc.utah.edu/common/home"
 
-  # Provide names for each host key stored in your secret
+# Provide names for each host key stored in your secret
   secret_name: "ssh-key-secret"
   host_keys:
     - host_key:
