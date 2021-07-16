@@ -117,9 +117,11 @@ easily manage remote sessions from the OnDemand portal.
       set_host: "$(hostname -A)"
 ```
 
+### Environment Changes (Optional)
+
 **Authentication**
 
-The LinuxHost Adapter requires passwordless SSH for all users which is 
+The LinuxHost Adapter also requires passwordless SSH for all users which is 
 most easily configured by establishing host-level trust.
 
 To enable hostBased Authentication, first go to each backend resources
@@ -146,15 +148,14 @@ HostbasedAuthentication yes
 IgnoreRhosts no
 ```
 
+Next, ensure that host_keys on all resources have the correct permissions,
+and that 
 
 Since pods are ephemeral, keys from the host system should be passed 
 into the container using a secret. This will ensure that trust is not broken
-when pods are replaced.
-
-**Filesystem Distribution**
-
-Resource management for Open OnDemand also requires that the backend
-resources be 
+when pods are replaced. This script will generate a secret containing all
+host keys on the OnDemand server (Note: make sure to keep these values 
+consistent with the values.yaml file).
 
 ```bash
 #!/bin/bash
@@ -173,6 +174,11 @@ done
 printf "$command\n"
 $command ; printf "\n"
 ```
+
+**Filesystem Distribution**
+
+Resource management for Open OnDemand also requires that the backend
+resources be 
 
 **Test User Setup**
 
