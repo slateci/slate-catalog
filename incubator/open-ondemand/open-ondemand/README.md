@@ -148,8 +148,23 @@ HostbasedAuthentication yes
 IgnoreRhosts no
 ```
 
-Next, ensure that host_keys on all resources have the correct permissions,
-and that 
+Next, ensure that you have the correct permissions for host keys at `/etc/ssh`
+
+```bash
+-rw-r-----.   1 root ssh_keys      227 Jan 1 2000      ssh_host_ecdsa_key
+-rw-r--r--.   1 root root          162 Jan 1 2000      ssh_host_ecdsa_key.pub
+-rw-r-----.   1 root ssh_keys      387 Jan 1 2000      ssh_host_ed25519_key
+-rw-r--r--.   1 root root           82 Jan 1 2000      ssh_host_ed25519_key.pub
+-rw-r-----.   1 root ssh_keys     1675 Jan 1 2000      ssh_host_rsa_key
+-rw-r--r--.   1 root root          382 Jan 1 2000      ssh_host_rsa_key.pub
+```
+
+And for ssh-keysign at `/usr/libexec/openssh` (Note: location varies with distro)
+
+```bash
+---x--s--x.  1 root ssh_keys      5760 Jan 1 2000      ssh-keysign
+```
+
 
 Since pods are ephemeral, keys from the host system should be passed 
 into the container using a secret. This will ensure that trust is not broken
