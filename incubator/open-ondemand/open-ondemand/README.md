@@ -151,6 +151,7 @@ IgnoreRhosts no
 Next, ensure that you have the correct permissions for host keys at `/etc/ssh`
 
 ```bash
+ls -la /etc/ssh
 -rw-r-----.   1 root ssh_keys      227 Jan 1 2000      ssh_host_ecdsa_key
 -rw-r--r--.   1 root root          162 Jan 1 2000      ssh_host_ecdsa_key.pub
 -rw-r-----.   1 root ssh_keys      387 Jan 1 2000      ssh_host_ed25519_key
@@ -162,6 +163,7 @@ Next, ensure that you have the correct permissions for host keys at `/etc/ssh`
 And for ssh-keysign at `/usr/libexec/openssh` (Note: location varies with distro)
 
 ```bash
+ls -la /usr/libexec/openssh
 ---x--s--x.  1 root ssh_keys      5760 Jan 1 2000      ssh-keysign
 ```
 
