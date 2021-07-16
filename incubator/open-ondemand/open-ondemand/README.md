@@ -240,6 +240,14 @@ Resource management for Open OnDemand also requires a distributed filesystem
 between front and backend resources. This can be set up using NFS, autoFS, or some 
 other DFS protocol. 
 
+To do this using NFS, first install `nfs-utils` and then modify the `/etc/exports`
+file with an entry for localhost, and then for any backend clutsers.
+
+```yaml
+/uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
+/uufs/chpc.utah.edu/common/home  155.0.0.1(rw,sync,no_subtree_check,root_squash)
+```
+
 By default, if `enableHostAdapter` is set to true, this chart will attempt to mount 
 an NFS volume into the OnDemand container using the `nfs_path` value. If the OnDemand 
 filesystem is consistent with backend clusters, and everything else is correct, then 
