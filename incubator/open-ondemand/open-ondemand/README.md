@@ -246,6 +246,8 @@ file with an entry for localhost, and then for any backend clutsers.
 ```yaml
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
 /uufs/chpc.utah.edu/common/home  155.0.0.1(rw,sync,no_subtree_check,root_squash)
+...
+...
 ```
 
 By default, if `enableHostAdapter` is set to true, this chart will attempt to mount 
