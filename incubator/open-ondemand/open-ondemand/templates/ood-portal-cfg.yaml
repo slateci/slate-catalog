@@ -28,3 +28,15 @@ data:
     
         # Set up user mapping
         user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex'
+
+        # Host regex
+        host_regex: '{{ .Values.host_regex }}'
+        
+        # Redirect when accessing the root URI
+        root_uri: '/pun/sys/dashboard'
+        
+        # Sub-uri to reverse proxy to backend web server
+        node_uri: '/node'
+        
+        # Sub-uri to reverse proxy to backend web server using only *relateive* URI paths
+        rnode_uri: '/rnode'

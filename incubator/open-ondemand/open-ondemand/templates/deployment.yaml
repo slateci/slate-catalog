@@ -15,44 +15,119 @@ spec:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
     spec:
+      {{ if eq .Values.enableHostAdapter true }}
+      nodeSelector:
+        disktype: {{ .Values.advanced.node_selector_label }}
+      {{ end }}
       volumes:
+        # Shared Volume
         - name: shared-data
           emptyDir: {}
+        # NFS Volume
+        - name: nfs
+          persistentVolumeClaim:
+            claimName: ood-nfs-pvc
+        # Keycloak Startup Script
+        - name: keycloak-setup
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
+        # OnDemand Server Config
         - name: ood-portal-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-ood-portal
             items:
             - key: ood_portal.yml
               path: ood_portal.yml
-        - name: keycloak-setup
+        # LinuxHost Adapter
+        - name: linuxhost-adapter-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-        - name: cluster-config-files
+            name: {{ include "open-ondemand.fullname" . }}-host-adapter
+        # HostBased Authentication setup script
+        - name: hostbased-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-shell-setup
-        - name: desktop-config-files
+            name: {{ include "open-ondemand.fullname" . }}-hostbased-auth
+            items:
+            - key: hostbased.sh
+              path: hostbased.sh
+              mode: 0700
+        # HostKey Volumes
+        - name: key-volume
+          secret:
+            secretName: {{ .Values.advanced.secret_name }}
+            items:
+            {{ range .Values.advanced.host_keys }}
+              - key: {{ .host_key.name | lower | nospace }}
+                path: {{ .host_key.name | lower | nospace }}
+                mode: 0600
+            {{ end }}
+        # Desktop Application Files
+        - name: desktop-app-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-desktop-host
+            name: {{ include "open-ondemand.fullname" . }}-desktop-app
+            items:
+            - key: form.yml
+              path: form.yml
+            - key: submit.yml.erb
+              path: submit.yml.erb
+            - key: linuxhost_submit.yml.erb
+              path: linuxhost_submit.yml.erb
+            {{ range .Values.clusters }}
+            {{ if eq .cluster.enableHostAdapter true }}
+            - key: {{ .cluster.name | lower | nospace }}.yml
+              path: {{ .cluster.name | lower | nospace }}.yml
+            {{ end }}
+            {{ end }}
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
             claimName: keycloak-persistent-volume-{{ .Values.Instance }}
       containers:
         - name: open-ondemand
-          image: slateci/open-ondemand:1.8.1
+          image: dockerbox88/open-ondemand:latest
           imagePullPolicy: Always
           volumeMounts:
+            # Shared Volume
             - name: shared-data
               mountPath: /shared
+            # OnDemand Server Config
             - name: ood-portal-config
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
-            # Shell app
-            - name: cluster-config-files
+            # LinuxHost Adapter
+            - name: linuxhost-adapter-config
               mountPath: /etc/ood/config/clusters.d
-            # Desktop app
-            - name: desktop-config-files
-              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
+            # HostBased Authentication Config
+          {{ if eq .Values.enableHostAdapter true }}
+            - name: hostbased-config
+              mountPath: /root/hostbased.sh
+              subPath: hostbased.sh
+            # NFS Volume
+            - name: nfs
+              mountPath: {{ .Values.advanced.nfs_path }}
+            # Secret Volume
+            {{- range .Values.advanced.host_keys }}
+            - name: key-volume
+              mountPath: /root/{{ .host_key.name | lower | nospace }}
+              subPath: {{ .host_key.name | lower | nospace }}
+            {{- end }}
+            # Desktop Application Files
+            {{- range .Values.clusters }}
+            {{ if eq .cluster.enableHostAdapter true }}
+            - name: desktop-app-config
+              mountPath: /etc/ood/config/apps/bc_desktop/{{ .cluster.name | lower | nospace }}.yml
+              subPath: {{ .cluster.name | lower | nospace }}.yml
+            {{ end }}
+            {{- end }}
+            - name: desktop-app-config
+              mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
+              subPath: form.yml
+            - name: desktop-app-config
+              mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
+              subPath: submit.yml.erb
+            - name: desktop-app-config
+              mountPath: /etc/ood/config/apps/bc_desktop/submit/linuxhost_submit.yml.erb
+              subPath: linuxhost_submit.yml.erb
+          {{ end }}
           ports:
             - name: http
               containerPort: 80
