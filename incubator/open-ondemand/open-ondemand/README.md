@@ -159,7 +159,8 @@ Next, ensure that you have the correct permissions for host keys at `/etc/ssh`
 -rw-r--r--.   1 root root          382 Jan 1 2000      ssh_host_rsa_key.pub
 ```
 
-And for ssh-keysign at `/usr/libexec/openssh` &nbsp;&nbsp;&nbsp; Note: location varies with distro
+And for ssh-keysign at `/usr/libexec/openssh` &nbsp;&nbsp;&nbsp; 
+Note: location varies with distro
 
 ```bash
 ---x--s--x.  1 root ssh_keys      5760 Jan 1 2000      ssh-keysign
