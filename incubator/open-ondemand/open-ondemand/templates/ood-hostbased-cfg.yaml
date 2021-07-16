@@ -5,18 +5,18 @@ metadata:
 data:
   hostbased.sh: |
     #!/bin/bash
-    {{ if eq .Values.enableHostAdapter true }}
+  {{ if eq .Values.enableHostAdapter true }}
     while [ ! -f /shared/newusers.txt ]
     do
-	    sleep 2
+      sleep 2
     done
     newusers /shared/newusers.txt
-    {{ end }}
-    {{ if eq .Values.enableHostAdapter false}}
+  {{ end }}
+  {{ if eq .Values.enableHostAdapter false}}
     for i in `ls {{ .Values.advanced.nfs_path }}`; do
       ln -s {{ .Values.advanced.nfs_path }}/$i /home/$i
     done
-    {{ end }}
+  {{ end }}
     mkdir -p {{ .Values.advanced.nfs_path }}
     array=()
     groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
@@ -35,6 +35,3 @@ data:
     done
     chgrp ssh_keys /usr/libexec/openssh/ssh-keysign
     chmod g+s /usr/libexec/openssh/ssh-keysign
-    for i in `ls /home`; do
-      ln -s /home/$i {{ .Values.advanced.nfs_path }}/$i
-    done
