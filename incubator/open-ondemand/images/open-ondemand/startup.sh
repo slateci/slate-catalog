@@ -2,7 +2,7 @@
 scl enable ondemand /var/www/ood/apps/sys/shell/bin/setup
 mkdir /etc/ood/config/apps /etc/ood/config/apps/shell
 touch /etc/ood/config/apps /etc/ood/config/apps/shell/env
-sed -i "/^Host */a \        HostBasedAuthentication yes\n        EnableSSHKeysign yes\n        PreferredAuthentications hostbased" /etc/ssh/ssh_config
+sed -i "/^Host */a \        HostBasedAuthentication yes\n        EnableSSHKeysign yes" /etc/ssh/ssh_config
 cat <<EOF > /etc/ood/config/apps/shell/env
 OOD_SSHHOST_ALLOWLIST=""
 OOD_SHELL_ORIGIN_CHECK="off"
