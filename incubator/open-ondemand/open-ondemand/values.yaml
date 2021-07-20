@@ -69,10 +69,12 @@ enableHostAdapter: true
 advanced:
   desktop: "mate"
   node_selector_label: "ssd"
-  ip_addr: 127.0.0.1
   ssh_keys_GID: 993
-  nfs_path: "/uufs/chpc.utah.edu/common/home"
-
+# Enable Autofs
+  autofs:
+    mount_paths:
+      - "* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \\"
+      - "        cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&"
 # Provide names for each host key stored in your secret
   secret_name: "ssh-key-secret"
   host_keys:
@@ -88,6 +90,9 @@ advanced:
         name: "ssh_host_rsa_key"
     - host_key:
         name: "ssh_host_rsa_key.pub"
+
+#nfs_path: "/uufs/chpc.utah.edu/common/home"
+#ip_addr: 127.0.0.1
 
 # Configure additional test users to be added to the Keycloak user database
 # Ensure that these users do not exist on backend clusters
