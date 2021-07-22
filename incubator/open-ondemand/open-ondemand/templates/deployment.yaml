@@ -50,6 +50,7 @@ spec:
         - name: autofs-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-autofs
+            items:
             - key: autofs_config.sh
               path: autofs_config.sh
               mode: 0700
@@ -117,7 +118,7 @@ spec:
             # NFS Volume
             {{ if eq .Values.advanced.NFS true }}
             - name: nfs-volume
-              mountPath: {{ .Values.advanced.nfs_path }}
+              mountPath: {{ .Values.advanced.fileSharing.nfs_path }}
             {{ end }}
             # Autofs Config
             {{ if eq .Values.advanced.autofs true }}
