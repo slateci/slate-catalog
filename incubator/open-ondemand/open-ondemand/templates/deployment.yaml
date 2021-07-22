@@ -85,7 +85,7 @@ spec:
         - name: open-ondemand
           image: dockerbox88/open-ondemand:latest
           imagePullPolicy: Always
-          securityPolicy:
+          securityContext:
             privileged: true
           volumeMounts:
             # Shared Volume
