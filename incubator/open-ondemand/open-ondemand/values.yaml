@@ -69,7 +69,6 @@ enableHostAdapter: true
 advanced:
   desktop: "mate"
   node_selector_label: "ssd"
-  ip_addr: 127.0.0.1
   ssh_keys_GID: 993
 # Provide names for each host key stored in your secret
   secret_name: "ssh-key-secret"
@@ -86,12 +85,14 @@ advanced:
         name: "ssh_host_rsa_key"
     - host_key:
         name: "ssh_host_rsa_key.pub"
-# Enable autofs or just NFS
+# Configure file sharing
   autofs: true
   NFS: false
-# Configure file sharing
   fileSharing:
+# If NFS enabled
     nfs_path: "/home/test"
+    ip_addr: 127.0.0.1
+# If autofs enabled
     autofs_path: "/uufs/ondemand/common/home"
     autofs_mounts: 
       - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \'
