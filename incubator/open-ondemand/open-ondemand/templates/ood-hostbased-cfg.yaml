@@ -7,16 +7,18 @@ data:
     #!/bin/bash
   {{ if eq .Values.enableHostAdapter true }}
   {{ if eq .Values.advanced.NFS true }}
-    for i in `ls {{ .Values.advanced.nfs_path }}`; do
-      ln -s {{ .Values.advanced.nfs_path }}/$i /home/$i
+    for i in `ls {{ .Values.advanced.fileSharing.nfs_path }}`; do
+      ln -s {{ .Values.advanced.fileSharing.nfs_path }}/$i /home/$i
     done
   {{ end }}
   {{ end }}
+  {{ if eq .Values.generateUsers true }}
     while [ ! -f /shared/newusers.txt ]; do
       sleep 2
     done
     newusers /shared/newusers.txt
-    mkdir -p {{ .Values.advanced.nfs_path }}
+  {{ end }}
+    mkdir -p {{ .Values.advanced.fileSharing.nfs_path }}
     array=()
     groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
     for i in `ls /root | grep .pub`; do
