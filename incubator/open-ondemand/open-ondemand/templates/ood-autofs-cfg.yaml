@@ -6,7 +6,7 @@ data:
     autofs_config.sh: |
         #!/bin/bash
         cat >> /etc/auto.ondemand <<EOF
-        {{-range .Values.advanced.filesharing.autofs_mounts }}
+        {{- range .Values.advanced.filesharing.autofs_mounts }}
         {{ . }}
         {{- end }}
         EOF
