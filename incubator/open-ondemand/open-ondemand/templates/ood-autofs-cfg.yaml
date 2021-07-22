@@ -8,7 +8,7 @@ data:
     cat >> /etc/auto.ondemand <<EOF
     {{- range .Values.advanced.fileSharing.autofs_mounts }}
     {{ . }}
-    {{-- end }}
+    {{- end }}
     EOF
     mkdir -p {{ .Values.advanced.fileSharing.autofs_mount_path }}
     cat >> /etc/auto.master.d/ondemand.autofs <<EOF
