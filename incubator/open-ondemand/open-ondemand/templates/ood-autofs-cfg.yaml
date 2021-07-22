@@ -1,0 +1,16 @@
+apiVesrion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "open-ondemand.fullname" }}-autofs
+data:
+  autofs_config.sh: |
+    #!/bin/bash
+    cat >> /etc/auto.ondemand <<EOF
+    {{- range .Values.advanced.fileSharing.autofs_mounts }}
+    {{ . }}
+    {{-- end }}
+    EOF
+    mkdir -p {{ .Values.advanced.fileSharing.autofs_mount_path }}
+    cat >> /etc/auto.master.d/ondemand.autofs <<EOF
+    {{ .Values.advanced.fileSharing.autofs_mount_path }}  /etc/auto.ondemand
+    EOF

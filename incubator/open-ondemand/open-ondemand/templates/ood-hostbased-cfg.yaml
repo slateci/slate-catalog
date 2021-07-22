@@ -6,9 +6,11 @@ data:
   hostbased.sh: |
     #!/bin/bash
   {{ if eq .Values.enableHostAdapter true }}
+  {{ if eq .Values.advanced.NFS true }}
     for i in `ls {{ .Values.advanced.nfs_path }}`; do
       ln -s {{ .Values.advanced.nfs_path }}/$i /home/$i
     done
+  {{ end }}
   {{ end }}
     while [ ! -f /shared/newusers.txt ]; do
       sleep 2

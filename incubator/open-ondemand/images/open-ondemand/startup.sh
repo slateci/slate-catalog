@@ -8,6 +8,9 @@ OOD_SSHHOST_ALLOWLIST=""
 OOD_SHELL_ORIGIN_CHECK="off"
 EOF
 sleep 30
+if [ -f /root/autofs_config.sh ]; then
+  /root/autofs_config.sh
+fi
 cat <<EOF > /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 OIDCProviderMetadataURL https://$(echo $SLATE_INSTANCE_NAME).keycloak.$(echo $SLATE_CLUSTER_NAME)/auth/realms/ondemand/.well-known/openid-configuration
 OIDCClientID        "`cat /shared/id`" 

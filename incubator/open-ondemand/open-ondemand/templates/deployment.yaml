@@ -20,17 +20,17 @@ spec:
         disktype: {{ .Values.advanced.node_selector_label }}
       {{ end }}
       volumes:
-        # Shared Volume
-        - name: shared-data
-          emptyDir: {}
-        # NFS Volume
-        - name: nfs
+        # Claim SLATE volume to persist Keycloak data.
+        - name: keycloak-db
           persistentVolumeClaim:
-            claimName: ood-nfs-pvc
+            claimName: keycloak-persistent-volume-{{ .Values.Instance }}
         # Keycloak Startup Script
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
+        # Shared Volume
+        - name: shared-data
+          emptyDir: {}
         # OnDemand Server Config
         - name: ood-portal-config
           configMap:
@@ -38,10 +38,21 @@ spec:
             items:
             - key: ood_portal.yml
               path: ood_portal.yml
+      ######## Start of Advanced Features ########
         # LinuxHost Adapter
         - name: linuxhost-adapter-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-host-adapter
+        # NFS Volume
+        - name: nfs-volume
+          persistentVolumeClaim:
+            claimName: ood-nfs-pvc
+        - name: autofs-config
+          configMap:
+            name: {{ include "open-ondemand.fullname" }}-autofs
+            - key: autofs_config.sh
+              path: autofs_config.sh
+              mode: 0700
         # HostBased Authentication setup script
         - name: hostbased-config
           configMap:
@@ -77,16 +88,15 @@ spec:
               path: {{ .cluster.name | lower | nospace }}.yml
             {{ end }}
             {{ end }}
-        # Claim SLATE volume to persist Keycloak data.
-        - name: keycloak-db
-          persistentVolumeClaim:
-            claimName: keycloak-persistent-volume-{{ .Values.Instance }}
+      ######## End of Advanced Features ########
       containers:
         - name: open-ondemand
           image: dockerbox88/open-ondemand:latest
           imagePullPolicy: Always
+          {{ if eq .Values.advanced.autofs true }}
           securityContext:
             privileged: true
+          {{ end }}
           volumeMounts:
             # Shared Volume
             - name: shared-data
@@ -98,14 +108,23 @@ spec:
             # LinuxHost Adapter
             - name: linuxhost-adapter-config
               mountPath: /etc/ood/config/clusters.d
-            # HostBased Authentication Config
+          ######## Start of Advanced Features #########
           {{ if eq .Values.enableHostAdapter true }}
+            # HostBased Authentication Config
             - name: hostbased-config
               mountPath: /root/hostbased.sh
               subPath: hostbased.sh
             # NFS Volume
-            - name: nfs
+            {{ if eq .Values.advanced.NFS true }}
+            - name: nfs-volume
               mountPath: {{ .Values.advanced.nfs_path }}
+            {{ end }}
+            # Autofs Config
+            {{ if eq .Values.advanced.autofs true }}
+            - name: autofs-config
+              mountPath: /root/autofs_config.sh
+              subPath: autofs_config.sh
+            {{ end }}
             # Secret Volume
             {{- range .Values.advanced.host_keys }}
             - name: key-volume
@@ -130,6 +149,7 @@ spec:
               mountPath: /etc/ood/config/apps/bc_desktop/submit/linuxhost_submit.yml.erb
               subPath: linuxhost_submit.yml.erb
           {{ end }}
+          ######## End of Advanced Features ########
           ports:
             - name: http
               containerPort: 80
