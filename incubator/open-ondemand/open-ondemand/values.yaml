@@ -90,10 +90,10 @@ advanced:
   NFS: false
   fileSharing:
 # If NFS enabled
-    nfs_path: "/home/test"
+    nfs_path: "/home"
     ip_addr: 127.0.0.1
 # If autofs enabled
-    autofs_path: "/uufs/ondemand/common/home"
+    autofs_path: "/home"
     autofs_mounts: 
       - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \'
       - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
