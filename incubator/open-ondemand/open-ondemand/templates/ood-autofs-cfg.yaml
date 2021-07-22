@@ -5,10 +5,10 @@ metadata:
 data:
     autofs_config.sh: |
         #!/bin/bash
-        cat >> /etc/auto.ondemand <<EOF
-        {{- range .Values.advanced.filesharing.autofs_mounts }}
-        {{ . }}
-        {{- end }}
+#        cat >> /etc/auto.ondemand <<EOF
+#        {{- range .Values.advanced.filesharing.autofs_mounts }}
+#        {{ . }}
+#        {{- end }}
         EOF
         export autofs_path={{ .Values.advanced.fileSharing.autofs_path }}
         mkdir -p $autofs_path
