@@ -10,8 +10,8 @@ data:
     {{ . }}
     {{- end }}
     EOF
-    export path={{ .Values.advanced.fileSharing.autofs_path }}
-    mkdir -p $path
+    export autofs_path={{ .Values.advanced.fileSharing.autofs_path }}
+    mkdir -p $autofs_path
     cat >> /etc/auto.master.d/ondemand.autofs <<EOF
-    $path  /etc/auto.ondemand
+    $autofs_path  /etc/auto.ondemand
     EOF
