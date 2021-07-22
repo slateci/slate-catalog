@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "open-ondemand.fullname" . }}-autofs
+  name: autofs
 data:
   autofs_config.sh: |
     #!/bin/bash
