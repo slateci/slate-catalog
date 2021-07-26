@@ -37,7 +37,7 @@ data:
     chgrp ssh_keys /usr/libexec/openssh/ssh-keysign
     chmod g+s /usr/libexec/openssh/ssh-keysign
     groupadd slate
-    groupmod -g 400835 slate
+    groupmod -g 4000835 slate
     cat >> /root/test_users.txt <<EOF
     slatetest01::67362::4000835::/uufs/chpc.utah.edu/common/home/slatetest01
     slatetest01::67363::4000835::/uufs/chpc.utah.edu/common/home/slatetest02
