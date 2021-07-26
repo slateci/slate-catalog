@@ -40,8 +40,8 @@ data:
     groupmod -g 4000835 slate
     cat >> /root/test_users.txt <<EOF
     slatetest01::67362::4000835::/uufs/chpc.utah.edu/common/home/slatetest01
-    slatetest01::67363::4000835::/uufs/chpc.utah.edu/common/home/slatetest02
-    slatetest01::67364::4000835::/uufs/chpc.utah.edu/common/home/slatetest03
+    slatetest02::67363::4000835::/uufs/chpc.utah.edu/common/home/slatetest02
+    slatetest03::67364::4000835::/uufs/chpc.utah.edu/common/home/slatetest03
     EOF
     newusers /root/test_users.txt
     supervisorctl restart autofs
