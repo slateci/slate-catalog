@@ -36,4 +36,3 @@ chgrp apache /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 chmod 640 /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
 supervisorctl restart apache
-supervisorctl restart autofs
