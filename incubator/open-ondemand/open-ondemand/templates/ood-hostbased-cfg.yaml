@@ -36,6 +36,3 @@ data:
     done
     chgrp ssh_keys /usr/libexec/openssh/ssh-keysign
     chmod g+s /usr/libexec/openssh/ssh-keysign
-    groupadd slate
-    groupmod -g 4000835 slate
-    supervisorctl restart autofs
