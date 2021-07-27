@@ -45,6 +45,7 @@ spec:
             items:
             - key: ood_portal.yml
               path: ood_portal.yml
+              mode: 0600
       ######## Start of Advanced Features ########
         # LinuxHost Adapter
         - name: linuxhost-adapter-config
