@@ -38,6 +38,7 @@ spec:
             items:
             - key: sssd.conf
               path: sssd.conf
+              mode: 0600
         # OnDemand Server Config
         - name: ood-portal-config
           configMap:
@@ -45,7 +46,6 @@ spec:
             items:
             - key: ood_portal.yml
               path: ood_portal.yml
-              mode: 0600
       ######## Start of Advanced Features ########
         # LinuxHost Adapter
         - name: linuxhost-adapter-config
