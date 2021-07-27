@@ -7,9 +7,10 @@ cat <<EOF > /etc/ood/config/apps/shell/env
 OOD_SSHHOST_ALLOWLIST=""
 OOD_SHELL_ORIGIN_CHECK="off"
 EOF
-sleep 30
 if [ -f /root/autofs_config.sh ]; then
   /root/autofs_config.sh
+else
+  sleep 2
 fi
 cat <<EOF > /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 OIDCProviderMetadataURL https://$(echo $SLATE_INSTANCE_NAME).keycloak.$(echo $SLATE_CLUSTER_NAME)/auth/realms/ondemand/.well-known/openid-configuration
@@ -44,3 +45,4 @@ supervisorctl restart apache
 #  newline=`echo $line | perl -pe "s/(?<=::)a/$uid/" | perl -pe "s/(?<=:)b/$gid/"`
 #  echo $newline >> /shared/newusers.txt
 #done < /shared/blank_users.txt
+supervisorctl restart autofs
