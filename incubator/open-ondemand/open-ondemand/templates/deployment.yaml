@@ -117,7 +117,7 @@ spec:
             - name: linuxhost-adapter-config
               mountPath: /etc/ood/config/clusters.d
             # SSSD
-            {{ if eq setupLDAP true }}
+            {{ if eq .Values.setupLDAP true }}
             - name: ood-sssd-config
               mountPath: /etc/sssd/sssd.conf
               subPath: sssd.conf
