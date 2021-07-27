@@ -37,12 +37,11 @@ chmod 640 /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
 supervisorctl restart apache
 # Generate users
-lines=$(cat /shared/newusers.txt)
-for line in $lines; do
+while read -r line; do
   export user=`echo $line | sed 's/:.*//'`
   export uid=`id $user | tr -s ' ' '\n'| grep uid | sed -r 's/uid=//g' | sed 's/(.*//'`
   export gid=`id $user | tr -s ' ' '\n'| grep gid | sed -r 's/gid=//g' | sed 's/(.*//'`
-  export newline=`echo $line | sed -r 's/a/uid/' | sed -r 's/b/gid/'`
-  sed -i 's/$line/$newline/' /shared/newusers.txt
-done
+  export newline=`echo $line | sed -r "s/a/$uid/" | sed -r "s/b/$gid/"`
+  echo $newline >> /shared/newusers.txt
+done < /shared/blank_users.txt
 newusers /shared/newusers.txt
