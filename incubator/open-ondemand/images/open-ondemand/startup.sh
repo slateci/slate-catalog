@@ -38,10 +38,10 @@ sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
 supervisorctl restart apache
 # Generate users
 while read -r line; do
-  export user=`echo $line | sed 's/:.*//'`
-  export uid=`id $user | tr -s ' ' '\n'| grep uid | sed -r 's/uid=//g' | sed 's/(.*//'`
-  export gid=`id $user | tr -s ' ' '\n'| grep gid | sed -r 's/gid=//g' | sed 's/(.*//'`
-  export newline=`echo $line | sed -r "s/a/$uid/" | sed -r "s/b/$gid/"`
+  user=`echo $line | sed 's/:.*//'`
+  uid=`id $user | tr -s ' ' '\n'| grep uid | sed -r 's/uid=//g' | sed 's/(.*//'`
+  gid=`id $user | tr -s ' ' '\n'| grep gid | sed -r 's/gid=//g' | sed 's/(.*//'`
+  newline=`echo $line | perl -pe "s/(?<=::)a/$uid/" | perl -pe "s/(?<=::)b/$gid/"`
   echo $newline >> /shared/newusers.txt
 done < /shared/blank_users.txt
 newusers /shared/newusers.txt
