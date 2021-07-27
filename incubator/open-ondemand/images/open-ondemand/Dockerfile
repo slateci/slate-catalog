@@ -4,6 +4,10 @@ RUN yum update -y && \
     yum install -y supervisor centos-release-scl subscription-manager && \
     yum install -y wget openssh-server openssh-clients nfs-utils
 
+# Install sssd components
+RUN yum -y install sssd oddjob oddjobm-mkhomedir adcli samba-common samba-common-tools && \
+    krb5-workstation openldap-clients policycoreutils-python
+
 # Install Ruby 2.5, Node.js 10, and Development Tools
 RUN yum install -y centos-release-scl-rh
 RUN yum-config-manager --enable rhel-server-rhscl-7-rpms

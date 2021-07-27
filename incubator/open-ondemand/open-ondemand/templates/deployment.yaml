@@ -20,6 +20,9 @@ spec:
         disktype: {{ .Values.advanced.node_selector_label }}
       {{ end }}
       volumes:
+        # Shared Volume
+        - name: shared-data
+          emptyDir: {}
         # Claim SLATE volume to persist Keycloak data.
         - name: keycloak-db
           persistentVolumeClaim:
@@ -28,9 +31,13 @@ spec:
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-        # Shared Volume
-        - name: shared-data
-          emptyDir: {}
+        # OnDemand SSSD config
+        - name: ood-sssd-config
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-sssd
+            items:
+            - key: sssd.conf
+              path: sssd.conf
         # OnDemand Server Config
         - name: ood-portal-config
           configMap:
@@ -109,6 +116,12 @@ spec:
             # LinuxHost Adapter
             - name: linuxhost-adapter-config
               mountPath: /etc/ood/config/clusters.d
+            # SSSD
+            {{ if eq setupLDAP true }}
+            - name: ood-sssd-config
+              mountPath: /etc/sssd/sssd.conf
+              subPath: sssd.conf
+            {{ end }}
           ######## Start of Advanced Features #########
           {{ if eq .Values.enableHostAdapter true }}
             # HostBased Authentication Config
