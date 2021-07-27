@@ -102,11 +102,11 @@ data:
         users=($users)
         {{ if eq .Values.advanced.NFS true }}
         for i in ${!users[@]}; do
-            echo "${users[$i]}::a:b::{{ .Values.advanced.fileSharing.nfs_path }}/${users[$i]}:/bin/bash" >> /shared/blank_users.txt
+            echo "${users[$i]}::a:b::/home/${users[$i]}:/bin/bash" >> /shared/blank_users.txt
         done
         {{ end }}
         {{ if eq .Values.advanced.autofs true }}
         for i in ${!users[@]}; do
-            echo "${users[$i]}::a:b::{{ .Values.advanced.fileSharing.autofs_path }}/${users[$i]}:/bin/bash" >> /shared/blank_users.txt
+            echo "${users[$i]}::a:b::/home/${users[$i]}:/bin/bash" >> /shared/blank_users.txt
         done
         {{ end }}
