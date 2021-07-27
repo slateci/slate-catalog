@@ -5,7 +5,7 @@ RUN yum update -y && \
     yum install -y wget openssh-server openssh-clients nfs-utils
 
 # Install sssd components
-RUN yum -y install sssd oddjob oddjobm-mkhomedir adcli samba-common samba-common-tools && \
+RUN yum install -y sssd oddjob oddjob-mkhomedir adcli samba-common samba-common-tools && \
     krb5-workstation openldap-clients policycoreutils-python
 
 # Install Ruby 2.5, Node.js 10, and Development Tools
