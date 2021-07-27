@@ -96,7 +96,7 @@ data:
         $keycloak create user-storage/$ldap_id/sync?action=triggerChangedUsersSync -r ondemand
 
         # Copy LDAP usernames into /shared directory
-        users=$($keycloak get users -r ondemand --limit 10000 | grep username | tr -d '"' | tr -d ',' | tr -d ':' | sed -e "s/username//g" | awk '{$1=$1};1')
+        users=$($keycloak get users -r ondemand --limit 100000 | grep username | tr -d '"' | tr -d ',' | tr -d ':' | sed -e "s/username//g" | awk '{$1=$1};1')
 
         # Turn users into /etc/passwd format
         total_uids=$((1001+$(echo $users | tr " " "\n" | wc -l)))
@@ -107,6 +107,13 @@ data:
                 uids+=( "$i" )
         done
         declare -p uids
+        {{ if eq .Values.advanced.NFS true }}
         for i in ${!users[@]}; do
-            echo "${users[$i]}::${uids[$i]}:${uids[$i]}::/home/${users[$i]}:/bin/bash" >> /shared/newusers.txt
+            echo "${users[$i]}::a:b::{{ .Values.advanced.fileSharing.nfs_path }}/${users[$i]}:/bin/bash" >> /shared/newusers.txt
         done
+        {{ end }}
+        {{ if eq .Values.advanced.autofs true }}
+        for i in ${!users[@]}; do
+            echo "${users[$i]}::a:b::{{ .Values.advanced.fileSharing.autofs_path }}/${users[$i]}:/bin/bash" >> /shared/newusers.txt
+        done
+        {{ end }}

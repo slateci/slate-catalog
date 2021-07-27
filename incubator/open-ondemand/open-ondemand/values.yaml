@@ -86,7 +86,7 @@ advanced:
         name: "ssh_host_rsa_key"
     - host_key:
         name: "ssh_host_rsa_key.pub"
-# Configure file sharing
+# Configure file sharing (Choose either to use autofs or a single NFS mount)
   autofs: true
   NFS: false
   fileSharing:
