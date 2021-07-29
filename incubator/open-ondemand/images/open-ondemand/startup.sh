@@ -7,11 +7,13 @@ cat <<EOF > /etc/ood/config/apps/shell/env
 OOD_SSHHOST_ALLOWLIST=""
 OOD_SHELL_ORIGIN_CHECK="off"
 EOF
-if [ -f /root/autofs_config.sh ]; then
-  /root/autofs_config.sh
-else
+while [ ! -f /root/autofs_config.sh ]; do
   sleep 2
-fi
+done
+/root/autofs_config.sh
+while [ ! -f /shared/id ]; do
+  sleep 2
+done
 cat <<EOF > /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 OIDCProviderMetadataURL https://$(echo $SLATE_INSTANCE_NAME).keycloak.$(echo $SLATE_CLUSTER_NAME)/auth/realms/ondemand/.well-known/openid-configuration
 OIDCClientID        "`cat /shared/id`" 
