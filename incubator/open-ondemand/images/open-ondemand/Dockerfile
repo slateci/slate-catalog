@@ -2,7 +2,7 @@ FROM centos:7
 RUN yum update -y && \
     yum install -y epel-release && \
     yum install -y supervisor centos-release-scl subscription-manager && \
-    yum install -y wget openssh-server openssh-clients nfs-utils
+    yum install -y wget openssh-server openssh-clients nfs-utils autofs
 
 # Install sssd components
 RUN yum install -y sssd realmd oddjob adcli && \
@@ -40,7 +40,6 @@ COPY startup.sh /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh
 COPY env /etc/ood/config/apps/shell/env
 
 # Configure Desktop application
-RUN yum install -y autofs
 RUN mkdir -p /etc/ood/config/apps/bc_desktop/single_cluster
 RUN mkdir /etc/ood/config/apps/bc_desktop/submit
 RUN mv /var/www/ood/apps/sys/bc_desktop/form.yml /var/www/ood/apps/sys/bc_desktop/form.yml.org
