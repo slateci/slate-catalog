@@ -14,6 +14,9 @@ done
 while [ ! -f /shared/id ]; do
   sleep 2
 done
+while [ ! -f /shared/client-secret ]; do
+  sleep 2
+done
 cat <<EOF > /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 OIDCProviderMetadataURL https://$(echo $SLATE_INSTANCE_NAME).keycloak.$(echo $SLATE_CLUSTER_NAME)/auth/realms/ondemand/.well-known/openid-configuration
 OIDCClientID        "`cat /shared/id`" 
