@@ -2,7 +2,7 @@ FROM centos:7
 RUN yum update -y && \
     yum install -y epel-release && \
     yum install -y supervisor centos-release-scl subscription-manager && \
-    yum install -y wget openssh-server openssh-clients nfs-utils
+    yum install -y wget openssh-server openssh-clients nfs-utils autofs
 
 # Install sssd components
 RUN yum install -y sssd realmd oddjob adcli && \
