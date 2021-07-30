@@ -35,31 +35,31 @@ kerberos:
 # Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
-      name: "slate-node1"
-      host: "slate-node1.chpc.utah.edu"
+      name: 'slate-node1'
+      host: 'slate-node1.chpc.utah.edu'
       enableHostAdapter: true
       job:
-        ssh_hosts: "slate-node1.chpc.utah.edu"
+        ssh_hosts: 'slate-node1.chpc.utah.edu'
         singularity_bin: /bin/singularity
         singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
         singularity_image: /opt/centos7.sif  # Something like centos_7.6.sif
         tmux_bin: /usr/bin/tmux
       basic_script: 
-        - "#!/bin/bash"
-        - "module purge"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
+        - '#!/bin/bash'
+        - 'module purge'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
       vnc_script: 
-        - "#!/bin/bash"
-        - "module purge"
-        - "export PATH='/opt/TurboVNC/bin:$PATH'"
-        - "export WEBSOCKIFY_CMD='/usr/bin/websockify'"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
-      set_host: "$(hostname)"
+        - '#!/bin/bash'
+        - 'module purge'
+        - 'export PATH="/opt/TurboVNC/bin:$PATH"'
+        - "export WEBSOCKIFY_CMD="/usr/bin/websockify"'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
+      set_host: '$(hostname)'
   - cluster:
-      name: "Notchpeak"
-      host: "notchpeak.chpc.utah.edu"
+      name: 'Notchpeak'
+      host: 'notchpeak.chpc.utah.edu'
       enableHostAdapter: false
 
 # Host regex (Should capture hostnames of all backend clusters)
