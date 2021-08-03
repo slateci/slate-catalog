@@ -46,12 +46,12 @@ clusters:
         tmux_bin: /usr/bin/tmux
       basic_script: 
         - '#!/bin/bash'
-        - 'module purge'
+        - 'set -x'
         - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
         - '%s'
       vnc_script: 
         - '#!/bin/bash'
-        - 'module purge'
+        - 'set -x'
         - 'export PATH="/opt/TurboVNC/bin:$PATH"'
         - 'export WEBSOCKIFY_CMD="/usr/bin/websockify"'
         - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
