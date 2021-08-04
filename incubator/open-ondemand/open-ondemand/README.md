@@ -150,6 +150,22 @@ easily manage remote sessions from the OnDemand portal.
       set_host: "$(hostname -A)"
 ```
 
+To establish a remote desktop connection, ports 5800(+n) 5900(+n) and 6000(+n)
+need to be open on the backend for each display number n. In addition, port 22
+must be open for SSH and ports 30000+ must be open to receive websocket traffic.
+The easiest way to do this is to accept all traffic coming from the OnDemand
+host through iptables or firewalld. To do this, simply add a new rule to iptables
+or a trusted firewalld zone.
+
+```bash
+sudo iptables -A INPUT -s xxx.xxx.xxx.xxx/32 -j ACCEPT
+```
+
+```bash
+firewall-cmd --zone=trusted --add-source=xxx.xxx.xxx.xxx/32
+```
+
+
 **Test User Setup**
 
 This Open OnDemand chart supports the creation of temporary test users, for
