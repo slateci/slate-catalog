@@ -42,12 +42,3 @@ chgrp apache /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 chmod 640 /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
 supervisorctl restart apache
-# Generate users
-#while read -r line; do
-#  user=`echo $line | sed 's/:.*//'`
-#  uid=`id $user | tr -s ' ' '\n'| grep uid | sed -r 's/uid=//g' | sed 's/(.*//'`
-#  gid=`id $user | tr -s ' ' '\n'| grep gid | sed -r 's/gid=//g' | sed 's/(.*//'`
-#  newline=`echo $line | perl -pe "s/(?<=::)a/$uid/" | perl -pe "s/(?<=:)b/$gid/"`
-#  echo $newline >> /shared/newusers.txt
-#done < /shared/blank_users.txt
-supervisorctl restart autofs

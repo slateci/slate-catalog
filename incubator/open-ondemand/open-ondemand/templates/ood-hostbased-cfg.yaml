@@ -5,18 +5,20 @@ metadata:
 data:
   hostbased.sh: |
     #!/bin/bash
-  {{ if eq .Values.enableHostAdapter true }}
+  {{ if eq .Values.setupLDAP true }}
+    while read -r line; do
+      user=`echo $line`
+      uid=`id $user | tr -s ' ' '\n'| grep uid | sed -r 's/uid=//g' | sed 's/(.*//'`
+      gid=`id $user | tr -s ' ' '\n'| grep gid | sed -r 's/gid=//g' | sed 's/(.*//'`
+      groupname=`id $user | tr -s ' ' '\n'| grep gid | sed 's/.*(//' | tr -s ')' ' '`
+      groupadd $groupname && groupmod -g $gid $groupname
+    done < /shared/users.txt
+    supervisorctl restart autofs
+  {{ end }}
   {{ if eq .Values.advanced.NFS true }}
     for i in `ls {{ .Values.advanced.fileSharing.nfs_path }}`; do
       ln -s {{ .Values.advanced.fileSharing.nfs_path }}/$i /home/$i
     done
-  {{ end }}
-  {{ end }}
-  {{ if eq .Values.generateUsers true }}
-    while [ ! -f /shared/newusers.txt ]; do
-      sleep 2
-    done
-    newusers /shared/newusers.txt
   {{ end }}
   {{ range .Values.testUsers }}
     useradd {{ .user.name }}
