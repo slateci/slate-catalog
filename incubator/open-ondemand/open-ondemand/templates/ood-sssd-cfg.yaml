@@ -31,9 +31,9 @@ data:
 
     chpass_provider = krb5
     ldap_uri = {{ .Values.ldap.connectionURL }}
-    ldap_search_base = {{ .Values.ldap.usersDN }}
-    # ldap_tls_cacert = /etc/pki/tls/certs/ca-bundle.crt
-    # ldap_tls_reqcert = never
+    ldap_search_base = {{ .Values.ldap.ldapSearchBase }}
+    ldap_tls_cacert = /etc/pki/tls/certs/ca-bundle.crt
+    ldap_tls_reqcert = never
 
     krb5_realm = {{ .Values.kerberos.realm }}
     krb5_server = {{ .Values.kerberos.serverPrincipal }}
@@ -46,7 +46,6 @@ data:
     ldap_krb5_ticket_lifetime = 86400
     cache_credentials = true
     use_fully_qualified_names = false
-    ldap_use_tokengroups = false
     ldap_access_filter = uidNumber=*
     ldap_schema = rfc2307bis
     ldap_group_member = uniqueMember
