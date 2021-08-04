@@ -19,8 +19,8 @@ data:
     filter_users = root
     reconnection_retries = 3
 
-    # [pam]
-    # reconnect_retries = 3
+    [pam]
+    reconnect_retries = 3
 
     [domain/{{ .Values.kerberos.realm | lower}}]
     debug_level = 2
@@ -36,7 +36,6 @@ data:
     # ldap_tls_reqcert = never
 
     krb5_realm = {{ .Values.kerberos.realm }}
-    # krb5_server = ring.ad.utah.edu:88,dc-dps.sys.utah.edu:88,dc-ebc.ad.utah.edu:88
     krb5_server = {{ .Values.kerberos.serverPrincipal }}
     krb5_ccname_template = KEYRING:persistent:%U
     krb5_auth_timeout = 15
