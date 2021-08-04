@@ -26,8 +26,7 @@ ldap:
   usersDN: "dc=chpc,dc=utah,dc=edu"
 kerberos:
   realm: "AD.UTAH.EDU"
-  serverPrincipal: "HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU"
-  krb5_server: "kdc1.chpc.utah.edu:88,kdc2.chpc.utah.edu:88,kdc3.chpc.utah.edu:88,kdc4.chpc.utah.edu:88,kdc5.chpc.utah.edu:88"
+  serverPrincipal: "kdc1.chpc.utah.edu:88,kdc2.chpc.utah.edu:88,kdc3.chpc.utah.edu:88,kdc4.chpc.utah.edu:88,kdc5.chpc.utah.edu:88"
   keyTab: "/etc/krb5.keytab"
   kerberosPasswordAuth: "true"
   debug: "true"
