@@ -23,7 +23,7 @@ ldap:
   rdnLDAPAttribute:  "uid"
   uuidLDAPAttribute: "uidNumber"
   userObjectClasses: "inetOrgPerson, organizationalPerson"
-  usersDN: "ou=People,dc=chpc,dc=utah,dc=edu"
+  usersDN: "dc=chpc,dc=utah,dc=edu"
 kerberos:
   realm: "AD.UTAH.EDU"
   serverPrincipal: "HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU"
