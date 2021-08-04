@@ -47,6 +47,7 @@ data:
     ldap_krb5_ticket_lifetime = 86400
     cache_credentials = true
     use_fully_qualified_names = false
+    ldap_use_tokengroups = false
     ldap_access_filter = uidNumber=*
     ldap_schema = rfc2307bis
     ldap_group_member = uniqueMember
