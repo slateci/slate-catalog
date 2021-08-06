@@ -327,16 +327,21 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`singularity_bin` | Location of singularity binary. |`/bin/singularity`|
 |`singularity_bindpath` | Directories accessible during VNC sessions. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
 |`singularity_image` | Location of singularity image. |`/opt/centos7.sif`|
-|`tmux_bin` | Location of tmux binary. |`/bin/tmux`|
+|`tmux_bin` | Location of tmux binary. |`/usr/bin/tmux`|
 |`basic_script` | Basic desktop startup script. |`#!/bin/bash \ ... \ %s`|
 |`vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
 |`set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
 |`host_regex` | Regular expression to capture hostnames. |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
+|`enableHostAdapter` | Set to true if configuring interactive apps |`true`|
 |`desktop` | Desktop environment (mate,xfce,gnome) |`mate`|
 |`node_selector_label` | Matching node label for a preferred node |`ssd`|
-|`ip_addr` | Public IP address of the preferred node. |`127.0.0.1`|
 |`ssh_keys_GID` | Group ID value of ssh_keys group. |`993`|
-|`nfs_path` | Path to distributed filesystem. |`/uufs/chpc.utah.edu/common/home`|
 |`secret_name` | Name of secret holding host_keys. |`ssh-key-secret`|
 |`host_keys` | Names of stored keys. |`ssh_host_ecdsa_key`|
+|`autofs` | Mount user home directories using autofs |`true`|
+|`NFS` | Mount home directories using just NFS |`false`|
+|`nfs_path` | NFS share path on the host system |`/ondemand/home`|
+|`ip_addr` | Public IP address of the preferred node. |`127.0.0.1`|
+|`autofs_path` | Preferred mount path in the container |`/home`|
+|`autofs_mounts` | Exports to be mounted in the container |`* -nolock,hard,...`|
 |`testUsers` | Unprivileged users for testing login to OnDemand. |`test`|
