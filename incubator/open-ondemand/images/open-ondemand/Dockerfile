@@ -8,10 +8,10 @@ RUN yum update -y && \
 RUN yum install -y sssd realmd oddjob adcli && \
     yum install -y krb5-workstation openldap-clients policycoreutils-python
 
-# Install Ruby 2.5, Node.js 10, and Development Tools
+# Install Ruby 2.7, Node.js 10, and Development Tools
 RUN yum install -y centos-release-scl-rh
 RUN yum-config-manager --enable rhel-server-rhscl-7-rpms
-RUN yum install -y rh-ruby25
+RUN yum install -y rh-ruby27
 RUN yum install -y rh-nodejs10
 RUN yum groupinstall -y 'Development Tools'
 
@@ -20,7 +20,7 @@ COPY filesystem.txt /root
 WORKDIR /root
 
 # Install OnDemand
-RUN yum install -y https://yum.osc.edu/ondemand/1.8/ondemand-release-web-1.8-1.noarch.rpm && \
+RUN yum install -y https://yum.osc.edu/ondemand/2.0/ondemand-release-web-2.0-1.noarch.rpm && \
     yum install -y ondemand && \
     yum clean all
 RUN yum install ondemand-selinux -y
