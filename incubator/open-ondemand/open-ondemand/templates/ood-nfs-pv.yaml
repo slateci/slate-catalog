@@ -11,5 +11,5 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: {{ .Values.advanced.fileSharing.ip_addr }}
-    path: {{ .Values.advanced.fileSharing.nfs_path | quote }}
+    server: 127.0.0.1
+    path: {{ .Values.advanced.fileSharing.mountPoint | quote }}

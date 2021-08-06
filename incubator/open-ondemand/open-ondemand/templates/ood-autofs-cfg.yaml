@@ -6,11 +6,11 @@ data:
   autofs_config.sh: |
     #!/bin/bash
     cat >> /etc/auto.ondemand <<EOF
-    {{- range .Values.advanced.fileSharing.autofs_mounts }}
+    {{- range .Values.advanced.fileSharing.nfs_shares }}
     {{ . }}
     {{- end }}
     EOF
-    export autofs_path={{ .Values.advanced.fileSharing.autofs_path }}
+    export autofs_path={{ .Values.advanced.fileSharing.mountPoint }}
     mkdir -p $autofs_path
     cat >> /etc/auto.master.d/ondemand.autofs <<EOF
     $autofs_path  /etc/auto.ondemand

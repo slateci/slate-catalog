@@ -114,7 +114,7 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
       enableHostAdapter: false
 ```
 
-**Remote Access**
+**Resource Management**
 
 To configure shell access to backend resources, simply fill in the
 name and host sections for each cluster. If no other features are desired
@@ -239,14 +239,11 @@ $command ; printf "\n"
 
 ### Filesystem Distribution
 
-Resource management for Open OnDemand also requires a distributed filesystem
-between front and backend resources. This can be set up using NFS, autoFS, or some 
-other DFS protocol. 
+Resource management for Open OnDemand also requires a distributed filesystem.
 
-To do this using NFS, first install `nfs-utils` and then modify the `/etc/exports`
-file with an entry for localhost, and then for any backend clusters.
-By default, if `enableHostAdapter` is set to true, this chart will attempt to mount 
-an NFS volume into the OnDemand container using the `nfs_path` value. 
+To configure NFS set the `NFS` value to true and specify a mount point.
+Then make sure `nfs-utils` is installed and the `/etc/exports` file has an
+entry for localhost, and any backend clusters.
 
 ```bash
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
@@ -254,6 +251,11 @@ an NFS volume into the OnDemand container using the `nfs_path` value.
 ...
 ...
 ```
+
+To configure autofs simply set the `autofs` value to true and then add any
+shares you would like in the `nfs_shares` field. Make sure that the backend
+clusters use the same shares and that they are mounted using the same absolute
+path.
 
 ### NodeSelector
 

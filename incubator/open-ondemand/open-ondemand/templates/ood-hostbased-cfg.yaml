@@ -15,15 +15,15 @@ data:
     done < /shared/users.txt
     supervisorctl restart autofs
   {{ end }}
+    mkdir -p {{ .Values.advanced.fileSharing.mountPoint }}
   {{ if eq .Values.advanced.NFS true }}
-    for i in `ls {{ .Values.advanced.fileSharing.nfs_path }}`; do
-      ln -s {{ .Values.advanced.fileSharing.nfs_path }}/$i /home/$i
+    for i in `ls {{ .Values.advanced.fileSharing.mountPoint }}`; do
+      ln -s {{ .Values.advanced.fileSharing.mountPoint }}/$i /home/$i
     done
   {{ end }}
   {{ range .Values.testUsers }}
     useradd {{ .user.name }}
   {{ end }}
-    mkdir -p {{ .Values.advanced.fileSharing.nfs_path }}
     array=()
     groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
     for i in `ls /root | grep .pub`; do

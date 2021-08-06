@@ -91,12 +91,8 @@ advanced:
   autofs: true
   NFS: false
   fileSharing:
-# If NFS enabled
-    nfs_path: "/uufs/chpc.utah.edu/common/home"
-    ip_addr: 127.0.0.1
-# If autofs enabled
-    autofs_path: "/uufs/chpc.utah.edu/common/home"
-    autofs_mounts: 
+    mountPoint: "/uufs/chpc.utah.edu/common/home"
+    nfs_shares: 
       - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \'
       - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
 

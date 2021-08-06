@@ -132,7 +132,7 @@ spec:
             # NFS Volume
             {{ if eq .Values.advanced.NFS true }}
             - name: nfs-volume
-              mountPath: {{ .Values.advanced.fileSharing.nfs_path }}
+              mountPath: {{ .Values.advanced.fileSharing.mountPoint }}
             {{ end }}
             # Autofs Config
             {{ if eq .Values.advanced.autofs true }}
