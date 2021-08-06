@@ -116,10 +116,10 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
 
 **Remote Access**
 
-To configure just shell access to backend resources, simply fill in the
-name and host sections for each cluster, then set `enableHostAdapter` to
-false. If no other applications or access is desired then skip the 'Advanced'
-section of this document.
+To configure shell access to backend resources, simply fill in the
+name and host sections for each cluster. If no other features are desired
+then set `enableHostAdapter` to false and skip the 'Advanced' section
+of this document.
 
 To set up remote desktop access, set the `enableHostAdapter` value to true,
 then configure the LinuxHost Adapter. This is a simplified resource manager
@@ -164,20 +164,6 @@ or a trusted firewalld zone.
 sudo iptables -A INPUT -s xxx.xxx.xxx.xxx/32 -j ACCEPT
 
 firewall-cmd --zone=trusted --add-source=xxx.xxx.xxx.xxx/32
-```
-
-
-**Test User Setup**
-
-This Open OnDemand chart supports the creation of temporary test users, for
-validating application functionality without the complexity of connecting to
-external LDAP and Kerberos servers. To add a test user(s), navigate to the
-`testUsers` section of the configuration file. Add the following yaml to this
-section for each user you would like to add:
-```yaml
-- user:
-    name: <username_here>
-    tempPassword: <temporary_password_here>
 ```
 
 ## Interactive Apps and Remote Desktop (Advanced)
@@ -299,6 +285,18 @@ Navigate to this URL with any web browser, and you will be directed to a
 Keycloak login page. A successful login will then direct you to the Open OnDemand portal home page.
 Navigating to the shell access menu within the portal should allow you to launch in-browser shells to the previously specified backend compute resources.
 
+**Test User Setup**
+
+This Open OnDemand chart supports the creation of temporary test users, for
+validating application functionality without the complexity of connecting to
+external LDAP and Kerberos servers. To add a test user(s), navigate to the
+`testUsers` section of the configuration file. Add the following yaml to this
+section for each user you would like to add:
+```yaml
+- user:
+    name: <username_here>
+    tempPassword: <temporary_password_here>
+```
 
 ## Configurable Parameters:
 
