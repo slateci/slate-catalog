@@ -41,7 +41,7 @@ clusters:
       enableHostAdapter: true
       job:
         ssh_hosts: "slate-node1.chpc.utah.edu"
-        site_timeout: 14000
+        site_timeout: 14400
         singularity_bin: /bin/singularity
         singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
         singularity_image: /opt/centos7.sif  # Something like centos_7.6.sif
