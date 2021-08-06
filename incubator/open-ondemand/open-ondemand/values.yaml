@@ -65,7 +65,7 @@ clusters:
       enableHostAdapter: false
 
 # Host regex (Should capture hostnames of all backend clusters)
-host_regex: '([A-Za-z0-9-_]+)\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
+host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 
 # Configure remote desktop and other applications (Requires LinuxHost Adapter)
 enableHostAdapter: true
