@@ -41,3 +41,14 @@ data:
     done
     chgrp ssh_keys /usr/libexec/openssh/ssh-keysign
     chmod g+s /usr/libexec/openssh/ssh-keysign
+
+    # Temporary fix for HTTP Error: 422 when using Interactive Apps
+    cat > /var/www/ood/apps/sys/dashboard/config/initializers/session_store.rb <<EOF
+    # contents of /var/www/ood/apps/sys/dashboard/config/initializers/session_store.rb
+    # This is what it currently is, which doesn't work over plain http
+    #Rails.application.config.session_store :cookie_store, key: '_dashboard_session', secure: Rails.env.production?
+
+    # This option may be a little more secure. Here I'm making a temp directory which should be 700 so other 
+    # folks can read these files. You could also use "#{ENV['HOME']/.ood-cache}" if you think a home directory would be better.
+    Rails.application.config.session_store :cache_store, { cache: ActiveSupport::Cache::FileStore.new(Dir.mktmpdir.to_s) }
+    EOF
