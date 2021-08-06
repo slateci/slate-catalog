@@ -78,6 +78,7 @@ data:
       - cluster
       - desktop
       - bc_num_hours
+      - bc_num_slots
     attributes:
       bc_queue: null
       bc_account: null
