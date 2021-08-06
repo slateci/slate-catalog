@@ -27,7 +27,7 @@ data:
         oidc_uri: '/oidc'
     
         # Set up user mapping
-        user_map_match: '^([^@]+)@chpc.utah.edu$'
+        user_map_match: '^([^@]+)@umail.utah.edu$'
 
         # Host regex
         host_regex: '{{ .Values.host_regex }}'
