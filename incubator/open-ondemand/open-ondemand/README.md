@@ -1,8 +1,6 @@
 
 # Using SLATE to deploy Open OnDemand
 
-## About
-
 [Open OnDemand](https://openondemand.org/) is a web application enabling easy access to high-performance computing resources.
 Open OnDemand, through a plugin system, provides many different ways to interact with these resources.
 Most simply, OnDemand can launch a shell to remote resources in one's web browser.
@@ -116,7 +114,12 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
       enableHostAdapter: false
 ```
 
-**Remote Desktop Access**
+**Remote Access**
+
+To configure just shell access to backend resources, simply fill in the
+name and host sections for each cluster, then set `enableHostAdapter` to
+false. If no other applications or access is desired then skip the 'Advanced'
+section of this document.
 
 To set up remote desktop access, set the `enableHostAdapter` value to true,
 then configure the LinuxHost Adapter. This is a simplified resource manager
@@ -177,7 +180,7 @@ section for each user you would like to add:
     tempPassword: <temporary_password_here>
 ```
 
-## Interactive Apps and Remote Desktop (Optional)
+## Interactive Apps and Remote Desktop (Advanced)
 
 ### Authentication
 
