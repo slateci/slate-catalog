@@ -19,7 +19,7 @@ data:
         submit_host: {{ .cluster.host | quote }}
         ssh_hosts: 
           - {{ .cluster.job.ssh_hosts }}
-        site_timeout: 7200
+        site_timeout: {{ .cluster.job.site_timeout }}
         debug: true
         singularity_bin: {{ .cluster.job.singularity_bin }}
         singularity_bindpath: {{ .cluster.job.singularity_bindpath }}
