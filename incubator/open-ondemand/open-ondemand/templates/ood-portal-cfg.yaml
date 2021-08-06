@@ -27,8 +27,7 @@ data:
         oidc_uri: '/oidc'
     
         # Set up user mapping
-        user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex'
-        user_env: 'REMOTE_USER'
+        user_map_match: '^([^@]+)@chpc.utah.edu$'
 
         # Host regex
         host_regex: '{{ .Values.host_regex }}'
