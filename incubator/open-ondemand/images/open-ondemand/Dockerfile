@@ -12,7 +12,7 @@ RUN yum install -y sssd realmd oddjob adcli && \
 RUN yum install -y centos-release-scl-rh
 RUN yum-config-manager --enable rhel-server-rhscl-7-rpms
 RUN yum install -y rh-ruby27
-RUN yum install -y rh-nodejs10
+RUN yum install -y rh-nodejs12
 RUN yum groupinstall -y 'Development Tools'
 
 # Copy in the filesystem-map
