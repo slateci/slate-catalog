@@ -21,13 +21,9 @@ data:
     # Copy configuration file to proper location
     cp /etc/setup/telegraf.conf  /etc/telegraf/conf.d/telegraf.conf
 
-    {{ if eq .Values.grnocOutput.enabled true }}
     # Create edited configuration file
     sed -e "s/passwordPlaceholder/$GRNOC_DATABASE_PASSWORD/" /etc/setup/config.yaml > /etc/telegraf/conf.d/config.yaml
-    {{ end }}
 
-
-  {{ if eq .Values.grnocOutput.enabled true }}
 
   "config.yaml": |-
 
@@ -80,7 +76,6 @@ data:
           - from: ifOperStatus
             to: status
 
-  {{ end }}
 
   "telegraf.conf": |-
 
@@ -122,17 +117,14 @@ data:
     {{ end }}
 
     # GlobalNOC database configuration
-    {{ if eq .Values.grnocOutput.enabled true }}
     [[outputs.execd]]
       namepass = ["interface"]
       command = ["/usr/bin/python3", "/usr/bin/tsds-output.py", "/etc/telegraf/conf.d/config.yaml"]  
       data_format = "json"
       restart_delay = "10s"
 
-    {{ end }}
 
 
-    {{ if eq .Values.grnocOutput.enabled true }} 
     [[processors.starlark]]
     namepass = ["interface", "interface_address"]
     source = '''
@@ -170,7 +162,6 @@ data:
 
        return metric
     '''
-    {{ end }}
 
 
     # Loop through host groups to monitor.
@@ -192,13 +183,6 @@ data:
       retries = {{ .hostGroup.retries }}
       max_repetitions = 15
 
-      # Poll custom OIDs if grnoc output is disabled.
-      {{ if eq $.Values.grnocOutput.enabled false }}
-      {{ .hostGroup.oids | indent 4 }}
-      {{ end }}
-
-      # Poll defined set of OIDs if grnoc output is enabled.
-      {{ if eq $.Values.grnocOutput.enabled true }}
 
       # 64-bit counter OIDs
       {{ if eq .hostGroup.counter64Bit true }}
@@ -319,8 +303,6 @@ data:
         [[inputs.snmp.table.field]]
           oid = "IF-MIB::ifOperStatus"
           name = "ifOperStatus"
-
-      {{ end }}
 
       {{ end }}
 

@@ -7,6 +7,7 @@ metadata:
     chart: {{ template "grafana.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 {{- with .Values.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}

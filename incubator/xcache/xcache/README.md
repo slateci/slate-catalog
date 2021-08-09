@@ -22,7 +22,6 @@ To set it up one needs to change values in values.yaml, all other variables have
 Instance: <Instance> # change only if you have more than one XCache server. 
 SiteConfig:
   Name: MWT2
-  CRICprotocolID: 433
 
 XCacheConfig:
   CacheDirectories:

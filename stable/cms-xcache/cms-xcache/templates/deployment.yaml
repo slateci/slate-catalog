@@ -74,7 +74,7 @@ spec:
             subPath: start-nginx.sh
         {{ end }}
         - name: cms-xcache
-          image: "opensciencegrid/cms-xcache:fresh"
+          image: "hub.opensciencegrid.org/opensciencegrid/cms-xcache:release"
           imagePullPolicy: Always
           env:
           {{ if .Values.HTTPLogger.Secret }}
