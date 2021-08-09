@@ -171,7 +171,7 @@ or a trusted firewalld zone.
 ```bash
 sudo iptables -A INPUT -s xxx.xxx.xxx.xxx/32 -j ACCEPT
 
-firewall-cmd --zone=trusted --add-source=xxx.xxx.xxx.xxx/32
+sudo firewall-cmd --zone=trusted --add-source=xxx.xxx.xxx.xxx/32
 ```
 
 ## Interactive Apps and Remote Desktop (Advanced)
