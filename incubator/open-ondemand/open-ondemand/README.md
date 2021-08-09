@@ -129,30 +129,36 @@ built from various components such as TurboVNC, Singularity and tmux. By
 enabling resource management, you can set up more interactive apps and 
 easily manage remote sessions from the OnDemand portal.
 
+Be sure to install these components on the backend nodes if you wish to
+enable resource management. These components include TurboVNC 2.1+, Singularity,
+a centos7 singularity image, nmap-ncat, Websockify 0.8.0+, and a desktop of your
+choice [mate 1+ (default), xfce 4+, gnome 2]
+
 ```yaml
   - cluster:
       name: "node1"
-      host: "example-node1.net"
+      host: "node1.example.net"
       enableHostAdapter: true
       job:
-        ssh_hosts: "example-node1.net"
+        ssh_hosts: "node1.example.net"
+        site_timeout: 14400
         singularity_bin: /bin/singularity
         singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
-        singularity_image: /opt/centos7.sif 
-        tmux_bin: /bin/tmux
+        singularity_image: /opt/centos7.sif  # Something like centos_7.6.sif
+        tmux_bin: /usr/bin/tmux
       basic_script: 
-        - "#!/bin/bash"
-        - "module purge"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
+        - '#!/bin/bash'
+        - 'set -x'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
       vnc_script: 
-        - "#!/bin/bash"
-        - "module purge"
-        - "export PATH='/opt/TurboVNC/bin:$PATH'"
-        - "export WEBSOCKIFY_CMD='/usr/bin/websockify'"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
-      set_host: "$(hostname -A)"
+        - '#!/bin/bash'
+        - 'set -x'
+        - 'export PATH="/opt/TurboVNC/bin:$PATH"'
+        - 'export WEBSOCKIFY_CMD="/usr/bin/websockify"'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
+      set_host: "$(hostname)"
 ```
 
 To establish a remote desktop connection, ports 5800(+n) 5900(+n) and 6000(+n)
