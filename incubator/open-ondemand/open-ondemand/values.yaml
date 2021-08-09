@@ -16,7 +16,6 @@ volume:
 
 # LDAP/Kerberos setup and configuration
 setupLDAP: true
-generateUsers: false
 ldap:
   connectionURL: "ldap://ldap.chpc.utah.edu"
   importUsers: "true"
