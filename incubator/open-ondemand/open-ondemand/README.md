@@ -62,7 +62,7 @@ cert_manager_enabled: true
 More information on using Ansible playbooks can be found [here](https://slateci.io/docs/cluster/install-kubernetes-with-kubespray.html).
 If the administrator has access to `kubectl` then cert-manager can be installed using a regular manifest or with helm. Instructions can be found at the official [cert-manager docs](https://cert-manager.io/docs/installation/kubernetes/).
 
-If there are security concerns with kubernetes secrets, then the administrator can also install a secure access agent such as Vault, Consul, Azure Key Vault, etc. Instructions for installing Vault using Kubernetes can be found at the [hashicorp-vault docs](https://learn.hashicorp.com/collections/vault/kubernetes)
+If there are security concerns with using kubernetes secrets, then the administrator can also install a secure access agent such as Vault, Consul, Azure Key Vault, etc. Instructions for installing Vault using Kubernetes can be found at the [hashicorp-vault docs](https://learn.hashicorp.com/collections/vault/kubernetes)
 
 When all of the manifest components are installed, create an `Issuer` or `ClusterIssuer` .yaml file so that cert-manager can issue certificates on request by the OnDemand Helm chart. Here is a simple example of a `ClusterIssuer` .yaml configuration:
 ```yaml
