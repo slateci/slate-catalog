@@ -234,7 +234,7 @@ for i in /etc/ssh/ssh_host_*; do
   command=`echo "$command --from-file=$i"`
 done
 printf "$command\n"
-$command ; printf "\n"
+$command ; echo ""
 ```
 
 ### Filesystem Distribution
@@ -249,20 +249,19 @@ entry for localhost, and any backend clusters.
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
 /uufs/chpc.utah.edu/common/home  192.168.1.1(rw,sync,no_subtree_check,root_squash)
 ...
-...
 ```
 
 To configure autofs simply set the `autofs` value to true and then add any
 shares you would like in the `nfs_shares` field. Make sure that the backend
-clusters use the same shares and that they are mounted using the same absolute
-path.
+clusters use the same shares and they are mounted using the same absolute path.
 
 ### NodeSelector
 
 Finally, in order for these environmental changes to have effect, the chart must
 be installed on a properly configured node. On a multi-node system it is necessary
-to set a `nodeSelectorLabel` called disktype, and match that label in the
-`values.yaml` file.
+to set a `nodeSelectorLabel` called disktype on a desired node. Then match
+that label in the `values.yaml` file. If all nodes are properly configured
+then you may skip this step.
 
 ```bash
 kubectl label nodes <node-name> disktype=ssd
@@ -270,7 +269,7 @@ kubectl label nodes <node-name> disktype=ssd
 
 ## Installation
 
-Now that Open OnDemand has been properly configured, we can install the application with the following SLATE command:
+To install the application using slate, run this app install command:
 
 ```bash
 slate app install open-ondemand --group <group_name> --cluster <cluster_name> --conf /path/to/ood.yaml
@@ -309,18 +308,18 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`Instance`| String to differentiate SLATE experiment instances. |`global`|
 |`replicaCount`| The number of replicas to create. |`1`|
 |`setupKeycloak`| Runs Keycloak setup script if enabled. |`true`|
-|`volume.storageClass`| The volume provisioner from which to request the Keycloak backing volume |`local-path`|
-|`volume.size`| The amount of storage to request for the volume |`50M`|
+|`volume.storageClass`| The volume provisioner from which to request the Keycloak backing volume. |`local-path`|
+|`volume.size`| The amount of storage to request for the volume. |`50M`|
 |`setupLDAP`| Set up LDAP automatically based on following values. |`true`|
 |`ldap.connectionURL`| URL to access LDAP at. |`ldap://your-ldap-here`|
 |`ldap.importUsers`| Import LDAP users to Keycloak. |`true`|
-|`ldap.rdnLDAPAttribute`| LDAP configuration |`uid`|
-|`ldap.uuidLDAPAttribute`| LDAP configuration |`uidNumber`|
-|`ldap.userObjectClasses`| LDAP configuration |`inetOrgPerson, organizationalPerson`|
-|`ldap.usersDN`| LDAP configuration |`ou=People,dc=chpc,dc=utah,dc=edu`|
+|`ldap.rdnLDAPAttribute`| LDAP configuration. |`uid`|
+|`ldap.uuidLDAPAttribute`| LDAP configuration. |`uidNumber`|
+|`ldap.userObjectClasses`| LDAP configuration. |`inetOrgPerson, organizationalPerson`|
+|`ldap.usersDN`| LDAP configuration. |`ou=People,dc=chpc,dc=utah,dc=edu`|
 |`kerberos.realm`| Kerberos realm to connect to. |`AD.UTAH.EDU`|
-|`kerberos.serverPrincipal`| Kerberos server principal |`HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU`|
-|`kerberos.keyTab`| Kerberos configuration |`/etc/krb5.keytab`|
+|`kerberos.serverPrincipal`| Kerberos server principal. |`HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU`|
+|`kerberos.keyTab`| Kerberos configuration. |`/etc/krb5.keytab`|
 |`kerberos.kerberosPasswordAuth`| Use Kerberos for password authentication. |`true`|
 |`kerberos.debug`| Writes additional debug logs if enabled. |`true`|
 |`clusters.cluster.name`| Name of cluster to connect to. |`Kingspeak`|
@@ -335,16 +334,14 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
 |`set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
 |`host_regex` | Regular expression to capture hostnames. |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
-|`enableHostAdapter` | Set to true if configuring interactive apps |`true`|
+|`enableHostAdapter` | Enable resource management and interactive apps. |`true`|
 |`desktop` | Desktop environment (mate,xfce,gnome) |`mate`|
-|`node_selector_label` | Matching node label for a preferred node |`ssd`|
+|`node_selector_label` | Matching node label for a preferred node. |`ssd`|
 |`ssh_keys_GID` | Group ID value of ssh_keys group. |`993`|
 |`secret_name` | Name of secret holding host_keys. |`ssh-key-secret`|
 |`host_keys` | Names of stored keys. |`ssh_host_ecdsa_key`|
-|`autofs` | Mount user home directories using autofs |`true`|
-|`NFS` | Mount home directories using just NFS |`false`|
-|`nfs_path` | NFS share path on the host system |`/ondemand/home`|
-|`ip_addr` | Public IP address of the preferred node. |`127.0.0.1`|
-|`autofs_path` | Preferred mount path in the container |`/home`|
-|`autofs_mounts` | Exports to be mounted in the container |`* -nolock,hard,...`|
+|`autofs` | Mount home directories using autofs. |`true`|
+|`NFS` | Mount home directories with just NFS. |`false`|
+|`mountPoint` | Preferred path for mounting nfs shares. |`/ondemand/home`|
+|`nfs_shares` | A mapfile with shares to be mounted by autofs. |`* -nolock,hard,...`|
 |`testUsers` | Unprivileged users for testing login to OnDemand. |`test`|

@@ -23,6 +23,7 @@ data:
   {{ end }}
   {{ range .Values.testUsers }}
     useradd {{ .user.name }}
+    echo "{{ .user.tempPassword }}" | passwd --stdin {{ user.name }}
   {{ end }}
     array=()
     groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
