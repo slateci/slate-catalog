@@ -91,7 +91,7 @@ advanced:
   autofs: true
   NFS: false
   fileSharing:
-    mountPoint: "/ondemand/home"
+    mountPoint: "/uufs/chpc.utah.edu/common/home"
     nfs_shares: 
       - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \\'
       - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
