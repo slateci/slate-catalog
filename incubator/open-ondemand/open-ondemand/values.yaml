@@ -35,11 +35,11 @@ kerberos:
 # Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
-      name: "node1"
-      host: "node1.example.net"
+      name: "slate-node1"
+      host: "slate-node1.example.net"
       enableHostAdapter: true
       job:
-        ssh_hosts: "node1.example.net"
+        ssh_hosts: "slate-node1.example.net"
         site_timeout: 14400
         singularity_bin: /bin/singularity
         singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home

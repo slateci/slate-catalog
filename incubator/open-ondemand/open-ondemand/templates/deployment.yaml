@@ -98,6 +98,7 @@ spec:
             {{ end }}
             {{ end }}
       ######## End of Advanced Features ########
+      hostNetwork: true
       containers:
         - name: open-ondemand
           image: dockerbox88/open-ondemand:latest
