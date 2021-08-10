@@ -10,6 +10,7 @@ metadata:
     chart: {{ template "condor-worker.chart" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 spec:
   replicas: {{ .Values.CondorConfig.Instances }}
   selector:

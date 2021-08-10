@@ -175,7 +175,7 @@ HostCredentials:
 
 # Choose which tag to use for the specified containers
 ContainerTags:
-  HostedCE: stable
+  HostedCE: release
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:

@@ -176,7 +176,7 @@ function(add_repository name)
 	# Also generate the repository index file
 	set(index_file "${CMAKE_BINARY_DIR}/${name}/index.yaml")
 	add_custom_command(OUTPUT "${index_file}"
-	                   COMMAND helm repo index "${CMAKE_BINARY_DIR}/${name}/" --merge "${index_file}"
+	                   COMMAND helm repo index "${CMAKE_BINARY_DIR}/${name}/"
 	                   DEPENDS ${repo_charts})
 	set(fingerprint_file "${CMAKE_BINARY_DIR}/${name}/fingerprints")
 	add_custom_command(OUTPUT "${fingerprint_file}"

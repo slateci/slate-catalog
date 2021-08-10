@@ -37,14 +37,12 @@ spec:
               exec:
                 # This script will create the appropriate "config.yaml" file for the grnoc output plugin
                 command: ["/bin/bash", "/etc/setup/setup.sh"]
-          {{ if eq .Values.grnocOutput.enabled true }}
           env:
             - name: GRNOC_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.grnocOutput.passwordSecretName }}
                   key: password
-          {{ end }}
       volumes:
         - name: telegraf-volume
           # populate volume with config map data

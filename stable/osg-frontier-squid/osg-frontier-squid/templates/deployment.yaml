@@ -6,7 +6,7 @@ metadata:
     app: {{ template "osg-frontier-squid.name" . }}
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance | quote }}
-
+    instanceID: {{ .Values.SLATE.Instance.ID | quote  }}
 spec:
   replicas: 1
   selector:
@@ -41,6 +41,10 @@ spec:
           value: {{ .Values.SquidConf.IPRange }}
         - name: SQUID_CACHE_MEM
           value: '{{ .Values.SquidConf.CacheMem }} MB'  
+        {{ if .Values.SquidConf.CacheSize }}
+        - name: SQUID_CACHE_DISK
+          value: '{{ .Values.SquidConf.CacheSize }}'
+        {{ end }}
         {{ if .Values.SquidConf.MaxAccessLog }}
         - name: SQUID_MAX_ACCESS_LOG
           value: {{ .Values.SquidConf.MaxAccessLog }}
@@ -48,11 +52,17 @@ spec:
         resources:
           requests:
             cpu: {{ .Values.SquidConf.CPU }}
+        {{ if not  .Values.SquidConf.CacheDirOnHost }}
 # converting CacheSize to MiB and adding it to total request
             ephemeral-storage: {{ add .Values.SquidConf.RequestEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
           limits:
 # converting CacheSize to MiB and adding it to total limit
             ephemeral-storage: {{ add .Values.SquidConf.LimitEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
+        {{ else }}
+            ephemeral-storage: {{ .Values.SquidConf.RequestEphemeralSize  }}Mi
+          limits:
+            ephemeral-storage: {{ .Values.SquidConf.LimitEphemeralSize  }}Mi
+        {{ end }}
         ports:
         - containerPort: 3128
           name: squid
@@ -62,6 +72,12 @@ spec:
           {{ if and .Values.NodeSelection.Hostname .Values.NodeSelection.OpenDefaultMonPort }}
           hostPort: 3401
           {{ end }}
+        {{ if and .Values.NodeSelection.Hostname .Values.Alarm.Site }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh","-c","/usr/local/sbin/squid-pre-stop-alarm.sh {{ .Values.Instance }} {{ .Values.NodeSelection.Hostname }} {{ .Values.Alarm.Site }}"]
+        {{ end }}
         volumeMounts:
 # Commented out and will probably not be needed. We're using the default 60-image-post-init.sh script 
 # that comes with upstream image. Our custom config has been moved to the .awk file added through configmap
@@ -97,6 +113,11 @@ spec:
         - name: squid-log-dir
           mountPath: /var/log/squid
         {{ end }}
+        {{ if and .Values.NodeSelection.Hostname .Values.Alarm.Site }}
+        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
+          mountPath: /usr/local/sbin/squid-pre-stop-alarm.sh
+          subPath: squid-pre-stop-alarm.sh 
+        {{ end }}
       volumes:
         {{ if .Values.SquidConf.CacheDirOnHost }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-cachedir
@@ -125,6 +146,11 @@ spec:
             {{ if .Values.SquidConf.CleanLog }}
             - key: 55-squid-log-clean.conf
               path: 55-squid-log-clean.conf
+            {{ end }}
+            {{ if and .Values.NodeSelection.Hostname .Values.Alarm.Site }}
+            - key: squid-pre-stop-alarm.sh
+              path: squid-pre-stop-alarm.sh
+              mode: 448
             {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
         {{ if .Values.SLATE.LocalStorage }}

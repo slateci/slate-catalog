@@ -15,19 +15,15 @@ Service:
 
 SiteConfig:
   Name: Home
-  # CRIC protocol ID. 433 is a dummy value. 
-  # can be looked up in this URL: https://atlas-cric.cern.ch/api/core/service/query/?json
-  # Endpoints can be created here: https://atlas-cric.cern.ch/core/service/create/
-  CRICprotocolID: 433
 
 Monitoring:
   Collector: http://xcache.atlas-ml.org:80
-  GStreamCollector: xcache.atlas-ml.org:9000 
+  GStreamCollector: xcache.atlas-ml.org:9000
   VPheartbeat: https://vps.cern.ch/liveness
 
 XCacheConfig:
   # Local directories to be used as a cache
-  
+
   CacheDirectories:
     # - path: /C/scratch/data
     - path: /tmp
@@ -37,11 +33,11 @@ XCacheConfig:
   # Space usage
   HighWaterMark: 0.95
   LowWaterMark: 0.90
-  
+
   # The amount of memory XCache is allowed to use (in GB)
   RamSize: 16g
   # Minimal chunk size that will be prefetched/cached.
-  BlockSize: 1M
+  BlockSize: 256k
   # to prefetch even chunks that were not requested
   Prefetch: 0
   # Write queue parameters
@@ -51,10 +47,9 @@ XCacheConfig:
   # This must be created BEFORE deploying XCache
   CertSecret: xcache-cert-secret
 
-
 image:
   repository: ivukotic/docker-xcache
-  tag: latest  
+  tag: latest
   pullPolicy: Always
   # repository: docker-xcache
   # tag: latest

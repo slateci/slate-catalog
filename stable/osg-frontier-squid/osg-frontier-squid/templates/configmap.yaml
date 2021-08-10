@@ -50,7 +50,7 @@ data:
     {{ if .Values.SquidConf.DiskCacheMinObjSize }}
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256 min_size={{ .Values.SquidConf.DiskCacheMinObjSize }}")
     {{ else if .Values.SquidConf.DisableDiskCache }}
-    setoption("cache_dir", "none /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
+    setoptionparameter("cache_dir", 1, "null")
     {{ else }}
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
     {{ end }} 
@@ -128,3 +128,29 @@ data:
     stdout_logfile=/dev/stdout
     stdout_logfile_maxbytes=0
 {{ end }}
+  squid-pre-stop-alarm.sh: |+
+    #!/bin/sh
+    
+    usage () {
+        echo "$0 <instance> <host> <site>"
+        echo "   <instance> is SLATE instance ID."
+        echo "   <host> can be obtained from K8s variables."
+        echo "   <site> is SLATE site name."
+    }
+    
+    
+    if [ $# -lt 3 ]; then
+        usage
+        exit 1
+    fi
+
+    instance=$1
+    host=$2
+    site=$3
+    
+    
+    echo $instance $host $site
+    curl --request POST "https://aaas.atlas-ml.org/alarm" \
+         -k \
+         --header 'Content-Type: application/json' \
+         --data-raw '{ "category" : "SLATE", "subcategory": "Squid", "event": "server down", "tags":"'"$site"'", "body":"down", "source": {"site": "'"$site"'", "instance": "'"$instance"'", "host": "'"$host"'"} }'

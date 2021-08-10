@@ -30,7 +30,6 @@ flushJitter: "10s"
 # Note that enabling GRNOC output results in a pre-defined set of
 # OIDs being polled, and will override user-specified OIDs.
 grnocOutput:
-  enabled: true
   hostname: "tsds.hostname.net"
   username: "tsds username"
   passwordSecretName: "tsds-password-secret"
@@ -62,10 +61,6 @@ targets:
       hosts:
         - "127.0.0.1"
       counter64Bit: false
-      oids: |-
-        [[inputs.snmp.field]]
-          oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
-          name = "uptime"
   - hostGroup:
       community: "public"
       timeout: "15s"
@@ -74,10 +69,6 @@ targets:
         - "127.0.0.1"
         - "localhost"
       counter64Bit: true
-      oids: |-
-        [[inputs.snmp.field]]
-          oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
-          name = "uptime"
 
 
 # Configuration for InfluxDB (v1) output.

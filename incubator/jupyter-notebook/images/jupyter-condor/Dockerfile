@@ -116,7 +116,8 @@ RUN yum install -y \
     inkscape \
     nano \
     texlive-xetex \
-    unzip \      
+    unzip \
+    fio \      
     && yum clean all
 
 # ffmpeg for matplotlib anim & dvipng for latex labels

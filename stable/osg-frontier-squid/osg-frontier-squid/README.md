@@ -26,9 +26,9 @@ $ slate app install osg-frontier-squid --group <group-name> --cluster <cluster-n
 | CacheMem | The amount of memory that Squid may use for caching hot objects | `4096 MB` |
 | MaximumObjectSizeInMemory | The maximum size in KB for individual objects stored in memory| `512 KB` |
 | CacheSize | The amount of disk space that Squid may use for caching cold objects | `10000 MB` |
-| HostCacheDir | The hostPath where Squid should write disk cache files | `/var/cache/squid` |
-| RequestEphemeralSize | The amount of disk space (in MiB ) that the Squid is requesting beyond CacheSize | `7000 MiB` |
-| LimitEphemeralSize | The maximum amount of disk space (in MiB ) that Squid may use beyond CacheSize | `12000 MiB` |
+| CacheDirOnHost | If True, the application will expect a hostPath directory to be present and writeable on the host | `/var/cache/squid` |
+| RequestEphemeralSize | The amount of disk space (in MiB ) that the Squid is requesting beyond CacheSize. The CacheSize is added to the request only when `CacheDirOnHost` is false.  | `7000 MiB` |
+| LimitEphemeralSize | The maximum amount of disk space (in MiB ) that Squid may use beyond CacheSize The CacheSize is added to the limit only when `CacheDirOnHost` is false.| `12000 MiB` |
 | IPRange | A space separated list of source address CIDRs that can access the cache. **NOTE** Incorrectly specifying this may lead to open proxies on your network! | `10.0.0.0/8 172.16.0.0/12 192.168.0.0/16` |
 | RESTRICT_DEST | A regular expression to restrict outbound traffic | `null` |
 | MonitoringIPRange | The range of IP addresses that will be allowed to query the service's monitoring data | `127.0.0.1/32` |

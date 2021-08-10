@@ -77,8 +77,6 @@ spec:
             value: "{{ .Values.XCacheConfig.BlockSize }}"
           - name: XC_PREFETCH
             value: "{{ .Values.XCacheConfig.Prefetch }}"
-          - name: CRIC_PROTOCOL_ID
-            value: "{{ .Values.SiteConfig.CRICprotocolID }}"
           - name: XC_WQ_BLOCKS_PER_LOOP
             value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
           - name: XC_WQ_THREADS
@@ -107,10 +105,6 @@ spec:
               - "{{.Values.Service.ExternalIP}}:{{.Values.Service.Port}}"
             initialDelaySeconds: 60
             periodSeconds: 30
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/usr/local/sbin/update-cric-status.sh","{{ .Values.SiteConfig.CRICprotocolID }}","DISABLED"]
           ports:
             - containerPort: {{ .Values.Service.Port }}         
           volumeMounts:

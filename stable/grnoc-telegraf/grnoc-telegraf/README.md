@@ -1,15 +1,14 @@
 # Telegraf SNMP Monitoring
 
-Application Name (in catalog): `telegraf`
+Application Name (in catalog): `grnoc-telegraf`
 
-Application Version: `0.5.0`
+Application Version: `0.7.0`
 
 
 ## Description
 
 This application uses Telegraf to pull [SNMP](http://www.net-snmp.org/) metrics from user-specifiable hosts.
-Metrics are then pushed to a time-series database. This database endpoint can also be configured by the user.
-Beyond general SNMP configuration options, this application also contains features to easily report a standard set of metrics to Indiana University's Global Research Network Operations Center ([GlobalNOC, or GRNOC](https://globalnoc.iu.edu/)).
+A standard set of metrics are pushed to a database at Indiana University's Global Research Network Operations Center ([GlobalNOC, or GRNOC](https://globalnoc.iu.edu/)).
 
 
 ## Installation
@@ -17,12 +16,12 @@ Beyond general SNMP configuration options, this application also contains featur
 This application is quite simple to install. First, retrieve and locally store the default configuration file with this command: 
 
 ```bash
-slate app get-conf telegraf > telegraf.yaml
+slate app get-conf grnoc-telegraf > grnoc-telegraf.yaml
 ```
 
 Next, modify the configuration file with your preferred editor to ensure appropriate configuration. A guide to this can be found [here](https://slateci.io/blog/telegraf-monitoring.html).
 
-Then, if you are writing to GlobalNOC's database, create a SLATE secret containing your database password.
+Then, create a SLATE secret containing your database password.
 This is done with the following command:
 ```bash
 slate secret create --group <slate_group> --cluster <slate_cluster> --from-literal password=<your_password> <secret_name>
@@ -32,7 +31,7 @@ Finally, install the app with your custom configuration onto a SLATE cluster.
 Use a command that looks something like this: 
 
 ```bash
-slate app install telegraf --group <group_name> --cluster <cluster> --conf telegraf.yaml
+slate app install grnoc-telegraf --group <group_name> --cluster <cluster> --conf grnoc-telegraf.yaml
 ```
 
 *Note that this application does not make sense to deploy without SNMP-enabled hosts to monitor, and a database endpoint to send metrics to.*

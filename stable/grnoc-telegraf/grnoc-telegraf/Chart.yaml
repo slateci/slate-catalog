@@ -1,0 +1,5 @@
+apiVersion: v2
+name: grnoc-telegraf
+version: 0.7.0
+appVersion: 1.17.0
+description: "Deploys an SNMP monitoring service and pushes metrics to a GRNOC TSDS using Telegraf."
