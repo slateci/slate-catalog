@@ -36,10 +36,10 @@ kerberos:
 clusters:
   - cluster:
       name: "slate-node1"
-      host: "slate-node1.example.net"
+      host: "slate-node1.chpc.utah.edu"
       enableHostAdapter: true
       job:
-        ssh_hosts: "slate-node1.example.net"
+        ssh_hosts: "slate-node1.chpc.utah.edu"
         site_timeout: 14400
         singularity_bin: /bin/singularity
         singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
