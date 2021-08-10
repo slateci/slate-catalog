@@ -93,7 +93,7 @@ advanced:
   fileSharing:
     mountPoint: "/ondemand/home"
     nfs_shares: 
-      - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \'
+      - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \\'
       - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
 
 # Configure additional test users to be added to the Keycloak user database
