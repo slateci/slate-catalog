@@ -40,3 +40,6 @@ data:
         
         # Sub-uri to reverse proxy to backend web server using only *relateive* URI paths
         rnode_uri: '/rnode'
+
+        # Increase max number of retries for a per-user-nginx session
+        pun_max_retries: 25
