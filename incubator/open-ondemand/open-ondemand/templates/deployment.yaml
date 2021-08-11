@@ -169,6 +169,9 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+            - name: websocket1
+              containerPort: 3000
+              protocol: TCP
           env:
             - name: SLATE_INSTANCE_NAME
               value: {{ .Values.Instance }}

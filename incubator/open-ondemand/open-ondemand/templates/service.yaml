@@ -13,5 +13,8 @@ spec:
     - port: 8080
       protocol: TCP
       name: kc8080
+    - port: 3000
+      protocol: TCP
+      name: websocket1
   selector:
     {{- include "open-ondemand.selectorLabels" . | nindent 4 }}
