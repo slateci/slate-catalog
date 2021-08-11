@@ -1,4 +1,4 @@
-FROM centos:passenger-40-centos7
+FROM phusion:passenger_rpm_automation_testbox_centos_7
 RUN yum update -y && \
     yum install -y epel-release && \
     yum install -y supervisor centos-release-scl subscription-manager && \
