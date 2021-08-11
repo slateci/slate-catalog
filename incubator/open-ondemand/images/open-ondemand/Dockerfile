@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:passenger-40-centos7
 RUN yum update -y && \
     yum install -y epel-release && \
     yum install -y supervisor centos-release-scl subscription-manager && \
