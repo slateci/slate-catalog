@@ -67,8 +67,8 @@ spec:
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-startup-cfg
             items:
-            - key: ood-startup.sh
-              path: ood-startup.sh
+            - key: startup-ood.sh
+              path: startup-ood.sh
               mode: 0700
         # HostKey Volumes
         - name: key-volume
@@ -127,8 +127,8 @@ spec:
           {{ if eq .Values.enableHostAdapter true }}
             # HostBased Authentication Config
             - name: startup-config
-              mountPath: /root/ood-startup.sh
-              subPath: ood-startup.sh
+              mountPath: /root/startup-ood.sh
+              subPath: startup-ood.sh
             # NFS Volume
             {{ if eq .Values.advanced.NFS true }}
             - name: nfs-volume

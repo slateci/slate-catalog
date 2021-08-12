@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:       # This configmap handles optional configuration and temporary bug fixes
   name: {{ include "open-ondemand.fullname" . }}-startup-cfg
 data:
-  ood-startup.sh: |
+  startup-ood.sh: |
     #!/bin/bash
   {{ if eq .Values.setupLDAP true }}
     # Generate groups for ldap users (may be unnecessary with sssd working properly now)
