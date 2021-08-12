@@ -46,7 +46,7 @@ RUN mv /var/www/ood/apps/sys/bc_desktop/form.yml /var/www/ood/apps/sys/bc_deskto
 RUN mv /var/www/ood/apps/sys/bc_desktop/submit.yml.erb /var/www/ood/apps/sys/bc_desktop/submit.yml.erb.org
 
 # Some security precautions
-RUN chmod 0700 /opt/rh/httpd24/root/etc/httpd/conf.d/startup.sh
+RUN chmod 0700 /opt/rh/httpd24/root/etc/httpd/conf.d/startup-apache.sh
 
 COPY supervisord.conf /etc/supervisord.conf
 CMD ["/bin/sh", "-c", "/usr/bin/supervisord -c /etc/supervisord.conf"]
