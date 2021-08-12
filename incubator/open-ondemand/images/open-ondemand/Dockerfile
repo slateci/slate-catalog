@@ -1,4 +1,4 @@
-FROM phusion:passenger_rpm_automation_testbox_centos_7
+FROM waystonesystems/baseimage-centos:latest
 RUN yum update -y && \
     yum install -y epel-release && \
     yum install -y supervisor centos-release-scl subscription-manager && \
