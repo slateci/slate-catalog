@@ -65,7 +65,7 @@ spec:
         # HostBased Authentication and linuxhost_adapter setup script
         - name: startup-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-startup-auth
+            name: {{ include "open-ondemand.fullname" . }}-startup-cfg
             items:
             - key: ood-startup.sh
               path: ood-startup.sh
