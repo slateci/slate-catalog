@@ -1,5 +1,4 @@
 #!/bin/bash
-scl enable ondemand /var/www/ood/apps/sys/shell/bin/setup
 mkdir /etc/ood/config/apps /etc/ood/config/apps/shell
 touch /etc/ood/config/apps /etc/ood/config/apps/shell/env
 sed -i "/^Host */a \        HostBasedAuthentication yes\n        EnableSSHKeysign yes" /etc/ssh/ssh_config
