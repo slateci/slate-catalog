@@ -62,13 +62,13 @@ spec:
             - key: autofs_config.sh
               path: autofs_config.sh
               mode: 0700
-        # HostBased Authentication setup script
-        - name: hostbased-config
+        # HostBased Authentication and linuxhost_adapter setup script
+        - name: startup-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-hostbased-auth
+            name: {{ include "open-ondemand.fullname" . }}-startup-auth
             items:
-            - key: hostbased.sh
-              path: hostbased.sh
+            - key: ood-startup.sh
+              path: ood-startup.sh
               mode: 0700
         # HostKey Volumes
         - name: key-volume
@@ -126,9 +126,9 @@ spec:
           ######## Start of Advanced Features #########
           {{ if eq .Values.enableHostAdapter true }}
             # HostBased Authentication Config
-            - name: hostbased-config
-              mountPath: /root/hostbased.sh
-              subPath: hostbased.sh
+            - name: startup-config
+              mountPath: /root/ood-startup.sh
+              subPath: ood-startup.sh
             # NFS Volume
             {{ if eq .Values.advanced.NFS true }}
             - name: nfs-volume
@@ -168,9 +168,6 @@ spec:
           ports:
             - name: http
               containerPort: 80
-              protocol: TCP
-            - name: websocket1
-              containerPort: 3000
               protocol: TCP
           env:
             - name: SLATE_INSTANCE_NAME
