@@ -56,7 +56,7 @@ data:
     cd /var/www/ood/apps/sys/shell
     sed -i "/^wss.on('connection'*/i function noop() {}\n\nfunction heartbeat() {\n  this.isAlive = true;\n}\n" app.js
     sed -i "/\[host, dir\] = host_and_dir_from_url(req.url);/i \ \ ws.isAlive = true;\n  ws.on(\'pong\', heartbeat);\n" app.js
-    sed -i "/^wss.on('close'*/i const interval = setInterval(function ping() {\n  wss.clients.forEach(function each(ws) {\n    if (ws.isAlive === false) return ws.terminate();\n\n    ws.isAlive = false;\n    ws.ping(noop);\n  });\n}, 30000);\n" app.js
+    sed -i "/ws.on('close'*/i \ \ const interval = setInterval(function ping() {\n    wss.clients.forEach(function each(ws) {\n      if (ws.isAlive === false) return ws.terminate();\n\n      ws.isAlive = false;\n      ws.ping(noop);\n    });\n  }, 30000);\n" app.js
 
     # Adding --heartbeat option to websockify (part of noVNC)
     # This is for the remote desktop application, ensuring our connection is not closed
