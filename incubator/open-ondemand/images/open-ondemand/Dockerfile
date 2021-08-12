@@ -1,4 +1,4 @@
-FROM waystonesystems/baseimage-centos:latest
+FROM centos:7
 RUN yum update -y && \
     yum install -y epel-release && \
     yum install -y supervisor centos-release-scl subscription-manager && \
