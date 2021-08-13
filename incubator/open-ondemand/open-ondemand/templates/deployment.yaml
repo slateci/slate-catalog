@@ -17,7 +17,7 @@ spec:
     spec:
       {{ if eq .Values.enableHostAdapter true }}
       nodeSelector:
-        disktype: {{ .Values.advanced.node_selector_label }}
+        application: {{ .Values.advanced.node_selector_label }}
       {{ end }}
       volumes:
         # Shared Volume
