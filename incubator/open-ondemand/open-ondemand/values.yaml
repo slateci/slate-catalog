@@ -22,10 +22,11 @@ ldap:
   rdnLDAPAttribute:  "uid"
   uuidLDAPAttribute: "uidNumber"
   userObjectClasses: "inetOrgPerson, organizationalPerson"
+  ldapSearchBase: "dc=chpc,dc=utah,dc=edu"
   usersDN: "ou=People,dc=chpc,dc=utah,dc=edu"
 kerberos:
   realm: "AD.UTAH.EDU"
-  serverPrincipal: "HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU"
+  serverPrincipal: "kdc1.chpc.utah.edu:88,kdc2.chpc.utah.edu:88,kdc3.chpc.utah.edu:88,kdc4.chpc.utah.edu:88,kdc5.chpc.utah.edu:88"
   keyTab: "/etc/krb5.keytab"
   kerberosPasswordAuth: "true"
   debug: "true"
@@ -34,28 +35,29 @@ kerberos:
 # Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
-      name: "slate-node1"
-      host: "slate-node1.chpc.utah.edu"
+      name: "Node1"
+      host: "node1.example.net"
       enableHostAdapter: true
       job:
-        ssh_hosts: "slate-node1.chpc.utah.edu"
+        ssh_hosts: "node1.example.net"
+        site_timeout: 14400
         singularity_bin: /bin/singularity
         singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
         singularity_image: /opt/centos7.sif  # Something like centos_7.6.sif
-        tmux_bin: /bin/tmux
+        tmux_bin: /usr/bin/tmux
       basic_script: 
-        - "#!/bin/bash"
-        - "module purge"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
+        - '#!/bin/bash'
+        - 'set -x'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
       vnc_script: 
-        - "#!/bin/bash"
-        - "module purge"
-        - "export PATH='/opt/TurboVNC/bin:$PATH'"
-        - "export WEBSOCKIFY_CMD='/usr/bin/websockify'"
-        - export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
-      set_host: "$(hostname -A)"
+        - '#!/bin/bash'
+        - 'set -x'
+        - 'export PATH="/opt/TurboVNC/bin:$PATH"'
+        - 'export WEBSOCKIFY_CMD="/usr/bin/websockify"'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
+      set_host: "$(hostname)"
   - cluster:
       name: "Notchpeak"
       host: "notchpeak.chpc.utah.edu"
@@ -68,11 +70,8 @@ host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
 enableHostAdapter: true
 advanced:
   desktop: "mate"
-  node_selector_label: "ssd"
-  ip_addr: 127.0.0.1
+  node_selector_label: "ood"
   ssh_keys_GID: 993
-  nfs_path: "/uufs/chpc.utah.edu/common/home"
-
 # Provide names for each host key stored in your secret
   secret_name: "ssh-key-secret"
   host_keys:
@@ -88,6 +87,14 @@ advanced:
         name: "ssh_host_rsa_key"
     - host_key:
         name: "ssh_host_rsa_key.pub"
+# Configure file sharing (Choose either to use autofs or a single NFS mount)
+  autofs: true
+  NFS: false
+  fileSharing:
+    mountPoint: "/example/home"
+    nfs_shares: 
+      - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \\'
+      - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
 
 # Configure additional test users to be added to the Keycloak user database
 # Ensure that these users do not exist on backend clusters

@@ -1,8 +1,6 @@
 
 # Using SLATE to deploy Open OnDemand
 
-## About
-
 [Open OnDemand](https://openondemand.org/) is a web application enabling easy access to high-performance computing resources.
 Open OnDemand, through a plugin system, provides many different ways to interact with these resources.
 Most simply, OnDemand can launch a shell to remote resources in one's web browser.
@@ -62,6 +60,8 @@ cert_manager_enabled: true
 More information on using Ansible playbooks can be found [here](https://slateci.io/docs/cluster/install-kubernetes-with-kubespray.html).
 If the administrator has access to `kubectl` then cert-manager can be installed using a regular manifest or with helm. Instructions can be found at the official [cert-manager docs](https://cert-manager.io/docs/installation/kubernetes/).
 
+If there are security concerns with using kubernetes secrets, then the administrator can also install a secure access agent such as Vault, Consul, Azure Key Vault, etc. Instructions for installing Vault using Kubernetes can be found at the [hashicorp-vault docs](https://learn.hashicorp.com/collections/vault/kubernetes)
+
 When all of the manifest components are installed, create an `Issuer` or `ClusterIssuer` .yaml file so that cert-manager can issue certificates on request by the OnDemand Helm chart. Here is a simple example of a `ClusterIssuer` .yaml configuration:
 ```yaml
 metadata:
@@ -114,7 +114,12 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
       enableHostAdapter: false
 ```
 
-**Remote Desktop Access**
+**Resource Management**
+
+To configure shell access to backend resources, simply fill in the
+name and host sections for each cluster. If no other features are desired
+then set `enableHostAdapter` to false and skip the 'Advanced' section
+of this document.
 
 To set up remote desktop access, set the `enableHostAdapter` value to true,
 then configure the LinuxHost Adapter. This is a simplified resource manager
@@ -122,46 +127,52 @@ built from various components such as TurboVNC, Singularity and tmux. By
 enabling resource management, you can set up more interactive apps and 
 easily manage remote sessions from the OnDemand portal.
 
+Be sure to install these components on the backend nodes if you wish to
+enable resource management. These components include TurboVNC 2.1+, Singularity,
+a centos7 singularity image, nmap-ncat, Websockify 0.8.0+, and a desktop of your
+choice [mate 1+ (default), xfce 4+, gnome 2]
+
 ```yaml
   - cluster:
       name: "node1"
-      host: "example-node1.net"
+      host: "node1.example.net"
       enableHostAdapter: true
       job:
-        ssh_hosts: "example-node1.net"
+        ssh_hosts: "node1.example.net"
+        site_timeout: 14400
         singularity_bin: /bin/singularity
         singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
-        singularity_image: /opt/centos7.sif 
-        tmux_bin: /bin/tmux
+        singularity_image: /opt/centos7.sif  # Something like centos_7.6.sif
+        tmux_bin: /usr/bin/tmux
       basic_script: 
-        - "#!/bin/bash"
-        - "module purge"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
+        - '#!/bin/bash'
+        - 'set -x'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
       vnc_script: 
-        - "#!/bin/bash"
-        - "module purge"
-        - "export PATH='/opt/TurboVNC/bin:$PATH'"
-        - "export WEBSOCKIFY_CMD='/usr/bin/websockify'"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
-      set_host: "$(hostname -A)"
+        - '#!/bin/bash'
+        - 'set -x'
+        - 'export PATH="/opt/TurboVNC/bin:$PATH"'
+        - 'export WEBSOCKIFY_CMD="/usr/bin/websockify"'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
+      set_host: "$(hostname)"
 ```
 
-**Test User Setup**
+To establish a remote desktop connection, ports 5800(+n) 5900(+n) and 6000(+n)
+need to be open on the backend for each display number n. In addition, port 22
+must be open for SSH and ports 20000+ must be open to receive websocket traffic.
+The easiest way to do this is to accept all traffic coming from the OnDemand
+host. To do this, simply add a new rule to iptables
+or a trusted firewalld zone.
 
-This Open OnDemand chart supports the creation of temporary test users, for
-validating application functionality without the complexity of connecting to
-external LDAP and Kerberos servers. To add a test user(s), navigate to the
-`testUsers` section of the configuration file. Add the following yaml to this
-section for each user you would like to add:
-```yaml
-- user:
-    name: <username_here>
-    tempPassword: <temporary_password_here>
+```bash
+sudo iptables -A INPUT -s xxx.xxx.xxx.xxx/32 -j ACCEPT
+
+sudo firewall-cmd --zone=trusted --add-source=xxx.xxx.xxx.xxx/32
 ```
 
-## Interactive Apps and Remote Desktop (Optional)
+## Interactive Apps and Remote Desktop (Advanced)
 
 ### Authentication
 
@@ -229,33 +240,34 @@ for i in /etc/ssh/ssh_host_*; do
   command=`echo "$command --from-file=$i"`
 done
 printf "$command\n"
-$command ; printf "\n"
+$command ; echo ""
 ```
 
 ### Filesystem Distribution
 
-Resource management for Open OnDemand also requires a distributed filesystem
-between front and backend resources. This can be set up using NFS, autoFS, or some 
-other DFS protocol. 
+Resource management for Open OnDemand also requires a distributed filesystem.
 
-To do this using NFS, first install `nfs-utils` and then modify the `/etc/exports`
-file with an entry for localhost, and then for any backend clusters.
-By default, if `enableHostAdapter` is set to true, this chart will attempt to mount 
-an NFS volume into the OnDemand container using the `nfs_path` value. 
+To configure NFS set the `NFS` value to true and specify a mount point.
+Then make sure `nfs-utils` is installed and the `/etc/exports` file has an
+entry for localhost, and any backend clusters.
 
 ```bash
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
 /uufs/chpc.utah.edu/common/home  192.168.1.1(rw,sync,no_subtree_check,root_squash)
 ...
-...
 ```
+
+To configure autofs simply set the `autofs` value to true and then add any
+shares you would like in the `nfs_shares` field. Make sure that the backend
+clusters use the same shares and they are mounted using the same absolute path.
 
 ### NodeSelector
 
 Finally, in order for these environmental changes to have effect, the chart must
 be installed on a properly configured node. On a multi-node system it is necessary
-to set a `nodeSelectorLabel` called disktype, and match that label in the
-`values.yaml` file.
+to set a `nodeSelectorLabel` called disktype on a desired node. Then match
+that label in the `values.yaml` file. If all nodes are properly configured
+then you may skip this step.
 
 ```bash
 kubectl label nodes <node-name> disktype=ssd
@@ -263,7 +275,7 @@ kubectl label nodes <node-name> disktype=ssd
 
 ## Installation
 
-Now that Open OnDemand has been properly configured, we can install the application with the following SLATE command:
+To install the application using slate, run this app install command:
 
 ```bash
 slate app install open-ondemand --group <group_name> --cluster <cluster_name> --conf /path/to/ood.yaml
@@ -280,6 +292,18 @@ Navigate to this URL with any web browser, and you will be directed to a
 Keycloak login page. A successful login will then direct you to the Open OnDemand portal home page.
 Navigating to the shell access menu within the portal should allow you to launch in-browser shells to the previously specified backend compute resources.
 
+**Test User Setup**
+
+This Open OnDemand chart supports the creation of temporary test users, for
+validating application functionality without the complexity of connecting to
+external LDAP and Kerberos servers. To add a test user(s), navigate to the
+`testUsers` section of the configuration file. Add the following yaml to this
+section for each user you would like to add:
+```yaml
+- user:
+    name: <username_here>
+    tempPassword: <temporary_password_here>
+```
 
 ## Configurable Parameters:
 
@@ -290,18 +314,18 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`Instance`| String to differentiate SLATE experiment instances. |`global`|
 |`replicaCount`| The number of replicas to create. |`1`|
 |`setupKeycloak`| Runs Keycloak setup script if enabled. |`true`|
-|`volume.storageClass`| The volume provisioner from which to request the Keycloak backing volume |`local-path`|
-|`volume.size`| The amount of storage to request for the volume |`50M`|
+|`volume.storageClass`| The volume provisioner from which to request the Keycloak backing volume. |`local-path`|
+|`volume.size`| The amount of storage to request for the volume. |`50M`|
 |`setupLDAP`| Set up LDAP automatically based on following values. |`true`|
 |`ldap.connectionURL`| URL to access LDAP at. |`ldap://your-ldap-here`|
 |`ldap.importUsers`| Import LDAP users to Keycloak. |`true`|
-|`ldap.rdnLDAPAttribute`| LDAP configuration |`uid`|
-|`ldap.uuidLDAPAttribute`| LDAP configuration |`uidNumber`|
-|`ldap.userObjectClasses`| LDAP configuration |`inetOrgPerson, organizationalPerson`|
-|`ldap.usersDN`| LDAP configuration |`ou=People,dc=chpc,dc=utah,dc=edu`|
+|`ldap.rdnLDAPAttribute`| LDAP configuration. |`uid`|
+|`ldap.uuidLDAPAttribute`| LDAP configuration. |`uidNumber`|
+|`ldap.userObjectClasses`| LDAP configuration. |`inetOrgPerson, organizationalPerson`|
+|`ldap.usersDN`| LDAP configuration. |`ou=People,dc=chpc,dc=utah,dc=edu`|
 |`kerberos.realm`| Kerberos realm to connect to. |`AD.UTAH.EDU`|
-|`kerberos.serverPrincipal`| Kerberos server principal |`HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU`|
-|`kerberos.keyTab`| Kerberos configuration |`/etc/krb5.keytab`|
+|`kerberos.serverPrincipal`| Kerberos server principal. |`HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU`|
+|`kerberos.keyTab`| Kerberos configuration. |`/etc/krb5.keytab`|
 |`kerberos.kerberosPasswordAuth`| Use Kerberos for password authentication. |`true`|
 |`kerberos.debug`| Writes additional debug logs if enabled. |`true`|
 |`clusters.cluster.name`| Name of cluster to connect to. |`Kingspeak`|
@@ -311,16 +335,19 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`singularity_bin` | Location of singularity binary. |`/bin/singularity`|
 |`singularity_bindpath` | Directories accessible during VNC sessions. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
 |`singularity_image` | Location of singularity image. |`/opt/centos7.sif`|
-|`tmux_bin` | Location of tmux binary. |`/bin/tmux`|
+|`tmux_bin` | Location of tmux binary. |`/usr/bin/tmux`|
 |`basic_script` | Basic desktop startup script. |`#!/bin/bash \ ... \ %s`|
 |`vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
 |`set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
 |`host_regex` | Regular expression to capture hostnames. |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
+|`enableHostAdapter` | Enable resource management and interactive apps. |`true`|
 |`desktop` | Desktop environment (mate,xfce,gnome) |`mate`|
-|`node_selector_label` | Matching node label for a preferred node |`ssd`|
-|`ip_addr` | Public IP address of the preferred node. |`127.0.0.1`|
+|`node_selector_label` | Matching node label for a preferred node. |`ssd`|
 |`ssh_keys_GID` | Group ID value of ssh_keys group. |`993`|
-|`nfs_path` | Path to distributed filesystem. |`/uufs/chpc.utah.edu/common/home`|
 |`secret_name` | Name of secret holding host_keys. |`ssh-key-secret`|
 |`host_keys` | Names of stored keys. |`ssh_host_ecdsa_key`|
+|`autofs` | Mount home directories using autofs. |`true`|
+|`NFS` | Mount home directories with just NFS. |`false`|
+|`mountPoint` | Preferred path for mounting nfs shares. |`/ondemand/home`|
+|`nfs_shares` | A mapfile with shares to be mounted by autofs. |`* -nolock,hard,...`|
 |`testUsers` | Unprivileged users for testing login to OnDemand. |`test`|
