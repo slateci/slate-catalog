@@ -22,7 +22,7 @@ OIDCProviderMetadataURL https://$(echo $SLATE_INSTANCE_NAME).keycloak.$(echo $SL
 OIDCClientID        "`cat /shared/id`" 
 OIDCClientSecret    "`cat /shared/client-secret`"
 OIDCRedirectURI      https://$(echo $SLATE_INSTANCE_NAME).ondemand.$(echo $SLATE_CLUSTER_NAME)/oidc
-OIDCCryptoPassphrase 'd14e5b4c8e6257ea81830f23c2be4633ad04d3af9816affdda6d8fec8ea926a000ca47b507587dc5'
+OIDCCryptoPassphrase '$(openssl rand -hex 40)'
 
 $(echo '# Keep sessions alive for 8 hours')
 OIDCSessionInactivityTimeout 28800
