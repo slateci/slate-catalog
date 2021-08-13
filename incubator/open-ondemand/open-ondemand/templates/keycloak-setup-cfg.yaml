@@ -9,8 +9,6 @@ data:
 
         # Sets up Keycloak to allow Open OnDemand to authenticate through it.
 
-        # TODO: save Keycloak admin password in a SLATE secret somehow?
-
         # Make sure script hasn't already been run
         if test -f "/shared/id"; then
                 echo "Keycloak is already configured. Skipping setup."
@@ -103,3 +101,5 @@ data:
                 echo "${users[$i]}" >> /shared/users.txt
         done
         {{ end }}
+        echo $KEYCLOAK_PASSWORD >> /root/kc-password.txt && chmod 0700 /root/kc-password.txt
+        export KEYCLOAK_PASSWORD='blank' && export $password='blank'
