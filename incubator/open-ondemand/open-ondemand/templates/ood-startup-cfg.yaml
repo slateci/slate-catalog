@@ -26,7 +26,8 @@ data:
   {{ end }}
   {{ range .Values.testUsers }}
     # Generate test users to match test users in keycloak
-    useradd {{ .user.name }}
+    groupadd -g {{ .user.groupID }} {{ .user.group }}
+    useradd -g {{ .user.group }} {{ .user.name }}
     echo "{{ .user.tempPassword }}" | passwd --stdin {{ .user.name }}
   {{ end }}
     array=()

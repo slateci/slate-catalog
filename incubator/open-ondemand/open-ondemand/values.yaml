@@ -101,6 +101,8 @@ advanced:
 testUsers:
   - user:
       name: "test"
+      group: "test"
+      groupID: "1000"
       tempPassword: "test"
 
 ### SLATE-START ###
