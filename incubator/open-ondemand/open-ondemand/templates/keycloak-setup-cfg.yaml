@@ -6,8 +6,7 @@ data:
   "keycloak-setup.sh": |-
 
         #! /bin/bash
-        echo $KEYCLOAK_PASSWORD >> /root/kc-password.txt && chmod 0700 /root/kc-password.txt
-        export KEYCLOAK_PASSWORD='blank' && export $password='blank'
+        echo $KEYCLOAK_PASSWORD >> /root/kc-password.txt && chmod 0700 /root/kc-password.txt && export KEYCLOAK_PASSWORD='blank'
 
         # Sets up Keycloak to allow Open OnDemand to authenticate through it.
 
