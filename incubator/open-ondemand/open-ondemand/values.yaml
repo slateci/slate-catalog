@@ -101,7 +101,7 @@ advanced:
 testUsers:
   - user:
       name: "test"
-      group: "test"
+      group: "test1"
       groupID: "1000"
       tempPassword: "test"
 
