@@ -43,7 +43,7 @@ data:
         done
 
         # Create Open-OnDemand realm
-        $keycloak create realms -s realm=ondemand -s enabled=true
+        $keycloak create realms -s realm=ondemand -s enabled=true -s rememberMe=true -s loginWithEmail=false
 
         # Open OnDemand client id
         client_id=$SLATE_INSTANCE_NAME.ondemand.$SLATE_CLUSTER_NAME
@@ -52,7 +52,7 @@ data:
         redirect_uris="[\"https://$SLATE_INSTANCE_NAME.ondemand.$SLATE_CLUSTER_NAME\",\"https://$SLATE_INSTANCE_NAME.ondemand.$SLATE_CLUSTER_NAME/oidc\"]"
 
         # Create Open-OnDemand Keycloak client
-        $keycloak create clients -r ondemand -s clientId=$client_id -s enabled=true -s publicClient=false -s protocol=openid-connect -s directAccessGrantsEnabled=false -s serviceAccountsEnabled=true -s redirectUris=$redirect_uris -s authorizationServicesEnabled=true -s rememberMe=true -s loginWithEmail=false
+        $keycloak create clients -r ondemand -s clientId=$client_id -s enabled=true -s publicClient=false -s protocol=openid-connect -s directAccessGrantsEnabled=false -s serviceAccountsEnabled=true -s redirectUris=$redirect_uris -s authorizationServicesEnabled=true
 
         # Store useful regex pattern
         client_id_pattern={\"id\":\"[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}\",\"clientId\":\"$client_id\"}
