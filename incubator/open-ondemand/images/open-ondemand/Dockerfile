@@ -37,7 +37,6 @@ WORKDIR /opt/ood/linuxhost_adapter
 RUN yum update -y
 RUN mkdir -p /etc/ood/config/apps && mkdir -p /etc/ood/config/apps/shell
 COPY startup-apache.sh /opt/rh/httpd24/root/etc/httpd/conf.d/startup-apache.sh
-COPY env /etc/ood/config/apps/shell/env
 
 # Configure Desktop application
 RUN mkdir -p /etc/ood/config/apps/bc_desktop/single_cluster

@@ -2,8 +2,8 @@
 mkdir /etc/ood/config/apps /etc/ood/config/apps/shell
 touch /etc/ood/config/apps /etc/ood/config/apps/shell/env
 sed -i "/^Host */a \        HostBasedAuthentication yes\n        EnableSSHKeysign yes" /etc/ssh/ssh_config
+touch /etc/ood/config/apps/shell/env
 cat <<EOF > /etc/ood/config/apps/shell/env
-PORT=${1:-8080}
 OOD_SSHHOST_ALLOWLIST=""
 OOD_SHELL_ORIGIN_CHECK="off"
 EOF

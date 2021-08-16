@@ -6,6 +6,8 @@ data:
   "keycloak-setup.sh": |-
 
         #! /bin/bash
+        echo $KEYCLOAK_PASSWORD >> /root/kc-password.txt && chmod 0700 /root/kc-password.txt
+        export KEYCLOAK_PASSWORD='blank' && export $password='blank'
 
         # Sets up Keycloak to allow Open OnDemand to authenticate through it.
 
@@ -29,7 +31,6 @@ data:
 
         # Setup credentials for connection to API
         user="admin"
-        password=$KEYCLOAK_PASSWORD
         realm="master"
         server="http://localhost:8080/auth"
 
@@ -37,13 +38,13 @@ data:
         n=0
         until [ "$n" -ge 5 ]
         do
-                $keycloak config credentials --server $server --realm $realm --user $user --password $password && break
+                $keycloak config credentials --server $server --realm $realm --user $user --password $(cat /root/kc-password.txt) && break
                 n=$((n+1)) 
                 sleep 5
         done
 
         # Create Open-OnDemand realm
-        $keycloak create realms -s realm=ondemand -s enabled=true -s rememberMe=true -s loginWithEmail=false
+        $keycloak create realms -s realm=ondemand -s enabled=true -s rememberMe=true -s loginWithEmailAllowed=false
 
         # Open OnDemand client id
         client_id=$SLATE_INSTANCE_NAME.ondemand.$SLATE_CLUSTER_NAME
@@ -98,5 +99,3 @@ data:
                 echo "${users[$i]}" >> /shared/users.txt
         done
         {{ end }}
-        echo $KEYCLOAK_PASSWORD >> /root/kc-password.txt && chmod 0700 /root/kc-password.txt
-        export KEYCLOAK_PASSWORD='blank' && export $password='blank'
