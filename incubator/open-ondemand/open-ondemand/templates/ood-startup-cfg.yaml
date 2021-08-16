@@ -5,17 +5,6 @@ metadata:       # This configmap handles optional configuration and temporary bu
 data:
   startup-ood.sh: |
     #!/bin/bash
-  {{ if eq .Values.setupLDAP true }}
-    # Generate groups for ldap users (may be unnecessary with sssd working properly now)
-    #while read -r line; do
-    #  user=`echo $line`
-    #  uid=`id $user | tr -s ' ' '\n'| grep uid | sed -r 's/uid=//g' | sed 's/(.*//'`
-    #  gid=`id $user | tr -s ' ' '\n'| grep gid | sed -r 's/gid=//g' | sed 's/(.*//'`
-    #  groupname=`id $user | tr -s ' ' '\n'| grep gid | sed 's/.*(//' | tr -s ')' ' '`
-    #  groupadd $groupname && groupmod -g $gid $groupname
-    #done < /shared/users.txt
-    #supervisorctl restart autofs
-  {{ end }}
   {{ if eq .Values.enableHostAdapter true }}
     mkdir -p {{ .Values.advanced.fileSharing.mountPoint }}
   {{ if eq .Values.advanced.NFS true }}
