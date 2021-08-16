@@ -84,7 +84,7 @@ data:
     ;startretries=10
  
     [program:slate-tests]
-    command=/usr/local/bin/run-perfsonar-tests.sh "{{ .Values.PerfsonarChecker.Dest1 }}" "{{ .Values.PerfsonarChecker.Dest2 }}" "{{ .Values.PerfsonarChecker.Dest3 }}"
+    command=/usr/local/bin/run-perfsonar-tests.sh -dest1 "{{ .Values.PerfsonarChecker.Dest1 }}" -dest2 "{{ .Values.PerfsonarChecker.Dest2 }}" -dest3 "{{ .Values.PerfsonarChecker.Dest3 }}" -dest1bw "{{ .Values.PerfsonarChecker.Dest1bw }}" -dest2bw "{{ .Values.PerfsonarChecker.Dest2bw }}" -dest3bw "{{ .Values.PerfsonarChecker.Dest3bw }}"
     priority=999
     autorestart = false
     startretries = 1
