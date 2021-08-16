@@ -6,8 +6,6 @@ data:
   "keycloak-setup.sh": |-
 
         #! /bin/bash
-        echo $KEYCLOAK_PASSWORD >> /root/kc-password.txt && chmod 0700 /root/kc-password.txt
-        export KEYCLOAK_PASSWORD="blank"
 
         # Sets up Keycloak to allow Open OnDemand to authenticate through it.
 
@@ -38,7 +36,7 @@ data:
         n=0
         until [ "$n" -ge 5 ]
         do
-                $keycloak config credentials --server $server --realm $realm --user $user --password $(cat /root/kc-password.txt) && break
+                $keycloak config credentials --server $server --realm $realm --user $user --password $KEYCLOAK_PASSWORD && break
                 n=$((n+1)) 
                 sleep 5
         done
@@ -99,3 +97,6 @@ data:
                 echo "${users[$i]}" >> /shared/users.txt
         done
         {{ end }}
+
+        echo $KEYCLOAK_PASSWORD >> /root/kc-password.txt && chmod 0700 /root/kc-password.txt
+        export KEYCLOAK_PASSWORD="blank"
