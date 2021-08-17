@@ -13,7 +13,7 @@ data:
         mkdir /root/.ssh && chown root:root /root/.ssh && chmod 0700 /root/.ssh
         ssh-keygen -t ecdsa -b 4096
         echo $(randAlphaNum 12 | b64enc | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/root/.ssh/id_ecdsa.pub) >> /root/.kc-password
-        KEYCLOAK_PASSWORD=`cat /root/.kc-password | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/root/.ssh/id_ecdsa`
+        export KEYCLOAK_PASSWORD=`cat /root/.kc-password | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/root/.ssh/id_ecdsa`
 
         # Make sure script hasn't already been run
         if test -f "/shared/id"; then
