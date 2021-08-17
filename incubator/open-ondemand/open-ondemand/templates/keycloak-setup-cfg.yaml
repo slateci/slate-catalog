@@ -14,10 +14,13 @@ data:
 
         # Generate encrypted password
         yum install -y coreutils
-        mkdir /root/.ssh && chown root:root /root/.ssh && chmod 0700 /root/.ssh
-        ssh-keygen -t ecdsa -b 521
-        echo $(openssl rand -base64 32 | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/root/.ssh/id_ecdsa.pub) >> /root/.kc-password
-        export KEYCLOAK_PASSWORD=`cat /root/.kc-password | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/root/.ssh/id_ecdsa`
+        mkdir /opt/jboss/.ssh && chown jboss:jboss /opt/jboss/.ssh && chmod 0700 /opt/jboss/.ssh
+        ssh-keygen -t ecdsa -b 521 -q -N ''
+        echo $(openssl rand -base64 32 | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa.pub) >> /opt/jboss/.kc-password
+        export KEYCLOAK_PASSWORD=`cat /opt/jboss/.kc-password | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa`
+
+        # Generate keycloak admin user
+        /opt/jboss/keycloak/bin/add-user-keycloak.sh --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD
 
         # Make sure script hasn't already been run
         if test -f "/shared/id"; then
@@ -108,4 +111,6 @@ data:
         done
         {{ end }}
 
-        export KEYCLOAK_PASSWORD="blank"
+        KEYCLOAK_PASSWORD="blank"
+        useradd unpriv
+        su - unpriv
