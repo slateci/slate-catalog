@@ -161,19 +161,19 @@ run_test "pscheduler troubleshoot"
 #run_all_tests_to "uofu-ddc-dmz-latency.chpc.utah.edu"
 #run_all_tests_to "sl-uu-es1.slateci.io"
 print ""
-if [ ! -z "$dst1" ]
+if [ ! -z "$dest1" ]
   then
-    run_all_tests_to "$dst1" "$dest1bw"
+    run_all_tests_to "$dest1" "$dest1bw"
 fi
 
-if [ ! -z "$dst2" ]
+if [ ! -z "$dest2" ]
   then
-    run_all_tests_to "$dst2" "$dest2bw"
+    run_all_tests_to "$dest2" "$dest2bw"
 fi
 
-if [ ! -z "$dst3" ]
+if [ ! -z "$dest3" ]
   then
-    run_all_tests_to "$dst3" "$dest3bw"
+    run_all_tests_to "$dest3" "$dest3bw"
 fi
 
 print "All tests have finished!"
