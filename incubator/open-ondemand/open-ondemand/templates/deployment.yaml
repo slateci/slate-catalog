@@ -188,7 +188,7 @@ spec:
             - name: shared-data
               mountPath: /shared
             - name: keycloak-setup
-              mountPath: /etc/keycloak/
+              mountPath: /opt
               # Mount SLATE volume to the location of the Keycloak database.
             - name: keycloak-db
               mountPath: "/opt/jboss/keycloak/standalone/data"
