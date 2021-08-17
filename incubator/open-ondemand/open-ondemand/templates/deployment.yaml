@@ -175,7 +175,7 @@ spec:
             - name: SLATE_CLUSTER_NAME
               value: {{ .Values.SLATE.Cluster.DNSName }}
         - name: keycloak
-          image: /keycloak:4.8.3.Final
+          image: dockerbox88/keycloak:4.8.3.Final
           imagePullPolicy: Always
           # Run script if setupKeycloak parameter is enabled.
           # {{ if eq .Values.setupKeycloak true }}
