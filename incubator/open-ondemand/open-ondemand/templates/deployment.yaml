@@ -175,15 +175,15 @@ spec:
             - name: SLATE_CLUSTER_NAME
               value: {{ .Values.SLATE.Cluster.DNSName }}
         - name: keycloak
-          image: jboss/keycloak:4.8.3.Final
+          image: /keycloak:4.8.3.Final
           imagePullPolicy: Always
           # Run script if setupKeycloak parameter is enabled.
-          {{ if eq .Values.setupKeycloak true }}
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
-          {{ end }}
+          # {{ if eq .Values.setupKeycloak true }}
+          # lifecycle:
+          #   postStart:
+          #     exec:
+          #       command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
+          # {{ end }}
           volumeMounts:
             - name: shared-data
               mountPath: /shared
