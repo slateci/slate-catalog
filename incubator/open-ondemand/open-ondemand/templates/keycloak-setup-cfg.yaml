@@ -10,9 +10,10 @@ data:
         # Sets up Keycloak to allow Open OnDemand to authenticate through it.
 
         # Generate encrypted password
+        yum install -y coreutils
         mkdir /root/.ssh && chown root:root /root/.ssh && chmod 0700 /root/.ssh
         ssh-keygen -t ecdsa -b 4096
-        echo $(randAlphaNum 12 | b64enc | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/root/.ssh/id_ecdsa.pub) >> /root/.kc-password
+        echo $(openssl rand -base64 32 | b64enc | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/root/.ssh/id_ecdsa.pub) >> /root/.kc-password
         export KEYCLOAK_PASSWORD=`cat /root/.kc-password | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/root/.ssh/id_ecdsa`
 
         # Make sure script hasn't already been run
