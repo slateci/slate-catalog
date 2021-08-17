@@ -35,11 +35,11 @@ kerberos:
 # Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
-      name: "Node1"
-      host: "node1.example.net"
+      name: "slate-node1"
+      host: "slate-node1.chpc.utah.edu"
       enableHostAdapter: true
       job:
-        ssh_hosts: "node1.example.net"
+        ssh_hosts: "slate-node1.chpc.utah.edu"
         site_timeout: 14400
         singularity_bin: /bin/singularity
         singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
@@ -91,7 +91,7 @@ advanced:
   autofs: true
   NFS: false
   fileSharing:
-    mountPoint: "/example/home"
+    mountPoint: "/uufs/chpc.utah.edu/common/home"
     nfs_shares: 
       - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \\'
       - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
