@@ -7,6 +7,9 @@ data:
 
         #! /bin/bash
 
+        # Redirect output to a logfile
+        exec >/opt/jboss/output.log 2>&1
+
         # Sets up Keycloak to allow Open OnDemand to authenticate through it.
 
         # Generate encrypted password
