@@ -182,7 +182,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh", "--uid", "0", "--gid", "0"]
+                command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
           {{ end }}
           volumeMounts:
             - name: shared-data
