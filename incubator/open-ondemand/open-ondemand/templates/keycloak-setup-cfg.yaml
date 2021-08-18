@@ -16,7 +16,7 @@ data:
         mkdir /opt/jboss/.ssh && chown jboss:jboss /opt/jboss/.ssh && chmod 0700 /opt/jboss/.ssh
         ssh-keygen -t ecdsa -b 521 -q -N '' -f /opt/jboss/.ssh/id_ecdsa
         echo $(openssl rand -base64 32 | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa.pub) >> /opt/jboss/.kc-password
-        export KEYCLOAK_PASSWORD=`cat /opt/jboss/.kc-password | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa`
+        export KEYCLOAK_PASSWORD=`cat /opt/jboss/.kc-password | openssl enc -base64 -a -A -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa`
 
         # Generate keycloak admin user
         /opt/jboss/keycloak/bin/add-user-keycloak.sh --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD
@@ -110,5 +110,6 @@ data:
         done
         {{ end }}
 
+        chown root:root /opt/jboss/.ssh
         useradd unpriv
         su - unpriv
