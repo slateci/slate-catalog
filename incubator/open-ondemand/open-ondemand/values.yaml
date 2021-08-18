@@ -7,8 +7,6 @@ Instance: "global"
 
 replicaCount: 1
 
-setupKeycloak: true
-
 # Keycloak volume parameters
 volume:
   storageClass: local-path

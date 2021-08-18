@@ -111,6 +111,5 @@ data:
         done
         {{ end }}
 
-        KEYCLOAK_PASSWORD="blank"
         useradd unpriv
         su - unpriv

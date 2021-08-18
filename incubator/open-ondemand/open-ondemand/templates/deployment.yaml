@@ -179,15 +179,8 @@ spec:
             - name: SLATE_CLUSTER_NAME
               value: {{ .Values.SLATE.Cluster.DNSName }}
         - name: keycloak
-          image: dockerbox88/keycloak
+          image: jboss/keycloak:9.0.0
           imagePullPolicy: Always
-          # Run script if setupKeycloak parameter is enabled.
-          # {{ if eq .Values.setupKeycloak true }}
-          # lifecycle:
-          #   postStart:
-          #     exec:
-          #       command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
-          # {{ end }}
           volumeMounts:
             - name: shared-data
               mountPath: /shared
