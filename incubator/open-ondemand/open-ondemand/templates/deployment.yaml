@@ -128,8 +128,7 @@ spec:
               subPath: sssd.conf
             {{ end }}
           ######## Start of Advanced Features #########
-          {{ if eq .Values.enableHostAdapter true }}
-            # HostBased Authentication Config
+            # Resource Management config
             - name: startup-config
               mountPath: /root/startup-ood.sh
               subPath: startup-ood.sh
@@ -150,13 +149,11 @@ spec:
               mountPath: /root/{{ .host_key.name | lower | nospace }}
               subPath: {{ .host_key.name | lower | nospace }}
             {{- end }}
-            # Desktop Application Files
+            # Cluster Definition Files
             {{- range .Values.clusters }}
-            {{ if eq .cluster.enableHostAdapter true }}
             - name: desktop-app-config
               mountPath: /etc/ood/config/apps/bc_desktop/{{ .cluster.name | lower | nospace }}.yml
               subPath: {{ .cluster.name | lower | nospace }}.yml
-            {{ end }}
             {{- end }}
             - name: desktop-app-config
               mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
