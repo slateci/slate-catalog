@@ -13,16 +13,10 @@ data:
       ln -s {{ .Values.advanced.fileSharing.mountPoint }}/$i /home/$i
     done
   {{ end }}
-  {{ range .Values.testUsers }}
-    # Generate test users to match test users in keycloak
-    groupadd -g {{ .user.groupID }} {{ .user.group }}
-    useradd -g {{ .user.group }} {{ .user.name }}
-    echo "{{ .user.tempPassword }}" | passwd --stdin {{ .user.name }}
-  {{ end }}
     array=()
     # Changing ownership of ssh_keys and copying them over to /etc/ssh folder
     groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
-    for i in `ls /root | grep .pub`; do
+    for i in `ls /root | grep .pub`; do1
       array+=("$i")
     done
     for i in ${array[@]}; do
@@ -38,6 +32,21 @@ data:
     # Changing permissions of openssh ssh-keysign
     chgrp ssh_keys /usr/libexec/openssh/ssh-keysign
     chmod g+s /usr/libexec/openssh/ssh-keysign
+  {{ end }}
+
+  {{ if eq .Values.enableHostAdapter false }}
+    # Generate users from LDAP to match users in keycloak
+    while read p; do
+      useradd $p
+      groupadd $p
+    done </shared/users.txt
+  {{ end }}
+
+  {{ range .Values.testUsers }}
+    # Generate test users to match test users in keycloak
+    groupadd -g {{ .user.groupID }} {{ .user.group }}
+    useradd -g {{ .user.group }} {{ .user.name }}
+    echo "{{ .user.tempPassword }}" | passwd --stdin {{ .user.name }}
   {{ end }}
 
     # Adding heartbeat (ping/pong) function to shell websocket connections, fixes a 60 second shell timeout issue
