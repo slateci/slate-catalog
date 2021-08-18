@@ -66,7 +66,7 @@ spec:
             - key: autofs_config.sh
               path: autofs_config.sh
               mode: 0700
-        # HostBased Authentication and linuxhost_adapter setup script
+        # Resource Management Configuration
         - name: startup-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-startup-cfg
@@ -85,6 +85,7 @@ spec:
                 mode: 0600
             {{ end }}
         # Desktop Application Files
+        {{ if eq .Values.enableHostAdapter true }}
         - name: desktop-app-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-desktop-app
@@ -96,11 +97,10 @@ spec:
             - key: linuxhost_submit.yml.erb
               path: linuxhost_submit.yml.erb
             {{ range .Values.clusters }}
-            {{ if eq .cluster.enableHostAdapter true }}
             - key: {{ .cluster.name | lower | nospace }}.yml
               path: {{ .cluster.name | lower | nospace }}.yml
             {{ end }}
-            {{ end }}
+        {{ end }}
       ######## End of Advanced Features ########
       containers:
         - name: open-ondemand
@@ -150,6 +150,7 @@ spec:
               subPath: {{ .host_key.name | lower | nospace }}
             {{- end }}
             # Cluster Definition Files
+            {{ if eq .Values.enableHostAdapter true }}
             {{- range .Values.clusters }}
             - name: desktop-app-config
               mountPath: /etc/ood/config/apps/bc_desktop/{{ .cluster.name | lower | nospace }}.yml
@@ -164,6 +165,7 @@ spec:
             - name: desktop-app-config
               mountPath: /etc/ood/config/apps/bc_desktop/submit/linuxhost_submit.yml.erb
               subPath: linuxhost_submit.yml.erb
+            {{ end }}
           ######## End of Advanced Features ########
           ports:
             - name: http
