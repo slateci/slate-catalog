@@ -35,10 +35,9 @@ data:
   {{ end }}
 
   {{ if eq .Values.enableHostAdapter false }}
-    # Generate users from LDAP to match users in keycloak
+    # Generate missing user home directories
     while read p; do
-      useradd $p
-      groupadd $p
+      mkdir /home/$p && chown $p /home/$p
     done </shared/users.txt
   {{ end }}
 
