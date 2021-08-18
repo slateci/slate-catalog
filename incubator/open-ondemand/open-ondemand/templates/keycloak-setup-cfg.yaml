@@ -76,7 +76,7 @@ data:
         id=$($keycloak get clients -r ondemand --fields clientId,id | tr -d " \t\n\r" | grep -o -E $client_id_pattern | grep -o -E $secret_id_pattern)
 
         # Write client_id to a file in shared volume
-        echo $client_id > /shared/id
+        echo $client_id > /shared/id && chmod 0600 /shared/id
 
         # Get the client secret to use with OnDemand installation
         client_secret=$($keycloak get clients/$id/client-secret -r ondemand | tr -d " \t\n\r" | grep -o -E $secret_id_pattern)

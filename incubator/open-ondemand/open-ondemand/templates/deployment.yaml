@@ -43,7 +43,7 @@ spec:
             - key: sssd.conf
               path: sssd.conf
               mode: 0600
-        # OnDemand Server Config
+        # OnDemand Portal Config
         - name: ood-portal-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-ood-portal
@@ -51,7 +51,7 @@ spec:
             - key: ood_portal.yml
               path: ood_portal.yml
       ######## Start of Advanced Features ########
-        # LinuxHost Adapter
+        # LinuxHost Adapter & Resource Management
         - name: linuxhost-adapter-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-host-adapter
@@ -66,7 +66,7 @@ spec:
             - key: autofs_config.sh
               path: autofs_config.sh
               mode: 0700
-        # Resource Management Configuration
+        # Post-Startup Config
         - name: startup-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-startup-cfg
@@ -84,7 +84,7 @@ spec:
                 path: {{ .host_key.name | lower | nospace }}
                 mode: 0600
             {{ end }}
-        # Desktop Application Files
+        # Desktop Application Config
         {{ if eq .Values.enableHostAdapter true }}
         - name: desktop-app-config
           configMap:
@@ -114,11 +114,11 @@ spec:
             # Shared Volume
             - name: shared-data
               mountPath: /shared
-            # OnDemand Server Config
+            # OnDemand Portal Config
             - name: ood-portal-config
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
-            # LinuxHost Adapter
+            # LinuxHost Adapter & Resource Management
             - name: linuxhost-adapter-config
               mountPath: /etc/ood/config/clusters.d
             # SSSD
@@ -128,7 +128,7 @@ spec:
               subPath: sssd.conf
             {{ end }}
           ######## Start of Advanced Features #########
-            # Resource Management config
+            # Post-Startup Config
             - name: startup-config
               mountPath: /root/startup-ood.sh
               subPath: startup-ood.sh

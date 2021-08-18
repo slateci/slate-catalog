@@ -114,27 +114,16 @@ be whatever you want the OnDemand web portal to display that cluster as, and the
       enableHostAdapter: false
 ```
 
-**Resource Management**
-
-To configure shell access to backend resources, simply fill in the
-name and host sections for each cluster. If no other features are desired
-then set `enableHostAdapter` to false and skip the 'Advanced' section
-of this document.
+### Cluster Definitions
 
 To set up remote desktop access, set the `enableHostAdapter` value to true,
-then configure the LinuxHost Adapter. This is a simplified resource manager
-built from various components such as TurboVNC, Singularity and tmux. By
-enabling resource management, you can set up more interactive apps and 
-easily manage remote sessions from the OnDemand portal.
-
-Be sure to install these components on the backend nodes if you wish to
-enable resource management. These components include TurboVNC 2.1+, Singularity,
-a centos7 singularity image, nmap-ncat, Websockify 0.8.0+, and a desktop of your
-choice [mate 1+ (default), xfce 4+, gnome 2]
+then configure the `LinuxHost Adapter`. This is a simplified resource manager
+built from various component softwares. By enabling resource management, you 
+can set up interactive apps and manage sessions remotely.
 
 ```yaml
   - cluster:
-      name: "node1"
+      name: "Node1"
       host: "node1.example.net"
       enableHostAdapter: true
       job:
@@ -157,37 +146,49 @@ choice [mate 1+ (default), xfce 4+, gnome 2]
         - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
         - '%s'
       set_host: "$(hostname)"
+  - cluster:
+      name: "Node2"
+      ...
+```
+
+### Backend Configuration
+
+To enable resource management, you must install components of the 
+`LinuxHost Adapter` on each backend cluster. These include 
+[TurboVNC 2.1+](https://www.turbovnc.org/), [Singularity](https://sylabs.io/),
+[nmap-ncat](https://nmap.org/ncat), 
+[Websockify 0.8.0+](https://pypi.org/project/websockify/#description),
+a singularity CentOS 7 image, and a desktop of your choice 
+[mate 1+, xfce 4+, gnome 2].
+
+```bash
+singularity pull docker://centos:7
 ```
 
 To establish a remote desktop connection, ports 5800(+n) 5900(+n) and 6000(+n)
-need to be open on the backend for each display number n. In addition, port 22
-must be open for SSH and ports 20000+ must be open to receive websocket traffic.
-The easiest way to do this is to accept all traffic coming from the OnDemand
-host. To do this, simply add a new rule to iptables
-or a trusted firewalld zone.
+need to be open for each display number n. As well as, port 22 for ssh
+and ports 20000+ for websocket connections. To do this simply, add a 
+global rule to iptables or a trusted firewalld zone.
 
 ```bash
 sudo iptables -A INPUT -s xxx.xxx.xxx.xxx/32 -j ACCEPT
-
 sudo firewall-cmd --zone=trusted --add-source=xxx.xxx.xxx.xxx/32
 ```
 
-## Interactive Apps and Remote Desktop (Advanced)
-
 ### Authentication
 
-The LinuxHost Adapter requires passwordless SSH for all users which is 
-most easily configured by establishing host-level trust. To enable hostBased 
-Authentication, first go to each backend resources and add public host keys 
-from the OnDemand server to a file called `/etc/ssh/ssh_known_hosts` using 
-the`ssh-keyscan` command.
+The LinuxHost Adapter requires passwordless SSH for all users. This is 
+most easily configured by establishing host-level trust (hostbased authentication). 
+First go to each backend cluster and add public host keys from the OnDemand 
+server to a file called `/etc/ssh/ssh_known_hosts` using the`ssh-keyscan`.
+For more detailed information, see the links in [Prerequisites](##Prerequisites).
 
 ```bash
 ssh-keyscan [IP_ADDR] >> /etc/ssh/ssh_known_hosts
 ```
 
 Add an entry to `/etc/ssh/shosts.equiv` with the IP address of the
-OnDemand server. Then in the `/etc/ssh/sshd_config` file, change the
+OnDemand server. Then, in the `/etc/ssh/sshd_config` file, change the
 following lines from:
 
 ```bash
@@ -200,7 +201,7 @@ HostbasedAuthentication yes
 IgnoreRhosts no
 ```
 
-Next, ensure that you have the correct permissions for host keys at `/etc/ssh`
+Now ensure that you have the correct permissions for host keys at `/etc/ssh`
 
 ```bash
 -rw-r-----.   1 root ssh_keys      227 Jan 1 2000      ssh_host_ecdsa_key
@@ -218,14 +219,14 @@ Note: location varies with distro
 ---x--s--x.  1 root ssh_keys      5760 Jan 1 2000      ssh-keysign
 ```
 
-Since pods are ephemeral, keys from the host system should be passed 
-into the container using a secret. This will ensure that trust is not broken
+### Secret Generation
+
+Pods are ephermeral, so keys from the host system should be passed 
+into the container using a secret. This will ensure trust is not broken
 when pods are replaced. This script will generate a secret containing host 
 keys on the OnDemand server.
 
-Note: must be consistent with the values.yaml file
-
-```bash
+```sh
 #!/bin/bash
 echo -n "Please enter a name for your secret: "
 read secretName
@@ -243,13 +244,19 @@ printf "$command\n"
 $command ; echo ""
 ```
 
+To secure your secrets when not in use or in the event of intrusion, 
+you can install a secret management provider such as 
+[Vault](https://www.vaultproject.io/docs/platform/k8s/helm) or 
+[CyberArk](https://docs.cyberark.com/Product-Doc/OnlineHelp/AAM-DAP/11.2/en/Content/Integrations/Kubernetes_deployApplicationsConjur-k8s-Secrets.htm).
+
 ### Filesystem Distribution
 
-Resource management for Open OnDemand also requires a distributed filesystem.
+Resource management for OnDemand also requires a distributed filesystem. This chart
+supports NFS and autofs.
 
-To configure NFS set the `NFS` value to true and specify a mount point.
+To configure NFS alone, set the `NFS` value to true and specify a mount point.
 Then make sure `nfs-utils` is installed and the `/etc/exports` file has an
-entry for localhost, and any backend clusters.
+entry for localhost, and backend clusters.
 
 ```bash
 /uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
@@ -257,20 +264,19 @@ entry for localhost, and any backend clusters.
 ...
 ```
 
-To configure autofs simply set the `autofs` value to true and then add any
-shares you would like in the `nfs_shares` field. Make sure that the backend
-clusters use the same shares and they are mounted using the same absolute path.
+To configure autofs set the `autofs` value to true and fill out the `nfs_shares` 
+field. Make sure that backend clusters use the same shares and are mounted using
+the same path.
 
 ### NodeSelector
 
-Finally, in order for these environmental changes to have effect, the chart must
-be installed on a properly configured node. On a multi-node system it is necessary
-to set a `nodeSelectorLabel` called disktype on a desired node. Then match
-that label in the `values.yaml` file. If all nodes are properly configured
-then you may skip this step.
+Finally, the chart must be installed on a properly configured node. On a multi-node
+cluster it is necessary to set a `nodeSelectorLabel` called 'application' on a desired 
+node. Then match that label in the `values.yaml` file. If all nodes are properly configured
+then you may leave this field blank.
 
 ```bash
-kubectl label nodes <node-name> disktype=ssd
+kubectl label nodes <node-name> application=ood
 ```
 
 ## Installation
@@ -313,7 +319,6 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |-------------------------------|---------------------------------|-----------------------------|
 |`Instance`| String to differentiate SLATE experiment instances. |`global`|
 |`replicaCount`| The number of replicas to create. |`1`|
-|`setupKeycloak`| Runs Keycloak setup script if enabled. |`true`|
 |`volume.storageClass`| The volume provisioner from which to request the Keycloak backing volume. |`local-path`|
 |`volume.size`| The amount of storage to request for the volume. |`50M`|
 |`setupLDAP`| Set up LDAP automatically based on following values. |`true`|
@@ -322,32 +327,33 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`ldap.rdnLDAPAttribute`| LDAP configuration. |`uid`|
 |`ldap.uuidLDAPAttribute`| LDAP configuration. |`uidNumber`|
 |`ldap.userObjectClasses`| LDAP configuration. |`inetOrgPerson, organizationalPerson`|
+|`ldap.ldapSearchBase`| LDAP configuration. |`dc=chpc,dc=utah,dc=edu`|
 |`ldap.usersDN`| LDAP configuration. |`ou=People,dc=chpc,dc=utah,dc=edu`|
 |`kerberos.realm`| Kerberos realm to connect to. |`AD.UTAH.EDU`|
 |`kerberos.serverPrincipal`| Kerberos server principal. |`HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU`|
 |`kerberos.keyTab`| Kerberos configuration. |`/etc/krb5.keytab`|
 |`kerberos.kerberosPasswordAuth`| Use Kerberos for password authentication. |`true`|
 |`kerberos.debug`| Writes additional debug logs if enabled. |`true`|
-|`clusters.cluster.name`| Name of cluster to connect to. |`Kingspeak`|
-|`clusters.cluster.host`| Hostname of cluster to connect to. |`kingspeak.chpc.utah.edu`|
-|`desktopEnable` | Configure remote desktop functionality. |`true`|
-|`ssh_hosts` | Full hostname of the login node. |`kingspeak.chpc.utah.edu`|
-|`singularity_bin` | Location of singularity binary. |`/bin/singularity`|
-|`singularity_bindpath` | Directories accessible during VNC sessions. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
-|`singularity_image` | Location of singularity image. |`/opt/centos7.sif`|
-|`tmux_bin` | Location of tmux binary. |`/usr/bin/tmux`|
-|`basic_script` | Basic desktop startup script. |`#!/bin/bash \ ... \ %s`|
-|`vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
-|`set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
+|`clusters.cluster.name`| Name of cluster to appear in the portal. |`Node1`|
+|`clusters.cluster.host`| Hostname of cluster to connect to. |`node1.example.net`|
+|`clusters.cluster.enableHostAdapter` | Configure remote desktop functionality. |`true`|
+|`clusters.cluster.job.ssh_hosts` | Full hostname of the login node. |`kingspeak.chpc.utah.edu`|
+|`clusters.cluster.job.singularity_bin` | Location of singularity binary. |`/bin/singularity`|
+|`clusters.cluster.job.singularity_bindpath` | Directories accessible during VNC sessions. |`/etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home`|
+|`clusters.cluster.job.singularity_image` | Location of singularity image. |`/opt/centos7.sif`|
+|`clusters.cluster.job.tmux_bin` | Location of tmux binary. |`/usr/bin/tmux`|
+|`clusters.cluster.basic_script` | Basic desktop startup script. |`#!/bin/bash \ ... \ %s`|
+|`clusters.cluster.vnc_script` | VNC session startup script. |`#!/bin/bash \ ... \ %s`|
+|`clusters.cluster.set_host` | Hostname passed from the remote node back to OnDemand. |`$(hostname -A)`|
 |`host_regex` | Regular expression to capture hostnames. |`[\w.-]+\.(peaks\|arches\|int).chpc.utah.edu`|
 |`enableHostAdapter` | Enable resource management and interactive apps. |`true`|
-|`desktop` | Desktop environment (mate,xfce,gnome) |`mate`|
-|`node_selector_label` | Matching node label for a preferred node. |`ssd`|
-|`ssh_keys_GID` | Group ID value of ssh_keys group. |`993`|
-|`secret_name` | Name of secret holding host_keys. |`ssh-key-secret`|
-|`host_keys` | Names of stored keys. |`ssh_host_ecdsa_key`|
-|`autofs` | Mount home directories using autofs. |`true`|
-|`NFS` | Mount home directories with just NFS. |`false`|
-|`mountPoint` | Preferred path for mounting nfs shares. |`/ondemand/home`|
-|`nfs_shares` | A mapfile with shares to be mounted by autofs. |`* -nolock,hard,...`|
+|`advanced.desktop` | Desktop environment (mate,xfce,gnome) |`mate`|
+|`advanced.node_selector_label` | Matching node label for a preferred node. |`ssd`|
+|`advanced.ssh_keys_GID` | Group ID value of ssh_keys group. |`993`|
+|`advanced.secret_name` | Name of secret holding host_keys. |`ssh-key-secret`|
+|`advanced.host_keys` | Names of stored keys. |`ssh_host_ecdsa_key`|
+|`advanced.autofs` | Mount home directories using autofs. |`true`|
+|`advanced.NFS` | Mount home directories with just NFS. |`false`|
+|`advanced.fliesharing.mountPoint` | Preferred path for mounting nfs shares. |`/ondemand/home`|
+|`advanced.filesharing.nfs_shares` | A mapfile with shares to be mounted by autofs. |`* -nolock,hard,...`|
 |`testUsers` | Unprivileged users for testing login to OnDemand. |`test`|
