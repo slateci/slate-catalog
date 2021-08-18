@@ -31,6 +31,10 @@ spec:
         - name: keycloak-setup
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
+            items:
+            - key: keycloak-setup.sh
+              path: keycloak-setup.sh
+              mode: 0700
         # OnDemand SSSD config
         - name: ood-sssd-config
           configMap:
@@ -188,7 +192,8 @@ spec:
             - name: shared-data
               mountPath: /shared
             - name: keycloak-setup
-              mountPath: /opt
+              mountPath: /opt/keycloak-setup.sh
+              subPath: keycloak-setup.sh
               # Mount SLATE volume to the location of the Keycloak database.
             - name: keycloak-db
               mountPath: "/opt/jboss/keycloak/standalone/data"
