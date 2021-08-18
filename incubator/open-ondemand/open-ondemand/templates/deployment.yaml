@@ -181,6 +181,10 @@ spec:
         - name: keycloak
           image: jboss/keycloak:4.8.3.Final
           imagePullPolicy: Always
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/bash", "/opt/keycloak-setup.sh"]
           volumeMounts:
             - name: shared-data
               mountPath: /shared
