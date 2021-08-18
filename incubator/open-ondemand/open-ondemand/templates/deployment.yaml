@@ -34,7 +34,7 @@ spec:
             items:
             - key: keycloak-setup.sh
               path: keycloak-setup.sh
-              mode: 0700
+              mode: 0711
         # OnDemand SSSD config
         - name: ood-sssd-config
           configMap:
@@ -65,7 +65,7 @@ spec:
             items:
             - key: autofs_config.sh
               path: autofs_config.sh
-              mode: 0711
+              mode: 0700
         # HostBased Authentication and linuxhost_adapter setup script
         - name: startup-config
           configMap:
