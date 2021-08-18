@@ -36,11 +36,12 @@ data:
 
   {{ if eq .Values.enableHostAdapter false }}
     # Generate missing user home directories (Only necessary without nfs shares mounted)
+    supervisorctl stop sssd
     while [ ! -f /shared/users.txt ]; do
       sleep 2
     done
     while read p; do
-      mkdir /home/$p && chown $p /home/$p
+      useradd $p
     done </shared/users.txt
   {{ end }}
 
