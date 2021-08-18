@@ -164,7 +164,6 @@ spec:
             - name: desktop-app-config
               mountPath: /etc/ood/config/apps/bc_desktop/submit/linuxhost_submit.yml.erb
               subPath: linuxhost_submit.yml.erb
-          {{ end }}
           ######## End of Advanced Features ########
           ports:
             - name: http
