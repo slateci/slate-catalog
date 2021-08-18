@@ -24,9 +24,7 @@ data:
         # Make sure script hasn't already been run
         if test -f "/shared/id"; then
                 echo "Keycloak is already configured. Skipping setup."
-                chown root:root /opt/jboss/.ssh
-                useradd unpriv
-                su - unpriv
+                rm -rf /opt/jboss/.ssh
                 exit 0
         fi
         echo "Configuring Keycloak..."
@@ -113,6 +111,5 @@ data:
         done
         {{ end }}
 
-        chown root:root /opt/jboss/.ssh
-        useradd unpriv
-        su - unpriv
+        # Delete encryption key
+        rm -rf /opt/jboss/.ssh
