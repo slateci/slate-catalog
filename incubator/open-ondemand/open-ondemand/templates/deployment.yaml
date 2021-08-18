@@ -34,7 +34,7 @@ spec:
             items:
             - key: keycloak-setup.sh
               path: keycloak-setup.sh
-              mode: 0711
+              mode: 0755
         # OnDemand SSSD config
         - name: ood-sssd-config
           configMap:
