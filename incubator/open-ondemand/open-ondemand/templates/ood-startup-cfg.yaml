@@ -36,7 +36,7 @@ data:
 
   {{ if eq .Values.enableHostAdapter false }}
     # Generate missing user home directories (Only necessary without nfs shares mounted)
-    while [ ! -f /shared/uers.txt ]; do
+    while [ ! -f /shared/users.txt ]; do
       sleep 2
     done
     while read p; do
