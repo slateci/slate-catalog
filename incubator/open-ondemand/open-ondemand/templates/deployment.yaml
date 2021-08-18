@@ -179,7 +179,7 @@ spec:
             - name: SLATE_CLUSTER_NAME
               value: {{ .Values.SLATE.Cluster.DNSName }}
         - name: keycloak
-          image: jboss/keycloak:9.0.0
+          image: jboss/keycloak:4.8.3.Final
           imagePullPolicy: Always
           volumeMounts:
             - name: shared-data
