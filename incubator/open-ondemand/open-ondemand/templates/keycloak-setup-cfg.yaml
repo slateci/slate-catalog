@@ -13,7 +13,6 @@ data:
         # Sets up Keycloak to allow Open OnDemand to authenticate through it.
 
         # Generate encrypted password
-        yum install -y coreutils
         mkdir /opt/jboss/.ssh && chown jboss:jboss /opt/jboss/.ssh && chmod 0700 /opt/jboss/.ssh
         ssh-keygen -t ecdsa -b 521 -q -N '' -f /opt/jboss/.ssh/id_ecdsa
         echo $(openssl rand -base64 32 | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa.pub) >> /opt/jboss/.kc-password
