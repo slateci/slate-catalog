@@ -5,6 +5,7 @@ metadata:       # This configmap handles optional configuration and temporary bu
 data:
   startup-ood.sh: |
     #!/bin/bash
+    exec >/root/ood-startup.log 2>&1
   {{ if eq .Values.enableHostAdapter true }}
     mkdir -p {{ .Values.advanced.fileSharing.mountPoint }}
   {{ if eq .Values.advanced.NFS true }}
@@ -88,3 +89,5 @@ data:
     # Since our session data is shared via nfs, the data is still accessible on the backend.
     Rails.application.config.session_store :cache_store, { cache: ActiveSupport::Cache::FileStore.new(Dir.mktmpdir.to_s) }
     EOF
+
+    echo "exiting..."
