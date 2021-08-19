@@ -24,7 +24,7 @@ data:
       groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
     else
       groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
-    for i in `ls /root | grep .pub`; do1
+    for i in `ls /root | grep .pub`; do
       array+=("$i")
     done
     for i in ${array[@]}; do
