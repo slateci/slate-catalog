@@ -16,7 +16,7 @@ data:
     array=()
     # Changing ownership of ssh_keys and copying them over to /etc/ssh folder
     if cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID }} ; then  # If group is taken change GID
-      export group=$(cat /etc/group | grep 991 | sed 's/:.*//g')
+      export group=$(cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID}} | sed 's/:.*//g')
       gid=900
       until groupmod $group -g $gid; do
         gid+=1
