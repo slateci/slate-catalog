@@ -10,7 +10,7 @@ data:
   {{ if eq .Values.enableHostAdapter true }}
     # Ensure that the fileSharing mountPoint exists in the container
     mkdir -p {{ .Values.advanced.fileSharing.mountPoint }}
-  {{ if eq .Values.advanced.NFS true || if eq .Values.advanced.autofs true }}
+  {{ if eq .Values.advanced.NFS true }}
     # Create a symbolic link between /home/$user and /{nfs_share_mount_point}/$user
     for i in `ls {{ .Values.advanced.fileSharing.mountPoint }}`; do
       ln -s {{ .Values.advanced.fileSharing.mountPoint }}/$i /home/$i
