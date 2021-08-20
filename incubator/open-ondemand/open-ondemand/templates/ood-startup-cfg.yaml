@@ -1,22 +1,23 @@
 apiVersion: v1
 kind: ConfigMap
-metadata:       # This configmap handles optional configuration and temporary bug fixes
+metadata:       # This configmap handles post-startup configuration and temporary bug fixes
   name: {{ include "open-ondemand.fullname" . }}-startup-cfg
 data:
   startup-ood.sh: |
     #!/bin/bash
+    unset HISTFILE
     exec >/root/ood-startup.log 2>&1
   {{ if eq .Values.enableHostAdapter true }}
+    # Ensure that the fileSharing mountPoint exists in the container
     mkdir -p {{ .Values.advanced.fileSharing.mountPoint }}
-  {{ if eq .Values.advanced.NFS true }}
-    # Create a symbolic link between /home/user and /{nfs_mount}/user
+  {{ if eq .Values.advanced.NFS true || if eq .Values.advanced.autofs true }}
+    # Create a symbolic link between /home/$user and /{nfs_share_mount_point}/$user
     for i in `ls {{ .Values.advanced.fileSharing.mountPoint }}`; do
       ln -s {{ .Values.advanced.fileSharing.mountPoint }}/$i /home/$i
     done
   {{ end }}
-    array=()
-    # Changing ownership of ssh_keys and copying them over to /etc/ssh folder
-    if cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID }} ; then  # If group is taken change GID
+    # Changing GID of ssh_keys group to match host, if GID is taken then make it available
+    if cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID }} ; then 
       export group=$(cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID}} | sed 's/:.*//g')
       gid=900
       until groupmod $group -g $gid; do
@@ -26,12 +27,15 @@ data:
     else
       groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
     fi
+    # Changing ownership of ssh public keys and moving to /etc/ssh folder
+    array=()
     for i in `ls /root | grep .pub`; do
       array+=("$i")
     done
     for i in ${array[@]}; do
       cat /root/$i > /etc/ssh/$i && chmod 0644 /etc/ssh/$i
     done
+    # Changing ownership of ssh keys and moving to /etc/ssh folder
     array=()
     for i in `ls /root/*_key | sed 's/\/root\///g'`; do
       array+=("$i")
@@ -62,6 +66,7 @@ data:
     echo "{{ .user.tempPassword }}" | passwd --stdin {{ .user.name }}
   {{ end }}
 
+    ############## Bug Fixes ##############
     # Adding heartbeat (ping/pong) function to shell websocket connections, fixes a 60 second shell timeout issue
     # See the github repo for the javascript 'ws' package here: 
     # https://github.com/websockets/ws#how-to-detect-and-close-broken-connections

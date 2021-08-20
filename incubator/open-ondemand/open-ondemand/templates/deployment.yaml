@@ -35,7 +35,7 @@ spec:
             - key: keycloak-setup.sh
               path: keycloak-setup.sh
               mode: 0755
-        # OnDemand SSSD config
+        # SSSD config
         - name: ood-sssd-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-sssd
@@ -50,15 +50,16 @@ spec:
             items:
             - key: ood_portal.yml
               path: ood_portal.yml
-      ######## Start of Advanced Features ########
-        # LinuxHost Adapter & Resource Management
-        - name: linuxhost-adapter-config
+        # Cluster Definition Files (+optional linuxHost_Adapter)
+        - name: ood-cluster-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-host-adapter
-        # NFS Volume
+            name: {{ include "open-ondemand.fullname" . }}-resource-management
+      ######## Start of Advanced Features ########
+        # NFS Volume (mounted from host)
         - name: nfs-volume
           persistentVolumeClaim:
             claimName: ood-nfs-pvc
+        # Autofs Config
         - name: autofs-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-autofs
@@ -74,8 +75,8 @@ spec:
             - key: startup-ood.sh
               path: startup-ood.sh
               mode: 0700
-        # HostKey Volumes
-        - name: key-volume
+        # Secret Volume
+        - name: secret-volume
           secret:
             secretName: {{ .Values.advanced.secret_name }}
             items:
@@ -118,10 +119,10 @@ spec:
             - name: ood-portal-config
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
-            # LinuxHost Adapter & Resource Management
-            - name: linuxhost-adapter-config
+            # Cluster Definition Files (+optional linuxHost_Adapter)
+            - name: ood-cluster-config
               mountPath: /etc/ood/config/clusters.d
-            # SSSD
+            # SSSD Config
             {{ if eq .Values.setupLDAP true }}
             - name: ood-sssd-config
               mountPath: /etc/sssd/sssd.conf
@@ -132,7 +133,7 @@ spec:
             - name: startup-config
               mountPath: /root/startup-ood.sh
               subPath: startup-ood.sh
-            # NFS Volume
+            # NFS Volume (mounted from host)
             {{ if eq .Values.advanced.NFS true }}
             - name: nfs-volume
               mountPath: {{ .Values.advanced.fileSharing.mountPoint }}
@@ -145,11 +146,11 @@ spec:
             {{ end }}
             # Secret Volume
             {{- range .Values.advanced.host_keys }}
-            - name: key-volume
+            - name: secret-volume
               mountPath: /root/{{ .host_key.name | lower | nospace }}
               subPath: {{ .host_key.name | lower | nospace }}
             {{- end }}
-            # Cluster Definition Files
+            # Desktop Application Config
             {{ if eq .Values.enableHostAdapter true }}
             {{- range .Values.clusters }}
             - name: desktop-app-config

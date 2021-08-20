@@ -1,6 +1,6 @@
 apiVersion: v1
 kind: ConfigMap
-metadata:       # This configmap configures Open OnDemand for the Remote Desktop app
+metadata:       # These are configuration files for the Desktop Application
   name: {{ include "open-ondemand.fullname" . }}-desktop-app
 data:
   form.yml: |
