@@ -1,22 +1,13 @@
 #!/bin/bash
+scl enable ondemand /var/www/ood/apps/sys/shell/bin/setup
 mkdir /etc/ood/config/apps /etc/ood/config/apps/shell
 touch /etc/ood/config/apps /etc/ood/config/apps/shell/env
 sed -i "/^Host */a \        HostBasedAuthentication yes\n        EnableSSHKeysign yes" /etc/ssh/ssh_config
 cat <<EOF > /etc/ood/config/apps/shell/env
-PORT=${1:-8080}
 OOD_SSHHOST_ALLOWLIST=""
 OOD_SHELL_ORIGIN_CHECK="off"
 EOF
-while [ ! -f /root/autofs_config.sh ]; do
-  sleep 2
-done
-/root/autofs_config.sh
-while [ ! -f /shared/id ]; do
-  sleep 2
-done
-while [ ! -f /shared/client-secret ]; do
-  sleep 2
-done
+sleep 30
 cat <<EOF > /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 OIDCProviderMetadataURL https://$(echo $SLATE_INSTANCE_NAME).keycloak.$(echo $SLATE_CLUSTER_NAME)/auth/realms/ondemand/.well-known/openid-configuration
 OIDCClientID        "`cat /shared/id`" 
@@ -42,4 +33,3 @@ chgrp apache /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 chmod 640 /opt/rh/httpd24/root/etc/httpd/conf.d/auth_openidc.conf
 sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
 supervisorctl restart apache
-supervisorctl restart autofs
