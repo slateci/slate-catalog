@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   name: {{ include "open-ondemand.fullname" . }}-nfs-pv
   labels:
-    {{- include "open-ondemand.labels" | nindent 4 }}
+    {{- include "open-ondemand.labels" . | nindent 4 }}
 spec:
   storageClassName: {{ .Values.volume.storageClass }}
   capacity:
