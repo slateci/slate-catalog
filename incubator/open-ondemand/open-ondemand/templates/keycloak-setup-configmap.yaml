@@ -3,28 +3,17 @@ kind: ConfigMap
 metadata:
   name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
 data:
-  keycloak-setup.sh: |
+  "keycloak-setup.sh": |-
 
         #! /bin/bash
 
-        # Redirect output to a logfile
-        exec >/opt/jboss/output.log 2>&1
-
         # Sets up Keycloak to allow Open OnDemand to authenticate through it.
 
-        # Generate encrypted password
-        mkdir /opt/jboss/.ssh && chown jboss:jboss /opt/jboss/.ssh && chmod 0700 /opt/jboss/.ssh
-        ssh-keygen -t ecdsa -b 521 -q -N '' -f /opt/jboss/.ssh/id_ecdsa
-        echo $(openssl rand -base64 32 | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa.pub) >> /opt/jboss/.kc-password
-        export KEYCLOAK_PASSWORD=`cat /opt/jboss/.kc-password | openssl enc -base64 -a -A -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa`
-
-        # Generate keycloak admin user
-        /opt/jboss/keycloak/bin/add-user-keycloak.sh --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD
+        # TODO: save Keycloak admin password in a SLATE secret somehow?
 
         # Make sure script hasn't already been run
         if test -f "/shared/id"; then
                 echo "Keycloak is already configured. Skipping setup."
-                rm -rf /opt/jboss/.ssh
                 exit 0
         fi
         echo "Configuring Keycloak..."
@@ -42,6 +31,7 @@ data:
 
         # Setup credentials for connection to API
         user="admin"
+        password=$KEYCLOAK_PASSWORD
         realm="master"
         server="http://localhost:8080/auth"
 
@@ -49,13 +39,16 @@ data:
         n=0
         until [ "$n" -ge 5 ]
         do
-                $keycloak config credentials --server $server --realm $realm --user $user --password $KEYCLOAK_PASSWORD && break
+                $keycloak config credentials --server $server --realm $realm --user $user --password $password && break
                 n=$((n+1)) 
                 sleep 5
         done
 
         # Create Open-OnDemand realm
-        $keycloak create realms -s realm=ondemand -s enabled=true -s rememberMe=true -s loginWithEmailAllowed=false
+        $keycloak create realms -s realm=ondemand -s enabled=true
+
+        # TODO: adjust login parameters in ondemand realm ("remember me: ON", "login with email: OFF")
+
 
         # Open OnDemand client id
         client_id=$SLATE_INSTANCE_NAME.ondemand.$SLATE_CLUSTER_NAME
@@ -76,7 +69,7 @@ data:
         id=$($keycloak get clients -r ondemand --fields clientId,id | tr -d " \t\n\r" | grep -o -E $client_id_pattern | grep -o -E $secret_id_pattern)
 
         # Write client_id to a file in shared volume
-        echo $client_id > /shared/id && chmod 0600 /shared/id
+        echo $client_id > /shared/id
 
         # Get the client secret to use with OnDemand installation
         client_secret=$($keycloak get clients/$id/client-secret -r ondemand | tr -d " \t\n\r" | grep -o -E $secret_id_pattern)
@@ -103,13 +96,17 @@ data:
         $keycloak create user-storage/$ldap_id/sync?action=triggerChangedUsersSync -r ondemand
 
         # Copy LDAP usernames into /shared directory
-        users=$($keycloak get users -r ondemand --limit 100000 | grep username | tr -d '"' | tr -d ',' | tr -d ':' | sed -e "s/username//g" | awk '{$1=$1};1')
-        users=($users)
-        {{ if eq .Values.setupLDAP true }}
-        for i in ${!users[@]}; do
-                echo "${users[$i]}" >> /shared/users.txt
-        done
-        {{ end }}
+        users=$($keycloak get users -r ondemand --limit 10000 | grep username | tr -d '"' | tr -d ',' | tr -d ':' | sed -e "s/username//g" | awk '{$1=$1};1')
 
-        # Delete encryption key
-        rm -rf /opt/jboss/.ssh
+        # Turn users into /etc/passwd format
+        total_uids=$((1001+$(echo $users | tr " " "\n" | wc -l)))
+        users=($users)
+        declare -a uids=()
+        for i in `seq 1001 $total_uids`;
+        do
+                uids+=( "$i" )
+        done
+        declare -p uids
+        for i in ${!users[@]}; do
+            echo "${users[$i]}::${uids[$i]}:${uids[$i]}::/home/${users[$i]}:/bin/bash" >> /shared/newusers.txt
+        done
