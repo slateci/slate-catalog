@@ -58,7 +58,7 @@ spec:
         # NFS Volume (mounted from host)
         - name: nfs-volume
           persistentVolumeClaim:
-            claimName: ood-nfs-pvc
+            claimName: {{ include "open-ondemand.fullname" . }}-nfs-pvc
         # Autofs Config
         - name: autofs-config
           configMap:
