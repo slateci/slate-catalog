@@ -90,8 +90,11 @@ advanced:
   autofs: true
   NFS: false
   fileSharing:
+    # NFS
     mountPoint: "/example/home"
-    nfs_shares: 
+    nfs_volume_size: 50M
+    # autofs
+    nfs_shares:
       - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \\'
       - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
 
