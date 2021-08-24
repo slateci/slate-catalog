@@ -8,14 +8,6 @@ data:
     unset HISTFILE
     exec >/root/ood-startup.log 2>&1
   {{ if eq .Values.enableHostAdapter true }}
-    # Ensure that the fileSharing mountPoint exists in the container
-    mkdir -p {{ .Values.advanced.fileSharing.mountPoint }}
-  {{ if eq .Values.advanced.NFS true }}
-    # Create a symbolic link between /home/$user and /{nfs_share_mount_point}/$user
-    for i in `ls {{ .Values.advanced.fileSharing.mountPoint }}`; do
-      ln -s {{ .Values.advanced.fileSharing.mountPoint }}/$i /home/$i
-    done
-  {{ end }}
     # Changing GID of ssh_keys group to match host, if GID is taken then make it available
     if cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID }} ; then 
       export group=$(cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID}} | sed 's/:.*//g')
