@@ -86,14 +86,9 @@ advanced:
         name: "ssh_host_rsa_key"
     - host_key:
         name: "ssh_host_rsa_key.pub"
-# Configure file sharing (Choose either to use autofs or a single NFS mount)
+# File system distribution
   autofs: true
-  NFS: false
   fileSharing:
-    # NFS
-    mountPoint: "/example/home"
-    nfs_volume_size: 50M
-    # autofs
     nfs_shares:
       - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \\'
       - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
