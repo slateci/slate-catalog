@@ -19,16 +19,20 @@ a containerized environment, complete with integration into an existing LDAP use
 
 ## Prerequisites
 
+This tutorial requires that you can install a basic OnDemand instance using SLATE as described [here](https://slateci.io/blog/slate-open-ondemand.html).
+
 It is assumed that you already have access to a SLATE-registered Kubernetes
 cluster, and that you have installed and configured the SLATE command
 line interface.  If not, instructions can be found at 
 [SLATE Quickstart](https://slateci.io/docs/quickstart/).  
 
-Additionally, this application requires that `cert-manager` and a volume provisioner be present on the cluster you are installing on.
-Contact your cluster administrator for more information about this.
-More information about `cert-manager` can be found [here](https://cert-manager.io/docs/installation/kubernetes/),
-and more information about persistent volume types can be found [here](https://kubernetes.io/docs/concepts/storage/storage-classes/).
+The remote desktop application requires that autofs can be implemented
+on the cluster you are installing on.
+The official linux man pages provide more information [here](https://linux.die.net/man/5/autofs).
 
+On backend resources, it is required you can install NFS/autofs, enable hostbased authentication, and can connect
+to an organizational LDAP. 
+More information about hostbased authentication can be found [here](https://arc.liv.ac.uk/SGE/howto/hostbased-ssh.html).
 
 ## Configuration
 
@@ -45,81 +49,21 @@ deploy Open OnDemand with this configuration.
 With your preferred text editor, open this configuration file and follow the
 instructions below.
 
-### Cert-Manager Setup
 
-If cert-manager is not already present, contact your cluster administrator. To install cert-manager, the administrator must either set up the SLATE cluster using Ansible and Kubespray, or have access to `kubectl` on the command line.
+### Cluster_Definitions
 
-When using the Ansible playbook the option for cert-manager must be changed from:
-```yaml
-cert_manager_enabled: false
-```
-to
-```yaml
-cert_manager_enabled: true
-```
-More information on using Ansible playbooks can be found [here](https://slateci.io/docs/cluster/install-kubernetes-with-kubespray.html).
-If the administrator has access to `kubectl` then cert-manager can be installed using a regular manifest or with helm. Instructions can be found at the official [cert-manager docs](https://cert-manager.io/docs/installation/kubernetes/).
+To set up remote desktop access, we must configure the `LinuxHost Adapter`. 
+This is a simplified resource manager built from various component softwares. 
+By enabling resource management, you can configure interactive apps and 
+manage sessions remotely.
 
-If there are security concerns with using kubernetes secrets, then the administrator can also install a secure access agent such as Vault, Consul, Azure Key Vault, etc. Instructions for installing Vault using Kubernetes can be found at the [hashicorp-vault docs](https://learn.hashicorp.com/collections/vault/kubernetes)
+To do this set `enableHostAdapter` to true and fill in each cluster definition
+file. If you're not sure what a field should be, leave it as default for now. Most
+failures in connecting to backend resources are due to errors with these definition
+files.
 
-When all of the manifest components are installed, create an `Issuer` or `ClusterIssuer` .yaml file so that cert-manager can issue certificates on request by the OnDemand Helm chart. Here is a simple example of a `ClusterIssuer` .yaml configuration:
-```yaml
-metadata:
-  name: letsencrypt-prod
-spec:
-  acme:
-    # The ACME server URL
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
-    # Email address used for ACME registration
-    email: admin@example.com
-    # Name of a secret used to store the ACME account private key
-    privateKeySecretRef:
-      name: lets-encrypt-key
-```
-Make sure that the name of the issuer is `letsencrypt-prod`.
-
-Note: The difference between a `ClusterIssuer` and an `Issuer` is that the latter is namespace specific.
-
-
-### Modifying Default Values
-
-At the top of the configuration file is a value called `Instance`.
-Set this to a unique string you wish to identify your application with.
-Take note of this value, as it will eventually form part of the URL you will access your OnDemand instance with.
-
-Next, configure the persistent volume that will store authentication data.
-Under `volume`, set the `storageClass` value to a storage class that is supported by your cluster.
-
-To determine the storage classes supported by each cluster, consult individual
-cluster documentation (`slate cluster info <cluster_name>`). If this does not
-yield helpful output, contact your cluster administrator.
-
-Leave the `size` value at its default `50M`.
-
-Then, configure the LDAP and Kerberos sections according to your institution's setup.
-
-
-**Shell Access**
-
-To set up shell access to backend compute resources, edit the `clusters` section
-of the configuration file. Add a `cluster` element for each cluster you wish to
-connect to, and fill out the `name` and `host` sections. The cluster name should
-be whatever you want the OnDemand web portal to display that cluster as, and the
-`host` value should be the DNS name of that cluster.
-
-```yaml
-  - cluster:
-      name: "Notchpeak"
-      host: "notchpeak.chpc.utah.edu"
-      enableHostAdapter: false
-```
-
-### Cluster Definitions
-
-To set up remote desktop access, set the `enableHostAdapter` value to true,
-then configure the `LinuxHost Adapter`. This is a simplified resource manager
-built from various component softwares. By enabling resource management, you 
-can set up interactive apps and manage sessions remotely.
+After creating an entry for each backend resource you'd like to connect to,
+ensure that the `host_regex` field below captures all of the provided hostnames.
 
 ```yaml
   - cluster:
@@ -151,75 +95,35 @@ can set up interactive apps and manage sessions remotely.
       ...
 ```
 
-### Backend Configuration
-
-To enable resource management, you must install components of the 
-`LinuxHost Adapter` on each backend cluster. These include 
-[TurboVNC 2.1+](https://www.turbovnc.org/), [Singularity](https://sylabs.io/),
-[nmap-ncat](https://nmap.org/ncat), 
-[Websockify 0.8.0+](https://pypi.org/project/websockify/#description),
-a singularity CentOS 7 image, and a desktop of your choice 
-[mate 1+, xfce 4+, gnome 2].
-
-```bash
-singularity pull docker://centos:7
+```yaml
+host_regex: '[\w.-]+\.(node1|node2|example.net|example.edu)'
 ```
 
-To establish a remote desktop connection, ports 5800(+n) 5900(+n) and 6000(+n)
-need to be open for each display number n. As well as, port 22 for ssh
-and ports 20000+ for websocket connections. To do this simply, add a 
-global rule to iptables or a trusted firewalld zone.
+### Advanced
 
-```bash
-sudo iptables -A INPUT -s xxx.xxx.xxx.xxx/32 -j ACCEPT
-sudo firewall-cmd --zone=trusted --add-source=xxx.xxx.xxx.xxx/32
+Here you must once again set `enableHostAdapter` equal to `true` and fill in the following entries.
+To find the groupID of your ssh_keys group, simply run `cat /etc/group | grep ssh_keys`.
+
+```yaml
+enableHostAdapter: true           # Enable linuxHost Adapter
+advanced:
+  desktop: "mate"                 # Desktop of your choice (mate, xfce, or gnome)
+  node_selector_label: "ood"      # Matching node_selector_label (See next step)
+  ssh_keys_GID: 993               # ssh_keys groupID
 ```
 
-### Authentication
+### NodeSelector
 
-The LinuxHost Adapter requires passwordless SSH for all users. This is 
-most easily configured by establishing host-level trust (hostbased authentication). 
-First go to each backend cluster and add public host keys from the OnDemand 
-server to a file called `/etc/ssh/ssh_known_hosts` using the`ssh-keyscan`.
-For more detailed information, see the links in [Prerequisites](##Prerequisites).
-
-```bash
-ssh-keyscan [IP_ADDR] >> /etc/ssh/ssh_known_hosts
-```
-
-Add an entry to `/etc/ssh/shosts.equiv` with the IP address of the
-OnDemand server. Then, in the `/etc/ssh/sshd_config` file, change the
-following lines from:
+The chart must be installed on a properly configured node. On a multi-node
+cluster it is necessary to set a `nodeSelectorLabel` called 'application' on a desired 
+node. Then match that label in the `values.yaml` file. If all nodes are properly configured
+then you may leave this field blank.
 
 ```bash
-#HostbasedAuthentication no
-#IgnoreRhosts yes
-```
-to
-```bash
-HostbasedAuthentication yes
-IgnoreRhosts no
+kubectl label nodes <node-name> application=ood
 ```
 
-Now ensure that you have the correct permissions for host keys at `/etc/ssh`
-
-```bash
--rw-r-----.   1 root ssh_keys      227 Jan 1 2000      ssh_host_ecdsa_key
--rw-r--r--.   1 root root          162 Jan 1 2000      ssh_host_ecdsa_key.pub
--rw-r-----.   1 root ssh_keys      387 Jan 1 2000      ssh_host_ed25519_key
--rw-r--r--.   1 root root           82 Jan 1 2000      ssh_host_ed25519_key.pub
--rw-r-----.   1 root ssh_keys     1675 Jan 1 2000      ssh_host_rsa_key
--rw-r--r--.   1 root root          382 Jan 1 2000      ssh_host_rsa_key.pub
-```
-
-And for ssh-keysign at `/usr/libexec/openssh` &nbsp;&nbsp;&nbsp; 
-Note: location varies with distro
-
-```bash
----x--s--x.  1 root ssh_keys      5760 Jan 1 2000      ssh-keysign
-```
-
-### Secret Generation
+### Secret_Generation
 
 Pods are ephermeral, so keys from the host system should be passed 
 into the container using a secret. This will ensure trust is not broken
@@ -244,28 +148,150 @@ printf "$command\n"
 $command ; echo ""
 ```
 
+In the slate configuration file, ensure that the `secret_name` field and `host_key` 
+names match the secret you generate. 
+
+If you're not sure what your host_key names are, list the contents of `/etc/ssh`.
+
+```yaml
+# Provide names for each host key stored in your secret
+  secret_name: "ssh-key-secret"
+  host_keys:
+    - host_key:
+        name: "ssh_host_ecdsa_key"
+    - host_key:
+        name: "ssh_host_ecdsa_key.pub"
+    - ...
+```
+
+**Security Precautions**
+
 To secure your secrets when not in use or in the event of intrusion, 
 you can install a secret management provider such as 
 [Vault](https://www.vaultproject.io/docs/platform/k8s/helm) or 
 [CyberArk](https://docs.cyberark.com/Product-Doc/OnlineHelp/AAM-DAP/11.2/en/Content/Integrations/Kubernetes_deployApplicationsConjur-k8s-Secrets.htm).
 
-### Filesystem Distribution
+### Filesystem_Distribution
 
 Resource management for OnDemand also requires a distributed filesystem. This chart
 currently supports autofs.
 
-Set the `autofs` value to true and fill out the `nfs_shares` field. Make sure that 
-backend clusters use the same shares and are mounted using the same path.
+```yaml
+# Filesystem distribution
+  autofs: true
+  fileSharing:
+    nfs_shares:
+      - 'slate1   -rw   slate.example.net:/export/mdist/slate1'
+      - 'slate2   -rw   slate.example.net:/export/mdist/slate2'
+      - '...'
+```
 
-### NodeSelector
+## Backend Configuration
 
-Finally, the chart must be installed on a properly configured node. On a multi-node
-cluster it is necessary to set a `nodeSelectorLabel` called 'application' on a desired 
-node. Then match that label in the `values.yaml` file. If all nodes are properly configured
-then you may leave this field blank.
+Now that Open OnDemand is ready to be deployed using `slate app install`, we should access each
+of our backend clusters and ensure that they are ready to establish a connection.
+
+### Resource_Management
+
+To enable resource management, you must install components of the 
+`LinuxHost Adapter` on each backend cluster. 
+
+These include 
+[TurboVNC 2.1+](https://www.turbovnc.org/), [Singularity](https://sylabs.io/),
+[nmap-ncat](https://nmap.org/ncat), 
+[Websockify 0.8.0+](https://pypi.org/project/websockify/#description),
+a [singularity image](https://sylabs.io/guides/3.5/user-guide/quick_start.html#download-pre-built-images),
+and a desktop 
+([mate 1+](https://mate-desktop.org/), [xfce 4+](https://www.xfce.org/), 
+[gnome 2](https://www.gnome.org/)).
+
+To get a basic centOS 7 image run the following command, and ensure it has the same
+path as the `singularity_image` field in Cluster Definitions [above](###Cluster_Definitions).
 
 ```bash
-kubectl label nodes <node-name> application=ood
+singularity pull docker://centos:7
+```
+
+To establish a remote desktop connection, ports 5800(+n) 5900(+n) and 6000(+n)
+need to be open for each display number n. As well as, port 22 for ssh
+and ports 20000+ for websocket connections. 
+
+To do this easily, add a global rule to iptables or a firewalld exception.
+
+```bash
+sudo iptables -A INPUT -s xxx.xxx.xxx.xxx/32 -j ACCEPT
+sudo firewall-cmd --zone=trusted --add-source=xxx.xxx.xxx.xxx/32
+```
+
+### Filesystem_Distribution
+
+Filesystem Distribution must also be configured on the backend clusters, so that user data
+is persistent between the OnDemand server and backend resources.
+
+**autofs**
+
+To configure autofs install `nfs-utils` and `autofs`. Then configure the `auto.master` file to
+mount NFS shares from an `auto.map` file. This map file should have consistent shares and mount points
+with entries in the slate app configuration described [above](###Filesystem_Distribution). When everything is set up, run `systemctl enable nfs autofs` to ensure they always run at system startup.
+
+```bash
+slate1   -rw   slate.example.net:/export/mdist/slate1
+slate2   -rw   slate.example.net:/export/mdist/slate2
+...
+```
+
+### Authentication
+
+The LinuxHost Adapter requires passwordless SSH for all users, which is most easily
+configured by establishing host-level trust (hostBasedAuthentication). 
+
+To do this, run the `ssh-keyscan` command below using the public IP address of the 
+OnDemand host. This will automatically populate an `ssh_known_hosts` file with public
+host keys.
+
+For more detailed information, see the links in [Prerequisites](##Prerequisites).
+
+```bash
+ssh-keyscan [ONDEMAND_HOST_PUBLIC_IP] >> /etc/ssh/ssh_known_hosts
+```
+
+Next, add an entry to `/etc/ssh/shosts.equiv` with the IP address of the
+OnDemand server like so
+
+```bash
+node1.example.net
+node2.example.net
+...
+```
+
+And in the `/etc/ssh/sshd_config` file, change the following entries from
+
+```bash
+#HostbasedAuthentication no
+#IgnoreRhosts yes
+```
+to
+```bash
+HostbasedAuthentication yes
+IgnoreRhosts no
+```
+
+Finally, ensure that you have the correct permissions for host keys at `/etc/ssh`
+
+```bash
+-rw-r-----.   1 root ssh_keys      227 Jan 1 2000      ssh_host_ecdsa_key
+-rw-r--r--.   1 root root          162 Jan 1 2000      ssh_host_ecdsa_key.pub
+-rw-r-----.   1 root ssh_keys      387 Jan 1 2000      ssh_host_ed25519_key
+-rw-r--r--.   1 root root           82 Jan 1 2000      ssh_host_ed25519_key.pub
+-rw-r-----.   1 root ssh_keys     1675 Jan 1 2000      ssh_host_rsa_key
+-rw-r--r--.   1 root root          382 Jan 1 2000      ssh_host_rsa_key.pub
+```
+
+And for ssh-keysign at `/usr/libexec/openssh` &nbsp;&nbsp;&nbsp; 
+Note: location varies with distro
+
+```bash
+---x--s--x.  1 root ssh_keys      5760 Jan 1 2000      ssh-keysign
 ```
 
 ## Installation
@@ -297,10 +323,12 @@ section for each user you would like to add:
 ```yaml
 - user:
     name: <username_here>
+    group: <test_group>
+    groupID: <1000+n>
     tempPassword: <temporary_password_here>
 ```
 
-## Configurable Parameters:
+## Configurable_Parameters:
 
 The following table lists the configurable parameters of the Open OnDemand application and their default values.
 
