@@ -252,21 +252,10 @@ you can install a secret management provider such as
 ### Filesystem Distribution
 
 Resource management for OnDemand also requires a distributed filesystem. This chart
-supports NFS and autofs.
+currently supports autofs.
 
-To configure NFS alone, set the `NFS` value to true and specify a mount point.
-Then make sure `nfs-utils` is installed and the `/etc/exports` file has an
-entry for localhost, and backend clusters.
-
-```bash
-/uufs/chpc.utah.edu/common/home  127.0.0.1(rw,sync,no_subtree_check,root_squash)
-/uufs/chpc.utah.edu/common/home  192.168.1.1(rw,sync,no_subtree_check,root_squash)
-...
-```
-
-To configure autofs set the `autofs` value to true and fill out the `nfs_shares` 
-field. Make sure that backend clusters use the same shares and are mounted using
-the same path.
+Set the `autofs` value to true and fill out the `nfs_shares` field. Make sure that 
+backend clusters use the same shares and are mounted using the same path.
 
 ### NodeSelector
 
@@ -353,7 +342,5 @@ The following table lists the configurable parameters of the Open OnDemand appli
 |`advanced.secret_name` | Name of secret holding host_keys. |`ssh-key-secret`|
 |`advanced.host_keys` | Names of stored keys. |`ssh_host_ecdsa_key`|
 |`advanced.autofs` | Mount home directories using autofs. |`true`|
-|`advanced.NFS` | Mount home directories with just NFS. |`false`|
-|`advanced.fliesharing.mountPoint` | Preferred path for mounting nfs shares. |`/ondemand/home`|
 |`advanced.filesharing.nfs_shares` | A mapfile with shares to be mounted by autofs. |`* -nolock,hard,...`|
 |`testUsers` | Unprivileged users for testing login to OnDemand. |`test`|
