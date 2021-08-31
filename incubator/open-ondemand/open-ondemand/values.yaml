@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # The SLATE instance value.
-Instance: "global"
+Instance: "slate"
 
 replicaCount: 1
 
@@ -15,16 +15,16 @@ volume:
 # LDAP/Kerberos setup and configuration
 setupLDAP: true
 ldap:
-  connectionURL: "ldap://ldap.chpc.utah.edu"
+  connectionURL: "ldap://ldap.example.net"
   importUsers: "true"
   rdnLDAPAttribute:  "uid"
   uuidLDAPAttribute: "uidNumber"
-  userObjectClasses: "inetOrgPerson, organizationalPerson"
-  ldapSearchBase: "dc=chpc,dc=utah,dc=edu"
-  usersDN: "ou=People,dc=chpc,dc=utah,dc=edu"
+  userObjectClasses: "inetOrgFoo, orgBar"
+  ldapSearchBase: "dc=foo,dc=bar"
+  usersDN: "ou=People,dc=foo,dc=bar"
 kerberos:
-  realm: "AD.UTAH.EDU"
-  serverPrincipal: "kdc1.chpc.utah.edu:88,kdc2.chpc.utah.edu:88,kdc3.chpc.utah.edu:88,kdc4.chpc.utah.edu:88,kdc5.chpc.utah.edu:88"
+  realm: "AD.EXAMPLE.NET"
+  serverPrincipal: "kdc1.example.net:80,kdc2.example.net:80"
   keyTab: "/etc/krb5.keytab"
   kerberosPasswordAuth: "true"
   debug: "true"
@@ -62,7 +62,7 @@ clusters:
       enableHostAdapter: false
 
 # Host regex (Should capture hostnames of all backend clusters)
-host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
+host_regex: '[\w.-]+\.(foo|bar|example.net|example.edu)'
 
 # Configure remote desktop and other applications (Advanced)
 # This is optional configuration which requires the linuxHost Adapter
@@ -89,9 +89,10 @@ advanced:
 # Filesystem distribution
   autofs: true
   fileSharing:
-    nfs_shares:
-      - '* -nolock,hard,intr,timeo=16,retrans=8,nfsvers=3 \\'
-      - '           cottonwood-vg10-2-lv1.chpc.utah.edu:/uufs/cottonwood/common/cottonwood-vg10-2-lv1/slate/&'
+    nfs_shares: # Use '\\' to escape a backslash character 
+      - '* -nolock,hard,ro \\'
+      - '           example.net:/foo/bar/& \\'
+      - '           example.edu:/foo/bar/&'
 
 # Configure additional test users to be added to the Keycloak user database
 # Ensure that these users do not exist on backend clusters
@@ -107,6 +108,6 @@ SLATE:
   Instance:
     ID: "untagged"
   Cluster:
-    DNSName: "utah-dev.slateci.net"
+    DNSName: "foo.bar.example.net"
 ### SLATE-END ###
       
