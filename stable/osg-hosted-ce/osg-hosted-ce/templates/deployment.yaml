@@ -59,6 +59,15 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
+      {{ if .Values.RemoteCluster.SSHCertificateSecret }}
+      - name: bosco-ssh-cert-volume
+        secret:
+          secretName: {{ .Values.RemoteCluster.SSHCertificateSecret }}
+          items:
+          - key: bosco.cert
+            path: bosco.cert
+            mode: 0o400
+      {{ end }
       {{ if .Values.HostCredentials.HostCertKeySecret }}
       - name: osg-hosted-ce-hostcertkey-volume
         secret:
@@ -160,6 +169,11 @@ spec:
         - name: bosco-ssh-private-key-volume
           mountPath: /etc/osg/bosco.key
           subPath: bosco.key
+        {{ if .Values.RemoteCluster.SSHCertificateSecret }}
+        - name: bosco-ssh-cert-volume
+          mountPath: /etc/osg/bosco.cert
+          subPath: bosco.cert
+        {{ end }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
