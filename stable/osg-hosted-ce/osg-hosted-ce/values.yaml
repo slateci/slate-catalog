@@ -18,6 +18,9 @@ RemoteCluster:
   LoginHost: remote-ssh.login.org
   # SLATE secret with 'bosco.key' containing the SSH key to access LoginHost:
   PrivateKeySecret: lincolnb-bosco
+  # Secret containing a signed certificate (required by some sites)
+  # See CertificateFile in `man ssh_config`
+  SSHCertificateSecret: null
   # condor, slurm, pbs, sge, or lsf
   Batch: slurm
   MemoryPerNode: 1024
