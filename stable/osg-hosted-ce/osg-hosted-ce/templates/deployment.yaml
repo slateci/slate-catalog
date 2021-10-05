@@ -67,7 +67,7 @@ spec:
           - key: bosco.cert
             path: bosco.cert
             mode: 0o400
-      {{ end }
+      {{ end }}
       {{ if .Values.HostCredentials.HostCertKeySecret }}
       - name: osg-hosted-ce-hostcertkey-volume
         secret:
