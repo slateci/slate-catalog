@@ -165,6 +165,8 @@ minio:
   secretKey: leftfoot1
   service:
     port: 8405
+  ingress:
+    enabled: false
 
 ###### Settings for Authenticating with the CERN Infrastructure #######
 noCerts: false
