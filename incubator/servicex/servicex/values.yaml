@@ -163,6 +163,8 @@ minio:
     enabled: false
   accessKey: miniouser
   secretKey: leftfoot1
+  service:
+    port: 8405
 
 ###### Settings for Authenticating with the CERN Infrastructure #######
 noCerts: false
