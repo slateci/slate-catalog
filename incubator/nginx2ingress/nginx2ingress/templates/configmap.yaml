@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-{{ .Values.Instance }}-configuration
+  labels:
+    app: {{ template "nginx.name" . }}
+    chart: {{ template "nginx.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+data:
+  index.html: |-
+{{ .Values.Data | indent 4 }}
