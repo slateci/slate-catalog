@@ -48,6 +48,11 @@ image:
   tag: testing
   pullPolicy: Always
 
+heartbeats:
+  frequency: 60
+  image: ivukotic/heartbeats
+  tag: latest
+
 ### SLATE-START ###
 SLATE:
   Instance:
