@@ -155,4 +155,29 @@ spec:
           - name: xcache-meta
             mountPath: "/xcache/meta"
             readOnly: true
-            
+        - name: heartbeats
+          image: "{{ .Values.heartbeats.image }}:{{ .Values.heartbeats.tag }}"
+          command: ["/usr/local/sbin/run_heartbeats.sh"]
+          volumeMounts:
+          - name: x509-data
+            mountPath: "/etc/proxy/"
+            readOnly: true
+          - name: x509-certs-volume
+            mountPath: "/etc/grid-certs/"
+            readOnly: true
+          {{- range $nindex, $ndir := .Values.XCacheConfig.CacheDirectories }}
+          - name: xcache-data-{{ $nindex }}
+            mountPath: "/xcache/data_{{ $nindex }}"
+          {{- end }}
+          env:
+          - name: XC_RESOURCENAME
+            value: "{{ .Values.SiteConfig.Name }}"
+          - name: XC_INSTANCE
+            value: {{ .Values.Instance | quote }}
+          - name: ADDRESS
+            value: "{{.Values.Service.ExternalIP}}:{{.Values.Service.Port}}"
+          - name: FREQUENCY
+            value: "{{ .Values.heartbeats.frequency }}"
+          resources:
+            requests:
+              ephemeral-storage: "1Gi"
