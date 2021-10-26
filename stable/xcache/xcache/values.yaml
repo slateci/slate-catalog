@@ -50,7 +50,7 @@ image:
 
 heartbeats:
   frequency: 60
-  image: ivukotic/heartbeats
+  image: ivukotic/atlas-xcache-heartbeats
   tag: latest
 
 ### SLATE-START ###
