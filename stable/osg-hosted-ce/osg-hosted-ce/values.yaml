@@ -16,6 +16,9 @@ Topology:
 RemoteCluster:
   # SSH host
   LoginHost: remote-ssh.login.org
+  # One or more jump proxies as either [user@]host[:port] or an ssh URI.
+  # See ProxyJump in 'man ssh_config'
+  ProxyJump: null
   # SLATE secret with 'bosco.key' containing the SSH key to access LoginHost:
   PrivateKeySecret: lincolnb-bosco
   # Secret containing a signed certificate (required by some sites)
