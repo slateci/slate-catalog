@@ -255,6 +255,10 @@ spec:
           value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
           value: {{ .Values.RemoteCluster.LoginHost }}
+        {{ if .Values.RemoteCluster.ProxyJump }}
+        - name: SSH_PROXY_JUMP
+          value: {{ .Values.RemoteCluster.ProxyJump }}
+        {{ end }}
         - name: REMOTE_BATCH
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR
