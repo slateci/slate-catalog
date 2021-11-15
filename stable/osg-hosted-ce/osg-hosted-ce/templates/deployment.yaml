@@ -68,6 +68,10 @@ spec:
             path: bosco.cert
             mode: 0o400
       {{ end }}
+      {{ if .Values.RemoteCluster.KnownHosts }}
+      - name: ssh-known-hosts
+        configMap: osg-hosted-ce-{{ .Values.Instance }}-known-hosts
+      {{ end }}
       {{ if .Values.HostCredentials.HostCertKeySecret }}
       - name: osg-hosted-ce-hostcertkey-volume
         secret:
@@ -173,6 +177,11 @@ spec:
         - name: bosco-ssh-cert-volume
           mountPath: /etc/osg/bosco.key-cert.pub
           subPath: bosco.cert
+        {{ end }}
+        {{ if .Values.RemoteCluster.KnownHosts }}
+        - name: ssh-known-hosts
+          mountPath: /etc/osg/ssh_known_hosts
+          subPath: ssh_known_hosts
         {{ end }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
