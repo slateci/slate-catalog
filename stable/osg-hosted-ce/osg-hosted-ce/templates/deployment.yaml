@@ -70,7 +70,8 @@ spec:
       {{ end }}
       {{ if .Values.RemoteCluster.KnownHosts }}
       - name: ssh-known-hosts
-        configMap: osg-hosted-ce-{{ .Values.Instance }}-known-hosts
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-known-hosts
       {{ end }}
       {{ if .Values.HostCredentials.HostCertKeySecret }}
       - name: osg-hosted-ce-hostcertkey-volume
