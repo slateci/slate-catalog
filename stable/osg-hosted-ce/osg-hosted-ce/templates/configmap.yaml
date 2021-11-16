@@ -193,7 +193,7 @@ data:
     exec nginx -g 'daemon off;'
 
 {{ end }}
-{{ if .Values.RemoteCluster.KnownHosts}}
+{{ if .Values.RemoteCluster.KnownHosts }}
 ---
 apiVersion: v1
 kind: ConfigMap
