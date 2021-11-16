@@ -205,5 +205,5 @@ metadata:
     release: {{ .Release.Name }}
 data:
   ssh_known_hosts: |+
-    {{ .Values.RemoteCluster.KnownHosts }}
+{{ .Values.RemoteCluster.KnownHosts | indent 4}}
 {{ end }}
