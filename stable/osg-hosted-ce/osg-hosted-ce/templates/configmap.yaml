@@ -193,7 +193,7 @@ data:
     exec nginx -g 'daemon off;'
 
 {{ end }}
-{{ if .Values.RemoteCluster.KnownHosts}}
+{{ if .Values.RemoteCluster.KnownHosts }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -205,5 +205,5 @@ metadata:
     release: {{ .Release.Name }}
 data:
   ssh_known_hosts: |+
-    {{ .Values.RemoteCluster.KnownHosts }}
+{{ .Values.RemoteCluster.KnownHosts | indent 4}}
 {{ end }}
