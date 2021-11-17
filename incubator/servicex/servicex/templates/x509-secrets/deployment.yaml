@@ -5,8 +5,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-x509-secrets
-  labels:
-    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: 1
   selector:

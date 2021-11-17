@@ -7,8 +7,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-did-finder-rucio
-  labels:
-    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: 1
   selector:
@@ -32,10 +30,10 @@ spec:
                 name: {{ .Values.secrets }}
                 key: rabbitmq-password
           - name: RMQ_URI
-            value: amqp://user:$(RMQ_PASS)@{{ .Release.Name }}-rabbitmq:5672
+            value: amqp://user:$(RMQ_PASS)@{{ .Release.Name }}-rabbitmq:5672/?heartbeat=9000
     {{- else }}
           - name: RMQ_URI
-            value: amqp://user:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq:5672
+            value: amqp://user:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq:5672/?heartbeat=9000
     {{- end }}
     {{- if .Values.didFinder.rucio.cachePrefix }}
           - name: CACHE_PREFIX
@@ -45,8 +43,6 @@ spec:
             value: "{{ .Values.didFinder.rucio.servicex_latitude }}"
           - name: RUCIO_LONGITUDE
             value: "{{ .Values.didFinder.rucio.servicex_longitude }}"
-          - name: DID_THREADS
-            value: "{{ .Values.didFinder.rucio.threads }}"
           - name: INSTANCE_NAME
             value: {{ .Release.Name }}
         volumeMounts:

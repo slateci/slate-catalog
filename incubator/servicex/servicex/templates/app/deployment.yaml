@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-servicex-app
-  labels:
-    instance: {{ .Values.Instance | quote }}
 spec:
   replicas: {{ .Values.app.replicas }}
   selector:
