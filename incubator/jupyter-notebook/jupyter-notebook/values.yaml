@@ -41,6 +41,7 @@ Resources:
   Memory: 256
   # Enable CVMFS
   Cvmfs: false
+  # GPU: 1
 
 CondorConfig:
   #Change this to true and set the other variables in this section 

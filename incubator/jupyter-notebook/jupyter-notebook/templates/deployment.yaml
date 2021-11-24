@@ -137,9 +137,15 @@ spec:
             # For CPU only, set request as half of limit
             cpu: "{{ div .Values.Resources.CPU 2 }}m"
             memory: "{{ .Values.Resources.Memory }}Mi"
+            {{ if .Values.Resources.GPU }}
+            nvidia.com/gpu: "{{ .Values.Resources.GPU }}"
+            {{ end }}
           limits:
             cpu: "{{ .Values.Resources.CPU }}m"
             memory: "{{ .Values.Resources.Memory }}Mi"
+            {{ if .Values.Resources.GPU }}
+            nvidia.com/gpu: "{{ .Values.Resources.GPU }}"
+            {{ end }}
         ports:
         - containerPort: 8888
           protocol: TCP
