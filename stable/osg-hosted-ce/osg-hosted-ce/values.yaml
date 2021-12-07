@@ -1,4 +1,4 @@
-Instance: ""
+Instance: "testrookthree"
 
 # Site information that should match the CE Topology registration
 Topology:
@@ -62,7 +62,7 @@ Networking:
   ServiceType: "LoadBalancer"
   # The hostname that the CE should use. 
   # Appropriate A and PTR DNS records must exist.
-  Hostname: ""
+  Hostname: "testone"
   # The preferred IP address which should be requested from the LoadBalancer. 
   # This may be left as null to express no preference. 
   # Setting this may be useful when redeploying a CE in order to try to get
@@ -165,7 +165,11 @@ HTTPLogger:
 
 # If a specific node is desired for scheduling
 # set this to the hostname of the desired node
-NodeSelection: null
+NodeSelection:
+  Enabled: true
+  Hostname: null
+  LabelSelectionFieldKey: rook-storage
+  LabelSelectionFieldValue: true
 
 HostCredentials:
   # Name of the secret containing a host key and certificate in
