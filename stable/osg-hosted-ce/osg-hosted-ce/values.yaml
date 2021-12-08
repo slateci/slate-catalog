@@ -1,4 +1,4 @@
-Instance: "testrookthree"
+Instance: "testfour"
 
 # Site information that should match the CE Topology registration
 Topology:
@@ -168,8 +168,8 @@ HTTPLogger:
 NodeSelection:
   Enabled: true
   Hostname: null
-  LabelSelectionFieldKey: rook-storage
-  LabelSelectionFieldValue: true
+  LabelSelectionFieldKey: storage
+  LabelSelectionFieldValue: rook-storage
 
 HostCredentials:
   # Name of the secret containing a host key and certificate in
