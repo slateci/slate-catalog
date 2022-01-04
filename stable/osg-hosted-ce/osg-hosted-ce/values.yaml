@@ -1,4 +1,4 @@
-Instance: "testfour"
+Instance: ""
 
 # Site information that should match the CE Topology registration
 Topology:
@@ -62,7 +62,7 @@ Networking:
   ServiceType: "LoadBalancer"
   # The hostname that the CE should use. 
   # Appropriate A and PTR DNS records must exist.
-  Hostname: "testone"
+  Hostname: ""
   # The preferred IP address which should be requested from the LoadBalancer. 
   # This may be left as null to express no preference. 
   # Setting this may be useful when redeploying a CE in order to try to get
@@ -168,6 +168,8 @@ HTTPLogger:
 NodeSelection:
   Enabled: true
   Hostname: null
+# If nodes with a specific label is desired
+# set key and value for the label
   LabelSelectionFieldKey: storage
   LabelSelectionFieldValue: rook-storage
 
