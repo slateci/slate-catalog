@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "4.4.1"
 description: Perfsonar Testpoint Deployment
 name: perfsonar-testpoint
-version: 1.4.0
+version: 1.4.1
