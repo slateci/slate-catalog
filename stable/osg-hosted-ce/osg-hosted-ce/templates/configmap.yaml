@@ -193,3 +193,17 @@ data:
     exec nginx -g 'daemon off;'
 
 {{ end }}
+{{ if .Values.RemoteCluster.KnownHosts }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-known-hosts
+  labels:
+    app: osg-hosted-ce
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  ssh_known_hosts: |+
+{{ .Values.RemoteCluster.KnownHosts | indent 4}}
+{{ end }}

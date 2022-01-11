@@ -68,6 +68,11 @@ spec:
             path: bosco.cert
             mode: 0o400
       {{ end }}
+      {{ if .Values.RemoteCluster.KnownHosts }}
+      - name: ssh-known-hosts
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-known-hosts
+      {{ end }}
       {{ if .Values.HostCredentials.HostCertKeySecret }}
       - name: osg-hosted-ce-hostcertkey-volume
         secret:
@@ -171,8 +176,13 @@ spec:
           subPath: bosco.key
         {{ if .Values.RemoteCluster.SSHCertificateSecret }}
         - name: bosco-ssh-cert-volume
-          mountPath: /etc/osg/bosco.cert
+          mountPath: /etc/osg/bosco.key-cert.pub
           subPath: bosco.cert
+        {{ end }}
+        {{ if .Values.RemoteCluster.KnownHosts }}
+        - name: ssh-known-hosts
+          mountPath: /etc/osg/ssh_known_hosts
+          subPath: ssh_known_hosts
         {{ end }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
@@ -255,6 +265,10 @@ spec:
           value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
           value: {{ .Values.RemoteCluster.LoginHost }}
+        {{ if .Values.RemoteCluster.ProxyJump }}
+        - name: SSH_PROXY_JUMP
+          value: {{ .Values.RemoteCluster.ProxyJump }}
+        {{ end }}
         - name: REMOTE_BATCH
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR

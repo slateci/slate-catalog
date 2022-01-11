@@ -14,8 +14,20 @@ Topology:
   Production: true
 
 RemoteCluster:
-  # SSH host
+  # Target SSH login host (host where batch system binaries are installed)
   LoginHost: remote-ssh.login.org
+  # One or more jump proxies as either [user@]host[:port] or an ssh
+  # URI (see ProxyJump in 'man ssh_config').
+  # If set, KnownHosts below must also be set.
+  ProxyJump: null
+  # Contents of SSH known_hosts
+  # Required for sites with ProyJump defined
+  KnownHosts: null
+  # Example:
+  # KnownHosts: |+
+  #    login04.osgconnect.net ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqsciY/FmcH6yedW7DxbTwLjkwlgVcbcG43QwdaSvMuN5EHAeLRH2P6ig3H6s/4hZqJn7AU2oNsoIqjZZ8iHqGyiTB9r70Aovt9PUuQXw5qHvYiIoyw49/waJ+yzu4+UD3qfnxeHuRw5EOaXia72MNJJ4lBMoS6iw1JveFJY4rBgKZ7nta1eAGGfHADsf5lfhlIXnJPN050X6zcUjqEEKXjdUkFa3wDiVbFEIESCMwi1b6Q1OXGGFwuSNse1X38CREBzQ+NjOB97o70chZoh2jZ2O3iZZZbujYcDzpxF3RxmewFC3pDmkoOpJrfV2W58n1KdJJnyvjlqEZGXCXcAlB
+  #    login04.osgconnect.net ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCnySArMSVd0O3UniYN4vX3a/d9d9mEMnrf2z1S900t0GrxVazVGu3ObeLfWwYRc3qFXNRPGh3mKcz5QVG6gcm4=
+  #    login04.osgconnect.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBW6weAaFSdLYksn4vIvqt4+geNVQ/bUvp71kTeQsKV
   # SLATE secret with 'bosco.key' containing the SSH key to access LoginHost:
   PrivateKeySecret: lincolnb-bosco
   # Secret containing a signed certificate (required by some sites)
