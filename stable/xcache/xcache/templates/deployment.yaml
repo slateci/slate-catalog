@@ -128,6 +128,8 @@ spec:
           resources:
             requests:
               ephemeral-storage: "1Gi"
+            limits:
+              memory: "512M"
           volumeMounts:
           - name: x509-data
             mountPath: "/etc/proxy/"
@@ -148,6 +150,11 @@ spec:
             value: {{ .Values.Monitoring.Collector | quote }}
           - name: XC_MONITOR
             value: {{ .Values.Monitoring.GStreamCollector | quote }}
+          resources:
+            requests:
+              ephemeral-storage: "1Gi"
+            limits:
+              memory: "512M"
           volumeMounts:
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
           - name: xcache-data-{{ $nindex }}
@@ -182,3 +189,5 @@ spec:
           resources:
             requests:
               ephemeral-storage: "1Gi"
+            limits:
+              memory: "512M"
