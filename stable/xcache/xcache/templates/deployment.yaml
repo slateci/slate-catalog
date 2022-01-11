@@ -66,28 +66,29 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: XC_SPACE_HIGH_WM
-            value: "{{ .Values.XCacheConfig.HighWaterMark }}"
+            value: {{ .Values.XCacheConfig.HighWaterMark | quote }}
           - name: XC_SPACE_LOW_WM
-            value: "{{ .Values.XCacheConfig.LowWaterMark }}"
+            value: {{ .Values.XCacheConfig.LowWaterMark | quote }}
           - name: XC_PORT
-            value: "{{ .Values.Service.Port }}"
+            value: {{ .Values.Service.Port | quote }}
           - name: XC_RAMSIZE
-            value: "{{ .Values.XCacheConfig.RamSize }}"
+            value: {{ .Values.XCacheConfig.RamSize | quote }}
           - name: XC_BLOCKSIZE
-            value: "{{ .Values.XCacheConfig.BlockSize }}"
+            value: {{ .Values.XCacheConfig.BlockSize | quote }}
           - name: XC_PREFETCH
-            value: "{{ .Values.XCacheConfig.Prefetch }}"
+            value: {{ .Values.XCacheConfig.Prefetch | quote }}
           - name: XC_WQ_BLOCKS_PER_LOOP
-            value: "{{ .Values.XCacheConfig.WQBlocksPerLoop }}"
+            value: {{ .Values.XCacheConfig.WQBlocksPerLoop | quote}}
           - name: XC_WQ_THREADS
-            value: "{{ .Values.XCacheConfig.WQThreads }}"
+            value: {{ .Values.XCacheConfig.WQThreads | quote }}
           - name: XC_RESOURCENAME
-            value: "{{ .Values.SiteConfig.Name }}"
+            value: {{ .Values.SiteConfig.Name | quote }}
           - name: XC_MONITOR
-            value: "{{ .Values.Monitoring.GStreamCollector }}"
+            value: {{ .Values.Monitoring.GStreamCollector | quote }}
           resources:
             requests:
               ephemeral-storage: "1Gi"
+              memory: {{ .Values.XCacheConfig.RamSize | upper | quote }}
             limits:
               ephemeral-storage: "5Gi"
           livenessProbe:
@@ -140,13 +141,13 @@ spec:
           command: ["/usr/local/sbin/run_cache_reporter.sh"]
           env:
           - name: XC_RESOURCENAME
-            value: "{{ .Values.SiteConfig.Name }}"
+            value: {{ .Values.SiteConfig.Name | quote }}
           - name: XC_INSTANCE
             value: {{ .Values.Instance | quote }}
           - name: XC_REPORT_COLLECTOR
-            value: "{{ .Values.Monitoring.Collector }}"
+            value: {{ .Values.Monitoring.Collector | quote }}
           - name: XC_MONITOR
-            value: "{{ .Values.Monitoring.GStreamCollector }}"
+            value: {{ .Values.Monitoring.GStreamCollector | quote }}
           volumeMounts:
           {{- range $nindex, $dir := .Values.XCacheConfig.CacheDirectories }}
           - name: xcache-data-{{ $nindex }}
