@@ -1,4 +1,4 @@
-FROM perfsonar/testpoint:v4.4.1
+FROM perfsonar/testpoint:v4.3.4
 LABEL maintainer="SLATE Team"
 
 #ADD run-my-tests.sh /usr/local/bin/run-my-tests.sh
