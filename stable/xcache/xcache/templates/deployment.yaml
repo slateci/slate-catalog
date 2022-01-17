@@ -87,7 +87,7 @@ spec:
             value: {{ .Values.Monitoring.GStreamCollector | quote }}
           resources:
             requests:
-              ephemeral-storage: "1Gi"
+              ephemeral-storage: "2Gi"
               memory: {{ .Values.XCacheConfig.RamSize | upper | quote }}
             limits:
               ephemeral-storage: "5Gi"
@@ -127,7 +127,7 @@ spec:
           command: ["/usr/local/sbin/run_x509_updater.sh"]
           resources:
             requests:
-              ephemeral-storage: "1Gi"
+              ephemeral-storage: "600Mi"
             limits:
               memory: "512M"
           volumeMounts:
@@ -152,7 +152,7 @@ spec:
             value: {{ .Values.Monitoring.GStreamCollector | quote }}
           resources:
             requests:
-              ephemeral-storage: "1Gi"
+              ephemeral-storage: "600Mi"
             limits:
               memory: "512M"
           volumeMounts:
@@ -188,6 +188,6 @@ spec:
             value: "{{ .Values.heartbeats.frequency }}"
           resources:
             requests:
-              ephemeral-storage: "1Gi"
+              ephemeral-storage: "600Mi"
             limits:
               memory: "512M"
