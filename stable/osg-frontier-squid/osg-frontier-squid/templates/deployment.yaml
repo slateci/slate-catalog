@@ -34,7 +34,7 @@ spec:
       containers:
       # Container for the primary application, OSG Frontier Squid
       - name: osg-frontier-squid
-        image: "opensciencegrid/frontier-squid:{{ .Values.ImageTag | default "release" }}"
+        image: "hub.opensciencegrid.org/opensciencegrid/frontier-squid:{{ .Values.ImageTag | default "release" }}"
         imagePullPolicy: Always
         env:
         - name: SQUID_IPRANGE
