@@ -87,10 +87,10 @@ spec:
             value: {{ .Values.Monitoring.GStreamCollector | quote }}
           resources:
             requests:
-              ephemeral-storage: "2Gi"
+              ephemeral-storage: "5Gi"
               memory: {{ .Values.XCacheConfig.RamSize | upper | quote }}
             limits:
-              ephemeral-storage: "5Gi"
+              ephemeral-storage: "25Gi"
           livenessProbe:
             tcpSocket:
               port: {{ .Values.Service.Port }}
