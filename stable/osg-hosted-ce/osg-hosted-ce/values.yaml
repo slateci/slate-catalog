@@ -192,6 +192,10 @@ HostCredentials:
 ContainerTags:
   HostedCE: release
 
+# When 'Debug: true', ignore fatal errors on startup for debugging
+# purpose (default: false)
+Debug: false
+
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:
 # - Configures the CE as an ITB host

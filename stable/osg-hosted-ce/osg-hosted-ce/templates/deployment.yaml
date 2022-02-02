@@ -261,6 +261,10 @@ spec:
           {{ else }}
           value: "false"
           {{ end }}
+        {{ if .Values.Debug }}
+        - name: HOSTED_CE_DEBUG
+          value: "true"
+        {{ end }}
         - name: RESOURCE_NAME
           value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
