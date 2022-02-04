@@ -261,8 +261,8 @@ spec:
           {{ else }}
           value: "false"
           {{ end }}
-        {{ if .Values.Debug }}
-        - name: HOSTED_CE_DEBUG
+        {{ if .Values.Debug.ContinueOnError }}
+        - name: HOSTED_CE_CONTINUE_ON_ERROR
           value: "true"
         {{ end }}
         - name: RESOURCE_NAME
