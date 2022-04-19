@@ -69,44 +69,23 @@ Networking:
   # back the same IP address that was used previously. 
   RequestIP: null
 
-# VOMS FQAN to remote user mapping
+
+# SCITOKENS url[,subject] to user mapping
 # This list controls the VOs accepted by the CE and the users they are
 # mapped to on the remote site.
 #
 # To disallow VOs, remove the relevant item from the list.
 # To change the remote user for a given VO, change the value (e.g. osg01)
-# To add custom VOMS FQAN mappings, add a new item to the list.
-# VOMS FQANs can include "*" wildcards.
-VoRemoteUserMapping:
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
-  - "/osg/Role=NULL/Capability=NULL": osg01
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
-  - "/GLOW/Role=htpc/Capability=NULL": osg02
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/HCC.yaml
-  - "/hcc/Role=NULL/Capability=NULL": osg03
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
-  - "/cms/*": osg04
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Fermilab.yaml
-  - "/fermilab/*": osg05
-  # osg06 reserved for JLAB
-  # LIGO-Virgo collaboration
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/LIGO.yaml
-  - "/osg/ligo/Role=NULL/Capability=NULL": osg07
-  - "/virgo/ligo/Role=NULL/Capability=NULL": osg07
-  # Brookhaven National Lab VOs
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/sPHENIX.yaml
-  - "/sdcc/Role=NULL/Capability=NULL": osg08
-  - "/sphenix/Role=NULL/Capability=NULL": osg08
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
-  - "/atlas/*": osg09
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Gluex.yaml
-  - "/Gluex/Role=NULL/Capability=NULL": osg10
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/DUNE.yaml
-  - "/dune/Role=pilot/Capability=NULL": osg11
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/IceCube.yaml
-  - "/icecube/Role=pilot/Capability=NULL": osg12
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/XENON.yaml
-  - "/xenon.biggrid.nl/Role=NULL/Capability=NULL": osg13
+
+SciTokenRemoteUserMapping:
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+    - "https://scitokens.org/osg-connect": osg01
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+    - "https://chtc.cs.wisc.edu": osg02
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
+    - "https://cms-auth.web.cern.ch/": osg04
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
+    - "https://atlas-auth.web.cern.ch/": osg09
 
 ##########################
 # OPTIONAL CONFIGURATION #
@@ -118,16 +97,39 @@ VoRemoteUserMapping:
 #DnRemoteUserMapping:
 #  - "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName": osg01
 
-# SCITOKENS url to user mapping
-# SciTokenRemoteUserMapping:
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
-    # - "https://scitokens.org/osg-connect": osg01
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
-    # - "https://chtc.cs.wisc.edu": osg02
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
-    # - "https://cms-auth.web.cern.ch/": osg04
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
-    # - "https://atlas-auth.web.cern.ch/": osg09
+# VOMS FQAN to remote user mapping
+# To add custom VOMS FQAN mappings, add a new item to the list.
+# VOMS FQANs can include "*" wildcards.
+# VoRemoteUserMapping:
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+  # - "/osg/Role=NULL/Capability=NULL": osg01
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+  # - "/GLOW/Role=htpc/Capability=NULL": osg02
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/HCC.yaml
+  # - "/hcc/Role=NULL/Capability=NULL": osg03
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
+  # - "/cms/*": osg04
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Fermilab.yaml
+  # - "/fermilab/*": osg05
+  # osg06 reserved for JLAB
+  # LIGO-Virgo collaboration
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/LIGO.yaml
+  # - "/osg/ligo/Role=NULL/Capability=NULL": osg07
+  # - "/virgo/ligo/Role=NULL/Capability=NULL": osg07
+  # Brookhaven National Lab VOs
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/sPHENIX.yaml
+  # - "/sdcc/Role=NULL/Capability=NULL": osg08
+  # - "/sphenix/Role=NULL/Capability=NULL": osg08
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
+  # - "/atlas/*": osg09
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Gluex.yaml
+  # - "/Gluex/Role=NULL/Capability=NULL": osg10
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/DUNE.yaml
+  # - "/dune/Role=pilot/Capability=NULL": osg11
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/IceCube.yaml
+  # - "/icecube/Role=pilot/Capability=NULL": osg12
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/XENON.yaml
+  # - "/xenon.biggrid.nl/Role=NULL/Capability=NULL": osg13
 
 # Specify additional HTCondor-CE configuration
 # HTCondorCeConfig: |+
