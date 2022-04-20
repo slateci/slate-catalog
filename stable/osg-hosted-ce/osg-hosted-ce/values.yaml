@@ -82,10 +82,40 @@ SciTokenRemoteUserMapping:
     - "https://scitokens.org/osg-connect": osg01
     # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
     - "https://chtc.cs.wisc.edu": osg02
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
-    - "https://cms-auth.web.cern.ch/": osg04
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
-    - "https://atlas-auth.web.cern.ch/": osg09
+    ## HCC ##
+    - "https://scitokens.org/hcc": osg03
+    ## CMS ##
+    # CMS pilots:
+    - "https://cms-auth.web.cern.ch/,bad55f4e-602c-4e8d-a5c5-bd8ffb762113": osg04
+    # SAM/ETF tests:
+    - "https://cms-auth.web.cern.ch/,08ca855e-d715-410e-a6ff-ad77306e1763": osg04
+    # CMS ITB pilots:
+    - "https://cms-auth.web.cern.ch/,490a9a36-0268-4070-8813-65af031be5a3": osg04
+    # CMS LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,07f75a9a-bb78-4735-938b-7e61b2b62d5c": osg04
+    # CMS ITB LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,efbed8c1-f9a7-4063-92f7-f89c04ce04a3": osg04
+    # USCMS LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,091b3617-722c-4720-bdb1-81e4f5ec96e0": osg04
+    ## LIGO ##
+    - "https://scitokens.org/ligo": osg07
+    ## Fermilab ##
+    # Fermilab pilots:
+    - "https://cilogon.org/fermilab,fermilabpilot@fnal.gov": osg05
+    ## ATLAS ##
+    # ATLAS production:
+    - "https://atlas-auth.web.cern.ch/,7dee38a3-6ab8-4fe2-9e4c-58039c21d817": osg09
+    # ATLAS SAM/ETF:
+    - "https://atlas-auth.web.cern.ch/,5c5d2a4d-9177-3efa-912f-1b4e5c9fb660": osg09
+    # ATLAS analysis:
+    - "https://atlas-auth.web.cern.ch/,750e9609-485a-4ed4-bf16-d5cc46c71024": osg09
+    ## Gluex ##
+    - "https://zeus.phys.uconn.edu": osg10
+    ## DUNE ##
+    # DUNE pilots:
+    - "https://cilogon.org/dune,dunepilot@fnal.gov": osg11
+    ## IceCube ##
+    - "https://chtc.cs.wisc.edu/icecube": osg12
 
 ##########################
 # OPTIONAL CONFIGURATION #
