@@ -116,6 +116,11 @@ SciTokenRemoteUserMapping:
     - "https://cilogon.org/dune,dunepilot@fnal.gov": osg11
     ## IceCube ##
     - "https://chtc.cs.wisc.edu/icecube": osg12
+    ## JLab ##
+    # CLAS12 #
+    - "https://scicomp.jlab.org/scitokens/clas12": osg14
+    # EIC #
+    - "https://scicomp.jlab.org/scitokens/eic": osg14
 
 ##########################
 # OPTIONAL CONFIGURATION #
