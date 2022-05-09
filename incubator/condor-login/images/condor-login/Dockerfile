@@ -37,10 +37,10 @@ RUN yum install -y openssh-clients \
   gcc \
   libXpm \
   libXpm-devel \
-  unzip && \
-  yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm -y && \
-  yum install HEP_OSlibs -y && \
-  yum clean all
+  unzip
+#  yum install http://linuxsoft.cern.ch/wlcg/centos7/x86_64/wlcg-repo-1.0.0-1.el7.noarch.rpm -y && \
+#  yum install HEP_OSlibs -y && \
+RUN yum clean all
 
 # not needed for now
 #RUN mkdir -p /var/lib/condor/credentials
