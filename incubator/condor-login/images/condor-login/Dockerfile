@@ -21,8 +21,8 @@ RUN yum -y install osg-flock
 
 # ran into a weird problem here
 
-# Copy the Gratia probe into the correct place
-RUN cp /etc/gratia/condor/ProbeConfig-flocking /etc/gratia/condor/ProbeConfig
+# Copy the Gratia probe into the correct place - FIXME
+#RUN cp /etc/gratia/condor/ProbeConfig-flocking /etc/gratia/condor/ProbeConfig
 
 # not sure what this does. can we remove it?
 RUN echo > /etc/sysconfig/i18n
@@ -45,7 +45,8 @@ RUN yum install -y openssh-clients \
 # not needed for now
 #RUN mkdir -p /var/lib/condor/credentials
 
-RUN sed -i 's/EnableProbe="0"/EnableProbe="1"/' /etc/gratia/condor/ProbeConfig
+# Preemptive FIXME
+#RUN sed -i 's/EnableProbe="0"/EnableProbe="1"/' /etc/gratia/condor/ProbeConfig
 
 COPY 10-base.conf /etc/condor/config.d/
 
