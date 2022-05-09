@@ -154,3 +154,21 @@ data:
          -k \
          --header 'Content-Type: application/json' \
          --data-raw '{ "category" : "SLATE", "subcategory": "Squid", "event": "server down", "tags":"'"$site"'", "body":"down", "source": {"site": "'"$site"'", "instance": "'"$instance"'", "host": "'"$host"'"} }'
+  heartbeat.sh: |+
+    #!/bin/bash
+    usage () {
+        echo "$0 <instance> <site>"
+        echo "   <instance> is SLATE instance ID."
+        echo "   <site> is SLATE site name."
+    }
+    
+    if [ $# -lt 2 ]; then
+        usage
+        exit 1
+    fi
+
+    instance=$1
+    site=$2
+    curl --request POST "https://aaas-dev.atlas-ml.org/heartbeat/" \
+         --header 'Content-Type: application/json' \
+         --data-raw '{"category": "SLATE", "subcategory": "Squid", "event": "liveness", "source": { "site": "'"$site"'", "instance" : "'"$instance"'"}}'

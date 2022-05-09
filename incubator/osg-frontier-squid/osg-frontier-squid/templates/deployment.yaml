@@ -73,6 +73,11 @@ spec:
           hostPort: 3401
           {{ end }}
         {{ if and .Values.NodeSelection.Hostname .Values.Alarm.Site }}
+        livenessProbe:
+          exec:
+            command: ["/bin/sh","-c","/usr/local/sbin/heartbeat.sh {{ .Values.Instance }} {{ .Values.Alarm.Site }}"]
+          initialDelaySeconds: 10
+          periodSeconds: 10
         lifecycle:
           preStop:
             exec:
@@ -117,6 +122,9 @@ spec:
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /usr/local/sbin/squid-pre-stop-alarm.sh
           subPath: squid-pre-stop-alarm.sh 
+        - name: osg-frontier-squid-heartbeat
+          mountPath: /usr/local/sbin/heartbeat.sh
+          subPath: heartbeat.sh
         {{ end }}
       volumes:
         {{ if .Values.SquidConf.CacheDirOnHost }}
@@ -150,6 +158,9 @@ spec:
             {{ if and .Values.NodeSelection.Hostname .Values.Alarm.Site }}
             - key: squid-pre-stop-alarm.sh
               path: squid-pre-stop-alarm.sh
+              mode: 448
+            - key: heartbeat.sh
+              path: heartbeat.sh
               mode: 448
             {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
