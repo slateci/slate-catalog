@@ -9,12 +9,13 @@ RUN yum install -y openssh-server pwgen supervisor authconfig
 RUN yum install openssl -y
 
 # from Mats
-RUN curl -s -o /etc/yum.repos.d/htcondor-testing-rhel7.repo https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-testing-rhel7.repo \
- && echo "priority=10" >>/etc/yum.repos.d/htcondor-testing-rhel7.repo \
- && rpm --import http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor \
- && yum -y install condor \
- && mkdir -p /etc/condor/passwords.d /etc/condor/tokens.d \
- && yum clean all
+#RUN curl -s -o /etc/yum.repos.d/htcondor-testing-rhel7.repo https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-testing-rhel7.repo \
+# && echo "priority=10" >>/etc/yum.repos.d/htcondor-testing-rhel7.repo \
+# && rpm --import http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor \
+# && yum -y install condor \
+# && mkdir -p /etc/condor/passwords.d /etc/condor/tokens.d \
+# && yum clean all
+RUN yum install -y condor
 
 RUN yum -y install osg-flock
 
