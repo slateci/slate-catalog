@@ -27,6 +27,7 @@ data:
     country = {{ .Values.Topology.Country }}
     latitude = {{ .Values.Topology.Latitude }}
     longitude = {{ .Values.Topology.Longitude }}
+    batch_systems = {{ .Values.RemoteCluster.Batch }}
 
     [BOSCO]
     enabled = False
