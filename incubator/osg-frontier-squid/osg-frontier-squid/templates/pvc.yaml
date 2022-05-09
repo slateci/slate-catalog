@@ -1,0 +1,18 @@
+{{ if .Values.SLATE.LocalStorage }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: osg-frontier-squid-{{ .Values.Instance }}-pvc
+  labels:
+    app: {{ template "osg-frontier-squid.name" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: {{ .Values.SquidConf.CacheSize }}Mi
+  storageClassName: nfs-provisioner
+{{ end }}
