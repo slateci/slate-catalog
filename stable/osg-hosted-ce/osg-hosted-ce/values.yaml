@@ -57,6 +57,8 @@ RemoteCluster:
   # Control the value of the SSH BatchMode option used by the CE for
   # communication with the remote cluster
   SSHBatchMode: True
+  # Control whether the remote shell is invoked as a login shell (bash -l)
+  LoginShell: True
 
 Networking:
   ServiceType: "LoadBalancer"
