@@ -4,7 +4,7 @@ LABEL maintainer "Lincoln Bryant <lincolnb@uchicago.edu>"
 RUN yum update -y && yum install -y epel-release
 
 # upcoming for tokens
-RUN yum install -y --enablerepo=osg-upcoming --enablerepo=osg-empty \
+RUN yum install -y --enablerepo=osg-upcoming \
   condor \
   pwgen \
   supervisor \
@@ -13,7 +13,7 @@ RUN yum install -y --enablerepo=osg-upcoming --enablerepo=osg-empty \
   gratia-probe-common \
   gratia-probe-condor \
   python2-scitokens-credmon \
-  empty-ca-certs \
+  osg-ca-certs \
   glibc-static \
   wget \ 
   curl
