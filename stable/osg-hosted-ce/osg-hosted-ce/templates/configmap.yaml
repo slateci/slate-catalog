@@ -84,6 +84,9 @@ data:
                                    {{ if not .Values.RemoteCluster.SSHBatchMode }}
                                    , " --rgahp-nobatchmode"
                                    {{ end }}
+                                   {{ if not .Values.RemoteCluster.LoginShell }}
+                                   , " --rgahp-nologin"
+                                   {{ end }}
                                    );
     ]
     @jrd
