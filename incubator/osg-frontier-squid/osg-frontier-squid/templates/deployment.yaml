@@ -122,7 +122,7 @@ spec:
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /usr/local/sbin/squid-pre-stop-alarm.sh
           subPath: squid-pre-stop-alarm.sh 
-        - name: osg-frontier-squid-heartbeat
+        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /usr/local/sbin/heartbeat.sh
           subPath: heartbeat.sh
         {{ end }}
