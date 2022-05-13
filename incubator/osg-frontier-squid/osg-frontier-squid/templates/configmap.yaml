@@ -147,10 +147,14 @@ data:
     instance=$1
     host=$2
     site=$3
+
+    if [[ -z $AAAS_SERVER ]]; then
+       AAAS_SERVER="aaas.atlas-ml.org"
+    fi
     
     
     echo $instance $host $site
-    curl --request POST "https://aaas.atlas-ml.org/alarm" \
+    curl --request POST "https://${AAAS_SERVER}/alarm" \
          -k \
          --header 'Content-Type: application/json' \
          --data-raw '{ "category" : "SLATE", "subcategory": "Squid", "event": "server down", "tags":"'"$site"'", "body":"down", "source": {"site": "'"$site"'", "instance": "'"$instance"'", "host": "'"$host"'"} }'
@@ -166,9 +170,13 @@ data:
         usage
         exit 1
     fi
+    
+    if [[ -z $AAAS_SERVER ]]; then
+       AAAS_SERVER="aaas.atlas-ml.org"
+    fi
 
     instance=$1
     site=$2
-    curl --request POST "https://aaas-dev.atlas-ml.org/heartbeat/" \
+    curl --request POST "https://${AAAS_SERVER}/heartbeat/" \
          --header 'Content-Type: application/json' \
          --data-raw '{"category": "SLATE", "subcategory": "Squid", "event": "liveness", "source": { "site": "'"$site"'", "instance" : "'"$instance"'"}}'
