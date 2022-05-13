@@ -179,4 +179,5 @@ data:
     site=$2
     curl --request POST "https://${AAAS_SERVER}/heartbeat/" \
          --header 'Content-Type: application/json' \
-         --data-raw '{"category": "SLATE", "subcategory": "Squid", "event": "liveness", "source": { "site": "'"$site"'", "instance" : "'"$instance"'"}}'
+         --data-raw '{"category": "SLATE", "subcategory": "Squid", "event": "liveness", "tags": "'"$site"'", "source": { "site": "'"$site"'", "instance" : "'"$instance"'"}}'
+    echo "Sent heartbeat to $AAAS_SERVER for instance $instance at site $site" >> /var/log/aaas-heartbeat.log
