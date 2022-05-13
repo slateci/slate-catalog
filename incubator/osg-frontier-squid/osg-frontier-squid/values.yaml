@@ -131,7 +131,7 @@ NodeSelection:
 #need to be set to some proper values.
 Alarm:
   Site: null
-  #AaasServer: 
+  #AaasServer: aaas.atlas-ml.org
 
 Pod:
   # Set to true if you want to use the host's timezone settings. This would affect the timestamps of log messages.
