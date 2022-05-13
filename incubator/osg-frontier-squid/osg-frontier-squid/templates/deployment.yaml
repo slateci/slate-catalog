@@ -49,6 +49,10 @@ spec:
         - name: SQUID_MAX_ACCESS_LOG
           value: {{ .Values.SquidConf.MaxAccessLog }}
         {{ end }} 
+        {{ if .Values.Alarm.AaasServer }}
+        - name: AAAS_SERVER
+          value: {{ .Values.Alarm.AaasServer }}
+        {{ end }}
         resources:
           requests:
             cpu: {{ .Values.SquidConf.CPU }}
