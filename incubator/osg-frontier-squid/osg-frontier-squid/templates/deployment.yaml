@@ -51,7 +51,7 @@ spec:
         {{ end }} 
         {{ if .Values.Alarm.AaasServer }}
         - name: AAAS_SERVER
-          value: {{ .Values.Alarm.AaasServer }}
+          value: '{{ .Values.Alarm.AaasServer }}'
         {{ end }}
         resources:
           requests:
