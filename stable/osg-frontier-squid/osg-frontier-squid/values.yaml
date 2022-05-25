@@ -50,7 +50,7 @@ Service:
 
 SquidConf:
   # The number of CPU cores allocated to the Squid application. The default is 2.
-  CPU: 2
+  CPU: 1
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
   # Per Frontier Squid, do not consume more than 1/8 of system memory with Frontier Squid
   CacheMem: 4096
@@ -94,11 +94,6 @@ SquidConf:
   #DisableLogging: False
   # truncates log file every 2 minutes.
   CleanLog: False
-  # Set this if you want to run more than one cache process concurrently.
-  # Cache memory/disk space is not shared; values configured above are per process. 
-  #Workers: 4
-  # This setting can be used to pin cache processes to CPU cores
-  #Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
   # Configure the number of names to use when rotating logfiles
   Logfile_Rotate: "30"
   # Set the max size for the access log file
