@@ -76,8 +76,8 @@ data:
     [
     GridResource = "intentionally left blank";
     eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ",
-                                   Owner, "@", "{{ .Values.RemoteCluster.LoginHost }} ",
-                                   "--rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite"
+                                   Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}",
+                                   " --rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite"
                                    {{ if .Values.BoscoOverrides.TarballURL | default "" | contains "bosco-1.3"  }}
                                    , " --rgahp-script batch_gahp"
                                    {{ end }}
