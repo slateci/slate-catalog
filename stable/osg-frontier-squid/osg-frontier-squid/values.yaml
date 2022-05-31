@@ -49,8 +49,10 @@ Service:
   #MonitoringNodePort: 31201
 
 SquidConf:
-  # The number of CPU cores allocated to the Squid application. The default is 2.
-  CPU: 1
+  # The number of CPU cores allocated to the Squid application. If not
+  # specified, the default is 1. You only need to uncomment this field if you
+  # plan to use more than 1 CPU for Squid.
+  # CPU: 1
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
   # Per Frontier Squid, do not consume more than 1/8 of system memory with Frontier Squid
   CacheMem: 4096
