@@ -17,10 +17,11 @@ data:
     setoptionparameter("acl RESTRICT_DEST", 3, "{{ .Values.SquidConf.RESTRICT_DEST }}")
     uncomment("http_access deny !RESTRICT_DEST")
     {{- end }}
-    {{- if .Values.SquidConf.Cpu_Affinity_Map }}
+    {{- if .Values.SquidConf.CPU }} 
     # Set the CPU affinity map
-    setoption("cpu_affinity_map", "{{ .Values.SquidConf.Cpu_Affinity_Map }}")
-    {{- end }}
+    {{ $AffinityMap := untilStep 1 (int (add1 .Values.SquidConf.CPU )) 1 | join "," }}
+    setoption("cpu_affinity_map", "process_numbers={{ $AffinityMap }} cores={{ $AffinityMap }}")
+    {{ end }}
     {{- if .Values.SquidConf.Logfile_Rotate }}
     # Whether to rotate logs or not
     setoption("logfile_rotate", "{{ .Values.SquidConf.Logfile_Rotate }}")
@@ -29,7 +30,7 @@ data:
     # Allow the user to set the maximum object size in memory
     setoption("maximum_object_size_in_memory", "{{ .Values.SquidConf.MaximumObjectSizeInMemory }} KB")
     {{ end }}
-    {{- if .Values.SquidConf.Workers }}
+    {{- if .Values.SquidConf.CPU }}
     # If multiple workers are requested
     {{- if .Values.SquidConf.DisableLogging }}
     # If multiple workers are used, and logging is disabled:
@@ -39,7 +40,11 @@ data:
     setoptionparameter("logformat awstats", 3, "kid${process_number}")
     {{ end }}
     # Set the number of workers and create a cache for each unique worker
-    setoption("workers", {{ .Values.SquidConf.Workers }} )
+    {{- if .Values.SquidConf.CPU }}
+    setoption("workers", {{ .Values.SquidConf.CPU }} )
+    {{ else }}
+    setoption("workers", "1" )
+    {{ end }}
     setoption("cache_dir", "ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256")
     {{ else }}
     # If multiple workers are NOT requested, set a single cache dir with one of

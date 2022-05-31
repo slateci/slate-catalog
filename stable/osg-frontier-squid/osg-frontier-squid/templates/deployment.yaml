@@ -55,7 +55,11 @@ spec:
         {{ end }}
         resources:
           requests:
+            {{ if .Values.SquidConf.CPU }}
             cpu: {{ .Values.SquidConf.CPU }}
+            {{ else }} 
+            cpu: 1
+            {{ end }}
         {{ if not  .Values.SquidConf.CacheDirOnHost }}
 # converting CacheSize to MiB and adding it to total request
             ephemeral-storage: {{ add .Values.SquidConf.RequestEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
