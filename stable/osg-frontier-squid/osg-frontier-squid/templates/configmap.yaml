@@ -74,7 +74,11 @@ data:
     {{ if .Values.SquidConf.MonitoringIPRange }}
     acl HOST_MONITOR src {{ .Values.SquidConf.MonitoringIPRange }}
     {{ end }}
+    {{- if .Values.SquidConf.CPU }} 
+    cache_mem {{ div .Values.SquidConf.CacheMem .Values.SquidConf.CPU }} MB
+    {{- else }}
     cache_mem {{ .Values.SquidConf.CacheMem }} MB
+    {{- end }}
     {{ if .Values.SquidConf.Workers }}
     workers {{ .Values.SquidConf.Workers }} # multiple worker case
     cache_dir ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256
