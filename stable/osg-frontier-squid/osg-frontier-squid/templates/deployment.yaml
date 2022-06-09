@@ -40,7 +40,11 @@ spec:
         - name: SQUID_IPRANGE
           value: {{ .Values.SquidConf.IPRange }}
         - name: SQUID_CACHE_MEM
+        {{- if .Values.SquidConf.CPU }}
+          value: '{{ div .Values.SquidConf.CacheMem .Values.SquidConf.CPU }} MB'  
+        {{- else }} 
           value: '{{ .Values.SquidConf.CacheMem }} MB'  
+        {{- end }}
         {{ if .Values.SquidConf.CacheSize }}
         - name: SQUID_CACHE_DISK
           value: '{{ .Values.SquidConf.CacheSize }}'
