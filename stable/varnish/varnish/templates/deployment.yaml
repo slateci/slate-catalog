@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "v4a.fullname" . }}
+  labels:
+    {{- include "v4a.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "v4a.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "v4a.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "varnish:7.1-alpine"
+          imagePullPolicy: Always
+          env:
+            - name: VARNISH_SIZE
+              value: {{ .Values.varnish_size }}
+          ports:
+            - containerPort: 80
+              hostPort: 6081
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/varnish/
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "v4a.fullname" . }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
