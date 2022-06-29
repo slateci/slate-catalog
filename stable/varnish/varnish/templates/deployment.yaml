@@ -16,8 +16,6 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "varnish:7.1-alpine"
           imagePullPolicy: Always
           env:
