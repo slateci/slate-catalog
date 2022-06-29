@@ -34,6 +34,15 @@ data:
     acl local {
         {{.Values.acl | nindent 4 }}
     }
+    sub vcl_init {
+        new vdir = directors.fallback();
+        vdir.add_backend(fermilab1);
+        vdir.add_backend(fermilab2);
+        vdir.add_backend(goc);  
+        vdir.add_backend(bnl1);
+        vdir.add_backend(bnl2);
+        vdir.add_backend(testStratum1);    
+    }
     sub vcl_backend_fetch {
         unset bereq.http.host;
     }
