@@ -29,6 +29,9 @@ spec:
               mountPath: /etc/varnish/
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            capabilities:
+              add: ["NET_ADMIN", "SYS_TIME", "CAP_BPF"]
 
       volumes:
         - name: config-volume
