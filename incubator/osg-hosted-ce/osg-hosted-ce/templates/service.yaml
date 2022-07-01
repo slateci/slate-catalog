@@ -17,10 +17,12 @@ spec:
     port: 9619
     targetPort: htcondor-ce
     protocol: TCP
+  {{ if and (not .Values.HostCertKeySecret) (not .Values.HostKeySecret) }}
   - name: http
     port: 80
     targetPort: http
     protocol: TCP
+  {{ end }}
   {{ if .Values.HTTPLogger.Enabled }}
   - port: 8080
     targetPort: logs
