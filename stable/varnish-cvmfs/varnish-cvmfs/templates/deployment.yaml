@@ -18,7 +18,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "varnish:7.1-alpine"
           imagePullPolicy: Always
-          cmd: "/usr/sbin/varnishd"
+          command: ["/usr/sbin/varnishd"]
           args: 
             - "-F"
             - "-f /etc/varnish/default.vcl"
