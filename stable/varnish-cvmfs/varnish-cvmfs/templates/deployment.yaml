@@ -22,7 +22,7 @@ spec:
             - name: VARNISH_SIZE
               value: {{ .Values.varnish_size }}
             - name: VARNISH_PORT
-              value: {{ .Values.varnish_container_port }}
+              value: {{quote .Values.varnish_container_port }}
           ports:
             - containerPort: {{ .Values.varnish_container_port }}
               hostPort: 6081
