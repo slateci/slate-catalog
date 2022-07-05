@@ -18,11 +18,14 @@ spec:
         - name: {{ .Chart.Name }}
           image: "varnish:7.1-alpine"
           imagePullPolicy: Always
-          env:
-            - name: VARNISH_SIZE
-              value: {{ .Values.varnish_size }}
-            - name: VARNISH_PORT
-              value: {{quote .Values.varnish_container_port }}
+          cmd: "/usr/sbin/varnishd"
+          args: 
+            - "-F"
+            - "-f /etc/varnish/default.vcl"
+            - "-a http=:{{ .Values.varnish_container_port }},HTTP" 
+            - "-a proxy=:8443,PROXY"
+            - "-p feature=+http2"
+            - "-s malloc,{{ .Values.varnish_size }}"
           ports:
             - containerPort: {{ .Values.varnish_container_port }}
               hostPort: 6081

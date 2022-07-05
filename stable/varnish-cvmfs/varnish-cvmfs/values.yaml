@@ -1,5 +1,5 @@
 varnish_size: "32G"
-varnish_container_port: 8080
+varnish_container_port: 80
 
 nodeSelector:
   varnish: cvmfs-slate
