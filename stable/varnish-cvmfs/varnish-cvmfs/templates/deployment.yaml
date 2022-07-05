@@ -21,8 +21,10 @@ spec:
           env:
             - name: VARNISH_SIZE
               value: {{ .Values.varnish_size }}
+            - name: VARNISH_PORT
+              value: {{ .Values.varnish_container_port }}
           ports:
-            - containerPort: 80
+            - containerPort: {{ .Values.varnish_container_port }}
               hostPort: 6081
           volumeMounts:
             - name: config-volume
