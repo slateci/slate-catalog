@@ -59,33 +59,33 @@ spec:
         {{ end }}
         resources:
           requests:
-            {{ if .Values.SquidConf.CPU }}
+            {{- if .Values.SquidConf.CPU }}
             cpu: {{ .Values.SquidConf.CPU }}
-            {{ else }} 
+            {{- else }} 
             cpu: 1
-            {{ end }}
-            {{ if .Values.SquidConf.CacheMem }}
+            {{- end }}
+            {{- if .Values.SquidConf.CacheMem }}
             memory: '{{ .Values.SquidConf.CacheMem }}Mi'
-            {{ end }} 
-            {{ if not  .Values.SquidConf.CacheDirOnHost }}
+            {{- end }} 
+            {{- if not  .Values.SquidConf.CacheDirOnHost }}
             ephemeral-storage: {{ add .Values.SquidConf.RequestEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
-            {{ else }}
+            {{- else }}
             ephemeral-storage: {{ .Values.SquidConf.RequestEphemeralSize  }}Mi
-            {{ end }}
+            {{- end }}
           limits:
-            {{ if .Values.SquidConf.CPU }}
+            {{- if .Values.SquidConf.CPU }}
             cpu: {{ mul .Values.SquidConf.CPU 2 }}
-            {{ else }} 
+            {{- else }} 
             cpu: 2
-            {{ end }}
-            {{ if .Values.SquidConf.CacheMem }}
+            {{- end }}
+            {{- if .Values.SquidConf.CacheMem }}
             memory: '{{ mul .Values.SquidConf.CacheMem 2 }}Mi'
-            {{ end }} 
-            {{ if not  .Values.SquidConf.CacheDirOnHost }}
+            {{- end }} 
+            {{- if not  .Values.SquidConf.CacheDirOnHost }}
             ephemeral-storage: {{ add .Values.SquidConf.LimitEphemeralSize  (floor (div (mul .Values.SquidConf.CacheSize 9537) 10000))  }}Mi
-            {{ else }}
+            {{- else }}
             ephemeral-storage: {{ .Values.SquidConf.LimitEphemeralSize  }}Mi
-            {{ end }}
+            {{- end }}
         ports:
         - containerPort: 3128
           name: squid
