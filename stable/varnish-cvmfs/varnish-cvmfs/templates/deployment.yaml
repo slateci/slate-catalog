@@ -21,11 +21,16 @@ spec:
           command: ["/usr/sbin/varnishd"]
           args: 
             - "-F"
-            - "-f /etc/varnish/default.vcl"
-            - "-a http=:{{ .Values.varnish_container_port }},HTTP" 
-            - "-a proxy=:8443,PROXY"
-            - "-p feature=+http2"
-            - "-s malloc,{{ .Values.varnish_size }}"
+            - "-f"
+            - "/etc/varnish/default.vcl"
+            - "-a"
+            - "http=:{{ .Values.varnish_container_port }},HTTP" 
+            - "-a"
+            - "proxy=:8443,PROXY"
+            - "-p"
+            - "feature=+http2"
+            - "-s"
+            - "malloc,{{ .Values.varnish_size }}"
           ports:
             - containerPort: {{ .Values.varnish_container_port }}
               hostPort: 6081
