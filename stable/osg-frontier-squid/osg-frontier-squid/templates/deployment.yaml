@@ -182,7 +182,7 @@ spec:
               mode: 448
             - key: heartbeat.sh
               path: heartbeat.sh
-              mode: 448
+              mode: 493
             - key: heartbeat.cron
               path: heartbeat.cron
               mode: 420
