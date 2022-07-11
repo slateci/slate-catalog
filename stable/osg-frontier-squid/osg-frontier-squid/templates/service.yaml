@@ -8,9 +8,9 @@ metadata:
     instance: {{ .Values.Instance | quote }}
 spec:
   type: {{ .Values.Service.ExternalVisibility }}
-  {{ if ne .Values.Service.ExternalVisibility "ClusterIP" }}
+  {{- if ne .Values.Service.ExternalVisibility "ClusterIP" }}
   externalTrafficPolicy: Local
-  {{ end }}
+  {{- end }}
   selector:
     app: {{ template "osg-frontier-squid.name" . }}
     release: {{ .Release.Name }}
@@ -19,17 +19,17 @@ spec:
   - port: {{ .Values.Service.Port }}
     name: cache
     targetPort: squid
-    {{ if eq .Values.Service.ExternalVisibility "NodePort" }}
-    {{ if .Values.Service.NodePort }}
+    {{- if eq .Values.Service.ExternalVisibility "NodePort" }}
+    {{- if .Values.Service.NodePort }}
     nodePort: {{ .Values.Service.NodePort }}
-    {{ end }}
-    {{ end }}
+    {{- end }}
+    {{- end }}
   - port: {{ .Values.Service.MonitoringPort }}
     name: monitoring
     targetPort: monitoring
     protocol: UDP
-    {{ if eq .Values.Service.ExternalVisibility "NodePort" }}
-    {{ if .Values.Service.NodePort }}
+    {{- if eq .Values.Service.ExternalVisibility "NodePort" }}
+    {{- if .Values.Service.NodePort }}
     nodePort: {{ .Values.Service.MonitoringNodePort }}
-    {{ end }}
-    {{ end }}
+    {{- end }}
+    {{- end }}
