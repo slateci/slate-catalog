@@ -96,11 +96,6 @@ spec:
           hostPort: 3401
           {{ end }}
         {{ if and .Values.NodeSelection.Hostname .Values.Alarm.Site }}
-        livenessProbe:
-          exec:
-            command: ["/bin/sh","-c","/usr/local/sbin/heartbeat.sh {{ .Values.Instance }} {{ .Values.Alarm.Site }}"]
-          initialDelaySeconds: 10
-          periodSeconds: 10
         lifecycle:
           preStop:
             exec:
@@ -148,6 +143,9 @@ spec:
         - name: osg-frontier-squid-{{ .Values.Instance }}-conf
           mountPath: /usr/local/sbin/heartbeat.sh
           subPath: heartbeat.sh
+        - name: osg-frontier-squid-{{ .Values.Instance }}-conf
+          mountPath: /etc/cron.d/heartbeat.cron
+          subPath: heartbeat.cron
         {{ end }}
       volumes:
         {{ if .Values.SquidConf.CacheDirOnHost }}
@@ -185,6 +183,9 @@ spec:
             - key: heartbeat.sh
               path: heartbeat.sh
               mode: 448
+            - key: heartbeat.cron
+              path: heartbeat.cron
+              mode: 420
             {{ end }}
         - name: osg-frontier-squid-{{ .Values.Instance }}-data
         {{ if .Values.SLATE.LocalStorage }}
