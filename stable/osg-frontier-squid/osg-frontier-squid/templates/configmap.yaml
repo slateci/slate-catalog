@@ -21,7 +21,7 @@ data:
     # Set the CPU affinity map
     {{ $AffinityMap := untilStep 1 (int (add1 .Values.SquidConf.CPU )) 1 | join "," }}
     setoption("cpu_affinity_map", "process_numbers={{ $AffinityMap }} cores={{ $AffinityMap }}")
-    {{ end }}
+    {{- end }}
     {{- if .Values.SquidConf.Logfile_Rotate }}
     # Whether to rotate logs or not
     setoption("logfile_rotate", "{{ .Values.SquidConf.Logfile_Rotate }}")
@@ -29,7 +29,7 @@ data:
     {{- if .Values.SquidConf.MaximumObjectSizeInMemory }}
     # Allow the user to set the maximum object size in memory
     setoption("maximum_object_size_in_memory", "{{ .Values.SquidConf.MaximumObjectSizeInMemory }} KB")
-    {{ end }}
+    {{- end }}
     {{- if .Values.SquidConf.CPU }}
     # If multiple workers are requested
     {{- if .Values.SquidConf.DisableLogging }}
@@ -42,30 +42,31 @@ data:
     # Set the number of workers and create a cache for each unique worker
     {{- if .Values.SquidConf.CPU }}
     setoption("workers", {{ .Values.SquidConf.CPU }} )
-    {{ else }}
+    {{- else }}
     setoption("workers", "1" )
-    {{ end }}
+    {{- end }}
     setoption("cache_dir", "ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256")
-    {{ else }}
+    {{- else }}
     # If multiple workers are NOT requested, set a single cache dir with one of
     # three options: 
     #  1. Cache with a minimum object size OR
     #  2. Cache with the disk cache disabled entirely OR
     #  3. Cache with no special parameters (default).
-    {{ if .Values.SquidConf.DiskCacheMinObjSize }}
+    {{- if .Values.SquidConf.DiskCacheMinObjSize }}
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256 min_size={{ .Values.SquidConf.DiskCacheMinObjSize }}")
-    {{ else if .Values.SquidConf.DisableDiskCache }}
+    {{- else if .Values.SquidConf.DisableDiskCache }}
     setoptionparameter("cache_dir", 1, "null")
-    {{ else }}
+    {{- else }}
     setoption("cache_dir", "ufs /var/cache/squid/squid {{ .Values.SquidConf.CacheSize }} 16 256")
-    {{ end }} 
+    {{- end }} 
     {{- if .Values.SquidConf.DisableLogging }}
     # Let the user enable/disable logging for a single worker case
     setoption("access_log", "none")
     {{- end }}
-    {{ end }}
-# The below 60-image-post-init.sh script is not mounted and the above new script takes care of the customization needed
-# 2-3 setttings are done vai env vars as per the OSG docs
+    {{- end }}
+  # The below 60-image-post-init.sh script is not mounted and the above new
+  # script takes care of the customization needed 2-3 setttings are done vai
+  # env vars as per the OSG docs
   60-image-post-init.sh: |+
     echo "Generating squid.conf..."
     grep -v cache_dir /etc/squid/squid.conf.frontierdefault > /etc/squid/squid.conf
@@ -73,26 +74,26 @@ data:
     acl NET_LOCAL src {{ .Values.SquidConf.IPRange }}
     {{ if .Values.SquidConf.MonitoringIPRange }}
     acl HOST_MONITOR src {{ .Values.SquidConf.MonitoringIPRange }}
-    {{ end }}
+    {{- end }}
     {{- if .Values.SquidConf.CPU }} 
     cache_mem {{ div .Values.SquidConf.CacheMem .Values.SquidConf.CPU }} MB
     {{- else }}
     cache_mem {{ .Values.SquidConf.CacheMem }} MB
     {{- end }}
-    {{ if .Values.SquidConf.Workers }}
+    {{- if .Values.SquidConf.Workers }}
     workers {{ .Values.SquidConf.Workers }} # multiple worker case
     cache_dir ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256
     logformat awstats %>a kid${process_number} %un [%{%d/%b/%Y:%H:%M:%S}tl.%03tu %{%z}tl] "%rm %ru HTTP/%rv" %>Hs %<st %Ss:%Sh %tr "%{X-Frontier-Id}>h %{cvmfs-info}>h" "%{Referer}>h" "%{User-Agent}>h"
     visible_hostname '`uname -n`'/${process_number}
-    {{ else }} # single worker case
+    {{- else }} # single worker case
     cache_dir ufs /var/cache/squid {{ .Values.SquidConf.CacheSize }} 16 256
-    {{ end }}
-    {{ if .Values.SquidConf.Cpu_Affinity_Map }}
+    {{- end }}
+    {{- if .Values.SquidConf.Cpu_Affinity_Map }}
     cpu_affinity_map {{ .Values.SquidConf.Cpu_Affinity_Map }}
-    {{ end }}
-    {{ if .Values.SquidConf.Logfile_Rotate }}
+    {{- end }}
+    {{- if .Values.SquidConf.Logfile_Rotate }}
     logfile_rotate {{ .Values.SquidConf.Logfile_Rotate }}
-    {{ end }}
+    {{- end }}
     acl URN proto URN
     http_access deny URN
     ' >> /etc/squid/squid.conf
@@ -109,14 +110,14 @@ data:
       done
     fi
     rm -f /dev/shm/squid-*.shm
-    {{ else }}
+    {{- else }}
     if [[ ! -d /var/cache/squid/00 ]]; then
         echo "Initializing cache..."
         /usr/sbin/squid -N -f /etc/squid/squid.conf -z
     fi
-    {{ end }}
+    {{- end }}
     echo "End of custom 60-image-post-init.sh"
-{{ if .Values.SquidConf.LogToStdout }}
+{{- if .Values.SquidConf.LogToStdout }}
   # Inject an extra helper to copy the squid logs to supervisor's stdout, 
   # where Docker can capture them. 
   50-squid-log-dump.conf: |+
@@ -126,8 +127,8 @@ data:
     autorestart=true
     stdout_logfile=/dev/stdout
     stdout_logfile_maxbytes=0
-{{ end }}
-{{ if .Values.SquidConf.CleanLog }}
+{{- end }}
+{{- if .Values.SquidConf.CleanLog }}
   # Truncates log file every 2 min 
   55-squid-log-clean.conf: |+
     [program:squid-log-trunc]
@@ -136,7 +137,7 @@ data:
     autorestart=true
     stdout_logfile=/dev/stdout
     stdout_logfile_maxbytes=0
-{{ end }}
+{{- end }}
   squid-pre-stop-alarm.sh: |+
     #!/bin/sh
     
