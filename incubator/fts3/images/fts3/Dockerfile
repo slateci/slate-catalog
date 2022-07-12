@@ -1,4 +1,4 @@
-FROM opensciencegrid/software-base:fresh
+FROM opensciencegrid/software-base:el7-fresh
 LABEL description="File Transfer Service from CERN"
 LABEL maintainer=lincolnb@uchicago.edu
 
