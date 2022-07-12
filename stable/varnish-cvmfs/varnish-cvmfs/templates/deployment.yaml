@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "varnish:7.1-alpine"
+          image: "ivukotic/v4a"
           imagePullPolicy: Always
           command: ["/usr/sbin/varnishd"]
           args: 
@@ -31,6 +31,12 @@ spec:
             - "feature=+http2"
             - "-s"
             - "malloc,{{ .Values.varnish_size }}"
+          livenessProbe:
+            exec:
+              command:
+                - /etc/varnish/sender.sh
+            initialDelaySeconds: 5
+            periodSeconds: 5
           ports:
             - containerPort: {{ .Values.varnish_container_port }}
               hostPort: 6081
