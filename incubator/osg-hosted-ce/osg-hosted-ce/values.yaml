@@ -229,7 +229,7 @@ HostCredentials:
 
 # Choose which tag to use for the specified containers
 ContainerTags:
-  HostedCE: release
+  HostedCE: 3.6-release
 
 Debug:
   # When 'ContinuOnError: true', ignore fatal errors on startup
