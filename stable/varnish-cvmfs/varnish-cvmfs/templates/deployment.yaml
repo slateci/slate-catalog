@@ -34,6 +34,8 @@ spec:
           livenessProbe:
             exec:
               command:
+                - /bin/sh
+                - -c
                 - /etc/varnish/sender.sh
             initialDelaySeconds: 5
             periodSeconds: 5
