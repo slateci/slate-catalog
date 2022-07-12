@@ -49,6 +49,8 @@ data:
     enabled = False
     {{ end }}
     location =  {{ .Values.RemoteCluster.Squid }}
+    # Operator-provided osg-configure configuration below this line
+{{ .Values.OsgConfigureConfig | default "" | indent 4 }}
 ---
 apiVersion: v1
 kind: ConfigMap
