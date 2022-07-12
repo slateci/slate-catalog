@@ -2,8 +2,8 @@ apiVersion: v2
 name: v4a
 description: A Varnish for ATLAS Frontiers
 type: application
-version: 0.1.18
-appVersion: 1.18.0
+version: 0.1.19
+appVersion: 1.19.0
 maintainers:
   - name: Ilija Vukotic
     email: ivukotic@uchicago.edu
