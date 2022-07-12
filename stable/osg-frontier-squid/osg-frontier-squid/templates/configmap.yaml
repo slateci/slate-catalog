@@ -190,3 +190,7 @@ data:
          --header 'Content-Type: application/json' \
          --data-raw '{"category": "SLATE", "subcategory": "Squid", "event": "liveness", "tags": "'"$site"'", "source": { "site": "'"$site"'", "instance" : "'"$instance"'"}}'
     echo "Sent heartbeat to $AAAS_SERVER for instance $instance at site $site" >> /var/log/aaas-heartbeat.log
+  {{- if .Values.Alarm.Site }}
+  heartbeat.cron: |+
+    * * * * * squid /usr/local/sbin/heartbeat.sh {{ .Values.Instance }} {{ quote .Values.Alarm.Site }}
+  {{- end }}
