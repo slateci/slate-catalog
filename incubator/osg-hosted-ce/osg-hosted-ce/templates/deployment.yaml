@@ -39,19 +39,9 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-      {{ if .Values.DnRemoteUserMapping }}
-      - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-      {{ end }}
-      {{ if .Values.SciTokenRemoteUserMapping }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
-      {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
           secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
@@ -216,14 +206,6 @@ spec:
           mountPath: /etc/osg/git.key
           subPath: git.key
         {{ end }}
-        {{ end }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-          mountPath: /etc/grid-security/voms-mapfile
-          subPath: voms-mapfile
-        {{ if .Values.DnRemoteUserMapping }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-          mountPath: /etc/grid-security/grid-mapfile
-          subPath: grid-mapfile
         {{ end }}
         {{ if .Values.SciTokenRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
