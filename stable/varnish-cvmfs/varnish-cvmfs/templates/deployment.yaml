@@ -18,19 +18,6 @@ spec:
         - name: {{ .Chart.Name }}
           image: "ivukotic/v4a"
           imagePullPolicy: Always
-          # command: ["/usr/sbin/varnishd"]
-          # args: 
-          #   - "-F"
-          #   - "-f"
-          #   - "/etc/varnish/default.vcl"
-          #   - "-a"
-          #   - "http=:{{ .Values.varnish_container_port }},HTTP" 
-          #   - "-a"
-          #   - "proxy=:8443,PROXY"
-          #   - "-p"
-          #   - "feature=+http2"
-          #   - "-s"
-          #   - "malloc,{{ .Values.varnish_size }}"
           env:
           - name: SITE
             value: {{ .Values.Site | quote }}
@@ -44,7 +31,7 @@ spec:
             exec:
               command:
                 - /usr/local/bin/sender.sh
-            initialDelaySeconds: 5
+            initialDelaySeconds: 120
             periodSeconds: 5
           ports:
             - containerPort: {{ .Values.varnish_container_port }}
