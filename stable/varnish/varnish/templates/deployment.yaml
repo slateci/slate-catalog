@@ -37,9 +37,9 @@ spec:
           - name: INSTANCE
             value: {{ .Values.Instance | quote }}
           - name: VARNISH_PORT
-            value: {{ .Values.varnish_container_port }}
+            value: {{ .Values.varnish_container_port | quote }}
           - name: VARNISH_MEM
-            value: {{ .Values.varnish_size }}
+            value: {{ .Values.varnish_size | quote }}
           livenessProbe:
             exec:
               command:
