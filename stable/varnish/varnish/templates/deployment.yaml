@@ -18,24 +18,28 @@ spec:
         - name: {{ .Chart.Name }}
           image: "ivukotic/v4a"
           imagePullPolicy: Always          
-          command: ["/usr/sbin/varnishd"]
-          args: 
-            - "-F"
-            - "-f"
-            - "/etc/varnish/default.vcl"
-            - "-a"
-            - "http=:{{ .Values.varnish_container_port }},HTTP" 
-            - "-a"
-            - "proxy=:8443,PROXY"
-            - "-p"
-            - "feature=+http2"
-            - "-s"
-            - "malloc,{{ .Values.varnish_size }}"
+          # command: ["/usr/sbin/varnishd"]
+          # args: 
+          #   - "-F"
+          #   - "-f"
+          #   - "/etc/varnish/default.vcl"
+          #   - "-a"
+          #   - "http=:{{ .Values.varnish_container_port }},HTTP" 
+          #   - "-a"
+          #   - "proxy=:8443,PROXY"
+          #   - "-p"
+          #   - "feature=+http2"
+          #   - "-s"
+          #   - "malloc,{{ .Values.varnish_size }}"
           env:
           - name: SITE
             value: {{ .Values.Site | quote }}
           - name: INSTANCE
             value: {{ .Values.Instance | quote }}
+          - name: VARNISH_PORT
+            value: {{ .Values.varnish_container_port }}
+          - name: VARNISH_MEM
+            value: {{ .Values.varnish_size }}
           livenessProbe:
             exec:
               command:
@@ -45,6 +49,9 @@ spec:
           ports:
             - containerPort: {{ .Values.varnish_container_port }}
               hostPort: 6081
+            - containerPort: 3401
+              hostPort: 3401
+              protocol: UDP
           volumeMounts:
             - name: config-volume
               mountPath: /etc/varnish/
