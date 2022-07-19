@@ -10,8 +10,8 @@ data:
 
     {{- range $nindex, $be := .Values.backends }}
     backend {{ $be.name }} {
-        .host = "{{ $be.host }}"
-        .port = "{{ $be.port }}"
+        .host = "{{ $be.host }}";
+        .port = "{{ $be.port }}";
     }
     {{- end }}
 
