@@ -8,7 +8,7 @@ data:
     import dynamic;
     import directors;
 
-    {{- range $nindex, $be := .Values.XCacheConfig.CacheDirectories }}
+    {{- range $nindex, $be := .Values.backends }}
     backend {{ $be.name }} {
         .host = "{{ $be.host }}"
         .port = "{{ $be.port }}"
@@ -21,7 +21,7 @@ data:
 
     sub vcl_init {
         new vdir = directors.round_robin();
-        {{- range $nindex, $be := .Values.XCacheConfig.CacheDirectories }}
+        {{- range $nindex, $be := .Values.backends }}
         vdir.add_backend({{ $be.name }});
         {{- end }}  
     }
