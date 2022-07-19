@@ -11,6 +11,22 @@ acl: |-
   "149.165.224.0"/23; 
   "192.170.240.0"/23;
 
+backends:
+  # atlasfrontier1-ai.cern.ch
+  - name: backend20
+    host: 188.184.29.207
+    port: 8000
+  - name: backend21
+    host: 2001:1458:201:e5::100:c1
+    port: 8000
+    # atlasfrontier2-ai.cern.ch
+  - name: backend30
+    host: 188.184.29.104
+    port: 8000
+  - name: backend31
+    host: 2001:1458:201:e5::100:5a
+    port: 8000
+
 resources:
   requests:
     cpu: "4"

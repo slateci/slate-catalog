@@ -8,27 +8,12 @@ data:
     import dynamic;
     import directors;
 
-    # atlasfrontier-ai.cern.ch
-    backend backend10 {
-        .host = "2001:1458:201:e5::100:c1";
-        .port = "8000";
+    {{- range $nindex, $be := .Values.XCacheConfig.CacheDirectories }}
+    backend {{ $be.name }} {
+        .host = "{{ $be.host }}"
+        .port = "{{ $be.port }}"
     }
-    backend backend11 {
-        .host = "2001:1458:201:e5::100:5a";
-        .port = "8000";
-    }
-    backend backend12 {
-        .host = "188.184.29.207";
-        .port = "8000";
-    }
-    backend backend2 {
-        .host = "atlasfrontier1-ai.cern.ch";
-        .port = "8000";
-    }
-    backend backend3 {
-        .host = "atlasfrontier2-ai.cern.ch";
-        .port = "8000";
-    }
+    {{- end }}
 
     acl local {
     {{.Values.acl | nindent 4 }}
@@ -36,11 +21,9 @@ data:
 
     sub vcl_init {
         new vdir = directors.round_robin();
-        vdir.add_backend(backend10);
-        vdir.add_backend(backend11);
-        vdir.add_backend(backend12);
-        vdir.add_backend(backend2);
-        vdir.add_backend(backend3);    
+        {{- range $nindex, $be := .Values.XCacheConfig.CacheDirectories }}
+        vdir.add_backend({{ $be.name }});
+        {{- end }}  
     }
 
     sub vcl_recv {
