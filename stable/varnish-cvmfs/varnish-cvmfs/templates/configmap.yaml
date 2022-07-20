@@ -7,41 +7,23 @@ data:
     vcl 4.1;
     import dynamic;
     import directors;
-    backend fermilab1 {
-        .host = "131.225.189.138";
-        .port = "8000";
+
+    {{- range $nindex, $be := .Values.backends }}
+    backend {{ $be.name }} {
+        .host = "{{ $be.host }}";
+        .port = "{{ $be.port }}";
     }
-    backend fermilab2 {
-        .host = "2620:6a:0:8421::244";
-        .port = "8000";
-    }
-    backend goc {
-        .host = "cvmfs-s1goc.opensciencegrid.org";
-        .port = "8000";
-    }
-    backend bnl1 { 
-        .host = "192.12.15.180";
-        .port = "8000";
-    }
-    backend bnl2 {
-        .host = "192.12.15.179";
-        .port = "8000";
-    }
-    backend testStratum1 {
-        .host ="oasis-replica-itb.opensciencegrid.org";
-        .port = "8000";
-    }
+    {{- end }}
+
+
     acl local {
         {{.Values.acl | nindent 4 }}
     }
     sub vcl_init {
         new vdir = directors.fallback();
-        vdir.add_backend(fermilab1);
-        vdir.add_backend(fermilab2);
-        vdir.add_backend(goc);  
-        vdir.add_backend(bnl1);
-        vdir.add_backend(bnl2);
-        vdir.add_backend(testStratum1);    
+        {{- range $nindex, $be := .Values.backends }}
+        vdir.add_backend({{ $be.name }});
+        {{- end }}  
     }
     sub vcl_backend_fetch {
         unset bereq.http.host;

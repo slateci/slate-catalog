@@ -11,6 +11,26 @@ acl: |-
   "149.165.224.0"/23; 
   "192.170.240.0"/23;
 
+backends:
+  - name: fermilab1
+    host: 131.225.189.138
+    port: 8000
+  - name: fermilab2
+    host: 2620:6a:0:8421::244
+    port: 8000
+  - name: goc
+    host: cvmfs-s1goc.opensciencegrid.org
+    port: 8000
+  - name: bnl1
+    host: 192.12.15.180
+    port: 8000
+  - name: bnl2
+    host: 192.12.15.179
+    port: 8000
+  - name: testStratum1
+    host: oasis-replica-itb.opensciencegrid.org
+    port: 8000
+
 resources:
   requests:
     cpu: "4"
