@@ -24,9 +24,15 @@ spec:
           - name: INSTANCE
             value: {{ .Values.Instance | quote }}
           - name: VARNISH_PORT
-            value: {{ .Values.varnish_container_port | quote }}
+            value: {{ .Values.ports.varnish_container_port | quote }}
+          - name: SNMP_PORT
+            value: {{ .Values.ports.snmp_container_port | quote }}
           - name: VARNISH_MEM
             value: {{ .Values.varnish_size | quote }}
+          - name: MONITOR_ES
+            value: {{ .Values.monitoring.es | quote }}
+          - name: MONITOR_SNMP
+            value: {{ .Values.monitoring.snmp | quote }}
           livenessProbe:
             exec:
               command:
@@ -34,11 +40,13 @@ spec:
             initialDelaySeconds: 120
             periodSeconds: 5
           ports:
-            - containerPort: {{ .Values.varnish_container_port }}
-              hostPort: 6081
-            - containerPort: 3401
-              hostPort: 3401
+            - containerPort: {{ .Values.ports.varnish_container_port }}
+              hostPort: {{ .Values.ports.varnish_port }}
+            {{- if .Values.monitoring.snmp }}
+            - containerPort: {{ .Values.ports.snmp_container_port }}
+              hostPort: {{ .Values.ports.snmp_port }}
               protocol: UDP
+            {{ end }} 
           volumeMounts:
             - name: config-volume
               mountPath: /etc/varnish/

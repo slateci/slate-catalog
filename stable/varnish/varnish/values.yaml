@@ -1,6 +1,15 @@
 Site: "MWT2"
 varnish_size: "32G"
-varnish_container_port: 80
+
+monitoring:
+  - es: true
+  - snmp: true
+
+ports:
+  - varnish_container_port: 80
+  - varnish_port: 6081
+  - snmp_container_port: 3401
+  - snmp_port: 3401
 
 nodeSelector:
   varnish: frontier-slate
