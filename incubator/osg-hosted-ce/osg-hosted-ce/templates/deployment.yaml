@@ -39,19 +39,9 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-      {{ if .Values.DnRemoteUserMapping }}
-      - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-      {{ end }}
-      {{ if .Values.SciTokenRemoteUserMapping }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
-      {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
           secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
@@ -217,14 +207,6 @@ spec:
           subPath: git.key
         {{ end }}
         {{ end }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-          mountPath: /etc/grid-security/voms-mapfile
-          subPath: voms-mapfile
-        {{ if .Values.DnRemoteUserMapping }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-          mountPath: /etc/grid-security/grid-mapfile
-          subPath: grid-mapfile
-        {{ end }}
         {{ if .Values.SciTokenRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
           mountPath: /etc/condor-ce/mapfiles.d/50-slate-scitokens.conf
@@ -234,9 +216,11 @@ spec:
         - name: htcondor-ce
           containerPort: 9619
           protocol: TCP
-        - name: http # needed to get a cert issued from Let's Encrypt
+        {{ if and (not .Values.HostCredentials.HostCertKeySecret) (not .Values.HostCredentials.HostCertSecret) }}
+        - name: http # needed to get a cert issued from Let's Encrypt (since the admin's not supplying a cert/key as a secret)
           containerPort: 80
           protocol: TCP
+        {{ end }}
         env:
         {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
         - name: _CONDOR_NETWORK_HOSTNAME
