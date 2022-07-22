@@ -132,6 +132,19 @@ SciTokenRemoteUserMapping:
 # HTCondorCeConfig: |+
 #   ALL_DEBUG = D_ALWAYS:2 D_CAT
 
+# Specify additional osg-configure configuration
+# See https://github.com/opensciencegrid/osg-configure#35-pilotini--pilot
+# OsgConfigureConfig: |+
+#   [Pilot entry_name ]
+#   allowed_vos = osg
+#   require_singularity = True
+#   cpucount = 8
+#   ram_mb = 6400
+#   whole_node = false
+#   gpucount = 1
+#   max_wall_time = 34560
+#   queue = opportunistic
+
 # Enable persistence to HostedCE files by creating corresponding SLATE Volumes
 # SLATE Creates a PVC in Kubernetes which can be reclaimed on restart
 # The value for each volume should correspond to the volume name within SLATE
