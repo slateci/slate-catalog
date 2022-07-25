@@ -16,8 +16,7 @@ Topology:
 RemoteCluster:
   # Target SSH login host (host where batch system binaries are installed)
   LoginHost: remote-ssh.login.org
-  # One or more jump proxies as either [user@]host[:port] or an ssh
-  # URI (see ProxyJump in 'man ssh_config').
+  # Jump host formatted as host[:port]
   # If set, KnownHosts below must also be set.
   ProxyJump: null
   # Contents of SSH known_hosts
