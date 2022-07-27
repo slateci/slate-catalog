@@ -55,11 +55,11 @@ echo -e "\n" | print
 }
 
 run_all_tests_to() {
-if is_valid_fqdn "$1"; then 
+if is_valid_fqdn "$1" && is_valid_fqdn "$2"; then 
 	if pscheduler ping $1; then
 
-		print "Running throughput test to: '$1' ....."	
-		run_test "pscheduler task throughput -t 30 --dest $1"
+		print "Running throughput test to: '$2' ....."	
+		run_test "pscheduler task throughput -t 30 --dest $2"
 		print "Running latency test to: '$1' ....."  
 		run_test "pscheduler task latency --packet-count 18000 --packet-interval .01 --dest $1"
 		print "Checking network path to: '$1' ....."  
@@ -78,9 +78,66 @@ fi
 }
 
 mkdir -p /var/log/perfsonar-checker
-dst1="$1"
-dst2="$2"
-dst3="$3"
+#declare vars here and set them to empty strings
+dest1=''
+dest2=''
+dest3=''
+dest1bw=''
+dest2bw=''
+dest3bw=''
+#loop through the user input and assign values to proper vars
+while [ -n "$1" ]; do # while loop starts
+
+	case "$1" in
+
+	-dest1) 
+    	dest1="$2"
+		shift
+		;;
+
+	-dest1bw)
+    	dest1bw="$2"
+		shift
+		;;
+
+	-dest2) 
+    	dest2="$2"
+		shift
+		;;
+
+	-dest2bw)
+    	dest2bw="$2"
+		shift
+		;;
+
+	-dest3) 
+    	dest3="$2"
+		shift
+		;;
+
+	-dest3bw)
+    	dest3bw="$2"
+		shift
+		;;
+
+
+
+	*) echo "Option $1 not recognized" ;;
+
+	esac
+
+	shift
+
+done
+#populate the remaining vars
+if [ -z $dest1bw ]; then dest1bw=$dest1; fi
+if [ -z $dest2bw ]; then dest2bw=$dest2; fi
+if [ -z $dest3bw ]; then dest3bw=$dest3; fi
+#commented out due to above new logic
+#dst1="$1"
+#dst2="$2"
+#dst3="$3"
+
 #Waiting for a limited time for services to start up and be ready
 #echo "Waiting for local perfSONAR services to stat up...." | tee -a /var/log/demo/demo.out /proc/1/fd/1
 print "Waiting for local perfSONAR services to start up and be ready...."
@@ -104,19 +161,19 @@ run_test "pscheduler troubleshoot"
 #run_all_tests_to "uofu-ddc-dmz-latency.chpc.utah.edu"
 #run_all_tests_to "sl-uu-es1.slateci.io"
 print ""
-if [ ! -z "$dst1" ]
+if [ ! -z "$dest1" ]
   then
-    run_all_tests_to "$dst1"
+    run_all_tests_to "$dest1" "$dest1bw"
 fi
 
-if [ ! -z "$dst2" ]
+if [ ! -z "$dest2" ]
   then
-    run_all_tests_to "$dst2" 
+    run_all_tests_to "$dest2" "$dest2bw"
 fi
 
-if [ ! -z "$dst3" ]
+if [ ! -z "$dest3" ]
   then
-    run_all_tests_to "$dst3" 
+    run_all_tests_to "$dest3" "$dest3bw"
 fi
 
 print "All tests have finished!"

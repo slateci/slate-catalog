@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:       # These are configuration files for the Desktop Application
+  name: {{ include "open-ondemand.fullname" . }}-desktop-app
+data:
+  form.yml: |
+    attributes:
+      desktop: {{ .Values.advanced.desktop | quote }}
+      bc_vnc_idle: 0
+      bc_vnc_resolution:
+        required: true
+      node_type: null
+      cluster:
+        widget: "select"
+        options:
+          {{- range .Values.clusters }}
+          - {{ .cluster.name | quote }}
+          {{- end }}
+        help: |
+          Select a node or cluster to create this desktop session on.
+        num_cores:
+          widget: "number_field"
+          label: "Number of tasks (CPU cores)"
+          value: 1
+          min: 1
+          max: 64
+          step: 1
+    
+    form:
+      - cluster
+      - bc_vnc_idle
+      - desktop
+      - bc_account
+      - bc_num_hours
+      - bc_num_slots
+      - node_type
+      - bc_queue
+      - bc_vnc_resolution
+      - bc_email_on_started
+
+  submit.yml.erb: |
+    attributes:
+      desktop: {{ .Values.advanced.desktop | quote }}
+      bc_vnc_idle: 0
+      bc_vnc_resolution:
+        required: true
+      node_type: null
+    
+    form:
+      - bc_vnc_idle
+      - desktop
+      - bc_account
+      - bc_num_hours
+      - bc_num_slots
+      - node_type
+      - bc_queue
+      - bc_vnc_resolution
+      - bc_email_on_started
+
+  {{ range .Values.clusters }}
+  {{ if eq .cluster.enableHostAdapter true }}
+  linuxhost_submit.yml.erb: |
+    batch_connect:
+      template: "vnc"
+      native:
+        singularity_bindpath: {{ .cluster.job.singularity_bindpath }}
+        singularity_container: {{ .cluster.job.singularity_image }}
+  {{ end }}
+
+  {{ .cluster.name | lower | nospace }}.yml: |
+    title: {{ .cluster.name | lower | nospace }}-desktop
+    cluster: {{ .cluster.name | lower | nospace }}
+    submit: "submit/linuxhost_submit.yml.erb"
+    form:
+      - cluster
+      - desktop
+      - bc_num_hours
+      - bc_num_slots
+    attributes:
+      bc_queue: null
+      bc_account: null
+      bc_num_slots: 1
+      num_cores: none
+  {{ end }}

@@ -1,0 +1,27 @@
+Site: "MWT2"
+varnish_size: "32G"
+varnish_container_port: 80
+
+nodeSelector:
+  varnish: frontier-slate
+
+acl: |-
+  "localhost";
+  "72.36.96.0"/24; 
+  "149.165.224.0"/23; 
+  "192.170.240.0"/23;
+
+resources:
+  requests:
+    cpu: "4"
+    memory: "33Gi"
+  limits:
+    cpu: "48"
+    memory: "48Gi"
+
+### SLATE-START ###
+Instance: slate01
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###

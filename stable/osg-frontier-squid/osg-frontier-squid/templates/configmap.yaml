@@ -17,10 +17,11 @@ data:
     setoptionparameter("acl RESTRICT_DEST", 3, "{{ .Values.SquidConf.RESTRICT_DEST }}")
     uncomment("http_access deny !RESTRICT_DEST")
     {{- end }}
-    {{- if .Values.SquidConf.Cpu_Affinity_Map }}
+    {{- if .Values.SquidConf.CPU }} 
     # Set the CPU affinity map
-    setoption("cpu_affinity_map", "{{ .Values.SquidConf.Cpu_Affinity_Map }}")
-    {{- end }}
+    {{ $AffinityMap := untilStep 1 (int (add1 .Values.SquidConf.CPU )) 1 | join "," }}
+    setoption("cpu_affinity_map", "process_numbers={{ $AffinityMap }} cores={{ $AffinityMap }}")
+    {{ end }}
     {{- if .Values.SquidConf.Logfile_Rotate }}
     # Whether to rotate logs or not
     setoption("logfile_rotate", "{{ .Values.SquidConf.Logfile_Rotate }}")
@@ -29,7 +30,7 @@ data:
     # Allow the user to set the maximum object size in memory
     setoption("maximum_object_size_in_memory", "{{ .Values.SquidConf.MaximumObjectSizeInMemory }} KB")
     {{ end }}
-    {{- if .Values.SquidConf.Workers }}
+    {{- if .Values.SquidConf.CPU }}
     # If multiple workers are requested
     {{- if .Values.SquidConf.DisableLogging }}
     # If multiple workers are used, and logging is disabled:
@@ -39,7 +40,11 @@ data:
     setoptionparameter("logformat awstats", 3, "kid${process_number}")
     {{ end }}
     # Set the number of workers and create a cache for each unique worker
-    setoption("workers", {{ .Values.SquidConf.Workers }} )
+    {{- if .Values.SquidConf.CPU }}
+    setoption("workers", {{ .Values.SquidConf.CPU }} )
+    {{ else }}
+    setoption("workers", "1" )
+    {{ end }}
     setoption("cache_dir", "ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256")
     {{ else }}
     # If multiple workers are NOT requested, set a single cache dir with one of
@@ -69,7 +74,11 @@ data:
     {{ if .Values.SquidConf.MonitoringIPRange }}
     acl HOST_MONITOR src {{ .Values.SquidConf.MonitoringIPRange }}
     {{ end }}
+    {{- if .Values.SquidConf.CPU }} 
+    cache_mem {{ div .Values.SquidConf.CacheMem .Values.SquidConf.CPU }} MB
+    {{- else }}
     cache_mem {{ .Values.SquidConf.CacheMem }} MB
+    {{- end }}
     {{ if .Values.SquidConf.Workers }}
     workers {{ .Values.SquidConf.Workers }} # multiple worker case
     cache_dir ufs /var/cache/squid/squid${process_number} {{ .Values.SquidConf.CacheSize }} 16 256
@@ -147,10 +156,41 @@ data:
     instance=$1
     host=$2
     site=$3
+
+    if [[ -z $AAAS_SERVER ]]; then
+       AAAS_SERVER="aaas.atlas-ml.org"
+    fi
     
     
     echo $instance $host $site
-    curl --request POST "https://aaas.atlas-ml.org/alarm" \
+    curl --request POST "https://${AAAS_SERVER}/alarm" \
          -k \
          --header 'Content-Type: application/json' \
          --data-raw '{ "category" : "SLATE", "subcategory": "Squid", "event": "server down", "tags":"'"$site"'", "body":"down", "source": {"site": "'"$site"'", "instance": "'"$instance"'", "host": "'"$host"'"} }'
+  heartbeat.sh: |+
+    #!/bin/bash
+    usage () {
+        echo "$0 <instance> <site>"
+        echo "   <instance> is SLATE instance ID."
+        echo "   <site> is SLATE site name."
+    }
+    
+    if [ $# -lt 2 ]; then
+        usage
+        exit 1
+    fi
+    
+    if [[ -z $AAAS_SERVER ]]; then
+       AAAS_SERVER="aaas.atlas-ml.org"
+    fi
+
+    instance=$1
+    site=$2
+    curl --request POST "https://${AAAS_SERVER}/heartbeat/" \
+         --header 'Content-Type: application/json' \
+         --data-raw '{"category": "SLATE", "subcategory": "Squid", "event": "liveness", "tags": "'"$site"'", "source": { "site": "'"$site"'", "instance" : "'"$instance"'"}}'
+    echo "Sent heartbeat to $AAAS_SERVER for instance $instance at site $site" >> /var/log/aaas-heartbeat.log
+  {{- if .Values.Alarm.Site }}
+  heartbeat.cron: |+
+    * * * * * squid /usr/local/sbin/heartbeat.sh {{ .Values.Instance }} {{ quote .Values.Alarm.Site }}
+  {{- end }}

@@ -3,11 +3,9 @@
 # Declare variables to be passed into your templates.
 
 # The SLATE instance value.
-Instance: "global"
+Instance: "slate"
 
 replicaCount: 1
-
-setupKeycloak: true
 
 # Keycloak volume parameters
 volume:
@@ -17,55 +15,92 @@ volume:
 # LDAP/Kerberos setup and configuration
 setupLDAP: true
 ldap:
-  connectionURL: "ldap://ldap.chpc.utah.edu"
+  connectionURL: "ldap://ldap.example.net"
   importUsers: "true"
   rdnLDAPAttribute:  "uid"
   uuidLDAPAttribute: "uidNumber"
-  userObjectClasses: "inetOrgPerson, organizationalPerson"
-  usersDN: "ou=People,dc=chpc,dc=utah,dc=edu"
+  userObjectClasses: "inetOrgFoo, orgBar"
+  ldapSearchBase: "dc=foo,dc=bar"
+  usersDN: "ou=People,dc=foo,dc=bar"
 kerberos:
-  realm: "AD.UTAH.EDU"
-  serverPrincipal: "HTTP/utah-dev.chpc.utah.edu@AD.UTAH.EDU"
+  realm: "AD.EXAMPLE.NET"
+  serverPrincipal: "kdc1.example.net:80,kdc2.example.net:80"
   keyTab: "/etc/krb5.keytab"
   kerberosPasswordAuth: "true"
   debug: "true"
 
-# Shell application setup
+# Resource management and cluster definition files
 # Add another cluster section for each backend cluster you wish to connect to
 clusters:
   - cluster:
-      name: "frisco1"
-      host: "frisco1.chpc.utah.edu"
-      desktopEnable: false
+      name: "Node1"
+      host: "node1.example.net"
+      enableHostAdapter: true
       job:
-        ssh_hosts: "[ 'frisco1.chpc.utah.edu' ]"
-        singularity_bin: /uufs/chpc.utah.edu/sys/installdir/singularity3/std/bin/singularity
-        singularity_bindpath: /etc,/mnt,/media,/opt,/run,/srv,/usr,/var,/uufs,/scratch
-        singularity_image: /uufs/chpc.utah.edu/sys/installdir/ood/centos7_lmod.sif  # Something like centos_7.6.sif
+        ssh_hosts: "node1.example.net"
+        site_timeout: 14400
+        singularity_bin: /bin/singularity
+        singularity_bindpath: /etc,/media,/mnt,/opt,/run,/srv,/usr,/var,/home
+        singularity_image: /opt/centos_7.sif
         tmux_bin: /usr/bin/tmux
       basic_script: 
-        - "#!/bin/bash"
-        - "if [ -z '$LMOD_VERSION' ]; then"
-        - "  source /etc/profile.d/chpc.sh"
-        - "fi"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
+        - '#!/bin/bash'
+        - 'set -x'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
       vnc_script: 
-        - "#!/bin/bash"
-        - "set -x"
-        - "export PATH='/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH'"
-        - "export WEBSOCKIFY_CMD='/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify'"
-        - "export XDG_RUNTIME_DIR=$(mktemp -d)"
-        - "%s"
+        - '#!/bin/bash'
+        - 'set -x'
+        - 'export PATH="/opt/TurboVNC/bin:$PATH"'
+        - 'export WEBSOCKIFY_CMD="/usr/bin/websockify"'
+        - 'export XDG_RUNTIME_DIR=$(mktemp -d)'
+        - '%s'
+      set_host: "$(hostname)"
   - cluster:
-      name: "Notchpeak"
-      host: "notchpeak.chpc.utah.edu"
-      desktopEnable: false
+      name: "Node2"
+      host: "node2.example.net"
+      enableHostAdapter: false
 
-# Configure additional test users to be added to Keycloak.
+# Host regex (Should capture hostnames of all backend clusters)
+host_regex: '[\w.-]+\.(foo|bar|example.net|example.edu)'
+
+# Configure remote desktop and other applications (Advanced)
+# This is optional configuration which requires the linuxHost Adapter
+enableHostAdapter: true
+advanced:
+  desktop: "mate"
+  node_selector_label: "ood"
+  ssh_keys_GID: 993
+# Provide names for each host key stored in your secret
+  secret_name: "ssh-key-secret"
+  host_keys:
+    - host_key:
+        name: "ssh_host_ecdsa_key"
+    - host_key:
+        name: "ssh_host_ecdsa_key.pub"
+    - host_key:
+        name: "ssh_host_ed25519_key"
+    - host_key:
+        name: "ssh_host_ed25519_key.pub"
+    - host_key:
+        name: "ssh_host_rsa_key"
+    - host_key:
+        name: "ssh_host_rsa_key.pub"
+# Filesystem distribution
+  autofs: true
+  fileSharing:
+    nfs_shares: # Use '\\' to escape a backslash character 
+      - '* -nolock,hard,ro \\'
+      - '           example.net:/foo/bar/& \\'
+      - '           example.edu:/foo/bar/&'
+
+# Configure additional test users to be added to the Keycloak user database
+# Ensure that these users do not exist on backend clusters
 testUsers:
   - user:
       name: "test"
+      group: "test1"
+      groupID: "1000"
       tempPassword: "test"
 
 ### SLATE-START ###
@@ -73,6 +108,6 @@ SLATE:
   Instance:
     ID: "untagged"
   Cluster:
-    DNSName: "utah-dev.slateci.net"
+    DNSName: "foo.bar.example.net"
 ### SLATE-END ###
       

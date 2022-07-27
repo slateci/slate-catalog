@@ -1,0 +1,202 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "jupyter.fullname" . }}
+  labels:
+    app: {{ template "jupyter.name" . }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "jupyter.name" . }}
+      chart: {{ template "jupyter.chart" . }}
+      release: {{ .Release.Name }}
+      instance: {{ .Values.Instance | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "jupyter.name" . }}
+        chart: {{ template "jupyter.chart" . }}
+        release: {{ .Release.Name }}
+        instance: {{ .Values.Instance | quote }}
+    spec:
+      volumes:
+      {{ if eq .Values.CondorConfig.Enabled true }}
+      - name: condor-token-volume
+        secret:
+          secretName: {{ .Values.CondorConfig.AuthTokenSecret }}
+          items:
+          - key: condor_token
+            path: condor_token
+            mode: 256
+#Commenting  out the reverse_password for now - it may no longer be required or needed -M
+#          - key: reverse_password
+#            path: password
+#            mode: 256
+      {{ if .Values.CondorConfig.IsExternalPool }}
+      - name: condor-configuration
+        configMap:
+          name: jupyter-{{ .Values.Instance }}-condor-configuration
+          items:
+          - key: condor_config.99-override
+            path: condor_config.99-override
+            mode: 292
+      {{ end }}
+      {{ end }}
+      - name: jupyter-{{ .Values.Instance }}-startup
+        configMap:
+          name: jupyter-{{ .Values.Instance }}-startup
+          items:
+          - key: startup_script.sh
+            path: startup_script.sh
+            mode: 0755
+      - name: jupyter-{{ .Values.Instance }}-motd
+        configMap:
+          name: jupyter-{{ .Values.Instance }}-motd
+          items:
+          - key: 99-limits
+            path: 99-limits
+            mode: 0755
+      {{ if .Values.PersistentVolume }}
+      - name: jupyter-{{ .Values.Instance }}-persistent-volume
+        persistentVolumeClaim:
+          claimName: {{ .Values.PersistentVolume }} 
+      {{ end }}
+      {{ if .Values.Resources.Cvmfs }}
+      - name: config-osg
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-config-osg-%s" .Values.Instance | trimSuffix "-" }}
+      - name: oasis
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-oasis-%s" .Values.Instance | trimSuffix "-" }}
+      - name: singularity
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-singularity-%s" .Values.Instance | trimSuffix "-" }}
+      - name: spt
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-spt-%s" .Values.Instance | trimSuffix "-" }}
+      - name: connect
+        persistentVolumeClaim:
+          claimName: {{ printf "csi-cvmfs-pvc-connect-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-condb
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-condb-%s" .Values.Instance | trimSuffix "-" }}
+#      - name: atlas-nightlies
+#        persistentVolumeClaim:
+#          claimName: {{ printf "csi-cvmfs-pvc-atlas-nightlies-%s" .Values.Instance | trimSuffix "-" }}
+      {{ end }}
+      containers:
+      - name: scipy-notebook
+        image: slateci/jupyter-condor-centos7:latest
+        imagePullPolicy: "Always"
+        workingDir: /home/{{ .Values.Jupyter.NB_USER }}
+        env:
+        - name: JUPYTER_ENABLE_LAB
+          value: 'yes'
+        - name: NB_USER
+          value: {{ .Values.Jupyter.NB_USER | default "jovyan" | quote }}
+        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
+        - name: _CONDOR_TCP_FORWARDING_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: _CONDOR_PRIVATE_NETWORK_INTERFACE
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        #If not an external pool
+        {{ else if eq .Values.CondorConfig.Enabled true }}
+        - name: _CONDOR_COLLECTOR_HOST
+          value: {{ .Values.CondorConfig.CollectorHost | quote }}
+        - name: _CONDOR_COLLECTOR_PORT
+          value: {{ .Values.CondorConfig.CollectorPort | quote }}        
+        {{ end }}
+        - name: JupyterPassword
+          value: {{ .Values.Jupyter.Password | quote }} 
+        - name: JupyterToken
+          value: {{ .Values.Jupyter.Token | quote }} 
+        readinessProbe:
+          tcpSocket:
+            port: 8888
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8888
+          initialDelaySeconds: 15
+          periodSeconds: 30
+          failureThreshold: 3
+        resources:
+          requests:
+            # For CPU only, set request as half of limit
+            cpu: "{{ div .Values.Resources.CPU 2 }}m"
+            memory: "{{ .Values.Resources.Memory }}Mi"
+            {{ if .Values.Resources.GPU }}
+            nvidia.com/gpu: "{{ .Values.Resources.GPU }}"
+            {{ end }}
+          limits:
+            cpu: "{{ .Values.Resources.CPU }}m"
+            memory: "{{ .Values.Resources.Memory }}Mi"
+            {{ if .Values.Resources.GPU }}
+            nvidia.com/gpu: "{{ .Values.Resources.GPU }}"
+            {{ end }}
+        ports:
+        - containerPort: 8888
+          protocol: TCP
+        {{ if eq .Values.SSH.Enabled true }}
+        - containerPort: 22
+          protocol: TCP
+        {{ end }}
+        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
+        - containerPort: {{ .Values.CondorConfig.ExternalCondorPort }}
+          protocol: TCP
+        {{ end }}
+        command: ["/usr/bin/startup_script.sh"] 
+        volumeMounts:
+        {{ if .Values.PersistentVolume }}
+        - name: jupyter-{{ .Values.Instance }}-persistent-volume
+          mountPath: /home/{{ .Values.Jupyter.NB_USER }}/data
+        {{ end }}
+        {{ if eq .Values.CondorConfig.Enabled true }}
+        - name: condor-token-volume
+          mountPath: /root/tokens/condor_token
+          subPath: condor_token
+#        - name: condor-token-volume
+#          mountPath: /etc/condor/passwords.d/{{ .Values.CondorConfig.KeyName }}
+#          subPath: password
+        {{ if and (eq .Values.CondorConfig.Enabled true) (eq .Values.CondorConfig.IsExternalPool true) }}
+        - name: condor-configuration
+          mountPath: /etc/condor/config.d/99-override.conf
+          subPath: condor_config.99-override
+        {{ end }}
+        {{ end }}
+        - name: jupyter-{{ .Values.Instance }}-startup
+          mountPath: "/usr/bin/startup_script.sh"
+          subPath: startup_script.sh
+        - name: jupyter-{{ .Values.Instance }}-motd
+          mountPath: "/etc/update-motd.d/99-limits"
+          subPath: 99-limits
+        {{ if .Values.Resources.Cvmfs }}
+        - name: config-osg
+          mountPath: /cvmfs/config-osg.opensciencegrid.org
+        - name: oasis
+          mountPath: /cvmfs/oasis.opensciencegrid.org
+        - name: spt
+          mountPath: /cvmfs/spt.opensciencegrid.org
+        - name: connect
+          mountPath: /cvmfs/connect.opensciencegrid.org
+        - name: singularity
+          mountPath: /cvmfs/singularity.opensciencegrid.org
+#        - name: atlas
+#          mountPath: /cvmfs/atlas.cern.ch
+#        - name: atlas-nightlies
+#          mountPath: /cvmfs/atlas-nightlies.cern.ch
+#        - name: atlas-condb
+#          mountPath: /cvmfs/atlas-condb.cern.ch
+        {{ end }}

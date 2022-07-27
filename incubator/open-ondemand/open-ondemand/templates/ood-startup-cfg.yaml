@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:       # This configmap handles post-startup configuration and temporary bug fixes
+  name: {{ include "open-ondemand.fullname" . }}-startup-cfg
+data:
+  startup-ood.sh: |
+    #!/bin/bash
+    unset HISTFILE
+    exec >/root/ood-startup.log 2>&1
+  {{ if eq .Values.enableHostAdapter true }}
+    # Changing GID of ssh_keys group to match host, if GID is taken then make it available
+    if cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID }} ; then 
+      export group=$(cat /etc/group | grep {{ .Values.advanced.ssh_keys_GID}} | sed 's/:.*//g')
+      gid=900
+      until groupmod $group -g $gid; do
+        gid+=1
+      done
+      groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
+    else
+      groupmod -g {{ .Values.advanced.ssh_keys_GID }} ssh_keys
+    fi
+    # Changing ownership of ssh public keys and moving to /etc/ssh folder
+    array=()
+    for i in `ls /root | grep .pub`; do
+      array+=("$i")
+    done
+    for i in ${array[@]}; do
+      cat /root/$i > /etc/ssh/$i && chmod 0644 /etc/ssh/$i
+    done
+    # Changing ownership of ssh keys and moving to /etc/ssh folder
+    array=()
+    for i in `ls /root/*_key | sed 's/\/root\///g'`; do
+      array+=("$i")
+    done
+    for i in ${array[@]}; do
+      cat /root/$i > /etc/ssh/$i && chmod 0640 /etc/ssh/$i && chgrp ssh_keys /etc/ssh/$i
+    done
+    # Changing permissions of openssh ssh-keysign
+    chgrp ssh_keys /usr/libexec/openssh/ssh-keysign
+    chmod g+s /usr/libexec/openssh/ssh-keysign
+  {{ end }}
+
+  {{ if eq .Values.enableHostAdapter false }}
+    # Generate missing user home directories (Only necessary without nfs shares mounted)
+    supervisorctl stop sssd
+    while [ ! -f /shared/users.txt ]; do
+      sleep 2
+    done
+    while read p; do
+      useradd $p
+    done </shared/users.txt
+  {{ end }}
+
+  {{ range .Values.testUsers }}
+    # Generate test users to match test users in keycloak
+    groupadd -g {{ .user.groupID }} {{ .user.group }}
+    useradd -g {{ .user.group }} {{ .user.name }}
+    echo "{{ .user.tempPassword }}" | passwd --stdin {{ .user.name }}
+  {{ end }}
+
+    ############## Bug Fixes ##############
+    # Adding heartbeat (ping/pong) function to shell websocket connections, fixes a 60 second shell timeout issue
+    # See the github repo for the javascript 'ws' package here: 
+    # https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
+    cd /var/www/ood/apps/sys/shell
+    sed -i "/^wss.on('connection'*/i function noop() {}\n\nfunction heartbeat() {\n  this.isAlive = true;\n}\n" app.js
+    sed -i "/\[host, dir\] = host_and_dir_from_url(req.url);/i \ \ ws.isAlive = true;\n  ws.on(\'pong\', heartbeat);\n" app.js
+    sed -i "/ws.on('close'*/i \ \ const interval = setInterval(function ping() {\n    wss.clients.forEach(function each(ws) {\n      if (ws.isAlive === false) return ws.terminate();\n\n      ws.isAlive = false;\n      ws.ping(noop);\n    });\n  }, 30000);\n" app.js
+    # Update the shell application
+    scl enable ondemand ./bin/setup
+    touch tmp/restart.txt
+
+    # Adding --heartbeat option to websockify (part of noVNC)
+    # This is for the remote desktop application, ensuring our connection is not closed
+    cd /opt/ood/ondemand/root/usr/share/gems/2.7/ondemand/2.0.13/gems/ood_core-0.17.2/lib/ood_core/batch_connect/templates
+    sed -i 's/#{websockify_cmd} -D ${websocket} localhost:${port}/#{websockify_cmd} -D ${websocket} --heartbeat=30 localhost:${port}/g' vnc.rb
+
+    # Temporary fix for HTTP Error: 422 when using Interactive Apps
+    # See issue #1193 on the osc/ondemand github repo:
+    # https://github.com/OSC/ondemand/issues/1193#issuecomment-862659031
+    cat > /var/www/ood/apps/sys/dashboard/config/initializers/session_store.rb <<EOF
+    # This is the old version, which doesn't work over plain http
+    # For some reason, our connection is treated as plain http as of 2.0.13, even though it's actually encrypted
+    #Rails.application.config.session_store :cookie_store, key: '_dashboard_session', secure: Rails.env.production?
+
+    # This version stores session data locally, rather than sending it through the websocket connection.
+    # Since our session data is shared via nfs, the data is still accessible on the backend.
+    Rails.application.config.session_store :cache_store, { cache: ActiveSupport::Cache::FileStore.new(Dir.mktmpdir.to_s) }
+    EOF
+
+    echo "exiting..."

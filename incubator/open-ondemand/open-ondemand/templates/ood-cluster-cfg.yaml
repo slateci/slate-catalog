@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:       # This configmap will generate cluster definition files
+  name: {{ include "open-ondemand.fullname" . }}-resource-management
+data:
+
+  {{ range .Values.clusters }}
+  {{ .cluster.name | lower | nospace }}.yml: |
+    ---
+    v2:
+      metadata:
+        title: {{ .cluster.name | quote }}
+        hidden: false
+      login:
+        host: {{ .cluster.host | quote }}
+      {{ if eq .cluster.enableHostAdapter true }}
+      job:
+        adapter: "linux_host"
+        submit_host: {{ .cluster.host | quote }}
+        ssh_hosts: 
+          - {{ .cluster.job.ssh_hosts }}
+        site_timeout: {{ .cluster.job.site_timeout }}
+        debug: true
+        singularity_bin: {{ .cluster.job.singularity_bin }}
+        singularity_bindpath: {{ .cluster.job.singularity_bindpath }}
+        singularity_image: {{ .cluster.job.singularity_image }}
+        strict_host_checking: false
+        tmux_bin: {{ .cluster.job.tmux_bin }}
+      batch_connect:
+        basic:
+          script_wrapper: |
+            {{- range .cluster.basic_script }}
+            {{ . }}
+            {{- end }}
+          set_host: "host={{ .cluster.set_host }}"
+        vnc:
+          script_wrapper: |
+            {{- range .cluster.vnc_script }}
+            {{ . }}
+            {{- end }}
+          set_host: "host={{ .cluster.set_host }}"
+      {{ end }}
+  {{ end }}

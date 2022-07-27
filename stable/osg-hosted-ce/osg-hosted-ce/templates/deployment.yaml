@@ -39,19 +39,9 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-      {{ if .Values.DnRemoteUserMapping }}
-      - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-      {{ end }}
-      {{ if .Values.SciTokenRemoteUserMapping }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
-      {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
           secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
@@ -59,6 +49,20 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
+      {{ if .Values.RemoteCluster.SSHCertificateSecret }}
+      - name: bosco-ssh-cert-volume
+        secret:
+          secretName: {{ .Values.RemoteCluster.SSHCertificateSecret }}
+          items:
+          - key: bosco.cert
+            path: bosco.cert
+            mode: 0o400
+      {{ end }}
+      {{ if .Values.RemoteCluster.KnownHosts }}
+      - name: ssh-known-hosts
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-known-hosts
+      {{ end }}
       {{ if .Values.HostCredentials.HostCertKeySecret }}
       - name: osg-hosted-ce-hostcertkey-volume
         secret:
@@ -158,14 +162,24 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
-          mountPath: /tmp/99-local.ini
-          subPath: 99-local.ini
+          mountPath: /tmp/90-local.ini
+          subPath: 90-local.ini
         - name: bosco-ssh-private-key-volume
           mountPath: /etc/osg/bosco.key
           subPath: bosco.key
+        {{ if .Values.RemoteCluster.SSHCertificateSecret }}
+        - name: bosco-ssh-cert-volume
+          mountPath: /etc/osg/bosco.key-cert.pub
+          subPath: bosco.cert
+        {{ end }}
+        {{ if .Values.RemoteCluster.KnownHosts }}
+        - name: ssh-known-hosts
+          mountPath: /etc/osg/ssh_known_hosts
+          subPath: ssh_known_hosts
+        {{ end }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-          mountPath: /etc/condor-ce/config.d/99-instance.conf
-          subPath: 99-instance.conf
+          mountPath: /etc/condor-ce/config.d/90-instance.conf
+          subPath: 90-instance.conf
         {{ if .Values.Persistence.LibCondorCeVolume }}
         - name: lib-condor-ce
           mountPath: /var/lib/condor-ce
@@ -195,14 +209,6 @@ spec:
           mountPath: /etc/osg/git.key
           subPath: git.key
         {{ end }}
-        {{ end }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-          mountPath: /etc/grid-security/voms-mapfile
-          subPath: voms-mapfile
-        {{ if .Values.DnRemoteUserMapping }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-          mountPath: /etc/grid-security/grid-mapfile
-          subPath: grid-mapfile
         {{ end }}
         {{ if .Values.SciTokenRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
@@ -240,10 +246,18 @@ spec:
           {{ else }}
           value: "false"
           {{ end }}
+        {{ if .Values.Debug.ContinueOnError }}
+        - name: HOSTED_CE_CONTINUE_ON_ERROR
+          value: "true"
+        {{ end }}
         - name: RESOURCE_NAME
           value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
           value: {{ .Values.RemoteCluster.LoginHost }}
+        {{ if .Values.RemoteCluster.ProxyJump }}
+        - name: SSH_PROXY_JUMP
+          value: {{ .Values.RemoteCluster.ProxyJump }}
+        {{ end }}
         - name: REMOTE_BATCH
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR

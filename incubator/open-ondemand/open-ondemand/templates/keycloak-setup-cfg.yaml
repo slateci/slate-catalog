@@ -1,0 +1,115 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
+data:
+  keycloak-setup.sh: |
+
+        #! /bin/bash
+
+        # Redirect output to a logfile
+        exec >/opt/jboss/output.log 2>&1
+
+        # Sets up Keycloak to allow Open OnDemand to authenticate through it.
+
+        # Generate encrypted password
+        mkdir /opt/jboss/.ssh && chown jboss:jboss /opt/jboss/.ssh && chmod 0700 /opt/jboss/.ssh
+        ssh-keygen -t ecdsa -b 521 -q -N '' -f /opt/jboss/.ssh/id_ecdsa
+        echo $(openssl rand -base64 32 | openssl enc -base64 -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa.pub) >> /opt/jboss/.kc-password
+        export KEYCLOAK_PASSWORD=`cat /opt/jboss/.kc-password | openssl enc -base64 -a -A -e -aes-256-cbc -nosalt -pass pass:/opt/jboss/.ssh/id_ecdsa`
+
+        # Generate keycloak admin user
+        /opt/jboss/keycloak/bin/add-user-keycloak.sh --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD
+
+        # Make sure script hasn't already been run
+        if test -f "/shared/id"; then
+                echo "Keycloak is already configured. Skipping setup."
+                rm -rf /opt/jboss/.ssh
+                exit 0
+        fi
+        echo "Configuring Keycloak..."
+
+        # Path to jboss-cli tool:
+        jboss_cli="/opt/jboss/keycloak/bin/jboss-cli.sh"
+
+        # Enable proxying to Keycloak:
+        $jboss_cli 'embed-server,/subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=proxy-address-forwarding,value=true)'
+        $jboss_cli 'embed-server,/socket-binding-group=standard-sockets/socket-binding=proxy-https:add(port=443)'
+        $jboss_cli 'embed-server,/subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=redirect-socket,value=proxy-https)'
+
+        # Path to keycloak-cli tool:
+        keycloak="/opt/jboss/keycloak/bin/kcadm.sh"
+
+        # Setup credentials for connection to API
+        user="admin"
+        realm="master"
+        server="http://localhost:8080/auth"
+
+        # Try to setup API access credentials and retry up to five times
+        n=0
+        until [ "$n" -ge 5 ]
+        do
+                $keycloak config credentials --server $server --realm $realm --user $user --password $KEYCLOAK_PASSWORD && break
+                n=$((n+1)) 
+                sleep 5
+        done
+
+        # Create Open-OnDemand realm
+        $keycloak create realms -s realm=ondemand -s enabled=true -s rememberMe=true -s loginWithEmailAllowed=false
+
+        # Open OnDemand client id
+        client_id=$SLATE_INSTANCE_NAME.ondemand.$SLATE_CLUSTER_NAME
+
+        # OnDemand URIs to redirect to Keycloak
+        redirect_uris="[\"https://$SLATE_INSTANCE_NAME.ondemand.$SLATE_CLUSTER_NAME\",\"https://$SLATE_INSTANCE_NAME.ondemand.$SLATE_CLUSTER_NAME/oidc\"]"
+
+        # Create Open-OnDemand Keycloak client
+        $keycloak create clients -r ondemand -s clientId=$client_id -s enabled=true -s publicClient=false -s protocol=openid-connect -s directAccessGrantsEnabled=false -s serviceAccountsEnabled=true -s redirectUris=$redirect_uris -s authorizationServicesEnabled=true
+
+        # Store useful regex pattern
+        client_id_pattern={\"id\":\"[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}\",\"clientId\":\"$client_id\"}
+
+        # Store useful regex pattern
+        secret_id_pattern=[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}
+
+        # Get other id field
+        id=$($keycloak get clients -r ondemand --fields clientId,id | tr -d " \t\n\r" | grep -o -E $client_id_pattern | grep -o -E $secret_id_pattern)
+
+        # Write client_id to a file in shared volume
+        echo $client_id > /shared/id && chmod 0600 /shared/id
+
+        # Get the client secret to use with OnDemand installation
+        client_secret=$($keycloak get clients/$id/client-secret -r ondemand | tr -d " \t\n\r" | grep -o -E $secret_id_pattern)
+
+        # Write client_secret to a file in shared volume
+        echo $client_secret > /shared/client-secret
+
+        # Configure Utah LDAP if requested
+        if [[ $SLATE_SETUP_LDAP == "true" ]];
+        then
+                $keycloak create components -r ondemand -s name=kerberos-ldap-provider -s providerId=ldap -s providerType=org.keycloak.storage.UserStorageProvider -s 'config.priority=["0"]' -s 'config.enabled=["true"]' -s 'config.fullSyncPeriod=["-1"]' -s 'config.changedSyncPeriod=["-1"]' -s 'config.cachePolicy=["DEFAULT"]' -s 'config.batchSizeForSync=["1000"]' -s 'config.editMode=["READ_ONLY"]' -s 'config.syncRegistrations=["false"]' -s 'config.vendor=["other"]' -s 'config.usernameLDAPAttribute=["uid"]' -s 'config.rdnLDAPAttribute=[{{ .Values.ldap.rdnLDAPAttribute | quote }}]' -s 'config.uuidLDAPAttribute=[{{ .Values.ldap.uuidLDAPAttribute | quote }}]' -s 'config.userObjectClasses=[{{ .Values.ldap.userObjectClasses | quote }}]' -s 'config.connectionUrl=[{{ .Values.ldap.connectionURL | quote }}]' -s 'config.usersDn=[{{ .Values.ldap.usersDN | quote }}]' -s 'config.authType=["none"]' -s 'config.searchScope=["1"]' -s 'config.useTruststoreSpi=["ldapsOnly"]' -s 'config.connectionPooling=["true"]' -s 'config.pagination=["true"]' -s 'config.allowKerberosAuthentication=["true"]' -s 'config.serverPrincipal=[{{ .Values.kerberos.serverPrincipal | quote }}]' -s 'config.keyTab=[{{ .Values.kerberos.keyTab | quote }}]' -s 'config.kerberosRealm=[{{ .Values.kerberos.realm | quote }}]' -s 'config.debug=[{{ .Values.kerberos.debug | quote }}]' -s 'config.useKerberosForPasswordAuthentication=[{{ .Values.kerberos.kerberosPasswordAuth | quote }}]' -s 'config.importEnabled=[{{ .Values.ldap.importUsers | quote }}]'
+        fi
+
+        # Add test users from values.yaml into OnDemand realm
+        {{ range .Values.testUsers }}
+        $keycloak create users -r ondemand -s username={{ .user.name }} -s enabled=true
+        $keycloak set-password -r ondemand --username {{ .user.name }} --new-password {{ .user.tempPassword }} --temporary
+        {{ end }}
+
+        # Get ldap user-storage id
+        ldap_id=$($keycloak get components -r ondemand --fields id,name | awk '/,$/ { printf("%s\t", $0); next } 1' | grep "kerberos-ldap-provider" | tr -d '"' | tr -d ":," | sed -e 's/name//g' | sed -e 's/kerberos-ldap-provider//g' | sed -e 's/\bid//g' | awk '{$1=$1};1')
+
+        # Update Keycloak user-storage
+        $keycloak create user-storage/$ldap_id/sync?action=triggerChangedUsersSync -r ondemand
+
+        # Copy LDAP usernames into /shared directory
+        users=$($keycloak get users -r ondemand --limit 100000 | grep username | tr -d '"' | tr -d ',' | tr -d ':' | sed -e "s/username//g" | awk '{$1=$1};1')
+        users=($users)
+        {{ if eq .Values.setupLDAP true }}
+        for i in ${!users[@]}; do
+                echo "${users[$i]}" >> /shared/users.txt
+        done
+        {{ end }}
+
+        # Delete encryption key
+        rm -rf /opt/jboss/.ssh

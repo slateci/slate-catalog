@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "jupyter.fullname" . }}
+  labels:
+    app: {{ template "jupyter.name" . }}
+    chart: {{ template "jupyter.chart" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.Ingress.Class }}
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.Ingress.Subdomain }}.{{ .Values.SLATE.Cluster.DNSName }}
+    secretName: jupyter-notebook-{{ .Values.Instance}}-tls
+  rules:
+  - host: {{ .Values.Ingress.Subdomain }}.{{ .Values.SLATE.Cluster.DNSName }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "jupyter.fullname" . }}
+          servicePort: 8888

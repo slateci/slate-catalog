@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:       # SSSD generates ldap users locally in the ondemand container
+  name: {{ include "open-ondemand.fullname" . }}-sssd
+data:
+  sssd.conf: |
+    [sssd]
+    config_file_version = 2
+
+    reconnection_retries = 3
+
+    sbus_timeout = 30
+    services = nss, pam
+
+    domains = {{ .Values.kerberos.realm | lower }}
+
+    [nss]
+    filter_groups = root
+    filter_users = root
+    reconnection_retries = 3
+
+    [pam]
+    reconnect_retries = 3
+
+    [domain/{{ .Values.kerberos.realm | lower}}]
+    debug_level = 2
+    enumerate = false
+    id_provider = ldap
+    auth_provider = krb5
+    access_provider = ldap
+
+    chpass_provider = krb5
+    ldap_uri = {{ .Values.ldap.connectionURL }}
+    ldap_search_base = {{ .Values.ldap.ldapSearchBase }}
+    ldap_tls_cacert = /etc/pki/tls/certs/ca-bundle.crt
+    ldap_tls_reqcert = never
+
+    krb5_realm = {{ .Values.kerberos.realm }}
+    krb5_server = {{ .Values.kerberos.serverPrincipal }}
+    krb5_ccname_template = KEYRING:persistent:%U
+    krb5_auth_timeout = 15
+    krb5_store_password_if_offline = true
+
+    # not needed on clients only LDAP server ldap_krb5_keytab = /etc/krb5.keytab
+    ldap_krb5_init_creds = true
+    ldap_krb5_ticket_lifetime = 86400
+    cache_credentials = true
+    use_fully_qualified_names = false
+    ldap_access_filter = uidNumber=*
+    ldap_schema = rfc2307bis
+    ldap_group_member = uniqueMember

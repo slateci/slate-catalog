@@ -17,10 +17,12 @@ spec:
     port: 9619
     targetPort: htcondor-ce
     protocol: TCP
-  - name: http
+  {{ if and (not .Values.HostCredentials.HostCertKeySecret) (not .Values.HostCredentials.HostCertSecret) }}
+  - name: http  # needed to get a cert issued from Let's Encrypt (since the admin's not supplying a cert/key as a secret)
     port: 80
     targetPort: http
     protocol: TCP
+  {{ end }}
   {{ if .Values.HTTPLogger.Enabled }}
   - port: 8080
     targetPort: logs

@@ -15,44 +15,150 @@ spec:
       labels:
         {{- include "open-ondemand.selectorLabels" . | nindent 8 }}
     spec:
+      {{ if eq .Values.enableHostAdapter true }}
+      nodeSelector:
+        application: {{ .Values.advanced.node_selector_label }}
+      {{ end }}
       volumes:
+        # Shared Volume
         - name: shared-data
           emptyDir: {}
+        # Claim SLATE volume to persist Keycloak data.
+        - name: keycloak-db
+          persistentVolumeClaim:
+            claimName: keycloak-persistent-volume-{{ .Values.Instance }}
+        # Keycloak Startup Script
+        - name: keycloak-setup
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
+            items:
+            - key: keycloak-setup.sh
+              path: keycloak-setup.sh
+              mode: 0755
+        # SSSD config
+        - name: ood-sssd-config
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-sssd
+            items:
+            - key: sssd.conf
+              path: sssd.conf
+              mode: 0600
+        # OnDemand Portal Config
         - name: ood-portal-config
           configMap:
             name: {{ include "open-ondemand.fullname" . }}-ood-portal
             items:
             - key: ood_portal.yml
               path: ood_portal.yml
-        - name: keycloak-setup
+        # Cluster Definition Files (+optional linuxHost_Adapter)
+        - name: ood-cluster-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-keycloak-setup
-        - name: cluster-config-files
+            name: {{ include "open-ondemand.fullname" . }}-resource-management
+      ######## Start of Advanced Features ########
+        # Autofs Config
+        - name: autofs-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-shell-setup
-        - name: desktop-config-files
+            name: {{ include "open-ondemand.fullname" . }}-autofs
+            items:
+            - key: autofs_config.sh
+              path: autofs_config.sh
+              mode: 0700
+        # Post-Startup Config
+        - name: startup-config
           configMap:
-            name: {{ include "open-ondemand.fullname" . }}-desktop-host
-        # Claim SLATE volume to persist Keycloak data.
-        - name: keycloak-db
-          persistentVolumeClaim:
-            claimName: keycloak-persistent-volume-{{ .Values.Instance }}
+            name: {{ include "open-ondemand.fullname" . }}-startup-cfg
+            items:
+            - key: startup-ood.sh
+              path: startup-ood.sh
+              mode: 0700
+        # Secret Volume
+        - name: secret-volume
+          secret:
+            secretName: {{ .Values.advanced.secret_name }}
+            items:
+            {{ range .Values.advanced.host_keys }}
+              - key: {{ .host_key.name | lower | nospace }}
+                path: {{ .host_key.name | lower | nospace }}
+                mode: 0600
+            {{ end }}
+        # Desktop Application Config
+        {{ if eq .Values.enableHostAdapter true }}
+        - name: desktop-app-config
+          configMap:
+            name: {{ include "open-ondemand.fullname" . }}-desktop-app
+            items:
+            - key: form.yml
+              path: form.yml
+            - key: submit.yml.erb
+              path: submit.yml.erb
+            - key: linuxhost_submit.yml.erb
+              path: linuxhost_submit.yml.erb
+            {{ range .Values.clusters }}
+            - key: {{ .cluster.name | lower | nospace }}.yml
+              path: {{ .cluster.name | lower | nospace }}.yml
+            {{ end }}
+        {{ end }}
+      ######## End of Advanced Features ########
       containers:
         - name: open-ondemand
-          image: slateci/open-ondemand:1.8.1
+          image: dockerbox88/open-ondemand:latest
           imagePullPolicy: Always
+          {{ if eq .Values.advanced.autofs true }}
+          securityContext:
+            privileged: true
+          {{ end }}
           volumeMounts:
+            # Shared Volume
             - name: shared-data
               mountPath: /shared
+            # OnDemand Portal Config
             - name: ood-portal-config
               mountPath: /etc/ood/config/ood_portal.yml
               subPath: ood_portal.yml
-            # Shell app
-            - name: cluster-config-files
+            # Cluster Definition Files (+optional linuxHost_Adapter)
+            - name: ood-cluster-config
               mountPath: /etc/ood/config/clusters.d
-            # Desktop app
-            - name: desktop-config-files
-              mountPath: /etc/ood/config/apps/bc_desktop/single_cluster
+            # SSSD Config
+            {{ if eq .Values.setupLDAP true }}
+            - name: ood-sssd-config
+              mountPath: /etc/sssd/sssd.conf
+              subPath: sssd.conf
+            {{ end }}
+          ######## Start of Advanced Features #########
+            # Post-Startup Config
+            - name: startup-config
+              mountPath: /root/startup-ood.sh
+              subPath: startup-ood.sh
+            # Autofs Config
+            {{ if eq .Values.advanced.autofs true }}
+            - name: autofs-config
+              mountPath: /root/autofs_config.sh
+              subPath: autofs_config.sh
+            {{ end }}
+            # Secret Volume
+            {{- range .Values.advanced.host_keys }}
+            - name: secret-volume
+              mountPath: /root/{{ .host_key.name | lower | nospace }}
+              subPath: {{ .host_key.name | lower | nospace }}
+            {{- end }}
+            # Desktop Application Config
+            {{ if eq .Values.enableHostAdapter true }}
+            {{- range .Values.clusters }}
+            - name: desktop-app-config
+              mountPath: /etc/ood/config/apps/bc_desktop/{{ .cluster.name | lower | nospace }}.yml
+              subPath: {{ .cluster.name | lower | nospace }}.yml
+            {{- end }}
+            - name: desktop-app-config
+              mountPath: /var/www/ood/apps/sys/bc_desktop/form.yml
+              subPath: form.yml
+            - name: desktop-app-config
+              mountPath: /var/www/ood/apps/sys/bc_desktop/submit.yml.erb
+              subPath: submit.yml.erb
+            - name: desktop-app-config
+              mountPath: /etc/ood/config/apps/bc_desktop/submit/linuxhost_submit.yml.erb
+              subPath: linuxhost_submit.yml.erb
+            {{ end }}
+          ######## End of Advanced Features ########
           ports:
             - name: http
               containerPort: 80
@@ -65,18 +171,16 @@ spec:
         - name: keycloak
           image: jboss/keycloak:4.8.3.Final
           imagePullPolicy: Always
-          # Run script if setupKeycloak parameter is enabled.
-          {{ if eq .Values.setupKeycloak true }}
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/bash", "/etc/keycloak/keycloak-setup.sh"]
-          {{ end }}
+                command: ["/bin/bash", "/opt/keycloak-setup.sh"]
           volumeMounts:
             - name: shared-data
               mountPath: /shared
             - name: keycloak-setup
-              mountPath: /etc/keycloak/
+              mountPath: /opt/keycloak-setup.sh
+              subPath: keycloak-setup.sh
               # Mount SLATE volume to the location of the Keycloak database.
             - name: keycloak-db
               mountPath: "/opt/jboss/keycloak/standalone/data"
@@ -86,8 +190,6 @@ spec:
               # Set Keycloak default username and password
             - name: KEYCLOAK_USER
               value: "admin"
-            - name: KEYCLOAK_PASSWORD
-              value: {{ randAlphaNum 12 | b64enc | quote }}
               # Specify database type (default Java H2 database)
             - name: DB_VENDOR 
               value: "h2"

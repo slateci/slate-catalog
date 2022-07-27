@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "v4a.fullname" . }}
+  labels:
+    {{- include "v4a.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "v4a.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "v4a.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "ivukotic/v4a"
+          imagePullPolicy: Always          
+          command: ["/usr/sbin/varnishd"]
+          args: 
+            - "-F"
+            - "-f"
+            - "/etc/varnish/default.vcl"
+            - "-a"
+            - "http=:{{ .Values.varnish_container_port }},HTTP" 
+            - "-a"
+            - "proxy=:8443,PROXY"
+            - "-p"
+            - "feature=+http2"
+            - "-s"
+            - "malloc,{{ .Values.varnish_size }}"
+          env:
+          - name: SITE
+            value: {{ .Values.Site | quote }}
+          - name: INSTANCE
+            value: {{ .Values.Instance | quote }}
+          livenessProbe:
+            exec:
+              command:
+                - /usr/local/bin/sender.sh
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          ports:
+            - containerPort: {{ .Values.varnish_container_port }}
+              hostPort: 6081
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/varnish/
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "v4a.fullname" . }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

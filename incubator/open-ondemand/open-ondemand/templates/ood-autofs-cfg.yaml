@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:       # This script will map NFS shares to be mounted by autofs
+  name: {{ include "open-ondemand.fullname" . }}-autofs
+data:
+  autofs_config.sh: |
+    #!/bin/bash
+    cat >> /etc/auto.ondemand <<EOF
+    {{- range .Values.advanced.fileSharing.nfs_shares }}
+    {{ . }}
+    {{- end }}
+    EOF
+    export autofs_path={{ .Values.advanced.fileSharing.mountPoint }}
+    mkdir -p $autofs_path
+    cat >> /etc/auto.master.d/ondemand.autofs <<EOF
+    $autofs_path  /etc/auto.ondemand
+    EOF

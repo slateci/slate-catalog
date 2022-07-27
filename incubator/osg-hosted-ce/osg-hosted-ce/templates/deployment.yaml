@@ -39,19 +39,9 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-      {{ if .Values.DnRemoteUserMapping }}
-      - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-      {{ end }}
-      {{ if .Values.SciTokenRemoteUserMapping }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
-      {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
           secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
@@ -59,6 +49,20 @@ spec:
           - key: bosco.key
             path: bosco.key
             mode: 256
+      {{ if .Values.RemoteCluster.SSHCertificateSecret }}
+      - name: bosco-ssh-cert-volume
+        secret:
+          secretName: {{ .Values.RemoteCluster.SSHCertificateSecret }}
+          items:
+          - key: bosco.cert
+            path: bosco.cert
+            mode: 0o400
+      {{ end }}
+      {{ if .Values.RemoteCluster.KnownHosts }}
+      - name: ssh-known-hosts
+        configMap:
+          name: osg-hosted-ce-{{ .Values.Instance }}-known-hosts
+      {{ end }}
       {{ if .Values.HostCredentials.HostCertKeySecret }}
       - name: osg-hosted-ce-hostcertkey-volume
         secret:
@@ -101,23 +105,20 @@ spec:
             mode: 256 
       {{ end }}
       {{ end }}
-      {{ if .Values.HTTPLogger.Enabled }}
       {{ if .Values.Persistence.LogVolume }}
       - name: log-volume
         persistentVolumeClaim:
           claimName: {{ .Values.Persistence.LogVolume }}
-      {{ else }}
-      - name: log-volume
-        emptyDir: {} 
       {{ end }}
+      {{ if .Values.HTTPLogger.Enabled }}
+      - name: log-volume
+        emptyDir: {}
       - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
-      {{ end }}
-      {{ if .Values.HTTPLogger.Enabled }}
       initContainers:
       - name: logging-sidecar-init
-        image: opensciencegrid/hosted-ce:{{ .Values.ContainerTags.HostedCE }}
+        image: hub.opensciencegrid.org/opensciencegrid/hosted-ce:{{ .Values.ContainerTags.HostedCE }}
         imagePullPolicy: Always
         command: ['/bin/chown','condor:condor','/var/log/condor-ce']
         volumeMounts:
@@ -154,7 +155,7 @@ spec:
         {{ end }}
       {{ end }}
       - name: osg-hosted-ce
-        image: opensciencegrid/hosted-ce:{{ .Values.ContainerTags.HostedCE }}
+        image: hub.opensciencegrid.org/opensciencegrid/hosted-ce:{{ .Values.ContainerTags.HostedCE }}
         imagePullPolicy: Always
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
@@ -163,6 +164,16 @@ spec:
         - name: bosco-ssh-private-key-volume
           mountPath: /etc/osg/bosco.key
           subPath: bosco.key
+        {{ if .Values.RemoteCluster.SSHCertificateSecret }}
+        - name: bosco-ssh-cert-volume
+          mountPath: /etc/osg/bosco.key-cert.pub
+          subPath: bosco.cert
+        {{ end }}
+        {{ if .Values.RemoteCluster.KnownHosts }}
+        - name: ssh-known-hosts
+          mountPath: /etc/osg/ssh_known_hosts
+          subPath: ssh_known_hosts
+        {{ end }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
           mountPath: /etc/condor-ce/config.d/99-instance.conf
           subPath: 99-instance.conf
@@ -185,7 +196,7 @@ spec:
           subPath: hostkey.pem
         {{ end }}
         {{ end }}
-        {{ if .Values.HTTPLogger.Enabled }}
+        {{ if or .Values.Persistence.LogVolume .Values.HTTPLogger.Enabled }}
         - name: log-volume
           mountPath: /var/log/condor-ce
         {{ end }}
@@ -196,14 +207,6 @@ spec:
           subPath: git.key
         {{ end }}
         {{ end }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-          mountPath: /etc/grid-security/voms-mapfile
-          subPath: voms-mapfile
-        {{ if .Values.DnRemoteUserMapping }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-          mountPath: /etc/grid-security/grid-mapfile
-          subPath: grid-mapfile
-        {{ end }}
         {{ if .Values.SciTokenRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
           mountPath: /etc/condor-ce/mapfiles.d/50-slate-scitokens.conf
@@ -213,9 +216,11 @@ spec:
         - name: htcondor-ce
           containerPort: 9619
           protocol: TCP
-        - name: http # needed to get a cert issued from Let's Encrypt
+        {{ if and (not .Values.HostCredentials.HostCertKeySecret) (not .Values.HostCredentials.HostCertSecret) }}
+        - name: http # needed to get a cert issued from Let's Encrypt (since the admin's not supplying a cert/key as a secret)
           containerPort: 80
           protocol: TCP
+        {{ end }}
         env:
         {{ if eq .Values.Networking.ServiceType "HostNetwork" }}
         - name: _CONDOR_NETWORK_HOSTNAME
@@ -240,10 +245,18 @@ spec:
           {{ else }}
           value: "false"
           {{ end }}
+        {{ if .Values.Debug.ContinueOnError }}
+        - name: HOSTED_CE_CONTINUE_ON_ERROR
+          value: "true"
+        {{ end }}
         - name: RESOURCE_NAME
           value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST
           value: {{ .Values.RemoteCluster.LoginHost }}
+        {{ if .Values.RemoteCluster.ProxyJump }}
+        - name: SSH_PROXY_JUMP
+          value: {{ .Values.RemoteCluster.ProxyJump }}
+        {{ end }}
         - name: REMOTE_BATCH
           value: {{ .Values.RemoteCluster.Batch | lower }}
         - name: REMOTE_BOSCO_DIR
@@ -269,5 +282,4 @@ spec:
           preStop:
             exec:
               command: ["/usr/local/bin/drain-ce.sh"]
-      terminationGracePeriodSeconds: 120
         {{ end }}

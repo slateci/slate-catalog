@@ -1,0 +1,5 @@
+apiVersion: "v1"
+name: "nginx2ingress"
+version: 0.1.0
+appVersion: 1.15.9
+description: "A simple nginx deployment which serves a static page, has two ingress routes for testing"

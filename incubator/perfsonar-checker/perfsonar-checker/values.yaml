@@ -19,6 +19,9 @@ PerfsonarChecker:
   Dest1: "sl-um-ps01.slateci.io"
   Dest2: "uofu-ddc-dmz-latency.chpc.utah.edu"
   Dest3: "sl-uc-ps01.slateci.io"
+  Dest1bw: "sl-um-ps01-bw.slateci.io"
+  Dest2bw: ""
+  Dest3bw: "sl-uc-ps01-bw.slateci.io"
 
 ### SLATE-START ###
 SLATE:

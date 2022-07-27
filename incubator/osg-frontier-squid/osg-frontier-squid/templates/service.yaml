@@ -2,6 +2,10 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ template "osg-frontier-squid.fullname" . }}
+  labels:
+    app: {{ template "osg-frontier-squid.name" . }}
+    release: {{ .Release.Name }}
+    instance: {{ .Values.Instance | quote }}
 spec:
   type: {{ .Values.Service.ExternalVisibility }}
   {{ if ne .Values.Service.ExternalVisibility "ClusterIP" }}
@@ -9,9 +13,23 @@ spec:
   {{ end }}
   selector:
     app: {{ template "osg-frontier-squid.name" . }}
-    chart: {{ template "osg-frontier-squid.chart" . }}
     release: {{ .Release.Name }}
-    instance: {{ .Values.Instance }}
+    instance: {{ .Values.Instance | quote }}
   ports:
   - port: {{ .Values.Service.Port }}
+    name: cache
     targetPort: squid
+    {{ if eq .Values.Service.ExternalVisibility "NodePort" }}
+    {{ if .Values.Service.NodePort }}
+    nodePort: {{ .Values.Service.NodePort }}
+    {{ end }}
+    {{ end }}
+  - port: {{ .Values.Service.MonitoringPort }}
+    name: monitoring
+    targetPort: monitoring
+    protocol: UDP
+    {{ if eq .Values.Service.ExternalVisibility "NodePort" }}
+    {{ if .Values.Service.NodePort }}
+    nodePort: {{ .Values.Service.MonitoringNodePort }}
+    {{ end }}
+    {{ end }}

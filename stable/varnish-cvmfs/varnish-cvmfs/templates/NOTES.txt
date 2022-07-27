@@ -1,0 +1,3 @@
+For this to work a node must be labeled with "varnish: cvmfs"
+Node must have an IP visible from all the WNs that will use it.
+Server will be accessible at http://<IP>:6081
