@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "v4cvmfs.fullname" . }}
+data:
+  default.vcl: |-
+    vcl 4.1;
+    import dynamic;
+    import directors;
+    backend fermilab1 {
+        .host = "131.225.189.138";
+        .port = "8000";
+    }
+    backend fermilab2 {
+        .host = "2620:6a:0:8421::244";
+        .port = "8000";
+    }
+    backend goc {
+        .host = "cvmfs-s1goc.opensciencegrid.org";
+        .port = "8000";
+    }
+    backend bnl1 { 
+        .host = "192.12.15.180";
+        .port = "8000";
+    }
+    backend bnl2 {
+        .host = "192.12.15.179";
+        .port = "8000";
+    }
+    backend testStratum1 {
+        .host ="oasis-replica-itb.opensciencegrid.org";
+        .port = "8000";
+    }
+    acl local {
+        {{.Values.acl | nindent 4 }}
+    }
+    sub vcl_init {
+        new vdir = directors.fallback();
+        vdir.add_backend(fermilab1);
+        vdir.add_backend(fermilab2);
+        vdir.add_backend(goc);  
+        vdir.add_backend(bnl1);
+        vdir.add_backend(bnl2);
+        vdir.add_backend(testStratum1);    
+    }
+    sub vcl_backend_fetch {
+        unset bereq.http.host;
+    }
+    sub vcl_recv {
+        set req.backend_hint = vdir.backend();
+        if (!(client.ip ~ local)) {
+            return (synth(405));
+        } 
+        if (req.method != "GET" && req.method != "HEAD") {
+            return (pipe);
+        }
+    }

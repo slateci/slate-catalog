@@ -44,19 +44,9 @@ spec:
       - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-      - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-      {{ if .Values.DnRemoteUserMapping }}
-      - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-        configMap:
-          name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-      {{ end }}
-      {{ if .Values.SciTokenRemoteUserMapping }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
-      {{ end }}
       - name: bosco-ssh-private-key-volume
         secret: 
           secretName: {{ .Values.RemoteCluster.PrivateKeySecret }}
@@ -124,10 +114,13 @@ spec:
       - name: log-volume
         persistentVolumeClaim:
           claimName: {{ .Values.Persistence.LogVolume }}
-      {{ end }}
+      {{ else }}
       {{ if .Values.HTTPLogger.Enabled }}
       - name: log-volume
         emptyDir: {}
+      {{ end }}
+      {{ end }}
+      {{ if .Values.HTTPLogger.Enabled }}
       - name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
         configMap:
           name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
@@ -174,8 +167,8 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
         - name: osg-hosted-ce-{{ .Values.Instance }}-configuration
-          mountPath: /tmp/99-local.ini
-          subPath: 99-local.ini
+          mountPath: /tmp/90-local.ini
+          subPath: 90-local.ini
         - name: bosco-ssh-private-key-volume
           mountPath: /etc/osg/bosco.key
           subPath: bosco.key
@@ -190,8 +183,8 @@ spec:
           subPath: ssh_known_hosts
         {{ end }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
-          mountPath: /etc/condor-ce/config.d/99-instance.conf
-          subPath: 99-instance.conf
+          mountPath: /etc/condor-ce/config.d/90-instance.conf
+          subPath: 90-instance.conf
         {{ if .Values.Persistence.LibCondorCeVolume }}
         - name: lib-condor-ce
           mountPath: /var/lib/condor-ce
@@ -221,14 +214,6 @@ spec:
           mountPath: /etc/osg/git.key
           subPath: git.key
         {{ end }}
-        {{ end }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
-          mountPath: /etc/grid-security/voms-mapfile
-          subPath: voms-mapfile
-        {{ if .Values.DnRemoteUserMapping }}
-        - name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
-          mountPath: /etc/grid-security/grid-mapfile
-          subPath: grid-mapfile
         {{ end }}
         {{ if .Values.SciTokenRemoteUserMapping }}
         - name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
@@ -266,6 +251,10 @@ spec:
           {{ else }}
           value: "false"
           {{ end }}
+        {{ if .Values.Debug.ContinueOnError }}
+        - name: HOSTED_CE_CONTINUE_ON_ERROR
+          value: "true"
+        {{ end }}
         - name: RESOURCE_NAME
           value: {{ .Values.Topology.Resource }}
         - name: REMOTE_HOST

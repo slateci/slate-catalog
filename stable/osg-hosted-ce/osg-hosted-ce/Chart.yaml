@@ -1,5 +1,6 @@
 apiVersion: v1
-appVersion: "5.1.2"
+appVersion: "5.1.5"
 description: OSG Hosted Compute Element
 name: osg-hosted-ce
-version: 3.13.3
+version: 4.1.3
+

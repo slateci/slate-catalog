@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "v4cvmfs.fullname" . }}
+  labels:
+    {{- include "v4cvmfs.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "v4cvmfs.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "v4cvmfs.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "ivukotic/v4a"
+          imagePullPolicy: Always
+          env:
+          - name: SITE
+            value: {{ .Values.Site | quote }}
+          - name: INSTANCE
+            value: {{ .Values.Instance | quote }}
+          - name: VARNISH_PORT
+            value: {{ .Values.ports.varnish_container_port | quote }}
+          - name: SNMP_PORT
+            value: {{ .Values.ports.snmp_container_port | quote }}
+          - name: VARNISH_MEM
+            value: {{ .Values.varnish_size | quote }}
+          - name: MONITOR_ES
+            value: {{ .Values.monitoring.es | quote }}
+          - name: MONITOR_SNMP
+            value: {{ .Values.monitoring.snmp | quote }}
+          livenessProbe:
+            exec:
+              command:
+                - /usr/local/bin/sender.sh
+            initialDelaySeconds: 120
+            periodSeconds: 5
+          ports:
+            - containerPort: {{ .Values.ports.varnish_container_port }}
+              hostPort: {{ .Values.ports.varnish_port }}
+            {{- if .Values.monitoring.snmp }}
+            - containerPort: {{ .Values.ports.snmp_container_port }}
+              hostPort: {{ .Values.ports.snmp_port }}
+              protocol: UDP
+            {{ end }} 
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/varnish/
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          # securityContext:
+          #   privileged: true
+          #   capabilities:
+          #     add: ["NET_ADMIN", "SYS_TIME", "CAP_BPF"]
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "v4cvmfs.fullname" . }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -14,10 +14,25 @@ Topology:
   Production: true
 
 RemoteCluster:
-  # SSH host
+  # Target SSH login host (host where batch system binaries are installed)
   LoginHost: remote-ssh.login.org
+  # One or more jump proxies as either [user@]host[:port] or an ssh
+  # URI (see ProxyJump in 'man ssh_config').
+  # If set, KnownHosts below must also be set.
+  ProxyJump: null
+  # Contents of SSH known_hosts
+  # Required for sites with ProyJump defined
+  KnownHosts: null
+  # Example:
+  # KnownHosts: |+
+  #    login04.osgconnect.net ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqsciY/FmcH6yedW7DxbTwLjkwlgVcbcG43QwdaSvMuN5EHAeLRH2P6ig3H6s/4hZqJn7AU2oNsoIqjZZ8iHqGyiTB9r70Aovt9PUuQXw5qHvYiIoyw49/waJ+yzu4+UD3qfnxeHuRw5EOaXia72MNJJ4lBMoS6iw1JveFJY4rBgKZ7nta1eAGGfHADsf5lfhlIXnJPN050X6zcUjqEEKXjdUkFa3wDiVbFEIESCMwi1b6Q1OXGGFwuSNse1X38CREBzQ+NjOB97o70chZoh2jZ2O3iZZZbujYcDzpxF3RxmewFC3pDmkoOpJrfV2W58n1KdJJnyvjlqEZGXCXcAlB
+  #    login04.osgconnect.net ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCnySArMSVd0O3UniYN4vX3a/d9d9mEMnrf2z1S900t0GrxVazVGu3ObeLfWwYRc3qFXNRPGh3mKcz5QVG6gcm4=
+  #    login04.osgconnect.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBW6weAaFSdLYksn4vIvqt4+geNVQ/bUvp71kTeQsKV
   # SLATE secret with 'bosco.key' containing the SSH key to access LoginHost:
   PrivateKeySecret: lincolnb-bosco
+  # Secret containing a signed certificate (required by some sites)
+  # See CertificateFile in `man ssh_config`
+  SSHCertificateSecret: null
   # condor, slurm, pbs, sge, or lsf
   Batch: slurm
   MemoryPerNode: 1024
@@ -42,6 +57,8 @@ RemoteCluster:
   # Control the value of the SSH BatchMode option used by the CE for
   # communication with the remote cluster
   SSHBatchMode: True
+  # Control whether the remote shell is invoked as a login shell (bash -l)
+  LoginShell: True
 
 Networking:
   ServiceType: "LoadBalancer"
@@ -54,65 +71,62 @@ Networking:
   # back the same IP address that was used previously. 
   RequestIP: null
 
-# VOMS FQAN to remote user mapping
+
+# SCITOKENS url[,subject] to user mapping
 # This list controls the VOs accepted by the CE and the users they are
 # mapped to on the remote site.
 #
 # To disallow VOs, remove the relevant item from the list.
 # To change the remote user for a given VO, change the value (e.g. osg01)
-# To add custom VOMS FQAN mappings, add a new item to the list.
-# VOMS FQANs can include "*" wildcards.
-VoRemoteUserMapping:
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
-  - "/osg/Role=NULL/Capability=NULL": osg01
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
-  - "/GLOW/Role=htpc/Capability=NULL": osg02
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/HCC.yaml
-  - "/hcc/Role=NULL/Capability=NULL": osg03
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
-  - "/cms/*": osg04
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Fermilab.yaml
-  - "/fermilab/*": osg05
-  # osg06 reserved for JLAB
-  # LIGO-Virgo collaboration
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/LIGO.yaml
-  - "/osg/ligo/Role=NULL/Capability=NULL": osg07
-  - "/virgo/ligo/Role=NULL/Capability=NULL": osg07
-  # Brookhaven National Lab VOs
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/sPHENIX.yaml
-  - "/sdcc/Role=NULL/Capability=NULL": osg08
-  - "/sphenix/Role=NULL/Capability=NULL": osg08
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
-  - "/atlas/*": osg09
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Gluex.yaml
-  - "/Gluex/Role=NULL/Capability=NULL": osg10
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/DUNE.yaml
-  - "/dune/Role=pilot/Capability=NULL": osg11
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/IceCube.yaml
-  - "/icecube/Role=pilot/Capability=NULL": osg12
-  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/XENON.yaml
-  - "/xenon.biggrid.nl/Role=NULL/Capability=NULL": osg13
+
+SciTokenRemoteUserMapping:
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+    - "https://scitokens.org/osg-connect": osg01
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+    - "https://chtc.cs.wisc.edu": osg02
+    ## HCC ##
+    - "https://scitokens.org/hcc": osg03
+    ## CMS ##
+    # CMS pilots:
+    - "https://cms-auth.web.cern.ch/,bad55f4e-602c-4e8d-a5c5-bd8ffb762113": osg04
+    # SAM/ETF tests:
+    - "https://cms-auth.web.cern.ch/,08ca855e-d715-410e-a6ff-ad77306e1763": osg04
+    # CMS ITB pilots:
+    - "https://cms-auth.web.cern.ch/,490a9a36-0268-4070-8813-65af031be5a3": osg04
+    # CMS LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,07f75a9a-bb78-4735-938b-7e61b2b62d5c": osg04
+    # CMS ITB LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,efbed8c1-f9a7-4063-92f7-f89c04ce04a3": osg04
+    # USCMS LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,091b3617-722c-4720-bdb1-81e4f5ec96e0": osg04
+    ## LIGO ##
+    - "https://scitokens.org/ligo": osg07
+    ## Fermilab ##
+    # Fermilab pilots:
+    - "https://cilogon.org/fermilab,fermilabpilot@fnal.gov": osg05
+    ## ATLAS ##
+    # ATLAS production:
+    - "https://atlas-auth.web.cern.ch/,7dee38a3-6ab8-4fe2-9e4c-58039c21d817": osg09
+    # ATLAS SAM/ETF:
+    - "https://atlas-auth.web.cern.ch/,5c5d2a4d-9177-3efa-912f-1b4e5c9fb660": osg09
+    # ATLAS analysis:
+    - "https://atlas-auth.web.cern.ch/,750e9609-485a-4ed4-bf16-d5cc46c71024": osg09
+    ## Gluex ##
+    - "https://zeus.phys.uconn.edu": osg10
+    ## DUNE ##
+    # DUNE pilots:
+    - "https://cilogon.org/dune,dunepilot@fnal.gov": osg11
+    ## IceCube ##
+    - "https://chtc.cs.wisc.edu/icecube": osg12
+    ## JLab ##
+    # CLAS12 #
+    - "https://scicomp.jlab.org/scitokens/clas12": osg14
+    # EIC #
+    - "https://scicomp.jlab.org/scitokens/eic": osg14
 
 ##########################
 # OPTIONAL CONFIGURATION #
 ##########################
-
-# DN to remote user mapping
-# For example, you may add your personal certificate's subject DN so
-# that you can submit jobs to this CE
-#DnRemoteUserMapping:
-#  - "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName": osg01
-
-# SCITOKENS url to user mapping
-# SciTokenRemoteUserMapping:
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
-    # - "https://scitokens.org/osg-connect": osg01
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
-    # - "https://chtc.cs.wisc.edu": osg02
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
-    # - "https://cms-auth.web.cern.ch/": osg04
-    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
-    # - "https://atlas-auth.web.cern.ch/": osg09
 
 # Specify additional HTCondor-CE configuration
 # HTCondorCeConfig: |+
@@ -175,7 +189,12 @@ HostCredentials:
 
 # Choose which tag to use for the specified containers
 ContainerTags:
-  HostedCE: stable
+  HostedCE: 3.6-release
+
+Debug:
+  # When 'ContinuOnError: true', ignore fatal errors on startup
+  # (default: false)
+  ContinueOnError: false
 
 # FOR DEVELOPMENT PURPOSES ONLY!
 # Setting 'Enabled: true' below does the following:

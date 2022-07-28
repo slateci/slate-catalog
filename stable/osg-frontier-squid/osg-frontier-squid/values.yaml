@@ -49,8 +49,10 @@ Service:
   #MonitoringNodePort: 31201
 
 SquidConf:
-  # The number of CPU cores allocated to the Squid application. The default is 2.
-  CPU: 2
+  # The number of CPU cores allocated to the Squid application. If not
+  # specified, the default is 1. You only need to uncomment this field if you
+  # plan to use more than 1 CPU for Squid.
+  # CPU: 1
   # The amount of memory (in MB) that Frontier Squid may use on the machine.
   # Per Frontier Squid, do not consume more than 1/8 of system memory with Frontier Squid
   CacheMem: 4096
@@ -94,11 +96,6 @@ SquidConf:
   #DisableLogging: False
   # truncates log file every 2 minutes.
   CleanLog: False
-  # Set this if you want to run more than one cache process concurrently.
-  # Cache memory/disk space is not shared; values configured above are per process. 
-  #Workers: 4
-  # This setting can be used to pin cache processes to CPU cores
-  #Cpu_Affinity_Map: "process_numbers=1,2,3,4 cores=2,3,4,5"
   # Configure the number of names to use when rotating logfiles
   Logfile_Rotate: "30"
   # Set the max size for the access log file
@@ -123,11 +120,15 @@ NodeSelection:
   OpenDefaultMonPort: False
 
 #Allow the frontier-squid instance to send an alert before container stops.
-#The alert will be sent to  https://aaas.atlas-ml.org/ and those who subscribed to the alert category will get notified. 
+#The alert will be sent to the configured value for AaasServer, by default
+#"aaas.atlas-ml.org", and those who subscribed to the alert category will get
+#notified. 
 #To enable the alarm feature, set the proper value for 'Site' below. 
-#Prerequists: The above Instance and NodeSelection.Hostname config variables need to be set to some proper values.
+#Prerequisites: The above Instance and NodeSelection.Hostname config variables
+#need to be set to some proper values.
 Alarm:
   Site: null
+  AaasServer: aaas.atlas-ml.org
 
 Pod:
   # Set to true if you want to use the host's timezone settings. This would affect the timestamps of log messages.
