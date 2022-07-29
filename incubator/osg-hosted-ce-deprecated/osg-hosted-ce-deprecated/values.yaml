@@ -1,0 +1,262 @@
+Instance: ""
+
+# Site information that should match the CE Topology registration
+Topology:
+  Resource: RESOURCE_NAME
+  ResourceGroup: RESOURCE_GROUP
+  Sponsor: osg:100
+  Contact: RESOURCE_CONTACT
+  ContactEmail: support@example.edu
+  City: City
+  Country: US
+  Latitude: 0.00
+  Longitude: 0.00
+  Production: true
+
+RemoteCluster:
+  # Target SSH login host (host where batch system binaries are installed)
+  LoginHost: remote-ssh.login.org
+  # Jump host formatted as host[:port]
+  # If set, KnownHosts below must also be set.
+  ProxyJump: null
+  # Contents of SSH known_hosts
+  # Required for sites with ProyJump defined
+  KnownHosts: null
+  # Example:
+  # KnownHosts: |+
+  #    login04.osgconnect.net ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqsciY/FmcH6yedW7DxbTwLjkwlgVcbcG43QwdaSvMuN5EHAeLRH2P6ig3H6s/4hZqJn7AU2oNsoIqjZZ8iHqGyiTB9r70Aovt9PUuQXw5qHvYiIoyw49/waJ+yzu4+UD3qfnxeHuRw5EOaXia72MNJJ4lBMoS6iw1JveFJY4rBgKZ7nta1eAGGfHADsf5lfhlIXnJPN050X6zcUjqEEKXjdUkFa3wDiVbFEIESCMwi1b6Q1OXGGFwuSNse1X38CREBzQ+NjOB97o70chZoh2jZ2O3iZZZbujYcDzpxF3RxmewFC3pDmkoOpJrfV2W58n1KdJJnyvjlqEZGXCXcAlB
+  #    login04.osgconnect.net ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCnySArMSVd0O3UniYN4vX3a/d9d9mEMnrf2z1S900t0GrxVazVGu3ObeLfWwYRc3qFXNRPGh3mKcz5QVG6gcm4=
+  #    login04.osgconnect.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBW6weAaFSdLYksn4vIvqt4+geNVQ/bUvp71kTeQsKV
+  # SLATE secret with 'bosco.key' containing the SSH key to access LoginHost:
+  PrivateKeySecret: lincolnb-bosco
+  # Secret containing a signed certificate (required by some sites)
+  # See CertificateFile in `man ssh_config`
+  SSHCertificateSecret: null
+  # condor, slurm, pbs, sge, or lsf
+  Batch: slurm
+  MemoryPerNode: 1024
+  CoresPerNode: 4
+  MaxWallTime: 1440
+  # Name for the remote bosco installation dir
+  BoscoDir: bosco
+  # Absolute path to the local WN client installation. Should be one of:
+  # - $HOME/bosco-osg-wn-client
+  # - /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/current/el7-x86_64/
+  #   (replacing "el7" with the remote OS major version)
+  GridDir: $HOME/bosco-osg-wn-client
+  # Worker node scratch space for payload jobs
+  # 1. For non-HTCondor batch systems, use of environment vars is supported
+  # 2. For HTCondor batch systems, only "$HOME" is accepted. For an
+  #    HTCondor site a directory specified in MOUNT_UNDER_SCRATCH in
+  #    their HTCondor configuration, or ask the Factory to specify
+  #    'work_dir="Condor"' in the appropriate entries
+  WorkerNodeTemp: /tmp
+  # <IP OR FQDN>:<PORT> for the site's local squid server, or 'null' if no site Squid
+  Squid: null
+  # Control the value of the SSH BatchMode option used by the CE for
+  # communication with the remote cluster
+  SSHBatchMode: True
+  # Control whether the remote shell is invoked as a login shell (bash -l)
+  LoginShell: True
+
+Networking:
+  ServiceType: "LoadBalancer"
+  # The hostname that the CE should use. 
+  # Appropriate A and PTR DNS records must exist.
+  Hostname: ""
+  # The preferred IP address which should be requested from the LoadBalancer. 
+  # This may be left as null to express no preference. 
+  # Setting this may be useful when redeploying a CE in order to try to get
+  # back the same IP address that was used previously. 
+  RequestIP: null
+
+
+# SCITOKENS url[,subject] to user mapping
+# This list controls the VOs accepted by the CE and the users they are
+# mapped to on the remote site.
+#
+# To disallow VOs, remove the relevant item from the list.
+# To change the remote user for a given VO, change the value (e.g. osg01)
+
+SciTokenRemoteUserMapping:
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+    - "https://scitokens.org/osg-connect": osg01
+    # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+    - "https://chtc.cs.wisc.edu": osg02
+    ## HCC ##
+    - "https://scitokens.org/hcc": osg03
+    ## CMS ##
+    # CMS pilots:
+    - "https://cms-auth.web.cern.ch/,bad55f4e-602c-4e8d-a5c5-bd8ffb762113": osg04
+    # SAM/ETF tests:
+    - "https://cms-auth.web.cern.ch/,08ca855e-d715-410e-a6ff-ad77306e1763": osg04
+    # CMS ITB pilots:
+    - "https://cms-auth.web.cern.ch/,490a9a36-0268-4070-8813-65af031be5a3": osg04
+    # CMS LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,07f75a9a-bb78-4735-938b-7e61b2b62d5c": osg04
+    # CMS ITB LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,efbed8c1-f9a7-4063-92f7-f89c04ce04a3": osg04
+    # USCMS LOCAL pilots:
+    - "https://cms-auth.web.cern.ch/,091b3617-722c-4720-bdb1-81e4f5ec96e0": osg04
+    ## LIGO ##
+    - "https://scitokens.org/ligo": osg07
+    ## Fermilab ##
+    # Fermilab pilots:
+    - "https://cilogon.org/fermilab,fermilabpilot@fnal.gov": osg05
+    ## ATLAS ##
+    # ATLAS production:
+    - "https://atlas-auth.web.cern.ch/,7dee38a3-6ab8-4fe2-9e4c-58039c21d817": osg09
+    # ATLAS SAM/ETF:
+    - "https://atlas-auth.web.cern.ch/,5c5d2a4d-9177-3efa-912f-1b4e5c9fb660": osg09
+    # ATLAS analysis:
+    - "https://atlas-auth.web.cern.ch/,750e9609-485a-4ed4-bf16-d5cc46c71024": osg09
+    ## Gluex ##
+    - "https://zeus.phys.uconn.edu": osg10
+    ## DUNE ##
+    # DUNE pilots:
+    - "https://cilogon.org/dune,dunepilot@fnal.gov": osg11
+    ## IceCube ##
+    - "https://chtc.cs.wisc.edu/icecube": osg12
+    ## JLab ##
+    # CLAS12 #
+    - "https://scicomp.jlab.org/scitokens/clas12": osg14
+    # EIC #
+    - "https://scicomp.jlab.org/scitokens/eic": osg14
+
+##########################
+# OPTIONAL CONFIGURATION #
+##########################
+
+# DN to remote user mapping
+# For example, you may add your personal certificate's subject DN so
+# that you can submit jobs to this CE
+#DnRemoteUserMapping:
+#  - "/DC=foo/DC=bar/OU=Organic Units/OU=Users/CN=YourUserName": osg01
+
+# VOMS FQAN to remote user mapping
+# To add custom VOMS FQAN mappings, add a new item to the list.
+# VOMS FQANs can include "*" wildcards.
+# VoRemoteUserMapping:
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/OSG.yaml
+  # - "/osg/Role=NULL/Capability=NULL": osg01
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/GLOW.yaml
+  # - "/GLOW/Role=htpc/Capability=NULL": osg02
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/HCC.yaml
+  # - "/hcc/Role=NULL/Capability=NULL": osg03
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/CMS.yaml
+  # - "/cms/*": osg04
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Fermilab.yaml
+  # - "/fermilab/*": osg05
+  # osg06 reserved for JLAB
+  # LIGO-Virgo collaboration
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/LIGO.yaml
+  # - "/osg/ligo/Role=NULL/Capability=NULL": osg07
+  # - "/virgo/ligo/Role=NULL/Capability=NULL": osg07
+  # Brookhaven National Lab VOs
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/sPHENIX.yaml
+  # - "/sdcc/Role=NULL/Capability=NULL": osg08
+  # - "/sphenix/Role=NULL/Capability=NULL": osg08
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/ATLAS.yaml
+  # - "/atlas/*": osg09
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/Gluex.yaml
+  # - "/Gluex/Role=NULL/Capability=NULL": osg10
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/DUNE.yaml
+  # - "/dune/Role=pilot/Capability=NULL": osg11
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/IceCube.yaml
+  # - "/icecube/Role=pilot/Capability=NULL": osg12
+  # https://github.com/opensciencegrid/topology/blob/master/virtual-organizations/XENON.yaml
+  # - "/xenon.biggrid.nl/Role=NULL/Capability=NULL": osg13
+
+# Specify additional HTCondor-CE configuration
+# HTCondorCeConfig: |+
+#   ALL_DEBUG = D_ALWAYS:2 D_CAT
+
+# Specify additional osg-configure configuration
+# See https://github.com/opensciencegrid/osg-configure#35-pilotini--pilot
+# OsgConfigureConfig: |+
+#   [Pilot entry_name ]
+#   allowed_vos = osg
+#   require_singularity = True
+#   cpucount = 8
+#   ram_mb = 6400
+#   whole_node = false
+#   gpucount = 1
+#   max_wall_time = 34560
+#   queue = opportunistic
+
+# Enable persistence to HostedCE files by creating corresponding SLATE Volumes
+# SLATE Creates a PVC in Kubernetes which can be reclaimed on restart
+# The value for each volume should correspond to the volume name within SLATE
+Persistence:
+  # /var/log/condor-ce
+  LogVolume: null 
+  # /var/lib/condor-ce
+  LibCondorCeVolume: null
+
+# Options to allow override of the bosco directory from arbitrary git repos
+# Bosco override dirs are expected in the following location in the git repo:
+#   <RESOURCE NAME>/bosco_override/
+BoscoOverrides:
+  Enabled: false
+  GitEndpoint: https://github.com/slateci/bosco-override-template
+  # If GitEndpoint requires authentication, create a SLATE secret with
+  # 'git.key' containing the private SSH key that can access
+  # it. Specify the name of the secret in GitKeySecret:
+  GitKeySecret: null
+  # Bosco tarball URL to use for installation on the remote login host
+  # instead of the default determined by the Hosted CE
+  TarballURL: null
+
+# Enable a logging sidecar
+HTTPLogger:
+  Enabled: true
+  # If you want to insert a password instead of using a randomly generated one,
+  # point Secret to a K8S/SLATE secret below.
+  # Secret: my-secret
+
+# If a specific node is desired for scheduling
+# set this to the hostname of the desired node
+NodeSelection: null
+
+HostCredentials:
+  # Name of the secret containing a host key and certificate in
+  # "tls.key" and "tls.crt", respectively. If defined, values of
+  # HostCertSecret and HostKeySecret are ignored.
+  HostCertKeySecret: null
+  # Use a pre-existing host key to request a new Let's Encrypt
+  # certificate If HostCertSecret is also specified, the Let's Encrypt
+  # request is skipped.  Secret must contain a "host.key" key
+  # containing the encoded host key.
+  HostKeySecret: null
+  # Use a pre-existing host certificate instead of requesting a new
+  # Let'S Encrypt certificate. If HostKeySecret is not specified, a
+  # new Let's Encrypt certificate and key are requested anyway.
+  # Secret must contain a "host.cert" containing the encoded host
+  # certificate.
+  HostCertSecret: null
+  # If set to 'true', use the Let's Encrypt staging server. This is
+  # useful for avoiding Let's Encrypt rate limits when first setting
+  # up a CE. NOT SUITABLE FOR PRODUCTION USE.
+  LetsEncryptStaging: false
+
+# Choose which tag to use for the specified containers
+ContainerTags:
+  HostedCE: release
+
+Debug:
+  # When 'ContinuOnError: true', ignore fatal errors on startup
+  # (default: false)
+  ContinueOnError: false
+
+# FOR DEVELOPMENT PURPOSES ONLY!
+# Setting 'Enabled: true' below does the following:
+# - Configures the CE as an ITB host
+# - Generates a test CA and self-signed host cert/key pair
+Developer:
+  Enabled: false
+
+### SLATE-START ###
+SLATE:
+  Instance:
+    ID: "untagged"
+### SLATE-END ###

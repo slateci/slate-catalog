@@ -1,0 +1,214 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-configuration
+  labels:
+    app: osg-hosted-ce-deprecated
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  90-local.ini: |
+    [Gateway]
+    job_envvar_path=$PATH
+
+    [Site Information]
+    {{ if or (.Values.Developer.Enabled) (not .Values.Topology.Production) }}
+    group = OSG-ITB
+    {{ else }}
+    group = OSG
+    {{ end }}
+    host_name = localhost
+    resource = {{ .Values.Topology.Resource }}
+    resource_group = {{ .Values.Topology.ResourceGroup }}
+    sponsor = {{ .Values.Topology.Sponsor }}
+    contact = {{ .Values.Topology.Contact }}
+    email = {{ .Values.Topology.ContactEmail }}
+    city = {{ .Values.Topology.City }}
+    country = {{ .Values.Topology.Country }}
+    latitude = {{ .Values.Topology.Latitude }}
+    longitude = {{ .Values.Topology.Longitude }}
+
+    [BOSCO]
+    enabled = False
+
+    [Storage]
+    grid_dir = {{ .Values.RemoteCluster.GridDir }}
+    worker_node_temp = {{ .Values.RemoteCluster.WorkerNodeTemp }}
+
+    [Subcluster {{ .Values.Topology.Resource }}]
+    name = {{ .Values.Topology.Resource }}
+    ram_mb = {{ .Values.RemoteCluster.MemoryPerNode }}
+    cores_per_node = {{ .Values.RemoteCluster.CoresPerNode }}
+    max_wall_time = {{ .Values.RemoteCluster.MaxWallTime }}
+    allowed_vos = *
+
+    [Squid]
+    {{ if .Values.RemoteCluster.Squid }}
+    enabled = True
+    {{ else }}
+    enabled = False
+    {{ end }}
+    location =  {{ .Values.RemoteCluster.Squid }}
+    # Operator-provided osg-configure configuration below this line
+{{ .Values.OsgConfigureConfig | default "" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-htcondor-ce-configuration
+  labels:
+    app: osg-hosted-ce-deprecated
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  90-instance.conf: |+
+{{ if .Values.Networking.RequestIP }}
+    TCP_FORWARDING_HOST = {{ .Values.Networking.RequestIP }}
+{{ end }}
+
+    SLATE_HOSTED_CE = True
+    SCHEDD_ATTRS = $(SCHEDD_ATTRS) SLATE_HOSTED_CE
+
+    # HACK: The job router doesn't recognize grid universe routes (the default) without
+    # a "GridResource" attribute and the Gridmanager doesn't evaluate GridResource expressions.
+    # So we set a dummy "GridResource" attribute and use "eval_set_GridResource"  to force the
+    # JobRouter to respect our will
+    JOB_ROUTER_DEFAULTS @=jrd
+    $(JOB_ROUTER_DEFAULTS)
+    [
+    GridResource = "intentionally left blank";
+    eval_set_GridResource = strcat("batch ", "{{ .Values.RemoteCluster.Batch }} ",
+                                   Owner, "@", "{{ .Values.RemoteCluster.LoginHost }}",
+                                   " --rgahp-glite ", "~/{{ .Values.RemoteCluster.BoscoDir | default "~/bosco"}}/glite"
+                                   {{ if .Values.BoscoOverrides.TarballURL | default "" | contains "bosco-1.3"  }}
+                                   , " --rgahp-script batch_gahp"
+                                   {{ end }}
+                                   {{ if not .Values.RemoteCluster.SSHBatchMode }}
+                                   , " --rgahp-nobatchmode"
+                                   {{ end }}
+                                   {{ if not .Values.RemoteCluster.LoginShell }}
+                                   , " --rgahp-nologin"
+                                   {{ end }}
+                                   );
+    ]
+    @jrd
+
+    JOB_ROUTER_ENTRIES = [Name = "Hosted_CE_default_route"]
+
+    JOB_ROUTER_ROUTE_NAMES = Hosted_CE_default_route
+    # Operator-provided HTCondor-CE configuration below this line
+{{ .Values.HTCondorCeConfig | default "" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-voms-mapfile
+  labels:
+    app: osg-hosted-ce-deprecated
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  voms-mapfile: |+
+    {{- range $index, $map := .Values.VoRemoteUserMapping }}
+    {{- range $voms, $user := $map }}
+    {{ $voms | quote }} {{ $user }}
+    {{- end }}
+    {{- end }}
+{{ if .Values.DnRemoteUserMapping }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-grid-mapfile
+  labels:
+    app: osg-hosted-ce-deprecated
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  grid-mapfile: |+
+    {{- range $index, $map := .Values.DnRemoteUserMapping }}
+    {{- range $dn, $user := $map }}
+    {{ $dn | quote }} {{ $user }}
+    {{- end}}
+    {{- end }}
+{{ end }}
+{{ if .Values.SciTokenRemoteUserMapping }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-slate-scitokens
+  labels:
+    app: osg-hosted-ce-deprecated
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  50-slate-scitokens.conf: |+
+    {{- range $index, $map := .Values.SciTokenRemoteUserMapping }}
+    {{- range $url, $user := $map }}
+    SCITOKENS /^{{ $url | replace "/" "\\/" | replace "." "\\." | replace "-" "\\-" }}{{ if not ( $url | contains "," ) }},{{ end }}/ {{ $user }}
+    {{- end }}
+    {{- end }}
+{{ end }}
+{{ if .Values.HTTPLogger.Enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-logger-startup
+  labels:
+    app: osg-hosted-ce-deprecated
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  start-nginx.sh: |+
+    #!/bin/bash -e
+    
+    apt-get update
+    apt-get install openssl -y
+  
+    if [ -z $HTPASSWD ]; then
+      PASS=$(tr -dc 'a-f0-9' < /dev/urandom | head -c16)
+      echo "Your randomly generated logger credentials are"
+      echo "**********************************************"
+      echo "logger:$PASS"
+      echo "**********************************************"
+      HTPASSWD="$(openssl passwd -apr1 $(echo -n $PASS))"
+    fi
+  
+    # maybe validate this
+    mkdir -p /etc/nginx/auth
+    echo "logger:$HTPASSWD" > /etc/nginx/auth/htpasswd
+
+    echo 'server {
+      listen       8080;
+      server_name  localhost;
+      location / {
+        default_type text/plain;
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/auth/htpasswd;  
+        root   /usr/share/nginx/html;
+        autoindex  on;
+      }
+      error_page   500 502 503 504  /50x.html;
+      location = /50x.html {
+        root   /usr/share/nginx/html;
+      }
+    }' > /etc/nginx/conf.d/default.conf
+    exec nginx -g 'daemon off;'
+
+{{ end }}
+{{ if .Values.RemoteCluster.KnownHosts }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osg-hosted-ce-{{ .Values.Instance }}-known-hosts
+  labels:
+    app: osg-hosted-ce-deprecated
+    instance: {{ .Values.Instance }}
+    release: {{ .Release.Name }}
+data:
+  ssh_known_hosts: |+
+{{ .Values.RemoteCluster.KnownHosts | indent 4}}
+{{ end }}
