@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "5.1.5"
 description: OSG Hosted Compute Element
 name: osg-hosted-ce-deprecated
-version: 3.17.0
+version: 3.17.1
