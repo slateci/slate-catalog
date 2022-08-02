@@ -176,7 +176,12 @@ HTTPLogger:
 
 # If a specific node is desired for scheduling
 # set this to the hostname of the desired node
-NodeSelection: null
+NodeSelection:
+  Enabled: false
+  Hostname: null
+  # Enter as many desired label key value pairs
+  NodeLabels:
+    - example: label
 
 HostCredentials:
   # Name of the secret containing a host key and certificate in
