@@ -28,8 +28,10 @@ spec:
         {{ if .Values.NodeSelection.Hostname }}
         kubernetes.io/hostname: {{ .Values.NodeSelection.Hostname }}
         {{ end }}
-        {{ if .Values.NodeSelection.LabelSelectionFieldKey }}
-        {{ .Values.NodeSelection.LabelSelectionFieldKey }}: {{ .Values.NodeSelection.LabelSelectionFieldValue }} 
+        {{ if .Values.NodeSelection.NodeLabels}}
+        {{- range $key, $value := .Values.NodeSelection.NodeLabels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
         {{ end }}
       {{ end }}
       volumes:
