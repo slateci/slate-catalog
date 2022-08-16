@@ -178,7 +178,6 @@ HTTPLogger:
 # set this to the hostname of the desired node
 NodeSelection:
   Enabled: false
-  Hostname: null
   # Enter as many desired label key value selector pairs
   # NodeLabels:
   #  For example, to specify a particular Kubernetes host for the deployment:
