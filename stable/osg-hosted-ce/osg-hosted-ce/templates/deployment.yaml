@@ -23,9 +23,13 @@ spec:
         release: {{ .Release.Name }}
         instance: {{ .Values.Instance }}
     spec:
-      {{ if .Values.NodeSelection }}
+      {{ if .Values.NodeSelection.Enabled }}
       nodeSelector: 
-        kubernetes.io/hostname: {{ .Values.NodeSelection }}
+        {{ if .Values.NodeSelection.NodeLabels}}
+        {{- range $key, $value := .Values.NodeSelection.NodeLabels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{ end }}
       {{ end }}
       volumes:
       {{ if .Values.Persistence.LibCondorCeVolume }}

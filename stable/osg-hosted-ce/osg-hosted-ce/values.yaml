@@ -176,7 +176,12 @@ HTTPLogger:
 
 # If a specific node is desired for scheduling
 # set this to the hostname of the desired node
-NodeSelection: null
+NodeSelection:
+  Enabled: false
+  # Enter as many desired label key value selector pairs
+  # NodeLabels:
+  #  For example, to specify a particular Kubernetes host for the deployment:
+  #  - kubernetes.io/hostname: example.host.org
 
 HostCredentials:
   # Name of the secret containing a host key and certificate in
