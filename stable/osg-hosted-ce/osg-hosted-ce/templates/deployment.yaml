@@ -25,9 +25,6 @@ spec:
     spec:
       {{ if .Values.NodeSelection.Enabled }}
       nodeSelector: 
-        {{ if .Values.NodeSelection.Hostname }}
-        kubernetes.io/hostname: {{ .Values.NodeSelection.Hostname }}
-        {{ end }}
         {{ if .Values.NodeSelection.NodeLabels}}
         {{- range $key, $value := .Values.NodeSelection.NodeLabels }}
         {{ $key }}: {{ $value }}
