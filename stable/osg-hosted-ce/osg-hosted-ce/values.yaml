@@ -179,9 +179,9 @@ HTTPLogger:
 NodeSelection:
   Enabled: false
   # Enter as many desired label key value selector pairs
+  # For example, to specify a particular Kubernetes host for the deployment:
   # NodeLabels:
-  #  For example, to specify a particular Kubernetes host for the deployment:
-  #  - kubernetes.io/hostname: example.host.org
+  #  kubernetes.io/hostname: example.host.org
 
 HostCredentials:
   # Name of the secret containing a host key and certificate in
