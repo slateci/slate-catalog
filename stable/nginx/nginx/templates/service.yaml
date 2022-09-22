@@ -19,7 +19,7 @@ spec:
     instance: {{ .Values.Instance | quote }}
 ---
 {{ if .Values.Ingress.Enabled }}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "nginx.fullname" . }}
