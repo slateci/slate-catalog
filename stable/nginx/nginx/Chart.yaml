@@ -1,5 +1,9 @@
 apiVersion: "v1"
 name: "nginx"
-version: 1.2.2
-appVersion: 1.15.9
+version: 1.2.3
+appVersion: "latest"
 description: "A simple nginx deployment which serves a static page"
+maintainers:
+  - name: slateci
+    email: slateci@googlegroups.com
+    url: https://slateci.io/
