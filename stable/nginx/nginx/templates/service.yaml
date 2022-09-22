@@ -10,10 +10,10 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - name: http
-      port: 80
-      targetPort: http
-      protocol: TCP
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
   selector:
     app: {{ template "nginx.name" . }}
     instance: {{ .Values.Instance | quote }}
@@ -32,14 +32,14 @@ metadata:
     kubernetes.io/ingress.class: {{ .Values.Ingress.Class }}
 spec:
   rules:
-    - host: {{ .Values.Ingress.Subdomain }}.{{ .Values.SLATE.Cluster.DNSName }}
-      http:
-        paths:
-          - path: /
-            backend:
-              service:
-                name: {{ template "nginx.fullname" . }}
-                port:
-                  number: 80
-            pathType: ImplementationSpecific
+  - host: {{ .Values.Ingress.Subdomain }}.{{ .Values.SLATE.Cluster.DNSName }}
+    http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: {{ template "nginx.fullname" . }}
+            port:
+              number: 80
+        pathType: ImplementationSpecific
 {{ end }}

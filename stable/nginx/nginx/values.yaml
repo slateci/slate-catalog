@@ -1,4 +1,4 @@
-# The label to apply to this deployment, 
+# The label to apply to this deployment,
 # used to manage multiple instances of the same application
 Instance: default
 
@@ -10,25 +10,30 @@ Data: |-
   </body>
   </html>
 
-# Ingress control settings  
+# Ingress control settings
 Ingress:
   # If true, use ingress control.
-  # Otherwise, generic NodePort networking will be used, 
-  # and the other settings in this section will be ignored. 
+  # Otherwise, generic NodePort networking will be used,
+  # and the other settings in this section will be ignored.
   Enabled: true
   # The subdomain to associate with this service.
   # This will result in a FQDN like {subdomain}.{cluster}.slateci.net
   Subdomain: hello
-  # The class of the ingress controller to use. 
-  # For SLATE this should be 'slate'. 
+  # The class of the ingress controller to use.
+  # For SLATE this should be 'slate'.
   Class: slate
 
-#Defines what IP ranges can access the app
-#If disabled all IP addresses can access the app
+# Defines what IP ranges can access the app
+# If disabled all IP addresses can access the app
 NetworkPolicy:
   Enabled: false
-  AllowedCIDRs: 
+  AllowedCIDRs:
     - 0.0.0.0/0
+
+Image: {}
+  ## The tag of the nginx image.
+  # tag: "1.23"
+
 ### SLATE-START ###
 SLATE:
   Cluster:
