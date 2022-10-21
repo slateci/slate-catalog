@@ -183,6 +183,14 @@ NodeSelection:
   # NodeLabels:
   #  kubernetes.io/hostname: example.host.org
 
+# Arbitrary annotations to add to the Service in case your Kubernetes cluster
+# requires them.  Use sparingly.  For example:
+#
+# ServiceAnnotations:
+#   metallb.universe.tf/address-pool: tiger-vlan5
+
+ServiceAnnotations: {}
+
 HostCredentials:
   # Name of the secret containing a host key and certificate in
   # "tls.key" and "tls.crt", respectively. If defined, values of
