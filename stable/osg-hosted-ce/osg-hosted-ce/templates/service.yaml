@@ -8,7 +8,10 @@ metadata:
     release: {{ .Release.Name }}
     instance: {{ .Values.Instance }}
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: {{ .Values.Networking.Hostname }} 
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.Networking.Hostname }}
+    {{- with .Values.ServiceAnnotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: LoadBalancer
   externalTrafficPolicy: "Local"
