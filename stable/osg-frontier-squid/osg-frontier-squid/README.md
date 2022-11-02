@@ -42,6 +42,7 @@ $ slate app install osg-frontier-squid --group <group-name> --cluster <cluster-n
 | UseHostpathLogDir | Allows the Squid to use local hostPath log directory at "/var/log/slate/hostPath/osg-frontier-squid" when the below `NodeSelection.Hostname` parameter is set| `Fasle` |
 | NodeSelection.Hostname |FQDN for the cluster node you want this instance to schedule on | `null` |
 | NodeSelection.OpenDefaultMonPort | Exposes default monitoring port(3401) on the host selected by `NodeSelection.Hostname` | `False` |
+| NodeSelection.OpenDefaultSquidPort | Exposes default squid port(3128) on the host selected by `NodeSelection.Hostname` | `False` |
 | Pod.UseHostTimezone | Allows the Squid appliction to use the host's timezone instead of UTC | `False` |
 
 ### Usage

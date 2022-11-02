@@ -89,6 +89,9 @@ spec:
         ports:
         - containerPort: 3128
           name: squid
+          {{ if and .Values.NodeSelection.Hostname .Values.NodeSelection.OpenDefaultSquidPort }}
+          hostPort: 3128
+          {{ end }}
         - containerPort: 3401
           name: monitoring
           protocol: UDP
