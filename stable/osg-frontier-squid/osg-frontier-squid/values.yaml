@@ -118,6 +118,10 @@ NodeSelection:
   # Set the below flag to true if you want to expose defautl port on the target node
   # Open default monitoring port (3401) -- This flag has no effect if Hostname is not set above in this conf file.
   OpenDefaultMonPort: False
+  # Set the below flag to true if you want to expose default port on the target node
+  # Open default squid port (3128) -- This flag has no effect if Hostname is not set above in this conf file.
+  OpenDefaultSquidPort: False
+
 
 #Allow the frontier-squid instance to send an alert before container stops.
 #The alert will be sent to the configured value for AaasServer, by default
