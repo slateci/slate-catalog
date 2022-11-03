@@ -24,7 +24,7 @@ Ingress:
   Class: slate
 
 # Defines what IP ranges can access the app
-# If disabled all IP addresses can access the app
+# If disabled all IP addresses can access the app.
 NetworkPolicy:
   Enabled: false
   AllowedCIDRs:
