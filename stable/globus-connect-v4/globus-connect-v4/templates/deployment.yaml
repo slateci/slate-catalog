@@ -50,7 +50,7 @@ spec:
       hostNetwork: true
       containers:
       - name: "gcs4"
-        image: slateci/gcs4:development
+        image: hub.opensciencegrid.org/slate/globus-connect-server-v4:{{ .Chart.AppVersion }}
         imagePullPolicy: Always
         command: ["/usr/local/bin/supervisord_startup.sh"]
         env: 
