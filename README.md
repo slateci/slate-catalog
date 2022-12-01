@@ -1,3 +1,6 @@
+
+> **_IMPORTANT:_** This repository has been deprecated in favor of the new [incubator](https://github.com/slateci/slate-catalog-incubator) and [stable](https://github.com/slateci/slate-catalog-stable) application catalog repositories. See [Adding the application to the catalog](https://slateci.io/docs/apps/catalog.html) for more details.
+
 # SLATE Application Catalog
 
 The SLATE Application Catalog is a [Helm](https://github.com/helm/helm) catalog focused on providing high-quality, secure packages for Scientific Computing applications. 
